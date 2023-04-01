@@ -4,6 +4,17 @@ export type CoordinatesDef = [ number, number ];
 export type PartnershipDef = number[];
 export type CompaniesDef = number[];
 
+export declare let mapboxBlockData: {
+	accessToken: string;
+	siteurl: string;
+	translations: Object;
+};
+
+export interface MapStyleDef {
+	label: string;
+	value: string;
+}
+
 export interface ExtraProperties {
 	id?: number | null;
 	name: string;

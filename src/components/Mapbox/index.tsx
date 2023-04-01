@@ -1,10 +1,12 @@
-import { useEffect } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { MapboxSidebar } from './MapboxSidebar';
 import { Mapbox } from './Map';
 import { getDefaults } from '../../constants';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { mapboxBlockData } from '../../types';
 
-export const MapboxBlock = ( { attributes, mapInstance } ) => {
+export default ({attributes, mapInstance}) => {
 	const {
 		latitude,
 		longitude,
@@ -12,22 +14,19 @@ export const MapboxBlock = ( { attributes, mapInstance } ) => {
 		bearing,
 		mapZoom,
 		mapStyle,
-		accessToken,
-		mapboxOptions: {
-			sidebarEnabled,
-			geocoderEnabled,
-			tags,
-			features,
-			listings,
-		},
+		mapboxOptions,
 	} = attributes;
 
-	const defaults = getDefaults();
+	const geocoderRef: React.MutableRefObject< MapboxGeocoder | undefined > =
+		useRef();
+	const defaults = {
+		accessToken: mapboxBlockData?.accessToken,
+		siteurl: mapboxBlockData?.siteurl,
+	};
 
 	useEffect( () => {
-		if ( accessToken ) {
-			mapboxgl.accessToken = accessToken;
-
+		if ( defaults?.accessToken ) {
+			mapboxgl.accessToken = defaults.accessToken;
 			if ( mapboxgl.accessToken && mapInstance.current !== null ) {
 				const map = new mapboxgl.Map( {
 					container: mapInstance.current || '',
@@ -38,10 +37,6 @@ export const MapboxBlock = ( { attributes, mapInstance } ) => {
 					zoom: parseFloat( mapZoom ),
 				} );
 			}
-
-			// TODO: enable geocoder
-
-			// TODO: refreshMap( mapInstance.current );
 		} else {
 			console.error( 'cannot find access token' );
 		}
@@ -64,5 +59,18 @@ export const MapboxBlock = ( { attributes, mapInstance } ) => {
 		}
 	}, [ defaults ] );
 
-	return <div className="map-wrapper"></div>;
-};
+	return (
+		<div className="map-wrapper">
+			{ mapboxOptions.sidebarEnabled ? (
+				<MapboxSidebar
+					geocoderEnabled={ mapboxOptions.geocoderEnabled }
+					geocoderRef={ geocoderRef }
+					listings={ mapboxOptions.listings }
+				/>
+			) : null }
+			<div id="map-container">
+				<Mapbox { ...mapboxOptions } />
+			</div>
+		</div>
+	);
+}

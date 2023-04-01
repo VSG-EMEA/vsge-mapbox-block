@@ -1,31 +1,19 @@
-/* global mapboxBlock */
 import { MapboxOptions } from 'mapbox-gl';
 import { __ } from '@wordpress/i18n';
+import { mapboxBlockData, MapStyleDef } from './types';
 
-export const getDefaults: () => {
-	siteurl: string;
-	translations: Object;
-	accessToken: string;
-	language?: string;
-} | null = () =>
-	mapboxBlock
-		? {
-				accessToken: mapboxBlock?.accessToken,
-				siteurl: mapboxBlock?.siteurl,
-				translations: mapboxBlock?.translations,
-		  }
-		: null;
+export const getDefaults: {
+	siteurl: string | undefined;
+	accessToken: string | undefined;
+} = {
+	accessToken: mapboxBlockData?.accessToken,
+	siteurl: mapboxBlockData?.siteurl,
+};
 
 export const mapboxDefaults: MapboxOptions = {
 	container: '',
 	scrollZoom: true,
 };
-
-
-interface MapStyleDef {
-	label: string;
-	value: string;
-}
 
 export const mapStyles: MapStyleDef[] = [
 	{ label: 'streets v11', value: 'streets-v11' },

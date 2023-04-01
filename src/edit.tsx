@@ -12,7 +12,7 @@ import {
 	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
-import { MapboxBlock } from './components/Mapbox';
+import MapboxBlock from './components/Mapbox';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from './components/Sortable';
 import { MutableRefObject } from 'react';
@@ -20,11 +20,11 @@ import { MutableRefObject } from 'react';
 /**
  * The edit function describes the structure of your block in the context of the editor.
  *
- * @param  props
- * @param  props.attributes    - the block attributes
- * @param  props.setAttributes - the setState function
+ * @param props
+ * @param props.attributes    - the block attributes
+ * @param props.setAttributes - the setState function
  *
- * @param  props.isSelected
+ * @param props.isSelected
  */
 export default function Edit( {
 	attributes,
@@ -38,7 +38,6 @@ export default function Edit( {
 		bearing,
 		mapZoom,
 		mapStyle,
-		defaults,
 		mapboxOptions: {
 			sidebarEnabled,
 			geocoderEnabled,
@@ -144,25 +143,6 @@ export default function Edit( {
 			pullMapOptions( mapInstance.current )
 		);
 	} );
-
-	useEffect( () => {
-
-		if ( defaults?.accessToken ) {
-			if ( listings.length === 0 ) {
-				setAttributes( {
-					...attributes,
-					defaults: defaultValues,
-					mapboxOptions: {
-						...attributes.mapboxOptions,
-						listings: features,
-					},
-				} );
-			}
-		} else {
-			//TODO: display a notice
-			throw new Error( 'cannot find access token' );
-		}
-	}, [] );
 
 	return (
 		<div { ...useBlockProps() }>
