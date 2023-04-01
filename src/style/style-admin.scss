@@ -11,6 +11,7 @@
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 2px;
+    margin: 0 0 6px;
 
     .components-base-control__field, h4 {
       margin: 0;
@@ -21,13 +22,15 @@
     span, button {
       margin: 0;
       padding: 0;
-      min-width: 36px;
+      min-width: 32px;
       align-self: center;
     }
 
+    input {
+      margin: 0;
+    }
+
     .controlgroup-feature-item {
-      height: 28px;
-      line-height: 28px;
       display: grid;
       margin: 0;
       width: 100%;
@@ -57,7 +60,7 @@
 
   .sortable-listings {
     .dnd-wrap {
-      height: 36px;
+      overflow: hidden;
 
       &.is-open {
         height: auto;

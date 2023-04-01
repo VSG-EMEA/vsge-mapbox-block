@@ -15,26 +15,14 @@ import {
 	renderListings,
 } from '../utils/utils';
 
-export function initMapbox( el: HTMLElement, storesList: any ) {
+export function initMapbox( el: HTMLElement ): void {
 	let map;
 	let geocoder;
 
 	const language = getUserLanguage();
 	const defaults = () => getDefaults;
 
-	const storesData = () => prepareStores( storesList.features );
-
-	if ( defaults ) {
-		const { accessToken, siteurl } = defaults;
-		// This adds the map
-		map = new mapboxgl.Map( {
-			...mapboxDefaults,
-			container: el,
-			accessToken,
-		} ) as mapboxgl.Map;
-	} else {
-		return false;
-	}
+	const storesData = () => prepareStores();
 
 	// Create a popup, but don't add it to the map yet.
 	const popup: Popup = new mapboxgl.Popup( {

@@ -339,6 +339,14 @@ $mq__phablet: "(max-width : 600px)";
         opacity: .8;
         &:hover {opacity: 1;}
       }
+
+
+      &.rotary, &.rotary:before {color: var(--color__rotary);}
+      &.butler, &.butler:before {color: var(--color__butler);}
+      &.hd, &.hd:before {color: var(--color__blitz);}
+      &.elektron, &.elektron:before {color: var(--color__elektron);}
+      &.ca_workshop, &.ca_workshop:before {color: #222;}
+      &.ca_industry, &.ca_industry:before {color: #999;}
     }
   }
 

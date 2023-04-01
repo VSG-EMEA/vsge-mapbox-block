@@ -1,106 +1,68 @@
-import { __ } from '@wordpress/i18n';
-import React from 'react';
+import { useEffect } from '@wordpress/element';
+import mapboxgl from 'mapbox-gl';
+import { MapboxSidebar } from './MapboxSidebar';
+import { Mapbox } from './Map';
+import { getDefaults } from '../../constants';
 
-export const Listing = ( data ) => {
-	return data.type === 'Feature' ? (
-		<div
-			style={ {
-				borderRadius: '2px',
-				border: '1px solid #ccc',
-				padding: '4px',
-				margin: '2px 2px 8px',
-			} }
-		>
-			<p>
-				<b>{ data.properties.name }</b>
-			</p>
-			<p>{ data.properties.phone }</p>
-			<p>{ data.properties.address }</p>
-		</div>
-	) : null;
-};
+export const MapboxBlock = ( { attributes, mapInstance } ) => {
+	const {
+		latitude,
+		longitude,
+		pitch,
+		bearing,
+		mapZoom,
+		mapStyle,
+		accessToken,
+		mapboxOptions: {
+			sidebarEnabled,
+			geocoderEnabled,
+			tags,
+			features,
+			listings,
+		},
+	} = attributes;
 
-export const MapboxSidebar = ( {
-	geocoderEnabled,
-	geocoderRef,
-	listings,
-} ): JSX.Element => {
-	return (
-		<div id="map-sidebar">
-			{ geocoderEnabled === true ? (
-				<div
-					id="geocoder"
-					className="geocoder"
-					ref={ geocoderRef }
-				></div>
-			) : null }
-			<div id="feature-listing" className="feature-listing">
-				{ listings.map( ( data: any, index: number ) => (
-					<Listing { ...data } key={ index } />
-				) ) }
-			</div>
-		</div>
-	);
-};
+	const defaults = getDefaults();
 
-export const Mapbox = ( props: {
-	fitView: any;
-	filtersEnabled: any;
-} ): JSX.Element => {
-	return (
-		<div>
-			<div id="map-topbar">
-				{ props.fitView ? (
-					<button
-						id="fit-view"
-						className="button outlined has-white-background-color"
-					>
-						<i className="material-icons">filter_center_focus</i>
-					</button>
-				) : null }
+	useEffect( () => {
+		if ( accessToken ) {
+			mapboxgl.accessToken = accessToken;
 
-				{ props.filtersEnabled ? (
-					<select id="filter-by-partnership">
-						<option value="" selected>
-							{ __( 'Filter by partnership' ) }
-						</option>
-					</select>
-				) : null }
+			if ( mapboxgl.accessToken && mapInstance.current !== null ) {
+				const map = new mapboxgl.Map( {
+					container: mapInstance.current || '',
+					style: 'mapbox://styles/mapbox/' + mapStyle,
+					center: [ parseFloat( longitude ), parseFloat( latitude ) ],
+					pitch: parseFloat( pitch ),
+					bearing: parseFloat( bearing ),
+					zoom: parseFloat( mapZoom ),
+				} );
+			}
 
-				{ props.filtersEnabled ? (
-					<select id="filter-by-tag">
-						<option value="" selected>
-							{ __( 'Filter by brand' ) }
-						</option>
-					</select>
-				) : null }
-			</div>
-			<div id="map" className="map"></div>
-		</div>
-	);
-};
+			// TODO: enable geocoder
 
-export const MapboxBlock: ( {
-	innerRef,
-	mapboxOptions,
-	geocoderRef,
-}: {
-	innerRef: any;
-	mapboxOptions: any;
-	geocoderRef: any;
-} ) => JSX.Element = ( { innerRef, mapboxOptions, geocoderRef } ) => {
-	return (
-		<div className="map-wrapper">
-			{ mapboxOptions.sidebarEnabled ? (
-				<MapboxSidebar
-					geocoderEnabled={ mapboxOptions.geocoderEnabled }
-					geocoderRef={ geocoderRef }
-					listings={ mapboxOptions.listings }
-				/>
-			) : null }
-			<div ref={ innerRef } id="map-container">
-				<Mapbox { ...mapboxOptions } />
-			</div>
-		</div>
-	);
+			// TODO: refreshMap( mapInstance.current );
+		} else {
+			console.error( 'cannot find access token' );
+		}
+	}, [] );
+
+	useEffect( () => {
+		if ( defaults?.accessToken ) {
+			if ( mapboxgl.accessToken && mapInstance.current !== null ) {
+				const currentMap = new mapboxgl.Map( {
+					container: mapInstance.current,
+					style: 'mapbox://styles/mapbox/' + mapStyle,
+					center: [ parseFloat( longitude ), parseFloat( latitude ) ],
+					pitch: parseFloat( pitch ),
+					bearing: parseFloat( bearing ),
+					zoom: parseFloat( mapZoom ),
+				} );
+			}
+		} else {
+			throw new Error( 'cannot find access token' );
+		}
+	}, [ defaults ] );
+
+	return <div className="map-wrapper"></div>;
 };

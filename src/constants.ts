@@ -21,6 +21,7 @@ export const mapboxDefaults: MapboxOptions = {
 	scrollZoom: true,
 };
 
+
 interface MapStyleDef {
 	label: string;
 	value: string;
@@ -53,10 +54,11 @@ export const mapStyles: MapStyleDef[] = [
 ];
 
 export const MapFiltersDefaults: string[] = [
-	__( 'Workshop' ),
-	__( 'Industrial' ),
-  __( 'Residential' ),];
+	__( 'all' ),
+	__( 'partner' ),
+	__( 'sales' ),
+];
 
-export const MapTagsDefaults: string[] = [ __( 'partner' ), __( 'sales' ) ];
+export const MapTagsDefaults: string[] = [ __( 'red' ), __( 'blue' ) ];
 
 export const pointerOffset = { offset: [ 0, -23 ] };

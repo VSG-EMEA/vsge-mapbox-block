@@ -1,8 +1,8 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useRef } from '@wordpress/element';
-import {getDefaults, mapStyles} from './constants';
+import { useEffect, useRef, useState } from '@wordpress/element';
+import { getDefaults, mapStyles } from './constants';
 import mapboxgl, { Map } from 'mapbox-gl';
 
 import {
@@ -15,8 +15,7 @@ import {
 import { MapboxBlock } from './components/Mapbox';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from './components/Sortable';
-
-import { initGeocoder } from './frontend/geocoder';
+import { MutableRefObject } from 'react';
 
 /**
  * The edit function describes the structure of your block in the context of the editor.
@@ -39,6 +38,7 @@ export default function Edit( {
 		bearing,
 		mapZoom,
 		mapStyle,
+		defaults,
 		mapboxOptions: {
 			sidebarEnabled,
 			geocoderEnabled,
@@ -52,11 +52,17 @@ export default function Edit( {
 		},
 	} = attributes;
 
-	const mapContainer: React.MutableRefObject< HTMLElement | undefined > =
-		useRef( undefined );
-	const mapInstance: React.MutableRefObject< Map | undefined > = useRef();
-	const geocoder: React.MutableRefObject< Map | undefined > = useRef();
-	const defaults = getDefaults();
+	/* the map */
+	const mapInstance: MutableRefObject< Map | undefined > = useRef();
+
+	function refreshMap( currentMap: mapboxgl.Map | undefined ) {
+		if ( currentMap && isSelected )
+			setAttributes( {
+				latitude: currentMap.getCenter().lat,
+				longitude: currentMap.getCenter().lng,
+				mapZoom: currentMap.getZoom(),
+			} );
+	}
 
 	function updateMap( key: string, value: any ) {
 		if ( mapInstance.current )
@@ -119,14 +125,7 @@ export default function Edit( {
 		} );
 	};
 
-	const setItems = ( items: any ) => {
-		setAttributes( {
-			...attributes,
-			items,
-		} );
-	};
-
-	function refreshMap( currentMap: mapboxgl.Map | undefined ) {
+	function pullMapOptions( currentMap: mapboxgl.Map | undefined ) {
 		if ( currentMap && isSelected )
 			setAttributes( {
 				latitude: currentMap.getCenter().lat,
@@ -142,46 +141,28 @@ export default function Edit( {
 		if ( ! mapInstance.current ) return;
 
 		mapInstance.current.on( 'move', () =>
-			refreshMap( mapInstance.current )
+			pullMapOptions( mapInstance.current )
 		);
 	} );
 
 	useEffect( () => {
-		if ( defaults?.accessToken ) {
-			mapboxgl.accessToken = defaults.accessToken;
 
+		if ( defaults?.accessToken ) {
 			if ( listings.length === 0 ) {
 				setAttributes( {
 					...attributes,
+					defaults: defaultValues,
 					mapboxOptions: {
 						...attributes.mapboxOptions,
 						listings: features,
 					},
 				} );
 			}
-
-			if ( mapboxgl.accessToken && mapInstance.current !== null ) {
-				mapInstance.current = new mapboxgl.Map( {
-					container: mapContainer.current || '',
-					style: 'mapbox://styles/mapbox/' + mapStyle,
-					center: [ parseFloat( longitude ), parseFloat( latitude ) ],
-					pitch: parseFloat( pitch ),
-					bearing: parseFloat( bearing ),
-					zoom: parseFloat( mapZoom ),
-				} );
-			}
-
-			refreshMap( mapInstance.current );
 		} else {
+			//TODO: display a notice
 			throw new Error( 'cannot find access token' );
 		}
 	}, [] );
-
-	useEffect( () => {
-		if ( geocoderEnabled ) {
-			initGeocoder( geocoder, mapboxgl, listings, defaults );
-		}
-	}, [ geocoderEnabled ] );
 
 	return (
 		<div { ...useBlockProps() }>
@@ -322,9 +303,8 @@ export default function Edit( {
 				</Panel>
 			</InspectorControls>
 			<MapboxBlock
-				mapboxOptions={ attributes.mapboxOptions }
-				innerRef={ mapContainer }
-				geocoderRef={ geocoder }
+				attributes={ attributes }
+				mapInstance={ mapInstance }
 			/>
 		</div>
 	);

@@ -20,7 +20,6 @@ export const Sortable = ( props: {
 		if ( ! result.destination ) {
 			return;
 		}
-
 		setOptions(
 			tax,
 			reorder( items, result.source.index, result.destination.index )
