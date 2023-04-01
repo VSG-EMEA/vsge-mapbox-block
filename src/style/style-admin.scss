@@ -1,0 +1,77 @@
+/* backend */
+.map-wrapper.alignwide {
+  min-height: 600px;
+}
+
+/** the drag and drop component */
+.block-editor-block-inspector {
+
+  .dnd-wrap {
+    padding: .25rem;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+
+    .components-base-control__field, h4 {
+      margin: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    span, button {
+      margin: 0;
+      padding: 0;
+      min-width: 36px;
+      align-self: center;
+    }
+
+    .controlgroup-feature-item {
+      height: 28px;
+      line-height: 28px;
+      display: grid;
+      margin: 0;
+      width: 100%;
+      grid-template-columns: 1fr auto auto;
+      button {
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+      }
+    }
+  }
+
+  .sortable-tags,
+  .sortable-filters {
+    .dnd-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      line-height: 1;
+      justify-content: space-between;
+
+      .components-base-control {
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+
+  .sortable-listings {
+    .dnd-wrap {
+      height: 36px;
+
+      &.is-open {
+        height: auto;
+      }
+
+      .components-base-control, span, button {
+        margin: 0 0 .15rem;
+        padding: 0;
+      }
+
+      .components-checkbox-control__input-container {
+        margin: 0 .25rem 0;
+      }
+    }
+  }
+
+}

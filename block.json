@@ -1,0 +1,13 @@
+{
+  "apiVersion": 2,
+  "name": "vsge/mapbox",
+  "title": "MapBox",
+  "description": "A block that displays the map using mapbox",
+  "keywords": [
+    "wp-block",
+    "mapbox"
+  ],
+  "category": "embed",
+  "editorStyle": "file:./build/mapbox.css",
+  "style": "file:./build/style-mapbox.css"
+}
