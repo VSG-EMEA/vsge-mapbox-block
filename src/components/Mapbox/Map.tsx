@@ -6,28 +6,23 @@ export const Mapbox = ( props ): JSX.Element => {
 	return (
 		<div ref={ props.mapContainer }>
 			<div id="map-topbar">
-				{ props.fitView ? (
-					<Button
-						id="fit-view"
-						className="button outlined has-white-background-color"
-						icon="filter_center_focus"
-						onClick={ () => {
-							props.fitView = ! props.fitView;
-						} }
-					/>
-				) : null }
+				<Button
+					id="fit-view"
+					className="button outlined has-white-background-color"
+					icon="filter_center_focus"
+					onClick={ () => {
+						props.fitView = ! props.fitView;
+					} }
+				/>
 
-				{ props.filtersEnabled ? (
+				{ props.tagsEnabled ? (
 					<select id="filter-by-partnership">
 						<option value="" selected>
 							{ __( 'Filter by partnership' ) }
 						</option>
-						{ props.features.map( ( feature: any ) => (
-							<option
-								value={ feature.properties.partnership }
-								key={ feature.properties.partnership }
-							>
-								{ feature.properties.partnership }
+						{ props.filters.map( ( option: any ) => (
+							<option value={ option } key={ option }>
+								{ option }
 							</option>
 						) ) }
 					</select>
@@ -38,9 +33,9 @@ export const Mapbox = ( props ): JSX.Element => {
 						<option value="" selected>
 							{ __( 'Filter by brand' ) }
 						</option>
-						{ props.tags.map( ( tag: any ) => (
-							<option value={ tag } key={ tag }>
-								{ tag }
+						{ props.tags.map( ( option: any ) => (
+							<option value={ option } key={ option }>
+								{ option }
 							</option>
 						) ) }
 					</select>

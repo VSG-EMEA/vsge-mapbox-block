@@ -2,11 +2,10 @@ import { useEffect, useRef } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { MapboxSidebar } from './MapboxSidebar';
 import { Mapbox } from './Map';
-import { getDefaults } from '../../constants';
+import { defaults } from '../../constants';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { mapboxBlockData } from '../../types';
 
-export default ({attributes, mapInstance}) => {
+export default ( { attributes, mapInstance } ) => {
 	const {
 		latitude,
 		longitude,
@@ -19,10 +18,6 @@ export default ({attributes, mapInstance}) => {
 
 	const geocoderRef: React.MutableRefObject< MapboxGeocoder | undefined > =
 		useRef();
-	const defaults = {
-		accessToken: mapboxBlockData?.accessToken,
-		siteurl: mapboxBlockData?.siteurl,
-	};
 
 	useEffect( () => {
 		if ( defaults?.accessToken ) {
@@ -63,8 +58,10 @@ export default ({attributes, mapInstance}) => {
 		<div className="map-wrapper">
 			{ mapboxOptions.sidebarEnabled ? (
 				<MapboxSidebar
+					map={ map }
 					geocoderEnabled={ mapboxOptions.geocoderEnabled }
 					geocoderRef={ geocoderRef }
+					mapboxOptions={ mapboxOptions }
 					listings={ mapboxOptions.listings }
 				/>
 			) : null }
@@ -73,4 +70,4 @@ export default ({attributes, mapInstance}) => {
 			</div>
 		</div>
 	);
-}
+};

@@ -12,21 +12,18 @@ import {
 	renderListings,
 } from '../../utils/utils';
 import { MapItem } from '../../types';
+import { defaults } from '../../constants';
 
 export let searchResult: Coord | undefined;
 
-export const GeoCoder = ( props ) => {
-	const {
-		geocoderRef,
-		mapboxgl,
-		listings,
-		defaults: { siteurl, translations, accessToken, language },
-	} = props;
-
+export default ( { geocoderRef, mapboxgl, listings } ) => {
 	let filteredStores: MapItem[] = listings;
-	const geoMarker = document.createElement( 'div' );
-	geoMarker.id = 'marker-geocoder';
-	geoMarker.className = 'marker marker-geocoder';
+	const geoMarker = (
+		<div
+			id={ 'marker-geocoder' }
+			className={ 'marker marker-geocoder' }
+		></div>
+	);
 
 	const geocoder = new MapboxGeocoder( {
 		accessToken: mapboxgl.accessToken,
@@ -52,8 +49,6 @@ export const GeoCoder = ( props ) => {
 			},
 		},
 	} );
-
-	geocoderEl.current.appendChild( geocoder.onAdd( map ) );
 
 	geocoder.on(
 		'result',
@@ -116,5 +111,5 @@ export const GeoCoder = ( props ) => {
 		fitView();
 	} );
 
-	return (<div id="geocoder" className="geocoder" ref={ geocoderRef }></div>);
+	return <div id="geocoder" className="geocoder" ref={ geocoderRef }></div>;
 };
