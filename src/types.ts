@@ -1,19 +1,19 @@
-import { Feature, Geometry, GeometryCollection } from '@turf/turf';
+import { Feature, Geometry } from '@turf/turf';
 
 export type CoordinatesDef = [ number, number ];
 export type PartnershipDef = number[];
 export type CompaniesDef = number[];
 
-export declare let mapboxBlockData: {
+export type MapboxBlockData = {
 	accessToken: string;
 	siteurl: string;
-	translations: Object;
+	language: string;
 };
 
-export interface MapStyleDef {
+export type MapStyleDef = {
 	label: string;
 	value: string;
-}
+};
 
 export interface ExtraProperties {
 	id?: number | null;

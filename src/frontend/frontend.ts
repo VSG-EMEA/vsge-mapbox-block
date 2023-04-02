@@ -1,19 +1,15 @@
-import {
-	getDefaults,
-	mapboxDefaults,
-	MapFiltersDefaults,
-	MapTagsDefaults,
-} from '../constants';
+import { MapFiltersDefaults, MapTagsDefaults } from '../constants';
 import mapboxgl, { Popup } from 'mapbox-gl';
 import {
 	addMarkers,
 	createSelectOptions,
 	filterStores,
 	fitView,
+	getDefaults,
 	getUserLanguage,
 	prepareStores,
 	renderListings,
-} from '../utils/utils';
+} from '../utils/';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 import { Coord } from '@turf/turf';
@@ -27,7 +23,7 @@ export function initMapbox( el: HTMLElement ): void {
 	let geocoder;
 
 	const language = getUserLanguage();
-	const defaults = () => getDefaults;
+	const defaults = getDefaults();
 
 	const storesData = () => prepareStores();
 

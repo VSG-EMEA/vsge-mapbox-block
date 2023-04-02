@@ -1,14 +1,10 @@
 import { MapboxOptions } from 'mapbox-gl';
 import { __ } from '@wordpress/i18n';
-import { mapboxBlockData, MapStyleDef } from './types';
+import { MapboxBlockData, MapStyleDef } from './types';
 
-export const defaults: {
-	siteurl: string | undefined;
-	accessToken: string | undefined;
-} = {
-	accessToken: mapboxBlockData?.accessToken,
-	siteurl: mapboxBlockData?.siteurl,
-};
+declare global {
+	let mapboxBlockData: MapboxBlockData;
+}
 
 export const mapboxDefaults: MapboxOptions = {
 	container: '',
@@ -30,6 +26,10 @@ export const mapStyles: MapStyleDef[] = [
 	{
 		label: 'satellite streets v11',
 		value: 'satellite-streets-v11',
+	},
+	{
+		label: 'satellite-streets-v12',
+		value: 'satellite-streets-v12',
 	},
 	{
 		label: 'navigation day v1',
