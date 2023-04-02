@@ -2,47 +2,51 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { Button } from '@wordpress/components';
 
-export const Mapbox = ( props ): JSX.Element => {
-	return (
-		<div ref={ props.mapContainer }>
-			<div id="map-topbar">
-				<Button
-					id="fit-view"
-					className="button outlined has-white-background-color"
-					icon="filter_center_focus"
-					onClick={ () => {
-						props.fitView = ! props.fitView;
-					} }
-				/>
+export default ( { attributes, mapContainer } ): JSX.Element => {
+	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
 
-				{ props.tagsEnabled ? (
+	return (
+		<>
+			<div id="map-topbar">
+				<button
+					id={ 'fit-view' }
+					className={ 'button outlined has-white-background-color' }
+					variant="secondary"
+					onClick={ () => {
+						console.log( attributes.fitView );
+					} }
+				>
+          fit-view
+				</button>
+
+				{ tagsEnabled ? (
 					<select id="filter-by-partnership">
 						<option value="" selected>
-							{ __( 'Filter by partnership' ) }
+							{ __( 'Filters' ) }
 						</option>
-						{ props.filters.map( ( option: any ) => (
-							<option value={ option } key={ option }>
-								{ option }
+						{ mapboxOptions.filters.map( ( option: any ) => (
+							<option value={ option.value } key={ option.key }>
+								{ option.value }
 							</option>
 						) ) }
 					</select>
 				) : null }
 
-				{ props.filtersEnabled ? (
+				{ filtersEnabled ? (
 					<select id="filter-by-tag">
 						<option value="" selected>
-							{ __( 'Filter by brand' ) }
+							{ __( 'Tags' ) }
 						</option>
-						{ props.tags.map( ( option: any ) => (
-							<option value={ option } key={ option }>
-								{ option }
+						{ mapboxOptions.tags.map( ( option: any ) => (
+							<option value={ option.value } key={ option.key }>
+								{ option.value }
 							</option>
 						) ) }
 					</select>
 				) : null }
 			</div>
 
-			<div id="map" className="map" ref={ props.mapRef }></div>
-		</div>
+			<div id="map" className="map" ref={ mapContainer }></div>
+		</>
 	);
 };
