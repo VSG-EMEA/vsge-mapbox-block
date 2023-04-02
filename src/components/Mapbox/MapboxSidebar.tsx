@@ -2,22 +2,23 @@ import { Listing } from './Listing';
 import GeoCoder from './Geocoder';
 
 export const MapboxSidebar = ( {
-	geocoderEnabled,
 	geocoderRef,
-	listings,
+	mapboxOptions,
 	map,
+	defaults,
 } ): JSX.Element => {
 	return (
 		<div id="map-sidebar">
-			{ geocoderEnabled === true ? (
+			{ mapboxOptions.geocoderEnabled === true && defaults ? (
 				<GeoCoder
+					defaults={ defaults }
 					geocoderRef={ geocoderRef }
 					mapboxgl={ map }
-					listings={ listings }
+					listings={ mapboxOptions.listings }
 				/>
 			) : null }
 			<div id="feature-listing" className="feature-listing">
-				{ listings.map( ( data: any, index: number ) => (
+				{ mapboxOptions.listings.map( ( data: any, index: number ) => (
 					<Listing { ...data } key={ index } />
 				) ) }
 			</div>
