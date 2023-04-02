@@ -1,8 +1,8 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useRef, useState } from '@wordpress/element';
-import { getDefaults, mapStyles } from './constants';
+import { useEffect, useRef } from '@wordpress/element';
+import { mapStyles } from './constants';
 import mapboxgl, { Map } from 'mapbox-gl';
 
 import {
@@ -16,6 +16,9 @@ import MapboxBlock from './components/Mapbox';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from './components/Sortable';
 import { MutableRefObject } from 'react';
+import { getDefaults } from './utils/';
+
+let map: Map;
 
 /**
  * The edit function describes the structure of your block in the context of the editor.
@@ -38,77 +41,64 @@ export default function Edit( {
 		bearing,
 		mapZoom,
 		mapStyle,
-		mapboxOptions: {
-			sidebarEnabled,
-			geocoderEnabled,
-			tags,
-			features,
-			listings,
-			filters,
-			fitView,
-			filtersEnabled,
-			tagsEnabled,
-		},
+		sidebarEnabled,
+		geocoderEnabled,
+		filtersEnabled,
+		tagsEnabled,
+		fitView,
+		treeDimensionality,
+		mapboxOptions: { tags, filters, listings },
 	} = attributes;
 
 	/* the map */
-	const mapInstance: MutableRefObject< Map | undefined > = useRef();
-
-	function refreshMap( currentMap: mapboxgl.Map | undefined ) {
-		if ( currentMap && isSelected )
-			setAttributes( {
-				latitude: currentMap.getCenter().lat,
-				longitude: currentMap.getCenter().lng,
-				mapZoom: currentMap.getZoom(),
-			} );
-	}
+	const mapContainer: MutableRefObject< HTMLDivElement | undefined > =
+		useRef();
+	const defaults = getDefaults();
 
 	function updateMap( key: string, value: any ) {
-		if ( mapInstance.current )
+		if ( mapContainer.current )
 			switch ( key ) {
 				case 'latitude':
 					setAttributes( {
 						...attributes,
 						latitude: value,
 					} );
-					mapInstance.current.setCenter( [ longitude, value ] );
+					map.setCenter( [ longitude, value ] );
 					break;
 				case 'longitude':
 					setAttributes( {
 						...attributes,
 						longitude: value,
 					} );
-					mapInstance.current.setCenter( [ value, latitude ] );
+					map.setCenter( [ value, latitude ] );
 					break;
 				case 'pitch':
 					setAttributes( {
 						...attributes,
 						pitch: value,
 					} );
-					mapInstance.current?.setPitch( pitch );
+					map?.setPitch( value );
 					break;
 				case 'bearing':
 					setAttributes( {
 						...attributes,
 						bearing: value,
 					} );
-					mapInstance.current?.setBearing( value );
+					map?.setBearing( value );
 					break;
 				case 'mapZoom':
 					setAttributes( {
 						...attributes,
 						mapZoom: value,
 					} );
-					mapInstance.current.setZoom( value );
+					map.setZoom( value );
 					break;
 				case 'mapStyle':
 					setAttributes( {
 						...attributes,
 						mapStyle: value,
 					} );
-					mapInstance.current.setStyle(
-						'mapbox://styles/mapbox/' + value
-					);
+					map.setStyle( 'mapbox://styles/mapbox/' + value );
 					break;
 				default:
 			}
@@ -137,12 +127,46 @@ export default function Edit( {
 
 	useEffect( () => {
 		// wait for map to initialize
-		if ( ! mapInstance.current ) return;
+		if ( ! map ) return;
 
-		mapInstance.current.on( 'move', () =>
-			pullMapOptions( mapInstance.current )
-		);
+		map.on( 'move', () => pullMapOptions( map ) );
 	} );
+
+	useEffect( () => {
+		if ( defaults?.accessToken && mapContainer.current ) {
+			mapboxgl.accessToken = defaults.accessToken;
+
+			map = new mapboxgl.Map( {
+				container: mapContainer.current,
+				style: 'mapbox://styles/mapbox/' + mapStyle,
+				center: [ longitude, latitude ],
+				zoom: mapZoom,
+				bearing,
+				pitch,
+			} );
+
+			pullMapOptions( map );
+		}
+	}, [] );
+
+	useEffect( () => {
+		if ( attributes.treeDimensionality ) {
+			if ( ! map.getSource( 'mapbox-dem' ) ) {
+				map.addSource( 'mapbox-dem', {
+					type: 'raster-dem',
+					url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+					tileSize: 512,
+					maxzoom: 14,
+				} );
+			}
+			// add the DEM source as a terrain layer with exaggerated height
+			map.setTerrain( { source: 'mapbox-dem', exaggeration: 1.5 } );
+		} else if (
+			! attributes.treeDimensionality &&
+			map.getSource( 'mapbox-dem' )
+		)
+			map.removeSource( 'mapbox-dem' );
+	}, [ attributes ] );
 
 	return (
 		<div { ...useBlockProps() }>
@@ -207,39 +231,52 @@ export default function Edit( {
 								updateMap( 'mapStyle', newValue )
 							}
 						/>
+					</PanelBody>
+				</Panel>
+				<Panel>
+					<PanelBody title="Options">
 						<ToggleControl
 							label={ __( 'Enable Sidebar' ) }
 							checked={ sidebarEnabled }
 							onChange={ ( newValue: boolean ) =>
-								setOptions( 'sidebarEnabled', newValue )
+								setAttributes( { sidebarEnabled: newValue } )
 							}
 						/>
 						<ToggleControl
 							label={ __( 'Enable Geocoder' ) }
 							checked={ geocoderEnabled }
 							onChange={ ( newValue: boolean ) =>
-								setOptions( 'geocoderEnabled', newValue )
-							}
-						/>
-						<ToggleControl
-							label={ __( 'Enable fitView' ) }
-							checked={ fitView }
-							onChange={ ( newValue: boolean ) =>
-								setOptions( 'fitView', newValue )
+								setAttributes( { geocoderEnabled: newValue } )
 							}
 						/>
 						<ToggleControl
 							label={ __( 'Enable Filters' ) }
 							checked={ filtersEnabled }
 							onChange={ ( newValue: boolean ) =>
-								setOptions( 'filtersEnabled', newValue )
+								setAttributes( { filtersEnabled: newValue } )
 							}
 						/>
 						<ToggleControl
-							label={ __( 'Enable Filter by Tag' ) }
+							label={ __( 'Enable Tag' ) }
 							checked={ tagsEnabled }
 							onChange={ ( newValue: boolean ) =>
-								setOptions( 'tagsEnabled', newValue )
+								setAttributes( { tagsEnabled: newValue } )
+							}
+						/>
+						<ToggleControl
+							label={ __( 'Enable fitView' ) }
+							checked={ fitView }
+							onChange={ ( newValue: boolean ) =>
+								setAttributes( { fitView: newValue } )
+							}
+						/>
+						<ToggleControl
+							label={ __( 'Enable map tree dimensionality' ) }
+							checked={ treeDimensionality }
+							onChange={ ( newValue: boolean ) =>
+								setAttributes( {
+									treeDimensionality: newValue,
+								} )
 							}
 						/>
 					</PanelBody>
@@ -283,8 +320,10 @@ export default function Edit( {
 				</Panel>
 			</InspectorControls>
 			<MapboxBlock
+				map={ map }
+				defaults={ defaults }
 				attributes={ attributes }
-				mapInstance={ mapInstance }
+				mapContainer={ mapContainer }
 			/>
 		</div>
 	);
