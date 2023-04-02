@@ -10,13 +10,12 @@ import {
 	locateNearestStore,
 	removePopup,
 	renderListings,
-} from '../../utils/utils';
+} from '../../utils/';
 import { MapItem } from '../../types';
-import { defaults } from '../../constants';
 
 export let searchResult: Coord | undefined;
 
-export default ( { geocoderRef, mapboxgl, listings } ) => {
+export default ( { geocoderRef, mapboxgl, listings, defaults } ) => {
 	let filteredStores: MapItem[] = listings;
 	const geoMarker = (
 		<div
@@ -26,12 +25,12 @@ export default ( { geocoderRef, mapboxgl, listings } ) => {
 	);
 
 	const geocoder = new MapboxGeocoder( {
-		accessToken: mapboxgl.accessToken,
+		accessToken: defaults.accessToken,
 		mapboxgl,
 		lang: defaults.language,
 		placeholder: __( 'Find the nearest store' ),
 		marker: {
-			element: geoMarker,
+			element: () => geoMarker,
 			color: 'grey',
 			offset: [ 0, -23 ],
 		},
