@@ -6,8 +6,17 @@ import {
 	MapItem,
 	PartnershipDef,
 } from '../types';
-import { FilterDef, pointerOffset } from '../constants';
+import { pointerOffset } from '../constants';
 import { __ } from '@wordpress/i18n';
+
+export const getDefaults = () => {
+	if ( mapboxBlockData )
+		return {
+			accessToken: mapboxBlockData.accessToken,
+			siteurl: mapboxBlockData.siteurl,
+			language: mapboxBlockData.language,
+		};
+};
 
 export const getUserLanguage = () => {
 	// @ts-ignore
