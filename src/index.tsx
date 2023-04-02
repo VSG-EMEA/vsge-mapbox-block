@@ -63,14 +63,33 @@ registerBlockType( jsonData.name, {
 			type: 'string',
 			default: 'satellite-streets-v11',
 		},
+		sidebarEnabled: {
+			type: 'boolean',
+			default: false,
+		},
+		geocoderEnabled: {
+			type: 'boolean',
+			default: false,
+		},
+		tagsEnabled: {
+			type: 'boolean',
+			default: false,
+		},
+		filtersEnabled: {
+			type: 'boolean',
+			default: false,
+		},
+		fitView: {
+			type: 'boolean',
+			default: false,
+		},
+		threeDimensionality: {
+			type: 'boolean',
+			default: false,
+		},
 		mapboxOptions: {
 			type: 'object',
 			default: {
-				sidebarEnabled: false,
-				geocoderEnabled: false,
-				tagsEnabled: false,
-				filtersEnabled: false,
-				fitView: false,
 				listings: [],
 				tags: MapFiltersDefaults,
 				filters: MapTagsDefaults,
