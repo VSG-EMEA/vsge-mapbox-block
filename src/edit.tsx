@@ -1,7 +1,7 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { mapStyles } from './constants';
 import mapboxgl, { Map } from 'mapbox-gl';
 
@@ -12,13 +12,9 @@ import {
 	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
-import MapboxBlock from './components/Mapbox';
+import MapBox from './components/Mapbox';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from './components/Sortable';
-import { MutableRefObject } from 'react';
-import { getDefaults } from './utils/';
-
-let map: Map;
 
 /**
  * The edit function describes the structure of your block in the context of the editor.
@@ -50,58 +46,62 @@ export default function Edit( {
 		mapboxOptions: { tags, filters, listings },
 	} = attributes;
 
-	/* the map */
-	const mapContainer: MutableRefObject< HTMLDivElement | undefined > =
-		useRef();
-	const defaults = getDefaults();
+	const [ mapboxInstance, setMapboxInstance ] = useState< Map | null >(
+		null
+	);
+
+	const mapContainer = useRef< HTMLDivElement >( null );
 
 	function updateMap( key: string, value: any ) {
-		if ( mapContainer.current )
+		if ( mapboxInstance ) {
 			switch ( key ) {
 				case 'latitude':
 					setAttributes( {
 						...attributes,
 						latitude: value,
 					} );
-					map.setCenter( [ longitude, value ] );
+					mapboxInstance.setCenter( [ longitude, value ] );
 					break;
 				case 'longitude':
 					setAttributes( {
 						...attributes,
 						longitude: value,
 					} );
-					map.setCenter( [ value, latitude ] );
+					mapboxInstance.setCenter( [ value, latitude ] );
 					break;
 				case 'pitch':
 					setAttributes( {
 						...attributes,
 						pitch: value,
 					} );
-					map?.setPitch( value );
+					mapboxInstance?.setPitch( value );
 					break;
 				case 'bearing':
 					setAttributes( {
 						...attributes,
 						bearing: value,
 					} );
-					map?.setBearing( value );
+					mapboxInstance?.setBearing( value );
 					break;
 				case 'mapZoom':
 					setAttributes( {
 						...attributes,
 						mapZoom: value,
 					} );
-					map.setZoom( value );
+					mapboxInstance.setZoom( value );
 					break;
 				case 'mapStyle':
 					setAttributes( {
 						...attributes,
 						mapStyle: value,
 					} );
-					map.setStyle( 'mapbox://styles/mapbox/' + value );
+					mapboxInstance.setStyle(
+						'mapbox://styles/mapbox/' + value
+					);
 					break;
 				default:
 			}
+		}
 	}
 
 	const setOptions = ( key: string, value: string | number | boolean ) => {
@@ -127,46 +127,10 @@ export default function Edit( {
 
 	useEffect( () => {
 		// wait for map to initialize
-		if ( ! map ) return;
+		if ( ! mapboxInstance ) return;
 
-		map.on( 'move', () => pullMapOptions( map ) );
+		mapboxInstance.on( 'move', () => pullMapOptions( mapboxInstance ) );
 	} );
-
-	useEffect( () => {
-		if ( defaults?.accessToken && mapContainer.current ) {
-			mapboxgl.accessToken = defaults.accessToken;
-
-			map = new mapboxgl.Map( {
-				container: mapContainer.current,
-				style: 'mapbox://styles/mapbox/' + mapStyle,
-				center: [ longitude, latitude ],
-				zoom: mapZoom,
-				bearing,
-				pitch,
-			} );
-
-			pullMapOptions( map );
-		}
-	}, [] );
-
-	useEffect( () => {
-		if ( attributes.treeDimensionality ) {
-			if ( ! map.getSource( 'mapbox-dem' ) ) {
-				map.addSource( 'mapbox-dem', {
-					type: 'raster-dem',
-					url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-					tileSize: 512,
-					maxzoom: 14,
-				} );
-			}
-			// add the DEM source as a terrain layer with exaggerated height
-			map.setTerrain( { source: 'mapbox-dem', exaggeration: 1.5 } );
-		} else if (
-			! attributes.treeDimensionality &&
-			map.getSource( 'mapbox-dem' )
-		)
-			map.removeSource( 'mapbox-dem' );
-	}, [ attributes ] );
 
 	return (
 		<div { ...useBlockProps() }>
@@ -319,11 +283,10 @@ export default function Edit( {
 					</PanelBody>
 				</Panel>
 			</InspectorControls>
-			<MapboxBlock
-				map={ map }
-				defaults={ defaults }
+			<MapBox
 				attributes={ attributes }
-				mapContainer={ mapContainer }
+				map={ mapboxInstance }
+				setMap={ setMapboxInstance }
 			/>
 		</div>
 	);
