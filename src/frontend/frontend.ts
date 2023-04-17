@@ -7,6 +7,7 @@ import {
 	fitView,
 	getDefaults,
 	getUserLanguage,
+	initMap,
 	prepareStores,
 	renderListings,
 } from '../utils/';
@@ -16,16 +17,36 @@ import { Coord } from '@turf/turf';
 
 export const markers: any[] = [];
 
-const mapboxWrapper: HTMLElement | null = document.querySelector( 'map' );
+const mapboxWrapper: HTMLElement[] | null = document.querySelectorAll(
+	'.wp-block-vsge-mapbox'
+);
 
 export function initMapbox( el: HTMLElement ): void {
-	let map;
 	let geocoder;
+	let mapbox;
 
+	// get the user data
 	const language = getUserLanguage();
-	const defaults = getDefaults();
 
-	const storesData = () => prepareStores();
+	// get the mapbox options defaults
+	const defaults = getDefaults();
+	if ( defaults.accessToken ) {
+		mapboxgl.accessToken = defaults.accessToken;
+	} else {
+		// TODO: throw a visual error
+		console.log( 'error' );
+	}
+
+	// get the mapbox map data
+	const attributes = JSON.parse( el.dataset.mapboxOptions || '{}' );
+
+  // the map div container
+	const map = el.querySelector( '.map' );
+
+  // finally initialize the mapbox container
+	initMap( map, attributes );
+
+	const storesData = () => prepareStores( attributes.listings | [] );
 
 	// Create a popup, but don't add it to the map yet.
 	const popup: Popup = new mapboxgl.Popup( {
@@ -40,37 +61,6 @@ export function initMapbox( el: HTMLElement ): void {
 			}
 		};
 	}
-
-	map.on( 'load', function ( e ) {
-		e.currentTarget.setLayoutProperty( 'country-label', 'text-field', [
-			'get',
-			'name_' + language.substring( 0, 2 ),
-		] );
-
-		e.currentTarget.addSource( 'places', storesData.stores );
-
-		const listingEl: HTMLElement | null =
-			document.getElementById( 'feature-listing' );
-
-		renderListings( storesData.stores );
-		addMarkers( storesData.stores );
-		createSelectOptions( MapFiltersDefaults, MapTagsDefaults );
-		fitView();
-	} );
-
-	const geocoderEl = document.getElementById( 'geocoder' );
-	if ( geocoderEl ) {
-		geocoder = initGeocoder( geocoderEl, defaults );
-	}
-
-	// Fit view button function (placed in the topbar)
-	document.getElementById( 'fit-view' )?.addEventListener( 'click', fitView );
-	document
-		.getElementById( 'filter-by-partnership' )
-		?.addEventListener( 'change', filterStores );
-	document
-		.getElementById( 'filter-by-tag' )
-		?.addEventListener( 'change', filterStores );
 }
 
 /**
@@ -78,6 +68,8 @@ export function initMapbox( el: HTMLElement ): void {
  */
 if ( mapboxWrapper ) {
 	document.addEventListener( 'DOMContentLoaded', () =>
-		initMapbox( mapboxWrapper )
+		mapboxWrapper.forEach( ( el ) => {
+			initMapbox( el );
+		} )
 	);
 }
