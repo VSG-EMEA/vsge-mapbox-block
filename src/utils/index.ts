@@ -555,3 +555,47 @@ export function filterStores( stores ) {
 
 	fitView();
 }
+
+/**
+ * Initialize the mapbox map.
+ *
+ * @param {HTMLElement} mapContainer - the div that will contain the map
+ * @param {Object}      attributes   - the attributes for the map
+ * @param {Map|null}    map          - the mapbox map object
+ */
+export function initMap( mapContainer, attributes, map = null ) {
+	const { latitude, longitude, pitch, bearing, mapZoom, mapStyle } =
+		attributes;
+
+	map = new mapboxgl.Map( {
+		container: mapContainer,
+		style: 'mapbox://styles/mapbox/' + mapStyle,
+		center: [ longitude, latitude ],
+		zoom: mapZoom,
+		bearing,
+		pitch,
+	} );
+
+	if ( attributes.treeDimensionality ) {
+		if ( ! map.getSource( 'mapbox-dem' ) ) {
+			map.addSource( 'mapbox-dem', {
+				type: 'raster-dem',
+				url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+				tileSize: 512,
+				maxzoom: 14,
+			} );
+		}
+		// add the DEM source as a terrain layer with exaggerated height
+		map.setTerrain( {
+			source: 'mapbox-dem',
+			exaggeration: 1.5,
+		} );
+	} else if (
+		! attributes.treeDimensionality &&
+		map.getSource( 'mapbox-dem' )
+	) {
+		map.removeSource( 'mapbox-dem' );
+	}
+
+	return map;
+}
