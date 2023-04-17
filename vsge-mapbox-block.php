@@ -38,19 +38,11 @@ function vsge_mapbox_frontend_scripts() {
 
 	wp_localize_script(
 		'vsge-mapbox-frontend',
-		'mapboxBlock',
+		'mapboxBlockData',
 		array(
 			'siteUrl'      => get_option( 'siteurl' ),
 			'accessToken'  => vsge_get_token(),
-			'translations' => array(
-				'caWorkshop'   => __( 'Blitz Compressed Air, Workshop' ) ,
-				'caIndustrial' => __( 'Blitz Compressed Air, Industrial' ) ,
-				'partner'      => __( 'BRB United Partner' ) ,
-				'sales'        => __( 'Sales & Service Partner' ) ,
-				'industrial'   => __( 'Compressed Air Partner Industrial' ) ,
-				'noResults'    => __( 'No results' ) ,
-				'placeholder'  => __( 'Find the nearest store' ) ,
-			),
+			'locale'       => get_locale()
 		)
 	);
 }

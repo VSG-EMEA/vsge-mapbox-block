@@ -59,7 +59,9 @@
   }
 
   .sortable-listings {
+
     .dnd-wrap {
+      height: 36px;
       overflow: hidden;
 
       &.is-open {
