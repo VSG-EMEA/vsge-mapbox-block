@@ -2,7 +2,7 @@ import { Listing } from './Listing';
 import GeoCoder from './Geocoder';
 
 export const MapboxSidebar = ( {
-	geocoderRef,
+	geocoderRef = null,
 	mapboxOptions,
 	map,
 	defaults,

@@ -15,7 +15,7 @@ import { MapItem } from '../../types';
 
 export let searchResult: Coord | undefined;
 
-export default ( { geocoderRef, mapboxgl, listings, defaults } ) => {
+export default ( { geocoderRef = null, mapboxgl, listings, defaults } ) => {
 	let filteredStores: MapItem[] = listings;
 	const geoMarker = (
 		<div

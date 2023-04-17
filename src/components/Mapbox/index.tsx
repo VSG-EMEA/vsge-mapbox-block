@@ -1,7 +1,23 @@
-import Mapbox from './Map';
+import { Map } from './Map';
 import { MapboxSidebar } from './MapboxSidebar';
+import { getDefaults, initMap } from '../../utils';
+import { useEffect, useRef } from '@wordpress/element';
+import mapboxgl from 'mapbox-gl';
 
-export default ( { attributes, mapContainer, map, defaults } ) => {
+function MapBox( { attributes, map = null, setMap = null } ) {
+	const defaults = getDefaults();
+
+	const mapContainer = useRef< HTMLDivElement >( null );
+
+	useEffect( () => {
+		if ( defaults?.accessToken && mapContainer.current ) {
+			mapboxgl.accessToken = defaults.accessToken;
+			setMap( initMap( mapContainer.current, attributes, map ) );
+		} else {
+			console.log( 'No access token' );
+		}
+	}, [] );
+
 	return (
 		<div className="map-wrapper">
 			{ attributes.sidebarEnabled ? (
@@ -13,11 +29,10 @@ export default ( { attributes, mapContainer, map, defaults } ) => {
 				/>
 			) : null }
 			<div id="map-container">
-				<Mapbox
-					attributes={ attributes }
-					mapContainer={ mapContainer }
-				/>
+				<Map attributes={ attributes } mapContainer={ mapContainer } />
 			</div>
 		</div>
 	);
-};
+}
+
+export default MapBox;
