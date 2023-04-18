@@ -1,9 +1,9 @@
 import { MapboxOptions } from 'mapbox-gl';
 import { __ } from '@wordpress/i18n';
-import { MapboxBlockData, MapStyleDef } from './types';
+import { MapboxBlockDefaults, MapStyleDef } from './types';
 
 declare global {
-	let mapboxBlockData: MapboxBlockData;
+	let mapboxBlockData: MapboxBlockDefaults;
 }
 
 export const mapboxDefaults: MapboxOptions = {

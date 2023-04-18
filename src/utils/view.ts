@@ -5,9 +5,9 @@ import { Feature } from '@turf/turf';
  * The function recenterView takes a map and default values and flies the map to the default center and
  * zoom.
  *
- * @param map      - The map object that we want to recenter.
- * @param defaults - `defaults` is an object that contains default values for the center coordinates
- *                 and zoom level of a map. It has the following properties:
+ * @param {mapboxgl.Map} map      - The map object that we want to recenter.
+ * @param {Object}       defaults - `defaults` is an object that contains default values for the center coordinates
+ *                                and zoom level of a map. It has the following properties:
  * @return The `recenterView` function is returning a call to the `flyTo` method of the `map` object
  * with an object argument containing the `center` and `zoom` properties.
  */
@@ -49,10 +49,10 @@ export function flyToStore(
  * The function fits the map view to the bounds of filtered stores with a padding of 10% of the map
  * container's width.
  *
- * @param map            - The map object is an instance of the Mapbox GL JS map that is being used to display the
- *                       map.
- * @param filteredStores - filteredStores is an array of features representing the stores that need to
- *                       be displayed on the map.
+ * @param {mapboxgl.Map} map            The map object is an instance of the Mapbox GL JS map that is being used to display the
+ *                                      map.
+ * @param {Feature[]}    filteredStores filteredStores is an array of features representing the stores that need to
+ *                                      be displayed on the map.
  */
 export function fitView( map, filteredStores ) {
 	const bounds = new mapboxgl.LngLatBounds();

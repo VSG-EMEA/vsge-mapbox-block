@@ -6,11 +6,11 @@ import { getPartnership } from './dataset';
 /**
  * This function creates a popup with information about a map feature and adds it to a Mapbox map.
  *
- * @param {mapboxgl.Map|null} map            - The mapboxgl map object on which the popup will be displayed.
- * @param {MapItem}           currentFeature - The current feature is an object that represents a specific
+ * @param {mapboxgl.Map|null} map            The mapboxgl map object on which the popup will be displayed.
+ * @param {MapItem}           currentFeature The current feature is an object that represents a specific
  *                                           location on a map, including its coordinates and properties such as name, address, and partnership.
  *                                           It is used to create a popup that displays information about the location when clicked on the map.
- * @param {Object}            defaults       - The `defaults` parameter is an object that contains default values for various
+ * @param {Object}            defaults       The `defaults` parameter is an object that contains default values for various
  *                                           settings or configurations used in the function. It is likely used to provide a fallback value in
  *                                           case a required value is not provided or to allow for customization of the function's behavior.
  */

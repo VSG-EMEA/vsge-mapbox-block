@@ -132,12 +132,7 @@ export function filterStores( searchResult, stores, listings ) {
  *
  * @param {PartnershipDef} partnerships - Partnerships is an array of PartnershipDef objects.
  * @return an array of strings that represent the keys of the partnerships in the input array.
- * However, there is an error in the code as the variable `partnerTxt` is declared as an array but then
- * reassigned to the result of the `forEach` method, which returns `undefined`. To fix this, you can
- * change the declaration of `partnerTxt` to `let` instead of
  */
 export function getPartnership( partnerships: PartnershipDef ) {
-	const partnerTxt = [];
-	partnerTxt = partnerships.forEach( ( partner ) => partner || partner.key );
-	return partnerTxt;
+	return partnerships.forEach( ( partner ) => partner || partner.key );
 }

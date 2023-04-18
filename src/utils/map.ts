@@ -4,15 +4,36 @@ import { pointerOffset } from '../constants';
 import { flyToStore } from './view';
 import { __ } from '@wordpress/i18n';
 import mapboxgl from 'mapbox-gl';
+import { getLinkType } from './index';
+
+/**
+ * This function enables a listing to be displayed on a map, with a popup and highlighted in a sidebar.
+ *
+ * @param {mapboxgl.Map|null} map            The mapboxgl map object on which the popup will be displayed.
+ * @param {Feature}           clickedListing The clickedListing parameter is a Feature object that represents a
+ *                                           point of interest on a map. It contains information about the location, such as its coordinates and
+ *                                           properties like name, address, and other attributes. This function is designed to enable a listing
+ *                                           by performing three actions: flying to the location on the map
+ */
+function enableListing( map, clickedListing: Feature ) {
+	// 1. Fly to the point
+	flyToStore( map, clickedListing );
+
+	// 2. Close all other popups and display popup for clicked store
+	createPopUp( map, clickedListing );
+
+	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
+	highlightListing( clickedListing );
+}
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
  * specified.
  *
- * @param {HTMLElement}       mapContainer - The HTML element that will contain the map.
- * @param {Object}            attributes   - An object containing various attributes for initializing the map, including
+ * @param {HTMLElement}       mapContainer The HTML element that will contain the map.
+ * @param {Object}            attributes   An object containing various attributes for initializing the map, including
  *                                         latitude, longitude, pitch, bearing, mapZoom, mapStyle, and treeDimensionality.
- * @param {mapboxgl.Map|null} map          - The `map` parameter is an optional parameter of type
+ * @param {mapboxgl.Map|null} map          The `map` parameter is an optional parameter of type
  *                                         `mapboxgl.Map` or `null`. It represents the Mapbox map object that will be initialized or updated
  *                                         with the provided attributes. If it is not provided, a new map object will be created.
  * @return {mapboxgl.Map} a mapboxgl.Map object.
@@ -253,18 +274,6 @@ export function renderListings( selectedFilter, data: Feature[], listingEl ) {
 
 						companiesParagraph.innerHTML += tagString;
 						paragraph2.innerHTML += companiesParagraph;
-					}
-
-					// click on sidebar store
-					function enableListing( clickedListing: Feature ) {
-						// 1. Fly to the point
-						flyToStore( clickedListing );
-
-						// 2. Close all other popups and display popup for clicked store
-						createPopUp( clickedListing );
-
-						// 3. Highlight listing in sidebar (and remove highlight for all other listings)
-						highlightListing( clickedListing );
 					}
 
 					link.addEventListener( 'click', function ( e ) {

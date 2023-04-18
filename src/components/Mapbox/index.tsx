@@ -8,10 +8,10 @@ import { initMap } from '../../utils/map';
 /**
  * This is a TypeScript React component that renders a Mapbox map with optional sidebar functionality.
  *
- * @param -            - `attributes`: an object containing various attributes for the MapBox component
- * @param -.attributes
- * @param -.map
- * @param -.setMap
+ * @param {Object}   Props
+ * @param {Object}   Props.attributes an object containing various attributes for the MapBox component
+ * @param {Object}   Props.map        an optional parameter of type `mapboxgl.Map` or `null`. It represents the Mapbox map object that will be initialized or updated
+ * @param {Function} Props.setMap     a function that accepts a mapboxgl.Map object and updates the map
  * @return A JSX element containing a div with class "map-wrapper" and either a MapboxSidebar
  * component or null (depending on the value of attributes.sidebarEnabled prop) followed by another div
  * with class "map-container" containing a Map component.

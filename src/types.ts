@@ -4,7 +4,7 @@ export type CoordinatesDef = [ number, number ];
 export type PartnershipDef = number[];
 export type CompaniesDef = number[];
 
-export type MapboxBlockData = {
+export type MapboxBlockDefaults = {
 	accessToken: string;
 	siteurl: string;
 	language: string;
