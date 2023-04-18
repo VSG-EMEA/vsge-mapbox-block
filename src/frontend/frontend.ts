@@ -8,6 +8,12 @@ import { addMarkers, initMap, renderListings } from '../utils/map';
 import { filterStores, prepareStores } from '../utils/dataset';
 import { fitView } from '../utils/view';
 
+/**
+ * The function initializes a Mapbox map with markers and a sidebar listing, and allows for filtering
+ * and fitting the view.
+ *
+ * @param {Element} el - The HTML element that contains the Mapbox map.
+ */
 export function initMapbox( el: Element ): void {
 	// get the mapbox options defaults
 	const defaults = getDefaults();
@@ -63,6 +69,9 @@ export function initMapbox( el: Element ): void {
 		};
 	}
 
+	/* This code block is adding an event listener to the Mapbox map object, which listens for the 'load'
+event. Once the map has finished loading, the function passed as the second argument to `map.on()`
+is executed. */
 	map.on( 'load', function ( e: Event ) {
 		/** set the browser language map language */
 		map.setLayoutProperty( 'country-label', 'text-field', [
@@ -115,6 +124,13 @@ const mapboxWrapper: NodeListOf< Element > | null = document.querySelectorAll(
 );
 
 /**
+ * This code block is checking if there are any elements with the class "wp-block-vsge-mapbox" on the
+ * page. If there are, it adds an event listener to the document that listens for the
+ * "DOMContentLoaded" event. Once the DOM content has loaded, it loops through each element with the
+ * "wp-block-vsge-mapbox" class and calls the "initMapbox" function on each one. This initializes the
+ * Mapbox map on each element.
+ *
+ *
  * @function Object() { [native code] } Initial Mapbox setup
  */
 if ( mapboxWrapper ) {

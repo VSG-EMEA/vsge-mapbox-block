@@ -1,4 +1,4 @@
-import { LngLatBoundsLike, Marker } from 'mapbox-gl';
+import { LngLatBoundsLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { __ } from '@wordpress/i18n';
@@ -10,8 +10,16 @@ import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
 import { renderListings } from '../../utils/map';
 import { fitView } from '../../utils/view';
 
+/* `export let searchResult: Coord | undefined;` is declaring a variable named `searchResult` that can
+be exported and imported in other modules. Its type is `Coord | undefined`, which means it can
+either hold a `Coord` object or be `undefined`. This variable is used to store the result of a
+geocoding search performed by the user, which is then used to locate the nearest store and adjust
+the map view accordingly. */
 export let searchResult: Coord | undefined;
 
+/**
+ * This is a TypeScript React function that returns a JSX element representing a geocoder marker.
+ */
 export const geoMarker = (): JSX.Element => (
 	<div id={ 'marker-geocoder' } className={ 'marker marker-geocoder' }></div>
 );

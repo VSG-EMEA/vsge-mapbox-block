@@ -5,11 +5,18 @@ import { useEffect, useRef } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { initMap } from '../../utils/map';
 
-function MapBox( {
-	attributes,
-	map = null,
-	setMap = null,
-} ): JSX.Element {
+/**
+ * This is a TypeScript React component that renders a Mapbox map with optional sidebar functionality.
+ *
+ * @param -            - `attributes`: an object containing various attributes for the MapBox component
+ * @param -.attributes
+ * @param -.map
+ * @param -.setMap
+ * @return A JSX element containing a div with class "map-wrapper" and either a MapboxSidebar
+ * component or null (depending on the value of attributes.sidebarEnabled prop) followed by another div
+ * with class "map-container" containing a Map component.
+ */
+function MapBox( { attributes, map = null, setMap = null } ): JSX.Element {
 	const defaults = getDefaults();
 
 	const mapContainer = useRef< HTMLDivElement >( null );

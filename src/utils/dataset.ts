@@ -1,11 +1,18 @@
 // Filter the type of reseller with the select in the top bar
 import { createPopUp, removePopup } from './popups';
 import { LngLatBoundsLike } from 'mapbox-gl';
-import {MapItem, PartnershipDef} from '../types';
+import { PartnershipDef } from '../types';
 import { Feature } from '@turf/turf';
-import {getBbox, locateNearestStore} from './spatialCalcs';
+import { getBbox, locateNearestStore } from './spatialCalcs';
 import { addMarkers, renderListings } from './map';
 
+/**
+ * The function prepares stores by assigning IDs to them and returning them as a geojson object.
+ *
+ * @param listings - The `listings` parameter is an array of `Feature` objects. It is used to create a
+ *                 new object with a `type` property set to `'geojson'` and a `stores` property that is an array of the
+ *                 same `Feature` objects with an added `id` property
+ */
 export const prepareStores = ( listings ) => ( {
 	type: 'geojson',
 	stores: listings.map( ( store: Feature, i: number ) => {
@@ -13,8 +20,22 @@ export const prepareStores = ( listings ) => ( {
 	} ),
 } );
 
+/**
+ * The function filters stores based on selected tags and partnerships and populates the sidebar with
+ * the filtered results.
+ *
+ * @param {Feature}     searchResult - It is not clear what the data type of `searchResult` is from the given code
+ *                                   snippet. It is likely a variable that contains the result of a search query, possibly a geocoding
+ *                                   result or a user input.
+ * @param {Feature[]}   stores       - an array of store features, each of which is an object with properties such as
+ *                                   company, partnership, and location.
+ * @param {HTMLElement} listings     - `listings` is a DOM element that represents the sidebar where the filtered results
+ *                                   will be displayed. It is used in the `renderListings` function to populate the sidebar with the
+ *                                   filtered results.
+ * @return An array of strings that represent the keys of the partnerships in the input array.
+ */
 export function filterStores( searchResult, stores, listings ) {
-  let filteredStores = [];
+	let filteredStores = [];
 	/** The tag select element */
 	const selectBoxType = document.getElementById(
 		'filter-by-tag'
@@ -106,6 +127,15 @@ export function filterStores( searchResult, stores, listings ) {
 	fitView();
 }
 
+/**
+ * The function takes in a partnership definition and returns an array of partnership keys or names.
+ *
+ * @param {PartnershipDef} partnerships - Partnerships is an array of PartnershipDef objects.
+ * @return an array of strings that represent the keys of the partnerships in the input array.
+ * However, there is an error in the code as the variable `partnerTxt` is declared as an array but then
+ * reassigned to the result of the `forEach` method, which returns `undefined`. To fix this, you can
+ * change the declaration of `partnerTxt` to `let` instead of
+ */
 export function getPartnership( partnerships: PartnershipDef ) {
 	const partnerTxt = [];
 	partnerTxt = partnerships.forEach( ( partner ) => partner || partner.key );

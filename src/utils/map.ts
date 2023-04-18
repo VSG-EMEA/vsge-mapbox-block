@@ -6,12 +6,16 @@ import { __ } from '@wordpress/i18n';
 import mapboxgl from 'mapbox-gl';
 
 /**
- * Initialize the mapbox map.
+ * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
+ * specified.
  *
- * @param {HTMLElement}       mapContainer - the div that will contain the map
- * @param {Object}            attributes   - the attributes for the map
- * @param {mapboxgl.Map|null} map          - the mapbox map object
- * @return {mapboxgl.Map} the mapbox map object
+ * @param {HTMLElement}       mapContainer - The HTML element that will contain the map.
+ * @param {Object}            attributes   - An object containing various attributes for initializing the map, including
+ *                                         latitude, longitude, pitch, bearing, mapZoom, mapStyle, and treeDimensionality.
+ * @param {mapboxgl.Map|null} map          - The `map` parameter is an optional parameter of type
+ *                                         `mapboxgl.Map` or `null`. It represents the Mapbox map object that will be initialized or updated
+ *                                         with the provided attributes. If it is not provided, a new map object will be created.
+ * @return {mapboxgl.Map} a mapboxgl.Map object.
  */
 export function initMap( mapContainer, attributes, map?: mapboxgl.Map | null ) {
 	const { latitude, longitude, pitch, bearing, mapZoom, mapStyle } =
@@ -50,6 +54,17 @@ export function initMap( mapContainer, attributes, map?: mapboxgl.Map | null ) {
 	return map;
 }
 
+/**
+ * This function adds markers to a map and creates popups when the markers are clicked.
+ *
+ * @param {Feature[]}         features - an array of GeoJSON features representing the markers to be added to
+ *                                     the map
+ * @param {mapboxgl.Map|null} map      - The map object is an instance of the Mapbox GL JS map that the markers will be added
+ *                                     to.
+ * @param {Object}            defaults - It is a variable that contains default values for the popup that will be displayed
+ *                                     when a marker is clicked. It is used in the createPopUp function.
+ * @return an array of markers that have been added to the map.
+ */
 export function addMarkers( features: Feature[], map, defaults ) {
 	removePopup();
 
@@ -91,6 +106,19 @@ export function addMarkers( features: Feature[], map, defaults ) {
 	return markers;
 }
 
+/**
+ * This function renders a list of map listings based on selected filters and data.
+ *
+ * @param {Object}      selectedFilter - The selectedFilter parameter is a filter that is applied to the data to
+ *                                     display only the relevant listings. It can be an array of strings or an array of arrays, where each
+ *                                     sub-array contains a string and a number. The string represents the company name and the number
+ *                                     represents the count of listings for that
+ * @param {Feature[]}   data           - The data parameter is an array of Feature objects that contain information
+ *                                     about each listing.
+ * @param {HTMLElement} listingEl      - The DOM element where the listings will be rendered.
+ * @return Nothing is being returned, as this is a function that modifies the DOM by rendering a list
+ * of listings based on the provided data and selected filter.
+ */
 export function renderListings( selectedFilter, data: Feature[], listingEl ) {
 	if ( data && data.length ) {
 		// Clear any existing listings
@@ -259,6 +287,18 @@ export function renderListings( selectedFilter, data: Feature[], listingEl ) {
 	}
 }
 
+/**
+ * The function creates a new paragraph element with optional hyperlink based on the provided
+ * properties.
+ *
+ * @param {Object} prop             The parameter `prop` is an object that contains the following properties:
+ * @param {string} prop.textContent The text content of the paragraph
+ * @param {string} prop.href        The `href` property of the paragraph
+ * @param {string} prop.type        The `type` property of the paragraph
+ * @return a newly created paragraph element with the text content specified in the `prop` parameter.
+ * If the `prop` parameter also includes an `href` property, a link element is created within the
+ * paragraph element with the specified `href` and `type` properties.
+ */
 export function addParagraph( prop: {
 	textContent: string;
 	href: string;

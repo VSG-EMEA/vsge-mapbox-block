@@ -1,3 +1,10 @@
+/**
+ * This function returns an object with default values based on the properties of a given object.
+ *
+ * @return The function `getDefaults` is returning an object with three properties: `accessToken`,
+ * `siteurl`, and `language`. The values of these properties are being taken from the `mapboxBlockData`
+ * object. If `mapboxBlockData` is falsy, then nothing is returned.
+ */
 export const getDefaults = () => {
 	if ( mapboxBlockData )
 		return {
@@ -7,17 +14,47 @@ export const getDefaults = () => {
 		};
 };
 
+/**
+ * This function returns the language of the user's browser.
+ *
+ * @return The `getUserLanguage` function returns the language of the user's browser as a string. It
+ * first checks for the `navigator.language` property, which returns the language version of the
+ * browser, and if that is not available, it checks for the `navigator.userLanguage` property, which
+ * returns the language version of the user's operating system.
+ */
 export const getUserLanguage = () => {
 	// @ts-ignore
 	return navigator.language || navigator.userLanguage;
 };
 
+/**
+ * The function takes a string and returns a URL-safe version of it by encoding it and removing any
+ * characters that are not allowed in URLs.
+ *
+ * @param {string} string - The input string that needs to be converted into a safe slug. A slug is a
+ *                        URL-friendly version of a string that is commonly used in web development to create clean and
+ *                        readable URLs. The function takes this string as an argument and returns a safe slug by removing any
+ *                        characters that are not allowed in a
+ * @return {string} The `safeSlug` function is returning a modified version of the input string that can be
+ * used as a URL slug. The returned value is the input string converted to lowercase, with any
+ * characters that are not alphanumeric or a hyphen removed and any special characters encoded using
+ * percent-encoding.
+ */
 function safeSlug( string: string ) {
 	return encodeURIComponent( string )
 		.toLowerCase()
 		.replace( /\.|%[0-9a-zA-Z]{2}/gi, '' );
 }
 
+/**
+ * The function returns a specific link type based on the input string.
+ *
+ * @param {string} linkType - a string that represents the type of link being generated. It can be
+ *                          either "phone", "email", or any other type of link.
+ * @return a string that corresponds to the link type provided as an argument. If the link type is
+ * "phone", the function returns "tel:", if it is "email", the function returns "mailto:", and if it is
+ * any other type, the function returns "//".
+ */
 export function getLinkType( linkType: string ) {
 	if ( linkType === 'phone' ) {
 		return 'tel:';
@@ -27,7 +64,15 @@ export function getLinkType( linkType: string ) {
 	return '//';
 }
 
-// normalize string for comparator
+/**
+ * The function normalizes a given string by removing leading/trailing spaces and converting it to
+ * lowercase.
+ *
+ * @param {string} string - The parameter "string" is a string type input that is passed to the
+ *                        function "normalize".
+ * @return If the `string` parameter is not `null` or `undefined`, the function returns the trimmed
+ * and lowercased version of the string. Otherwise, it returns an empty string.
+ */
 export function normalize( string: string ) {
 	if ( string ) {
 		return string.trim().toLowerCase();
