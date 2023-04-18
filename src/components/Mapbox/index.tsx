@@ -1,10 +1,15 @@
 import { Map } from './Map';
 import { MapboxSidebar } from './MapboxSidebar';
-import { getDefaults, initMap } from '../../utils';
+import { getDefaults } from '../../utils';
 import { useEffect, useRef } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
+import { initMap } from '../../utils/map';
 
-function MapBox( { attributes, map = null, setMap = null } ) {
+function MapBox( {
+	attributes,
+	map = null,
+	setMap = null,
+} ): JSX.Element {
 	const defaults = getDefaults();
 
 	const mapContainer = useRef< HTMLDivElement >( null );
@@ -28,7 +33,7 @@ function MapBox( { attributes, map = null, setMap = null } ) {
 					mapboxOptions={ attributes.mapboxOptions }
 				/>
 			) : null }
-			<div id="map-container">
+			<div className={ 'map-container' }>
 				<Map attributes={ attributes } mapContainer={ mapContainer } />
 			</div>
 		</div>

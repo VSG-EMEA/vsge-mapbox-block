@@ -3,26 +3,21 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { __ } from '@wordpress/i18n';
 import { Coord } from '@turf/turf';
-import {
-	createPopUp,
-	fitView,
-	getBbox,
-	locateNearestStore,
-	removePopup,
-	renderListings,
-} from '../../utils/';
+
 import { MapItem } from '../../types';
+import { createPopUp, removePopup } from '../../utils/popups';
+import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
+import { renderListings } from '../../utils/map';
+import { fitView } from '../../utils/view';
 
 export let searchResult: Coord | undefined;
 
+export const geoMarker = (): JSX.Element => (
+	<div id={ 'marker-geocoder' } className={ 'marker marker-geocoder' }></div>
+);
+
 export default ( { geocoderRef = null, mapboxgl, listings, defaults } ) => {
 	let filteredStores: MapItem[] = listings;
-	const geoMarker = (
-		<div
-			id={ 'marker-geocoder' }
-			className={ 'marker marker-geocoder' }
-		></div>
-	);
 
 	const geocoder = new MapboxGeocoder( {
 		accessToken: defaults.accessToken,
@@ -107,7 +102,7 @@ export default ( { geocoderRef = null, mapboxgl, listings, defaults } ) => {
 		renderListings( filteredStores );
 		searchResult = undefined;
 		removePopup();
-		fitView();
+		fitView( map, filteredStores );
 	} );
 
 	return <div id="geocoder" className="geocoder" ref={ geocoderRef }></div>;
