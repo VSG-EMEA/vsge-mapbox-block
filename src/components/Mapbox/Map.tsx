@@ -7,12 +7,11 @@ export function Map( { attributes, mapContainer = null } ): JSX.Element {
 
 	return (
 		<>
-			<div id="map-topbar">
+			<div className={ 'map-topbar' }>
 				{ fitView ? (
 					<button
-						id={ 'fit-view' }
 						className={
-							'button button-secondary outlined has-white-background-color'
+							'button button-secondary outlined has-white-background-color fit-view'
 						}
 					>
 						fit-view
@@ -20,7 +19,7 @@ export function Map( { attributes, mapContainer = null } ): JSX.Element {
 				) : null }
 
 				{ tagsEnabled ? (
-					<select id="filter-by-partnership">
+					<select className={ 'filter-by-partnership' }>
 						<option value="" selected>
 							{ __( 'Filters' ) }
 						</option>
@@ -33,7 +32,7 @@ export function Map( { attributes, mapContainer = null } ): JSX.Element {
 				) : null }
 
 				{ filtersEnabled ? (
-					<select id="filter-by-tag">
+					<select className={ 'filter-by-tag' }>
 						<option value="" selected>
 							{ __( 'Tags' ) }
 						</option>
@@ -46,7 +45,7 @@ export function Map( { attributes, mapContainer = null } ): JSX.Element {
 				) : null }
 			</div>
 
-			<div id="map" className="map" ref={ mapContainer }></div>
+			<div className="map" ref={ mapContainer }></div>
 		</>
 	);
 }

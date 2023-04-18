@@ -7,6 +7,7 @@ $mq__phablet: "(max-width : 600px)";
 
 .map-wrapper {
   display: flex;
+  gap: var(--wp--preset--spacing--40);
   min-height: 400px;
   max-height: 80vh;
   padding-top: var(--wp--preset--spacing--50, 8px);
@@ -16,7 +17,7 @@ $mq__phablet: "(max-width : 600px)";
     height: auto;
   }
 
-  #map-sidebar {
+  .map-sidebar {
     min-width:300px;
     overflow:hidden;
     padding-right: var(--size__margin);
@@ -169,11 +170,13 @@ $mq__phablet: "(max-width : 600px)";
     }
   }
 
-  #map-container {
+  .map-container {
     width: 100%;
     flex-grow: 1;
     display: flex;
+    display: flex;
     flex-direction: column;
+    gap: var(--wp--preset--spacing--40);
 
     .mapboxgl-popup-content {
       max-width: 280px;

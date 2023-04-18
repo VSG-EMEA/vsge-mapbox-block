@@ -30,11 +30,11 @@ function Save( { attributes, map }: BlockAttributes ): JSX.Element {
 			data-mapbox-options={ JSON.stringify( attributes ) }
 		>
 			{ attributes.sidebarEnabled ? (
-				<div id="map-sidebar">
+				<div className={ 'map-sidebar' }>
 					{ attributes.geocoderEnabled === true && defaults ? (
 						<div id="geocoder" className="geocoder"></div>
 					) : null }
-					<div id="feature-listing" className="feature-listing">
+					<div className="feature-listing">
 						{ attributes.mapboxOptions.listings.map(
 							( data: any, index: number ) => (
 								<Listing { ...data } key={ index } />
@@ -43,7 +43,7 @@ function Save( { attributes, map }: BlockAttributes ): JSX.Element {
 					</div>
 				</div>
 			) : null }
-			<div id="map-container">
+			<div className={ 'map-container' }>
 				<Map attributes={ attributes } mapContainer={ null } />
 			</div>
 		</div>
