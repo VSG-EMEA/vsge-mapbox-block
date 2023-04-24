@@ -1,9 +1,9 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { mapStyles } from './constants';
-import mapboxgl, { Map } from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 
 import {
 	Panel,
@@ -12,9 +12,11 @@ import {
 	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
-import MapBox from './components/Mapbox';
+import { MapBox } from './components/Mapbox';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from './components/Sortable';
+import { MapProvider, useMap } from './components/Mapbox/MapboxContext';
+import { MapEdit } from './components/Mapbox/MapEdit';
 
 /**
  * The edit function describes the structure of your block in the context of the editor.
@@ -46,64 +48,6 @@ export default function Edit( {
 		mapboxOptions: { tags, filters, listings },
 	} = attributes;
 
-	const [ mapboxInstance, setMapboxInstance ] = useState< Map | null >(
-		null
-	);
-
-	const mapContainer = useRef< HTMLDivElement >( null );
-
-	function updateMap( key: string, value: any ) {
-		if ( mapboxInstance ) {
-			switch ( key ) {
-				case 'latitude':
-					setAttributes( {
-						...attributes,
-						latitude: value,
-					} );
-					mapboxInstance.setCenter( [ longitude, value ] );
-					break;
-				case 'longitude':
-					setAttributes( {
-						...attributes,
-						longitude: value,
-					} );
-					mapboxInstance.setCenter( [ value, latitude ] );
-					break;
-				case 'pitch':
-					setAttributes( {
-						...attributes,
-						pitch: value,
-					} );
-					mapboxInstance?.setPitch( value );
-					break;
-				case 'bearing':
-					setAttributes( {
-						...attributes,
-						bearing: value,
-					} );
-					mapboxInstance?.setBearing( value );
-					break;
-				case 'mapZoom':
-					setAttributes( {
-						...attributes,
-						mapZoom: value,
-					} );
-					mapboxInstance.setZoom( value );
-					break;
-				case 'mapStyle':
-					setAttributes( {
-						...attributes,
-						mapStyle: value,
-					} );
-					mapboxInstance.setStyle(
-						'mapbox://styles/mapbox/' + value
-					);
-					break;
-				default:
-			}
-		}
-	}
-
 	const setOptions = ( key: string, value: string | number | boolean ) => {
 		setAttributes( {
 			...attributes,
@@ -113,24 +57,6 @@ export default function Edit( {
 			},
 		} );
 	};
-
-	function pullMapOptions( currentMap: mapboxgl.Map | undefined ) {
-		if ( currentMap && isSelected )
-			setAttributes( {
-				latitude: currentMap.getCenter().lat,
-				longitude: currentMap.getCenter().lng,
-				pitch: currentMap.getPitch(),
-				bearing: currentMap.getBearing(),
-				mapZoom: currentMap.getZoom(),
-			} );
-	}
-
-	useEffect( () => {
-		// wait for map to initialize
-		if ( ! mapboxInstance ) return;
-
-		mapboxInstance.on( 'move', () => pullMapOptions( mapboxInstance ) );
-	} );
 
 	return (
 		<div { ...useBlockProps() }>
@@ -143,9 +69,12 @@ export default function Edit( {
 							min={ -90 }
 							max={ 90 }
 							step={ 0.0001 }
-							onChange={ ( newValue ) => {
-								return updateMap( 'latitude', newValue );
-							} }
+							onChange={ ( newValue ) =>
+								setAttributes( {
+									...attributes,
+									latitude: newValue,
+								} )
+							}
 						/>
 						<RangeControl
 							label={ 'Longitude' }
@@ -153,9 +82,12 @@ export default function Edit( {
 							min={ -180 }
 							max={ 180 }
 							step={ 0.0001 }
-							onChange={ ( newValue ) => {
-								return updateMap( 'longitude', newValue );
-							} }
+							onChange={ ( newValue ) =>
+								setAttributes( {
+									...attributes,
+									longitude: newValue,
+								} )
+							}
 						/>
 						<RangeControl
 							label={ 'pitch' }
@@ -163,9 +95,12 @@ export default function Edit( {
 							min={ 0 }
 							max={ 90 }
 							step={ 0.01 }
-							onChange={ ( newValue ) => {
-								return updateMap( 'pitch', newValue );
-							} }
+							onChange={ ( newValue ) =>
+								setAttributes( {
+									...attributes,
+									pitch: newValue,
+								} )
+							}
 						/>
 						<RangeControl
 							label={ 'bearing' }
@@ -173,9 +108,12 @@ export default function Edit( {
 							min={ -180 }
 							max={ 180 }
 							step={ 0.01 }
-							onChange={ ( newValue ) => {
-								return updateMap( 'bearing', newValue );
-							} }
+							onChange={ ( newValue ) =>
+								setAttributes( {
+									...attributes,
+									bearing: newValue,
+								} )
+							}
 						/>
 						<RangeControl
 							label={ 'Zoom' }
@@ -183,16 +121,22 @@ export default function Edit( {
 							min={ 0 }
 							max={ 15 }
 							step={ 0.01 }
-							onChange={ ( newValue ) => {
-								return updateMap( 'mapZoom', newValue );
-							} }
+							onChange={ ( newValue ) =>
+								setAttributes( {
+									...attributes,
+									mapZoom: newValue,
+								} )
+							}
 						/>
 						<SelectControl
 							options={ mapStyles }
 							value={ mapStyle }
 							label={ 'Style' }
 							onChange={ ( newValue: number ) =>
-								updateMap( 'mapStyle', newValue )
+								setAttributes( {
+									...attributes,
+									mapStyle: newValue,
+								} )
 							}
 						/>
 					</PanelBody>
@@ -237,11 +181,11 @@ export default function Edit( {
 						<ToggleControl
 							label={ __( 'Enable map tree dimensionality' ) }
 							checked={ treeDimensionality }
-							onChange={ ( newValue: boolean ) =>
+							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
 									treeDimensionality: newValue,
-								} )
-							}
+								} );
+							} }
 						/>
 					</PanelBody>
 				</Panel>
@@ -283,11 +227,13 @@ export default function Edit( {
 					</PanelBody>
 				</Panel>
 			</InspectorControls>
-			<MapBox
-				attributes={ attributes }
-				map={ mapboxInstance }
-				setMap={ setMapboxInstance }
-			/>
+			<MapProvider>
+				<MapEdit
+					attributes={ attributes }
+					setAttributes={ setAttributes }
+					isSelected={ isSelected }
+				/>
+			</MapProvider>
 		</div>
 	);
 }
