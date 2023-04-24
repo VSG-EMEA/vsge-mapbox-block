@@ -36,7 +36,7 @@ export function MapEdit( {
 		mapboxOptions: { tags, filters, listings },
 	} = attributes;
 
-	const { map } = useContext( MapboxContext );
+	const { map, mapRef } = useContext( MapboxContext );
 
 	const setOptions = ( key: string, value: string | number | boolean ) => {
 		setAttributes( {
@@ -194,9 +194,17 @@ export function MapEdit( {
 						<ToggleControl
 							label={ __( 'Enable Sidebar' ) }
 							checked={ sidebarEnabled }
-							onChange={ ( newValue: boolean ) =>
-								setAttributes( { sidebarEnabled: newValue } )
-							}
+							onChange={ ( newValue: boolean ) => {
+								setAttributes( { sidebarEnabled: newValue } );
+								// wait 500 ms then resize the map
+								setTimeout( () => {
+									// get the mapRef element width and height
+									map?.resize(
+										mapRef.current.style.width,
+										mapRef.current.style.height
+									);
+								}, 100 );
+							} }
 						/>
 						<ToggleControl
 							label={ __( 'Enable Geocoder' ) }
@@ -276,7 +284,6 @@ export function MapEdit( {
 				</Panel>
 			</InspectorControls>
 			<MapBox attributes={ attributes } />
-			);
 		</>
 	);
 }

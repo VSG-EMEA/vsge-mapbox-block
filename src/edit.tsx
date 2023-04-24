@@ -1,7 +1,7 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { MapProvider, useMap } from './components/Mapbox/MapboxContext';
+import { MapProvider } from './components/Mapbox/MapboxContext';
 import { MapEdit } from './components/Mapbox/MapEdit';
 
 /**
@@ -18,7 +18,6 @@ export default function Edit( {
 	setAttributes,
 	isSelected,
 }: BlockEditProps< BlockAttributes > ): JSX.Element {
-
 	return (
 		<div { ...useBlockProps() }>
 			<MapProvider>

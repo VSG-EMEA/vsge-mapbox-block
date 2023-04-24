@@ -8,7 +8,7 @@ type MountedMapsContextValue = {
 	popupContent?: any;
 	setPopupContent?: any;
 	setMap?: any;
-	mapRef?: Ref< MountedMapsContextValue >;
+	mapRef?: Ref< HTMLDivElement >;
 };
 
 export const MapboxContext = createContext< MountedMapsContextValue >( {} );

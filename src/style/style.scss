@@ -167,7 +167,6 @@ $mq__phablet: "(max-width : 600px)";
         &.active-store {
           background-color: #f3f3f3;
         }
-
       }
     }
   }
@@ -199,7 +198,7 @@ $mq__phablet: "(max-width : 600px)";
     }
   }
 
-  #map-topbar {
+  .map-topbar {
     height: $topbar-height;
     padding-bottom: var(--wp--preset--spacing--3);
     display: flex;
