@@ -2,19 +2,6 @@
 .map {
   height: 100%;
   flex-grow: 1;
-
-  .marker {
-    border: none;
-    cursor: pointer;
-    height: 56px;
-    width: 56px;
-    background-image: url('../images/marker.webp');
-    background-color: rgba(var(--color__black_decimal), 0);
-
-    &#marker-geocoder {
-      filter: grayscale(1);
-    }
-  }
 }
 
 .map-container {

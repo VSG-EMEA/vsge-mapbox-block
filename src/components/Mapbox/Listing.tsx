@@ -1,3 +1,6 @@
+import { ListingTag } from './MapComponents';
+import { Icon } from '@wordpress/components';
+
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
  *
@@ -15,21 +18,39 @@ export const Listing = ( {
 	properties: any;
 	type: any;
 } ) => {
+	// TODO: replace with a better name for this
+	const tags: { id: number; value: string }[] = properties?.company || [];
+	const filter: { id: number; value: string }[] =
+		properties?.partnership || [];
+
 	return type === 'Feature' ? (
-		<div
-			className={ 'mapbox-feature listing' }
-			style={ {
-				borderRadius: '2px',
-				border: '1px solid #ccc',
-				padding: '4px',
-				margin: '2px 2px 8px',
-			} }
-		>
-			<p>
-				<b>{ properties.name }</b>
-			</p>
-			<p>{ properties.phone }</p>
-			<p>{ properties.address }</p>
+		<div className={ 'mapbox-sidebar-feature listing' }>
+			<Icon icon={ 'marker' } />
+			<p className="partnership">{ properties.partnership }</p>
+			<a href="#" className="title">
+				{ properties.name }
+			</a>
+
+			<div>
+				<p>{ properties.address }</p>
+				<p>
+					Phone:{ ' ' }
+					<a href={ properties.phone } className="email-link">
+						{ properties.phone }
+					</a>
+				</p>
+				<p>
+					<a
+						href={ '//' + properties.website }
+						className="website-link"
+					>
+						{ properties.website }
+					</a>
+				</p>
+				{ tags.length
+					? tags.map( ( tag ) => <ListingTag { ...tag } /> )
+					: null }
+			</div>
 		</div>
 	) : null;
 };
