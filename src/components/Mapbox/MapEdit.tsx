@@ -32,7 +32,7 @@ export function MapEdit( {
 		filtersEnabled,
 		tagsEnabled,
 		fitView,
-		treeDimensionality,
+		threeDimensionality,
 		mapboxOptions: { tags, filters, listings },
 	} = attributes;
 
@@ -73,7 +73,7 @@ export function MapEdit( {
 
 	useEffect( () => {
 		if ( map ) {
-			if ( attributes.treeDimensionality ) {
+			if ( attributes.threeDimensionality ) {
 				if ( ! map.getSource( 'mapbox-dem' ) ) {
 					map.addSource( 'mapbox-dem', {
 						type: 'raster-dem',
@@ -93,7 +93,7 @@ export function MapEdit( {
 				map.setTerrain();
 			}
 		}
-	}, [ attributes.treeDimensionality ] );
+	}, [ attributes.threeDimensionality ] );
 
 	return (
 		<>
@@ -236,10 +236,10 @@ export function MapEdit( {
 						/>
 						<ToggleControl
 							label={ __( 'Enable map tree dimensionality' ) }
-							checked={ treeDimensionality }
+							checked={ threeDimensionality }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
-									treeDimensionality: newValue,
+									threeDimensionality: newValue,
 								} );
 							} }
 						/>
