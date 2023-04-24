@@ -32,9 +32,12 @@
 
     .controlgroup-feature-item {
       display: grid;
-      margin: 0;
+      margin: 0 0 4px;
       width: 100%;
       grid-template-columns: 1fr auto auto;
+      white-space: nowrap;
+      line-height: 20px;
+
       button {
         cursor: pointer;
         background: transparent;

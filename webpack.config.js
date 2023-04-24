@@ -5,7 +5,7 @@ module.exports = {
 	...defaultConfig,
 	entry: {
 		'mapbox': path.resolve( process.cwd(), `src/index.tsx` ),
-		'mapbox-frontend': path.resolve( process.cwd(), `src/frontend/frontend.ts` ),
+		'mapbox-frontend': path.resolve( process.cwd(), `src/frontend/index.ts` ),
 	},
   devtool: 'inline-source-map',
 	module: {

@@ -55,12 +55,12 @@
     "babel-jest": "^29.5.0",
     "jest-puppeteer": "^8.0.6",
     "react-beautiful-dnd": "^13.1.1",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@mapbox/mapbox-gl-geocoder": "^5.0.1",
     "@turf/turf": "^6.5.0",
-    "mapbox-gl": "^2.13.0"
+    "mapbox-gl": "^2.14.1"
   },
   "engines": {
     "node": ">=16.0.0"

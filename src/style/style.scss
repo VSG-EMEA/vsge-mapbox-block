@@ -7,8 +7,10 @@ $mq__phablet: "(max-width : 600px)";
 
 .map-wrapper {
   display: flex;
+  overflow: hidden;
   gap: var(--wp--preset--spacing--40);
   min-height: 400px;
+  width: 100%;
   max-height: 80vh;
   padding-top: var(--wp--preset--spacing--50, 8px);
 
@@ -173,7 +175,6 @@ $mq__phablet: "(max-width : 600px)";
   .map-container {
     width: 100%;
     flex-grow: 1;
-    display: flex;
     display: flex;
     flex-direction: column;
     gap: var(--wp--preset--spacing--40);

@@ -51,10 +51,10 @@ export function flyToStore(
  *
  * @param {mapboxgl.Map} map            The map object is an instance of the Mapbox GL JS map that is being used to display the
  *                                      map.
- * @param {Feature[]}    filteredStores filteredStores is an array of features representing the stores that need to
+ * @param {Feature[]}    listings filteredStores is an array of features representing the stores that need to
  *                                      be displayed on the map.
  */
-export function fitView( map, filteredStores ) {
+export function fitView( map, listings ) {
 	const bounds = new mapboxgl.LngLatBounds();
 	const mapContainer = document.getElementById( 'map-container' );
 	if ( mapContainer ) {
@@ -62,8 +62,8 @@ export function fitView( map, filteredStores ) {
 
 		console.log( bounds );
 
-		if ( filteredStores.length !== 0 ) {
-			filteredStores.forEach( ( point: Feature ) => {
+		if ( listings.length !== 0 ) {
+			listings.forEach( ( point: Feature ) => {
 				bounds.extend( point.geometry.coordinates );
 			} );
 
