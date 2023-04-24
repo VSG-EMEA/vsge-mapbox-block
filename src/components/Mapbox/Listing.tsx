@@ -26,10 +26,10 @@ export const Listing = ( {
 	return type === 'Feature' ? (
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ 'marker' } />
-			<p className="partnership">{ properties.partnership.join(" ") }</p>
-			<a href="#" className="title">
-				{ properties.name }
-			</a>
+			<p className="partnership">
+				{ properties.partnership.join( ' ' ) }
+			</p>
+			<h4 className="title">{ properties.name }</h4>
 			<div>
 				<p>{ properties.address }</p>
 				<p>

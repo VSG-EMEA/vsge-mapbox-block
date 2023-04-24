@@ -5,9 +5,10 @@ import { useEffect, useContext, useRef } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { initMap } from './utils/map';
 import mapboxgl from 'mapbox-gl';
+import { initGeocoder } from './utils/geocoder';
 
 export function MapBox( { attributes } ): JSX.Element {
-	const { setMap, defaults, mapRef, geocoderRef } =
+	const { map, setMap, setGeoCoder, defaults, mapRef, geocoderRef } =
 		useContext( MapboxContext );
 
 	useEffect( () => {
@@ -18,6 +19,17 @@ export function MapBox( { attributes } ): JSX.Element {
 			console.log( 'No access token' );
 		}
 	}, [ mapRef ] );
+
+	useEffect( () => {
+		if ( defaults?.accessToken && geocoderRef.current ) {
+			if ( attributes.geocoderEnabled )
+				setGeoCoder(
+					initGeocoder( geocoderRef.current, attributes, defaults )
+				);
+		} else {
+			console.log( 'No access token' );
+		}
+	}, [ geocoderRef ] );
 
 	return (
 		<div className={ 'map-wrapper' }>

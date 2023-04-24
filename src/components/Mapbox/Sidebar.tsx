@@ -1,7 +1,5 @@
 import { Listing } from './Listing';
 import { GeoCoder } from './Geocoder';
-import { useContext } from '@wordpress/element';
-import { MapboxContext } from './MapboxContext';
 
 /**
  * This is a TypeScript React component that renders a Mapbox sidebar with a geocoder and a list of
@@ -19,12 +17,11 @@ import { MapboxContext } from './MapboxContext';
  * the "mapboxOptions" object. The "feature-listing" div contains a map
  */
 export const Sidebar = ( { attributes, geocoderRef } ): JSX.Element => {
-	const { defaults } = useContext( MapboxContext );
 	const { mapboxOptions } = attributes;
 
 	return (
 		<div className={ 'map-sidebar' }>
-			{ mapboxOptions.geocoderEnabled === true && defaults ? (
+			{ mapboxOptions.geocoderEnabled === true ? (
 				<GeoCoder geocoderRef={ geocoderRef } />
 			) : null }
 			<div className={ 'feature-listing' }>

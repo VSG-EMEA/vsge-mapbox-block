@@ -1,4 +1,9 @@
-import {createContext, useContext, useRef, useState} from '@wordpress/element';
+import {
+	createContext,
+	useContext,
+	useRef,
+	useState,
+} from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { getDefaults } from '../../utils';
 import { Ref } from 'react';
@@ -9,11 +14,13 @@ type MountedMapsContextValue = {
 	setPopupContent?: any;
 	setMap?: any;
 	mapRef?: Ref< HTMLDivElement >;
+	geocoderRef?: Ref< HTMLDivElement >;
+	defaults?: any;
 };
 
 export const MapboxContext = createContext< MountedMapsContextValue >( {} );
 export const useMap = () => {
-	const {map} = useContext( MapboxContext );
+	const { map } = useContext( MapboxContext );
 
 	if ( ! map ) {
 		throw new Error( 'useMap has to be used within <Map.Provider>' );
@@ -24,7 +31,7 @@ export const useMap = () => {
 
 export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ map, setMap ] = useState( null );
-	const [ filters, setFilters ] = useState( null );
+	const [ geoCoder, setGeoCoder ] = useState( null );
 	const [ listings, setListings ] = useState( null );
 	const [ lngLat, setLngLat ] = useState( { lng: null, lat: null } );
 	const [ popupContent, setPopupContent ] = useState( [] );
@@ -40,14 +47,14 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 				setMap,
 				popupContent,
 				setPopupContent,
-				filters,
-				setFilters,
 				lngLat,
 				setLngLat,
 				listings,
 				setListings,
 				defaults,
 				mapRef,
+				geoCoder,
+				setGeoCoder,
 				geocoderRef,
 			} }
 		>

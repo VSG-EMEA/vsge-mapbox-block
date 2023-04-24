@@ -7,5 +7,5 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
  * @param geocoderRef
  */
 export const GeoCoder = ( { geocoderRef } ) => {
-	return <div id="geocoder" className="geocoder" ref={ geocoderRef }></div>;
+	return <div className="geocoder" ref={ geocoderRef }></div>;
 };

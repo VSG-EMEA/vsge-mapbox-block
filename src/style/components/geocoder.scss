@@ -1,4 +1,4 @@
-.mapboxgl-ctrl-geocoder {
+.geocoder {
   width: 100%;
   height: $topbar-height;
 
@@ -30,6 +30,7 @@
       left: 8px;
     }
   }
+
   &--suggestion-title {}
   &--suggestion-address {
     font-weight: 300;

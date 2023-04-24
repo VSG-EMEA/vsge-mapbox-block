@@ -36,7 +36,8 @@ export function MapEdit( {
 		mapboxOptions: { tags, filters, listings },
 	} = attributes;
 
-	const { map, mapRef } = useContext( MapboxContext );
+	const { map, mapRef, geoCoder, geocoderRef, defaults } =
+		useContext( MapboxContext );
 
 	const setOptions = ( key: string, value: string | number | boolean ) => {
 		setAttributes( {
@@ -70,6 +71,12 @@ export function MapEdit( {
 			map.setStyle( 'mapbox://styles/mapbox/' + attributes.mapStyle );
 		}
 	}, [ attributes.mapStyle ] );
+
+	useEffect( () => {
+		if ( ! geoCoder ) {
+			geoCoder.onAdd( map );
+		}
+	}, [ attributes.geocoderEnabled ] );
 
 	useEffect( () => {
 		if ( map ) {
