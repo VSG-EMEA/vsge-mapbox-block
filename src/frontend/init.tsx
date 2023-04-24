@@ -1,8 +1,8 @@
 import { createRoot } from '@wordpress/element';
-import { MapBox } from '../components/Mapbox';
+import { MapFrontend } from '../components/Mapbox/MapFrontend';
 
-export function createMapRoot( el: HTMLElement, attributes ) {
+export function createMapRoot( el: HTMLElement, { attributes } ) {
 	// initialize the map with React
 	const componentRoot = createRoot( el );
-	componentRoot.render( <MapBox attributes={ attributes } /> );
+	componentRoot.render( <MapFrontend attributes={ attributes } /> );
 }

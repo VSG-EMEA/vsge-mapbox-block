@@ -5,7 +5,6 @@ import { BlockAttributes } from '@wordpress/blocks';
 import { Map } from './components/Mapbox/Map';
 import { getDefaults } from './utils';
 import { Listing } from './components/Mapbox/Listing';
-import { TopBar } from './components/Mapbox/TopBar';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -16,7 +15,7 @@ import { __ } from '@wordpress/i18n';
  * @param    props.map
  * @function Object() { [native code] }
  */
-function Save( { attributes, map }: BlockAttributes ): JSX.Element {
+function Save( { attributes }: BlockAttributes ): JSX.Element {
 	const blockProps = useBlockProps.save( {
 		className: 'wp-block-vsge-mapbox',
 	} );
@@ -26,8 +25,10 @@ function Save( { attributes, map }: BlockAttributes ): JSX.Element {
 	return (
 		<div
 			{ ...blockProps }
-			data-mapbox-listings={ JSON.stringify( attributes.listings ) }
-			data-mapbox-options={ JSON.stringify( attributes.options ) }
+			data-mapbox-attributes={ JSON.stringify( attributes ) }
+			data-mapbox-listings={ JSON.stringify( attributes.mapboxOptions.listings ) }
+			data-mapbox-tags={ JSON.stringify( attributes.mapboxOptions.tags ) }
+			data-mapbox-filters={ JSON.stringify( attributes.mapboxOptions.filters ) }
 		>
 			{ attributes.sidebarEnabled ? (
 				<div className={ 'map-sidebar' }>
