@@ -1,50 +1,36 @@
 import { Map } from './Map';
-import { MapboxSidebar } from './MapboxSidebar';
-import { getDefaults } from '../../utils';
-import { useEffect, useRef } from '@wordpress/element';
+import { Sidebar } from './Sidebar';
+import { TopBar } from './TopBar';
+import { useEffect, useContext, useRef } from '@wordpress/element';
+import { MapboxContext } from './MapboxContext';
+import { initMap } from './utils/map';
 import mapboxgl from 'mapbox-gl';
-import { initMap } from '../../utils/map';
 
-/**
- * This is a TypeScript React component that renders a Mapbox map with optional sidebar functionality.
- *
- * @param {Object}   Props
- * @param {Object}   Props.attributes an object containing various attributes for the MapBox component
- * @param {Object}   Props.map        an optional parameter of type `mapboxgl.Map` or `null`. It represents the Mapbox map object that will be initialized or updated
- * @param {Function} Props.setMap     a function that accepts a mapboxgl.Map object and updates the map
- * @return A JSX element containing a div with class "map-wrapper" and either a MapboxSidebar
- * component or null (depending on the value of attributes.sidebarEnabled prop) followed by another div
- * with class "map-container" containing a Map component.
- */
-function MapBox( { attributes, map = null, setMap = null } ): JSX.Element {
-	const defaults = getDefaults();
-
-	const mapContainer = useRef< HTMLDivElement >( null );
+export function MapBox( { attributes } ): JSX.Element {
+	const { setMap, defaults, mapRef, geocoderRef } =
+		useContext( MapboxContext );
 
 	useEffect( () => {
-		if ( defaults?.accessToken && mapContainer.current ) {
+		if ( defaults?.accessToken && mapRef.current ) {
 			mapboxgl.accessToken = defaults.accessToken;
-			setMap( initMap( mapContainer.current, attributes, map ) );
+			setMap( initMap( mapRef.current, attributes ) );
 		} else {
 			console.log( 'No access token' );
 		}
-	}, [] );
+	}, [ mapRef ] );
 
 	return (
-		<div className="map-wrapper">
+		<div className={ 'map-wrapper' }>
 			{ attributes.sidebarEnabled ? (
-				<MapboxSidebar
-					defaults={ defaults }
-					map={ map }
-					geocoderRef={ attributes.geocoderRef }
-					mapboxOptions={ attributes.mapboxOptions }
+				<Sidebar
+					attributes={ attributes }
+					geocoderRef={ geocoderRef }
 				/>
 			) : null }
 			<div className={ 'map-container' }>
-				<Map attributes={ attributes } mapContainer={ mapContainer } />
+				<TopBar { ...attributes } />
+				<Map mapRef={ mapRef } />
 			</div>
 		</div>
 	);
 }
-
-export default MapBox;

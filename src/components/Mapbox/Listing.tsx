@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
  *
@@ -19,6 +17,7 @@ export const Listing = ( {
 } ) => {
 	return type === 'Feature' ? (
 		<div
+			className={ 'mapbox-feature listing' }
 			style={ {
 				borderRadius: '2px',
 				border: '1px solid #ccc',
