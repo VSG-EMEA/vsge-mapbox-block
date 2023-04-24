@@ -1,0 +1,43 @@
+.map-topbar {
+  height: $topbar-height;
+  padding-bottom: var(--wp--preset--spacing--20);
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+
+  button,
+  select {
+    margin: 0 var(--wp--preset--spacing--40) 0 0;
+    max-width: 250px;
+  }
+
+  select {
+    height: $topbar_elements_height;
+    font-family: var(--font__family);
+    font-weight: 500;
+    text-overflow: ellipsis;
+  }
+
+  button.outlined {
+    height: $topbar_elements_height;
+    border: 1px solid var(--wp--preset--color--gray-light);
+
+    &:focus,
+    &:hover {
+      filter: inherit !important;
+      border-color: var(--wp--preset--color--gray);
+    }
+
+    &:active {
+      border-color: var(--wp--preset--color--gray-light);
+    }
+
+    svg {
+      line-height: $topbar_elements_height;
+    }
+  }
+
+  & > *:last-child {
+    margin-right: 0;
+  }
+}

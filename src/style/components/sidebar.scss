@@ -1,0 +1,37 @@
+.map-sidebar {
+  min-width:300px;
+  overflow:hidden;
+  padding-right: var(--size__margin);
+
+  display: flex;
+  flex-direction: column;
+
+  @media #{$mq__phablet} {
+    width: 100%;
+  }
+
+  p {
+    margin: 0;
+    padding: 0 0 var(--wp--preset--spacing--30);
+  }
+
+  .feature-listing {
+    overflow:auto;
+
+    @media #{$mq__phablet} {
+      padding-bottom:var(--wp--preset--spacing--30);
+      display: block;
+      max-height: 80vh;
+    }
+
+    &.filtered {
+      .map-item {
+        display: none;
+      }
+      .map-item.active-store {
+        display: block;
+      }
+    }
+
+  }
+}

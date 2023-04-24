@@ -1,0 +1,47 @@
+// the map
+.map {
+  height: 100%;
+  flex-grow: 1;
+
+  .marker {
+    border: none;
+    cursor: pointer;
+    height: 56px;
+    width: 56px;
+    background-image: url('../images/marker.webp');
+    background-color: rgba(var(--color__black_decimal), 0);
+
+    &#marker-geocoder {
+      filter: grayscale(1);
+    }
+  }
+}
+
+.map-container {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--40);
+
+  .mapboxgl-popup-content {
+    max-width: 280px;
+    @media #{$mq__phablet} {
+      width: 100%;
+      max-width: 100%;
+      min-width: inherit;
+    }
+  }
+
+  .mapboxgl-popup-anchor-top {
+    & > .mapboxgl-popup-tip {
+      border-bottom-color: #fff;
+    }
+  }
+
+  @media #{$mq__phablet} {
+    height: 60vh;
+    width:100%;
+    padding-bottom: var(--wp--preset--spacing--40);
+  }
+}

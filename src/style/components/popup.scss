@@ -1,0 +1,46 @@
+/* Marker tweaks */
+.map .mapboxgl-popup {
+  padding-bottom: 50px;
+  &-close-button {
+    // display:none;
+    margin: 0;
+    background-color: transparent;
+    color: var(--color__gray-800);
+    border: 0 !important;
+    min-width: 32px;
+    font-size: 28px;
+    padding: 0;
+  }
+  &-content {
+    font-weight: 400;
+    padding: 16px 16px 10px 64px;
+    min-width: 280px;
+    line-height: var(--text__line-height-headline);
+
+    img.gray-marker {
+      position: absolute;
+      left: 24px;
+    }
+  }
+  &-anchor-bottom .mapboxgl-popup-tip {
+    filter: drop-shadow(0 3px 2px rgba(0,0,0,0.1));
+  }
+  h3 {
+    margin: 0 0 4px;
+    font-weight:600;
+    font-size: 15px;
+  }
+  h4 {
+    font-size: 14px;
+  }
+
+  h4,
+  p{
+    color: #9b9b9b;
+    margin:0;
+  }
+
+  p {
+    font-size: 13px;
+  }
+}

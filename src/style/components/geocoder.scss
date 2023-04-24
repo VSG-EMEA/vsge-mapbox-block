@@ -1,0 +1,53 @@
+.mapboxgl-ctrl-geocoder {
+  width: 100%;
+  height: $topbar-height;
+
+  input {
+    border: 0;
+    max-width: calc(100% - 6px);
+    border-bottom: 1px solid var(--wp--preset--color--gray-light);
+    height: $topbar_elements_height;
+    padding: 6px var(--wp--preset--spacing--40) 6px 48px;
+    font-family: var(--wp--preset--font-family--default);
+    font-weight: 300;
+
+    @media #{$mq__phablet} {
+      font-size: var(--wp--preset--spacing--20);
+    }
+  }
+
+  & > div {
+    min-width: 100%;
+    margin-left: 0;
+  }
+
+  &--icon-search {
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    top: 12px;
+    @media #{$mq__phablet} {
+      left: 8px;
+    }
+  }
+  &--suggestion-title {}
+  &--suggestion-address {
+    font-weight: 300;
+    font-size: .9em;
+  }
+
+  &--pin-right {
+    min-width: inherit;
+    & > * {
+      min-width: 30px;
+      right: 0;
+      margin: 0;
+      background-color: transparent;
+      color: var(--wp--preset--color--gray);
+      @media #{$mq__phablet} {
+        top: 2px;
+      }
+    }
+  }
+
+}
