@@ -80,8 +80,11 @@ export const Sortable = ( props: {
 				</Droppable>
 			</DragDropContext>
 			<Button
-				text={ __( 'add' ) }
-				type={ 'secondary' }
+				icon={ 'plus' }
+				text={ __( 'Add new' ) }
+				type={ 'link' }
+				className={ 'add-new-sortable-item' }
+				style={ { width: '100%' } }
 				onClick={ () => {
 					setOptions( tax, [
 						...items,

@@ -4,6 +4,7 @@ import {
 	CheckboxControl,
 	TextareaControl,
 	TextControl,
+	IconButton,
 } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
@@ -44,15 +45,17 @@ export const PinCard = ( {
 							<h4>
 								({ key }) - { props.properties?.name || 'New' }
 							</h4>
-							<Button
+							<IconButton
 								onClick={ () => setIsOpen( ! isOpen ) }
 								isSmall={ true }
-								icon={ 'move' }
+								size={ 16 }
+								icon={ 'arrow-down' }
 							/>
-							<Button
+							<IconButton
 								onClick={ () => deleteItem( key ) }
 								isSmall={ true }
-								icon={ 'close' }
+								icon="trash"
+								size={ 16 }
 							/>
 						</div>
 						<TextControl

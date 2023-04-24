@@ -1,5 +1,5 @@
 import { memo } from '@wordpress/element';
-import { Icon, IconButton, TextControl } from '@wordpress/components';
+import {Button, Icon, IconButton, TextControl} from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
 
 const Item = ( { props, index, tax, key, updateItem, deleteItem } ) => (
@@ -23,9 +23,15 @@ const Item = ( { props, index, tax, key, updateItem, deleteItem } ) => (
 							updateItem( key, tax, { value: newValue } )
 						}
 					></TextControl>
-					<Icon icon="move" />
+					<IconButton
+            icon="move"
+            size={ 16 }
+            isSmall={ true }
+          />
 					<IconButton
 						icon="trash"
+						size={ 16 }
+            isSmall={ true }
 						onClick={ () => deleteItem( key ) }
 					/>
 				</div>
@@ -47,7 +53,7 @@ export const ItemsList = memo( function ItemsList( {
 			tax={ tax }
 			key={ el.id }
 			updateItem={ updateItem }
-      deleteItem={ deleteItem }
+			deleteItem={ deleteItem }
 		/>
 	) );
 } );
