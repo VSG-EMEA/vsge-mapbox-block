@@ -42,7 +42,7 @@ export const getUserLanguage = () => {
  * characters that are not alphanumeric or a hyphen removed and any special characters encoded using
  * percent-encoding.
  */
-function safeSlug( string: string ) {
+export function safeSlug( string: string ) {
 	return encodeURIComponent( string )
 		.toLowerCase()
 		.replace( /\.|%[0-9a-zA-Z]{2}/gi, '' );

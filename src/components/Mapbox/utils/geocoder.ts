@@ -4,11 +4,11 @@ import { Coord } from '@turf/turf';
 
 import { LngLatBoundsLike } from 'mapbox-gl';
 
-function initGeocoder( geocoderRef, attributes ) {
+function initGeocoder( geocoderRef, map, attributes, defaults ) {
 	const geocoder = new MapboxGeocoder( {
-		accessToken: defaults.accessToken,
+		accessToken: defaults,
 		mapboxgl,
-		lang: defaults.language,
+		lang: defaults,
 		placeholder: __( 'Find the nearest store' ),
 		marker: {
 			element: document.createElement( 'div' ),
@@ -30,6 +30,7 @@ function initGeocoder( geocoderRef, attributes ) {
 		},
 	} );
 
+	/*
 	geocoder.on(
 		'result',
 		( ev: { result: { geometry: Coord | undefined } } ) => {
@@ -49,13 +50,13 @@ function initGeocoder( geocoderRef, attributes ) {
 				}
 
 				renderListings( filteredStores );
-				/* Open a popup for the closest store. */
+				/!* Open a popup for the closest store. *!/
 				if ( defaults?.siteurl )
 					createPopUp( filteredStores[ 0 ], {
 						siteurl: defaults.siteurl,
 					} );
 
-				/** Highlight the listing for the closest store. */
+				/!** Highlight the listing for the closest store. *!/
 				const activeListing = filteredStores.length
 					? document.getElementById(
 							'listing-' + filteredStores[ 0 ].properties?.id
@@ -63,11 +64,11 @@ function initGeocoder( geocoderRef, attributes ) {
 					: null;
 				activeListing?.classList.add( 'active-store' );
 
-				/**
+				/!**
 				 * Adjust the map camera:
 				 * Get a bbox that contains both the geocoder result and
 				 * the closest store. Fit the bounds to that bbox.
-				 */
+				 *!/
 				const bbox = getBbox(
 					filteredStores,
 					0,
@@ -90,6 +91,7 @@ function initGeocoder( geocoderRef, attributes ) {
 		removePopup();
 		fitView( map, filteredStores );
 	} );
+*/
 
 	return geocoder;
 }
