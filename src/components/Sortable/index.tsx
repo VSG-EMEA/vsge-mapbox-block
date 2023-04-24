@@ -63,7 +63,7 @@ export const Sortable = ( props: {
 									sortedItems={ items }
 									tax={ tax }
 									updateItem={ updateItem }
-									deleteItem
+									deleteItem={ deleteItem }
 								/>
 							) : (
 								<PinList
@@ -71,7 +71,7 @@ export const Sortable = ( props: {
 									filters={ mapboxOptions.filters }
 									tags={ mapboxOptions.tags }
 									updateItem={ updateItem }
-									deleteItem
+									deleteItem={ deleteItem }
 								/>
 							) }
 							{ provided.placeholder }

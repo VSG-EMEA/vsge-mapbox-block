@@ -8,16 +8,15 @@ import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 
-export const PinCard = ( data: {
-	props: any;
-	updateItem: Function;
-	deleteItem: Function;
-	tags: any;
-	filters: any;
-	index: any;
+export const PinCard = ( {
+	props,
+	key,
+	updateItem,
+	deleteItem,
+	tags,
+	filters,
+	index,
 } ) => {
-	const { props, updateItem, deleteItem, tags, filters, index } = data;
-
 	const [ isOpen, setIsOpen ] = useState( false );
 
 	return (
@@ -41,11 +40,13 @@ export const PinCard = ( data: {
 						} }
 					>
 						<div className={ 'controlgroup-feature-item' }>
-							<h4>{ props.properties?.name || 'New' }</h4>
+							<h4>
+								({ key }) - { props.properties?.name || 'New' }
+							</h4>
 							<button onClick={ () => setIsOpen( ! isOpen ) }>
 								🔻
 							</button>
-							<button onClick={ () => deleteItem( index ) }>
+							<button onClick={ () => deleteItem( key ) }>
 								✖️
 							</button>
 						</div>
@@ -138,9 +139,10 @@ export const PinList = memo( function PinList( {
 	return sortedPins.map( ( pin, index ) => (
 		<PinCard
 			props={ pin }
-			key={ pin.id }
+			key={ pin.id || index }
 			index={ index }
 			updateItem={ updateItem }
+			deleteItem={ deleteItem }
 			tags={ tags }
 			filters={ filters }
 		/>
