@@ -25,7 +25,7 @@ export function renderListings( selectedFilter, data: Feature[] ) {
 	}
 }
 
-export const MapListingTag = ( props ) => {
+export const ListingTag = ( props ) => {
 	const { tag, value } = props;
 	return (
 		<span className={ value } title={ value }>

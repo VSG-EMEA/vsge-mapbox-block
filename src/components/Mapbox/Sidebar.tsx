@@ -23,11 +23,11 @@ export const Sidebar = ( { attributes, geocoderRef } ): JSX.Element => {
 	const { mapboxOptions } = attributes;
 
 	return (
-		<div id="map-sidebar">
+		<div className={ 'map-sidebar' }>
 			{ mapboxOptions.geocoderEnabled === true && defaults ? (
 				<GeoCoder geocoderRef={ geocoderRef } />
 			) : null }
-			<div id="feature-listing" className="feature-listing">
+			<div className={ 'feature-listing' }>
 				{ mapboxOptions.listings.map( ( data: any, index: number ) => (
 					<Listing { ...data } key={ index } />
 				) ) }

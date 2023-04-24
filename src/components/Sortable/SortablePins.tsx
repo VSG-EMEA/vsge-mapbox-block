@@ -1,5 +1,6 @@
 import { memo, useState } from '@wordpress/element';
 import {
+	Button,
 	CheckboxControl,
 	TextareaControl,
 	TextControl,
@@ -43,12 +44,16 @@ export const PinCard = ( {
 							<h4>
 								({ key }) - { props.properties?.name || 'New' }
 							</h4>
-							<button onClick={ () => setIsOpen( ! isOpen ) }>
-								🔻
-							</button>
-							<button onClick={ () => deleteItem( key ) }>
-								✖️
-							</button>
+							<Button
+								onClick={ () => setIsOpen( ! isOpen ) }
+								isSmall={ true }
+								icon={ 'move' }
+							/>
+							<Button
+								onClick={ () => deleteItem( key ) }
+								isSmall={ true }
+								icon={ 'close' }
+							/>
 						</div>
 						<TextControl
 							label={ __( 'name' ) }
