@@ -1,6 +1,5 @@
-import { Button, SelectControl } from '@wordpress/components';
+import { Button, Icon, SelectControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
 import { safeSlug } from '../../utils';
 
 /**
@@ -18,6 +17,22 @@ function topbarSelectValue( selectValues: { id: number; value: string } ) {
 	return selectItems;
 }
 
+const centerViewIcon = () => (
+	<Icon
+		icon={ () => (
+			<svg
+				width={ 20 }
+				height={ 20 }
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 48 48"
+			>
+				<path d="M0 0h48v48H0z" fill="none" />
+				<path d="M10 30H6v8a4 4 0 0 0 4 4h8v-4h-8v-8zm0-20h8V6h-8a4 4 0 0 0-4 4v8h4v-8zm28-4h-8v4h8v8h4v-8a4 4 0 0 0-4-4zm0 32h-8v4h8a4 4 0 0 0 4-4v-8h-4v8zM24 16a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm0 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+			</svg>
+		) }
+	/>
+);
+
 export const TopBar = ( attributes ) => {
 	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
 	const [ filter, setFilter ] = useState( '' );
@@ -27,7 +42,8 @@ export const TopBar = ( attributes ) => {
 		<div className={ 'map-topbar' }>
 			{ fitView ? (
 				<Button
-					icon={ 'align-center' }
+					icon={ centerViewIcon }
+					isSmall={ true }
 					className={
 						'button button-secondary outlined has-white-background-color fit-view'
 					}
@@ -38,7 +54,6 @@ export const TopBar = ( attributes ) => {
 
 			{ tagsEnabled ? (
 				<SelectControl
-					label={ __( 'partnership:' ) }
 					className={ 'filter-by-partnership' }
 					value={ filter }
 					options={ [
@@ -56,7 +71,6 @@ export const TopBar = ( attributes ) => {
 
 			{ filtersEnabled ? (
 				<SelectControl
-					label={ __( 'Tag:' ) }
 					className={ 'filter-by-tag' }
 					value={ tag }
 					options={ [
