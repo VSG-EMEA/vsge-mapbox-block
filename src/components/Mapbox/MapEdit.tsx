@@ -73,10 +73,12 @@ export function MapEdit( {
 	}, [ attributes.mapStyle ] );
 
 	useEffect( () => {
-		if ( map ) {
+		if ( map && attributes.geocoderEnabled ) {
 			setGeoCoder(
 				initGeocoder( geocoderRef, map, attributes, defaults )
 			);
+		} else {
+			// removeGeocoder( undefined );
 		}
 	}, [ attributes.geocoderEnabled ] );
 

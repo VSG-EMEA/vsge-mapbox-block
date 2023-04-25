@@ -6,7 +6,8 @@ import {
 } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { getDefaults } from '../../utils';
-import { Ref } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { MutableRefObject, Ref } from 'react';
 
 type MountedMapsContextValue = {
 	map?: mapboxgl.Map | null;
@@ -37,8 +38,10 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ popupContent, setPopupContent ] = useState( [] );
 	const defaults = getDefaults();
 
-	const mapRef = useRef< HTMLDivElement >( null );
-	const geocoderRef = useRef< HTMLDivElement >( null );
+	const mapRef: MutableRefObject< HTMLDivElement | null > =
+		useRef< HTMLDivElement >( null );
+	const geocoderRef: MutableRefObject< HTMLDivElement | null > =
+		useRef< HTMLDivElement >( null );
 
 	return (
 		<MapboxContext.Provider

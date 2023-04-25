@@ -1,7 +1,11 @@
 .wp-block-vsge-mapbox .map-wrapper {
+
 	.geocoder {
 		width: 100%;
 		height: $topbar-height;
+	}
+
+	.mapboxgl-ctrl-geocoder {
 
 		input {
 			border: 0;

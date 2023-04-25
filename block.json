@@ -9,5 +9,8 @@
   ],
   "category": "embed",
   "editorStyle": "file:./build/mapbox.css",
-  "style": ["file:./build/style-mapbox-frontend.css", "file:./build/mapbox-frontend.css"]
+  "style": [
+    "file:./build/mapbox-frontend.css",
+    "file:./build/style-mapbox-frontend.css"
+  ]
 }
