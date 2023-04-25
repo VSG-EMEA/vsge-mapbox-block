@@ -14,6 +14,7 @@ import {
 import { mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
+import { initGeocoder } from './utils/geocoder';
 
 export function MapEdit( {
 	attributes,
@@ -36,7 +37,7 @@ export function MapEdit( {
 		mapboxOptions: { tags, filters, listings },
 	} = attributes;
 
-	const { map, mapRef, geoCoder, geocoderRef, defaults } =
+	const { map, mapRef, setGeoCoder, geocoderRef, defaults } =
 		useContext( MapboxContext );
 
 	const setOptions = ( key: string, value: string | number | boolean ) => {
@@ -73,8 +74,10 @@ export function MapEdit( {
 	}, [ attributes.mapStyle ] );
 
 	useEffect( () => {
-		if ( ! geoCoder ) {
-			geoCoder.onAdd( map );
+		if ( map ) {
+			setGeoCoder(
+				initGeocoder( geocoderRef, map, attributes, defaults )
+			);
 		}
 	}, [ attributes.geocoderEnabled ] );
 

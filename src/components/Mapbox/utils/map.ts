@@ -1,4 +1,5 @@
 import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -10,8 +11,15 @@ import mapboxgl from 'mapbox-gl';
  * @return {mapboxgl.Map} a mapboxgl.Map object.
  */
 export function initMap( mapRef, attributes ) {
-	const { latitude, longitude, pitch, bearing, mapZoom, mapStyle } =
-		attributes;
+	const {
+		latitude,
+		longitude,
+		pitch,
+		bearing,
+		mapZoom,
+		mapStyle,
+		mapboxOptions,
+	} = attributes;
 
 	const map = new mapboxgl.Map( {
 		container: mapRef,
@@ -23,6 +31,19 @@ export function initMap( mapRef, attributes ) {
 	} );
 
 	map.on( 'load', function () {
+		/*		map.setLayoutProperty( 'country-label', 'text-field', [
+			'get',
+			'name_' + defaults.language.substr( 0, 2 ),
+		] );*/
+
+		map.addSource( 'places', {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: mapboxOptions.listings,
+			},
+		} );
+
 		if ( map && attributes.threeDimensionality ) {
 			if ( ! map.getSource( 'mapbox-dem' ) ) {
 				map.addSource( 'mapbox-dem', {

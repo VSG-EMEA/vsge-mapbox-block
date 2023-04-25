@@ -1,15 +1,17 @@
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
-import { Coord } from '@turf/turf';
+import { mapboxgl } from 'mapbox-gl';
 
 export function initGeocoder(
 	geocoderRef,
+	map,
 	attributes,
 	defaults
 ): MapboxGeocoder {
 	if ( defaults.accessToken ) {
 		const geocoder = new MapboxGeocoder( {
 			accessToken: defaults.accessToken,
+			mapboxgl,
 			lang: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
 			marker: {
@@ -32,6 +34,8 @@ export function initGeocoder(
 			},
 		} );
 
+		geocoderRef.current.appendChild( geocoder.onAdd( map ) );
+
 		geocoder.on( 'clear', function () {
 			// document
 			// 	.getElementById( 'feature-listing' )
@@ -42,12 +46,10 @@ export function initGeocoder(
 			// fitView( map, attributes.mapboxOptions.listings );
 		} );
 
-		geocoder.on(
-			'result',
-			( ev: { result: { geometry: Coord | undefined } } ) => {
-				console.log( ev.result );
-				// save the search results
-				/*searchResult = ev.result.geometry;
+		geocoder.on( 'result', ( ev ) => {
+			console.log( ev?.result );
+			// save the search results
+			/*searchResult = ev.result.geometry;
 
         if ( searchResult ) {
           filteredStores = locateNearestStore(
@@ -91,8 +93,7 @@ export function initGeocoder(
             padding: 100,
           } );
         }*/
-			}
-		);
+		} );
 
 		return geocoder;
 	}

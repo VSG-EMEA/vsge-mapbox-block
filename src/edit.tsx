@@ -1,6 +1,5 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapProvider } from './components/Mapbox/MapboxContext';
 import { MapEdit } from './components/Mapbox/MapEdit';
 

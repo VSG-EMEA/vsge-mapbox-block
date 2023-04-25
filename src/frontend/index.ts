@@ -1,6 +1,6 @@
+import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { createMapRoot } from './init';
-import { getDefaults } from '../utils';
 
 /**
  * This code block is checking if there are any elements with the class "wp-block-vsge-mapbox" on the

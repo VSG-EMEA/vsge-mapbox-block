@@ -1,5 +1,6 @@
 import { registerBlockType } from '@wordpress/blocks';
 /** add styles to bundle */
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './style/style-admin.scss';
 
 /** the edit function */
