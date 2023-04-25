@@ -1,59 +1,62 @@
-.mapbox-sidebar-feature {
-  display: block;
-  position: relative;
-  border-bottom: 1px solid #eee;
-  padding: 16px 16px 16px 48px;
-  margin: 0 0 var(--wp--preset--spacing--40);
-  border-radius: 2px;
-  background: #f3f3f3;
-  text-decoration: none;
+.wp-block-vsge-mapbox .map-wrapper {
+	.mapbox-sidebar-feature {
+		display: block;
+		position: relative;
+		border-bottom: 1px solid #eee;
+		padding: 16px 16px 16px 48px;
+		margin: 0 0 var(--wp--preset--spacing--40);
+		border-radius: 2px;
+		background: #f3f3f3;
+		text-decoration: none;
 
-  &:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-  }
+		&:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+		}
 
-  .title {
-    display: block;
-    color: #484848;
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 1.1;
-    margin: 0 0 8px;
-    transition: .3s;
-    small {
-      font-weight: 400;
-    }
-  }
+		.title {
+			display: block;
+			color: #484848;
+			font-weight: 600;
+			font-size: 18px;
+			line-height: 1.1;
+			margin: 0 0 8px;
+			transition: 0.3s;
 
-  .dashicons-marker {
-    position: absolute;
-    left: 12px;
-    top: 18px;
-  }
+			small {
+				font-weight: 400;
+			}
+		}
 
-  p.partnership {
-    line-height: 15px;
-    margin: 0;
-    font-size: 11px;
-    text-transform: uppercase;
-    color: #757575;
-  }
+		.dashicons-marker {
+			position: absolute;
+			left: 12px;
+			top: 18px;
+		}
 
-  p,
-  a {
-    line-height: 18px;
-    margin: 0;
-    font-size: 14px;
-    color: #757575;
-  }
+		p.partnership {
+			line-height: 15px;
+			margin: 0;
+			font-size: 11px;
+			text-transform: uppercase;
+			color: #757575;
+		}
 
-  &.active-store .title,
-  .title:hover {
-    color: #3f51b5;
-  }
+		p,
+		a {
+			line-height: 18px;
+			margin: 0;
+			font-size: 14px;
+			color: #757575;
+		}
 
-  &.active-store {
-    background-color: #f3f3f3;
-  }
+		&.active-store .title,
+		.title:hover {
+			color: #3f51b5;
+		}
+
+		&.active-store {
+			background-color: #f3f3f3;
+		}
+	}
 }

@@ -1,5 +1,3 @@
-import './style/style.scss';
-
 import { useBlockProps } from '@wordpress/block-editor';
 import { BlockAttributes } from '@wordpress/blocks';
 import { Map } from './components/Mapbox/Map';

@@ -1,75 +1,78 @@
 .dnd-wrap {
-  padding: .25rem;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  margin: 0 0 6px;
+	padding: 0.25rem;
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	margin: 0 0 6px;
 
-  .components-base-control__field, h4 {
-    margin: 0;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
+	.components-base-control__field,
+	h4 {
+		margin: 0;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
 
-  span, button {
-    margin: 0;
-    padding: 0;
-    min-width: 32px;
-    align-self: center;
-  }
+	span,
+	button {
+		margin: 0;
+		padding: 0;
+		min-width: 32px;
+		align-self: center;
+	}
 
-  input {
-    margin: 0;
-  }
+	input {
+		margin: 0;
+	}
 
-  .controlgroup-feature-item {
-    display: grid;
-    margin: 0 0 4px;
-    width: 100%;
-    grid-template-columns: 1fr auto auto;
-    white-space: nowrap;
-    line-height: 20px;
+	.controlgroup-feature-item {
+		display: grid;
+		margin: 0 0 4px;
+		width: 100%;
+		grid-template-columns: 1fr auto auto;
+		white-space: nowrap;
+		line-height: 20px;
 
-    button {
-      cursor: pointer;
-      background: transparent;
-      border: 0;
-    }
-  }
+		button {
+			cursor: pointer;
+			background: transparent;
+			border: 0;
+		}
+	}
 }
 
 .sortable-listings {
+	.dnd-wrap {
+		height: 36px;
+		overflow: hidden;
 
-  .dnd-wrap {
-    height: 36px;
-    overflow: hidden;
+		&.is-open {
+			height: auto;
+		}
 
-    &.is-open {
-      height: auto;
-    }
+		.components-base-control,
+		span,
+		button {
+			margin: 0 0 0.15rem;
+			padding: 0;
+		}
 
-    .components-base-control, span, button {
-      margin: 0 0 .15rem;
-      padding: 0;
-    }
-
-    .components-checkbox-control__input-container {
-      margin: 0 .25rem 0;
-    }
-  }
+		.components-checkbox-control__input-container {
+			margin: 0 0.25rem 0;
+		}
+	}
 }
 
 .sortable-tags,
 .sortable-filters {
-  .dnd-wrap {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    line-height: 1;
-    justify-content: space-between;
+	.dnd-wrap {
+		display: grid;
+		grid-template-columns: 1fr auto auto;
+		line-height: 1;
+		justify-content: space-between;
 
-    .components-base-control {
-      margin: 0;
-      padding: 0;
-    }
-  }
+		.components-base-control {
+			margin: 0;
+			padding: 0;
+		}
+	}
 }

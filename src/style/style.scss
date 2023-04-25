@@ -1,30 +1,13 @@
-$topbar-height: 48px;
-$topbar_elements_height: $topbar-height;
+/** the plugin global variables */
+@import "vars";
 
-$size__margin: 8px;
 
-$mq__phablet: "(max-width : 600px)";
 
-.wp-block-vsge-mapbox .map-wrapper {
-
-  display: flex;
-  overflow: hidden;
-  gap: var(--wp--preset--spacing--40);
-  min-height: 400px;
-  width: 100%;
-  max-height: 80vh;
-  padding-top: var(--wp--preset--spacing--50, 8px);
-
-  @media #{$mq__phablet} {
-    // flex-direction: column-reverse;
-    // height: auto;
-  }
-
-  @import "components/geocoder";
-  @import "components/listing";
-  @import "components/map";
-  @import "components/popup";
-  @import "components/sidebar";
-  @import "components/tags";
-  @import "components/topbar";
-}
+@import "components/common";
+@import "components/geocoder";
+@import "components/listing";
+@import "components/map";
+@import "components/popup";
+@import "components/sidebar";
+@import "components/tags";
+@import "components/topbar";

@@ -1,54 +1,60 @@
-.geocoder {
-  width: 100%;
-  height: $topbar-height;
+.wp-block-vsge-mapbox .map-wrapper {
+	.geocoder {
+		width: 100%;
+		height: $topbar-height;
 
-  input {
-    border: 0;
-    max-width: calc(100% - 6px);
-    border-bottom: 1px solid var(--wp--preset--color--gray-light);
-    height: $topbar_elements_height;
-    padding: 6px var(--wp--preset--spacing--40) 6px 48px;
-    font-family: var(--wp--preset--font-family--default);
-    font-weight: 300;
+		input {
+			border: 0;
+			max-width: calc(100% - 6px);
+			border-bottom: 1px solid var(--wp--preset--color--gray-light);
+			height: $topbar_elements_height;
+			padding: 6px var(--wp--preset--spacing--40) 6px 48px;
+			font-family: var(--wp--preset--font-family--default);
+			font-weight: 300;
 
-    @media #{$mq__phablet} {
-      font-size: var(--wp--preset--spacing--20);
-    }
-  }
+			@media #{$mq__phablet} {
+				font-size: var(--wp--preset--spacing--20);
+			}
+		}
 
-  & > div {
-    min-width: 100%;
-    margin-left: 0;
-  }
+		& > div {
+			min-width: 100%;
+			margin-left: 0;
+		}
 
-  &--icon-search {
-    right: 12px;
-    width: 24px;
-    height: 24px;
-    top: 12px;
-    @media #{$mq__phablet} {
-      left: 8px;
-    }
-  }
+		&--icon-search {
+			right: 12px;
+			width: 24px;
+			height: 24px;
+			top: 12px;
 
-  &--suggestion-title {}
-  &--suggestion-address {
-    font-weight: 300;
-    font-size: .9em;
-  }
+			@media #{$mq__phablet} {
+				left: 8px;
+			}
+		}
 
-  &--pin-right {
-    min-width: inherit;
-    & > * {
-      min-width: 30px;
-      right: 0;
-      margin: 0;
-      background-color: transparent;
-      color: var(--wp--preset--color--gray);
-      @media #{$mq__phablet} {
-        top: 2px;
-      }
-    }
-  }
+		&--suggestion-title {
+		}
 
+		&--suggestion-address {
+			font-weight: 300;
+			font-size: 0.9em;
+		}
+
+		&--pin-right {
+			min-width: inherit;
+
+			& > * {
+				min-width: 30px;
+				right: 0;
+				margin: 0;
+				background-color: transparent;
+				color: var(--wp--preset--color--gray);
+
+				@media #{$mq__phablet} {
+					top: 2px;
+				}
+			}
+		}
+	}
 }

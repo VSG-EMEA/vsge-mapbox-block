@@ -1,5 +1,3 @@
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-
 /**
  * This is a TypeScript React function that returns a JSX element representing a geocoder marker.
  *

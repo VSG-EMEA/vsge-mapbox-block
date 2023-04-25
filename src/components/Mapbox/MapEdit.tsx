@@ -1,4 +1,3 @@
-import { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
 import { MapboxContext, useMap } from './MapboxContext';
 import mapboxgl from 'mapbox-gl';
 import { useContext, useEffect } from '@wordpress/element';

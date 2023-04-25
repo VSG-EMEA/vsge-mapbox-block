@@ -1,26 +1,31 @@
 // TAGS
-.tags {
-  margin-top: 8px;
-  line-height: var(--text__line-height-headline);
+.wp-block-vsge-mapbox .map-wrapper {
+	.tags {
+		margin-top: 8px;
+		line-height: var(--text__line-height-headline);
 
-  span.tag {
-    margin: 0 var(--wp--preset--spacing--40) 0 0;
-    display: inline-block;
-    white-space: nowrap;
-    font-size: 9px;
-    line-height: 10px;
-    text-transform: uppercase;
-    color: #888;
+		span.tag {
+			margin: 0 var(--wp--preset--spacing--40) 0 0;
+			display: inline-block;
+			white-space: nowrap;
+			font-size: 9px;
+			line-height: 10px;
+			text-transform: uppercase;
+			color: #888;
 
-    &:before {
-      content: "+";
-      display: inline-block;
-      vertical-align: top;
-      font-size: 16px;
-      line-height: 10px;
-      margin-right: 2px;
-      opacity: .8;
-      &:hover {opacity: 1;}
-    }
-  }
+			&:before {
+				content: "+";
+				display: inline-block;
+				vertical-align: top;
+				font-size: 16px;
+				line-height: 10px;
+				margin-right: 2px;
+				opacity: 0.8;
+
+				&:hover {
+					opacity: 1;
+				}
+			}
+		}
+	}
 }

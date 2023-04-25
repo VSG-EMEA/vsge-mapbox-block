@@ -1,11 +1,14 @@
-.marker {
-  border: none;
-  cursor: pointer;
-  height: 56px;
-  width: 56px;
-  background-color: rgba(var(--color__black_decimal), 0);
+.wp-block-vsge-mapbox .map-wrapper {
+  display: flex;
+  overflow: hidden;
+  gap: var(--wp--preset--spacing--40);
+  min-height: 400px;
+  width: 100%;
+  max-height: 80vh;
+  padding-top: var(--wp--preset--spacing--50, 8px);
 
-  &#marker-geocoder {
-    filter: grayscale(1);
+  @media #{$mq__phablet} {
+    // flex-direction: column-reverse;
+    // height: auto;
   }
 }

@@ -8,7 +8,6 @@
     "mapbox"
   ],
   "category": "embed",
-  "viewScript": "file:./build/mapbox-frontend.js",
   "editorStyle": "file:./build/mapbox.css",
-  "style": "file:./build/style-mapbox.css"
+  "style": ["file:./build/style-mapbox-frontend.css", "file:./build/mapbox-frontend.css"]
 }
