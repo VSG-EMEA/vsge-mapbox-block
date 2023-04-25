@@ -17,11 +17,11 @@ import { GeoCoder } from './Geocoder';
  * the "mapboxOptions" object. The "feature-listing" div contains a map
  */
 export const Sidebar = ( { attributes, geocoderRef } ): JSX.Element => {
-	const { mapboxOptions } = attributes;
+	const { geocoderEnabled, mapboxOptions } = attributes;
 
 	return (
 		<div className={ 'map-sidebar' }>
-			{ mapboxOptions.geocoderEnabled === true ? (
+			{ geocoderEnabled ? (
 				<GeoCoder geocoderRef={ geocoderRef } />
 			) : null }
 			<div className={ 'feature-listing' }>

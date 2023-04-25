@@ -1,4 +1,4 @@
-import mapboxgl, { Coordinate } from 'mapbox-gl';
+import mapboxgl, {Coordinate, Marker} from 'mapbox-gl';
 import { Feature } from '@turf/turf';
 
 /**
@@ -36,11 +36,11 @@ export function recenterView( map, defaults ) {
  */
 export function flyToStore(
 	map: mapboxgl.Map,
-	coordinates: Coordinate,
+	store: Point,
 	zoom: number = 8
 ) {
 	return map.flyTo( {
-		center: coordinates,
+		center: store.geometry.coordinates,
 		zoom,
 	} );
 }

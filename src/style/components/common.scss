@@ -1,14 +1,14 @@
 .wp-block-vsge-mapbox .map-wrapper {
-  display: flex;
-  overflow: hidden;
-  gap: var(--wp--preset--spacing--40);
-  min-height: 400px;
-  width: 100%;
-  max-height: 80vh;
-  padding-top: var(--wp--preset--spacing--50, 8px);
+	display: flex;
+	overflow: hidden;
+	gap: var(--wp--preset--spacing--40);
+	min-height: 400px;
+	width: 100%;
+	max-height: 80vh;
+	padding-top: var(--wp--preset--spacing--50, 8px);
 
-  @media #{$mq__phablet} {
-    // flex-direction: column-reverse;
-    // height: auto;
-  }
+	@media #{$mq__phablet} {
+		// flex-direction: column-reverse;
+		// height: auto;
+	}
 }

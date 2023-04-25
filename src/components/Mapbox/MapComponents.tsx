@@ -1,6 +1,8 @@
 import { Feature } from '@turf/turf';
 import { __ } from '@wordpress/i18n';
-
+import { highlightListing, MapPopup, MarkerPopup, removePopup } from './Popup';
+import { flyToStore } from '../../utils/view';
+import mapboxgl from 'mapbox-gl';
 
 /**
  * This function renders a list of map listings based on selected filters and data.
@@ -183,3 +185,46 @@ if ( props.name ) {
     }
   } );
 }*/
+
+export function addMarkers( storesEl, map ) {
+	removePopup();
+
+	const markers = [];
+
+	// removes all markers
+	for ( let i = markers.length - 1; i >= 0; i-- ) {
+		markers[ i ].remove();
+	}
+
+	/* For each feature in the GeoJSON object above: */
+	storesEl.features.forEach( function ( marker, i ) {
+		// Create an img element for the marker
+		const el = document.createElement( 'div' );
+		el.id = 'marker-' + i;
+		el.className = 'marker';
+
+		console.log( marker );
+
+		if ( marker?.geometry ) {
+			// Add markers to the map at all points
+			const thismarker = new mapboxgl.Marker( el, { offset: [ 0, -23 ] } )
+				.setLngLat( marker.geometry.coordinates )
+				.addTo( map );
+
+			markers.push( thismarker );
+		}
+
+		el.addEventListener( 'click', function ( e ) {
+			e.stopPropagation();
+
+			// 1. Fly to the point
+			flyToStore( map, marker );
+
+			// 2. Close all other popups and display popup for clicked store
+			MarkerPopup( marker );
+
+			// 3. Highlight listing in sidebar (and remove highlight for all other listings)
+			highlightListing( marker );
+		} );
+	} );
+}

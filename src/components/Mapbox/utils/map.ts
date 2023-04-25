@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { addMarkers, renderListings } from '../MapComponents';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -21,6 +21,11 @@ export function initMap( mapRef, attributes ) {
 		mapboxOptions,
 	} = attributes;
 
+	const stores = {
+		type: 'FeatureCollection',
+		features: mapboxOptions.listings,
+	};
+
 	const map = new mapboxgl.Map( {
 		container: mapRef,
 		style: 'mapbox://styles/mapbox/' + mapStyle,
@@ -38,11 +43,10 @@ export function initMap( mapRef, attributes ) {
 
 		map.addSource( 'places', {
 			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: mapboxOptions.listings,
-			},
+			data: stores,
 		} );
+
+		addMarkers( stores, map );
 
 		if ( map && attributes.threeDimensionality ) {
 			if ( ! map.getSource( 'mapbox-dem' ) ) {

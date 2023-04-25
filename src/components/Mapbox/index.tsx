@@ -8,14 +8,8 @@ import mapboxgl from 'mapbox-gl';
 import { initGeocoder } from './utils/geocoder';
 
 export function MapBox( { attributes } ): JSX.Element {
-	const {
-		map,
-		setMap,
-		setGeoCoder,
-		defaults,
-		mapRef,
-		geocoderRef,
-	} = useContext( MapboxContext );
+	const { map, setMap, setGeoCoder, defaults, mapRef, geocoderRef } =
+		useContext( MapboxContext );
 
 	useEffect( () => {
 		if ( defaults?.accessToken && mapRef.current ) {
@@ -24,12 +18,7 @@ export function MapBox( { attributes } ): JSX.Element {
 
 			if ( attributes.geocoderEnabled ) {
 				setGeoCoder(
-					initGeocoder(
-						geocoderRef,
-						map,
-						attributes,
-						defaults
-					)
+					initGeocoder( geocoderRef, map, attributes, defaults )
 				);
 			}
 		} else {

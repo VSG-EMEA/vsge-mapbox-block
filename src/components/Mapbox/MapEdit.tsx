@@ -77,8 +77,6 @@ export function MapEdit( {
 			setGeoCoder(
 				initGeocoder( geocoderRef, map, attributes, defaults )
 			);
-		} else {
-			// removeGeocoder( undefined );
 		}
 	}, [ attributes.geocoderEnabled ] );
 

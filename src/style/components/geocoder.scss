@@ -1,11 +1,15 @@
 .wp-block-vsge-mapbox .map-wrapper {
 
 	.geocoder {
-		width: 100%;
 		height: $topbar-height;
+    padding-bottom: var(--wp--preset--spacing--40);
 	}
 
 	.mapboxgl-ctrl-geocoder {
+    width: 100%;
+    max-width: inherit;
+    box-shadow: inherit;
+    border-radius: 0;
 
 		input {
 			border: 0;
@@ -21,7 +25,7 @@
 			}
 		}
 
-		& > div {
+		> div {
 			min-width: 100%;
 			margin-left: 0;
 		}
