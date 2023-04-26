@@ -1,5 +1,6 @@
 import { ListingTag } from './MapComponents';
 import { Icon } from '@wordpress/components';
+import { mapMarker } from '@wordpress/icons';
 
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
@@ -25,7 +26,7 @@ export const Listing = ( {
 
 	return type === 'Feature' ? (
 		<div className={ 'mapbox-sidebar-feature listing' }>
-			<Icon icon={ 'marker' } />
+			<Icon icon={ mapMarker } />
 			<p className="partnership">
 				{ properties.partnership.join( ' ' ) }
 			</p>

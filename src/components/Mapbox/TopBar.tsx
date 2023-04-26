@@ -1,6 +1,7 @@
 import { Button, Icon, SelectControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { safeSlug } from '../../utils';
+import { fitInView } from '../../utils/view';
 
 /**
  * trasform an array of strings into a select values that could be used with select control
@@ -44,9 +45,8 @@ export const TopBar = ( attributes ) => {
 				<Button
 					icon={ centerViewIcon }
 					isSmall={ true }
-					className={
-						'button button-secondary outlined has-white-background-color fit-view'
-					}
+					className={ 'fit-view' }
+					onClick={ () => fitInView() }
 				>
 					fit-view
 				</Button>
@@ -54,7 +54,7 @@ export const TopBar = ( attributes ) => {
 
 			{ tagsEnabled ? (
 				<SelectControl
-					className={ 'filter-by-partnership' }
+					className={ 'mapbox-map-filter filter-by-partnership' }
 					value={ filter }
 					options={ [
 						{
@@ -71,7 +71,7 @@ export const TopBar = ( attributes ) => {
 
 			{ filtersEnabled ? (
 				<SelectControl
-					className={ 'filter-by-tag' }
+					className={ 'mapbox-map-filter filter-by-tag' }
 					value={ tag }
 					options={ [
 						{ value: '', label: 'Select a tag', disabled: true },

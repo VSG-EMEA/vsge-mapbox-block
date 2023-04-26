@@ -2,9 +2,9 @@
   .marker {
     border: none;
     cursor: pointer;
-    height: 56px;
-    width: 56px;
-    background-color: rgba(var(--color__black_decimal), 0);
+    height: 48px;
+    width: 48px;
+    background: transparent;
 
     &#marker-geocoder {
       filter: grayscale(1);

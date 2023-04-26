@@ -54,7 +54,7 @@ export function flyToStore(
  * @param {Feature[]}    listings filteredStores is an array of features representing the stores that need to
  *                                      be displayed on the map.
  */
-export function fitView( map, listings ) {
+export function fitInView( map, listings ) {
 	const bounds = new mapboxgl.LngLatBounds();
 	const mapContainer = document.getElementById( 'map-container' );
 	if ( mapContainer ) {

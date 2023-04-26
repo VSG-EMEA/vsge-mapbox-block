@@ -1,11 +1,6 @@
 import { Feature } from '@turf/turf';
 import { __ } from '@wordpress/i18n';
-import { highlightListing, MarkerPopup, removePopup } from './Popup';
-import { flyToStore } from '../../utils/view';
-import mapboxgl from 'mapbox-gl';
-import { createRef, render } from '@wordpress/element';
 import { Button } from '@wordpress/components';
-import {RefObject} from "react";
 
 /**
  * This function renders a list of map listings based on selected filters and data.
@@ -48,15 +43,18 @@ export const Listing = ( props, i ) => {
 
 	return (
 		<div className={ 'map-item listing' + props.id }>
-			<img
-				src="./src/images/grey-marker.png"
+			<Button
 				className="gray-marker"
-				alt={ '' }
+				icon={ mapMarker }
+				size={ 48 }
+				style={ {
+					fill: 'gray',
+				} }
 			/>
 			<p className={ 'partnership' }>{ tags.join() }</p>
-			<a href={ '#' } className={ 'title' } data-position={ i }>
+			<Button href={ '#' } className={ 'title' } data-position={ i }>
 				{ name }
-			</a>
+			</Button>
 		</div>
 	);
 };
@@ -188,64 +186,3 @@ if ( props.name ) {
     }
   } );
 }*/
-
-function enableListing( map, marker ) {
-	// 1. Fly to the point
-	flyToStore( map, marker );
-
-	// 2. Close all other popups and display popup for clicked store
-	MarkerPopup( marker );
-
-	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
-	highlightListing( marker );
-}
-
-export function Marker( { onClick, children, feature } ): JSX.Element {
-	const _onClick = () => {
-		onClick( feature.properties.description );
-	};
-
-	return (
-		<Button
-			onClick={ onClick }
-			className={ 'marker' }
-			id={ 'marker-' + feature.id }
-		>
-			{ children }
-		</Button>
-	);
-}
-
-export function addMarkers( storesEl, map ) {
-	removePopup();
-
-	const markers = [];
-
-	// removes all markers
-	markers.forEach( ( marker ) => marker.remove() );
-
-	/* For each feature in the GeoJSON object above: */
-	storesEl.features.forEach( function ( marker, i ) {
-		if ( marker?.geometry ) {
-			const ref: RefObject< HTMLDivElement > = createRef();
-			// Create a new DOM node and save it to the React ref
-			ref.current = document.createElement( 'div' );
-			// Render a Marker Component on our new DOM node
-			render(
-				<Marker
-					onClick={ () => enableListing( map, marker ) }
-					feature={ marker }
-				/>,
-				ref.current
-			);
-			// Add markers to the map at all points
-			const newMarker = new mapboxgl.Marker( ref.current, {
-				offset: [ 0, -23 ],
-			} )
-				.setLngLat( marker.geometry.coordinates )
-				.addTo( map );
-
-			markers.push( newMarker );
-		}
-	} );
-}

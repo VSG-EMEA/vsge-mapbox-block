@@ -8,20 +8,25 @@
 		align-content: center;
 
 		button,
-		select {
-			margin: 0 var(--wp--preset--spacing--40) 0 0;
+		.components-base-control {
+			margin: 0 var(--wp--preset--spacing--40);
 			max-width: 250px;
+			height: $topbar_elements_height;
 		}
 
-		select {
+		.components-select-control select {
 			height: $topbar_elements_height;
 			font-family: var(--font__family);
 			font-weight: 500;
 			text-overflow: ellipsis;
 		}
 
-		button.outlined {
-			height: $topbar_elements_height;
+    .components-input-control__backdrop {
+      border: 1px solid var(--wp--preset--color--gray-light);
+    }
+
+		button {
+      background: var(--wp--preset--color--white);
 			border: 1px solid var(--wp--preset--color--gray-light);
 
 			&:focus,
@@ -35,11 +40,13 @@
 			}
 
 			svg {
+				vertical-align: sub;
 				line-height: $topbar_elements_height;
+        margin-right: var(--wp--preset--spacing--30);
 			}
 		}
 
-		& > *:last-child {
+		> *:last-child {
 			margin-right: 0;
 		}
 	}
