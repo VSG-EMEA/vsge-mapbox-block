@@ -1,20 +1,19 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import { BlockAttributes } from '@wordpress/blocks';
+import { BlockAttributes, BlockSaveProps } from '@wordpress/blocks';
 import { Map } from './components/Mapbox/Map';
 import { getDefaults } from './utils';
 import { Listing } from './components/Mapbox/Listing';
 import { __ } from '@wordpress/i18n';
 import classNames from 'classnames';
+import { MapAttributes } from './types';
 
 /**
  * The save function defines the way in which the different attributes should be combined into the final markup, which is then serialized into post_content.
  *
- * @param    props
- * @param    props.attributes - the block attributes
- * @param    props.map
- * @function Object() { [native code] }
+ * @param {BlockSaveProps} props
+ * @param {MapAttributes}  props.attributes - the block attributes
  */
-function Save( { attributes }: BlockAttributes ): JSX.Element {
+function Save( { attributes }: BlockSaveProps< MapAttributes > ): JSX.Element {
 	const blockProps = useBlockProps.save( {
 		className: classNames( 'wp-block-vsge-mapbox', 'block-mapbox' ),
 	} );
@@ -35,7 +34,7 @@ function Save( { attributes }: BlockAttributes ): JSX.Element {
 		>
 			{ attributes.sidebarEnabled ? (
 				<div className={ 'map-sidebar' }>
-					{ attributes.geocoderEnabled === true && defaults ? (
+					{ attributes.geocoderEnabled && defaults ? (
 						<div id="geocoder" className="geocoder"></div>
 					) : null }
 					<div className="feature-listing">

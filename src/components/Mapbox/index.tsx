@@ -14,7 +14,7 @@ export function MapBox( { attributes } ): JSX.Element {
 	useEffect( () => {
 		if ( defaults?.accessToken && mapRef.current ) {
 			mapboxgl.accessToken = defaults.accessToken;
-			setMap( initMap( mapRef.current, attributes ) );
+			setMap( initMap( mapRef.current, attributes, defaults ) );
 
 			if ( attributes.geocoderEnabled ) {
 				setGeoCoder(
