@@ -1,9 +1,9 @@
 import { memo } from '@wordpress/element';
-import {Button, Icon, IconButton, TextControl} from '@wordpress/components';
+import { Button, Icon, IconButton, TextControl } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
 
-const Item = ( { props, index, tax, key, updateItem, deleteItem } ) => (
-	<Draggable draggableId={ tax + '-' + props.id } index={ index }>
+const Item = ( { props, index, tax, key, id, updateItem, deleteItem } ) => (
+	<Draggable draggableId={ tax + '-' + id } index={ index }>
 		{ ( provided ) => (
 			<div
 				ref={ provided.innerRef }
@@ -23,16 +23,12 @@ const Item = ( { props, index, tax, key, updateItem, deleteItem } ) => (
 							updateItem( key, tax, { value: newValue } )
 						}
 					></TextControl>
-					<IconButton
-            icon="move"
-            size={ 16 }
-            isSmall={ true }
-          />
-					<IconButton
+					<Button icon="move" iconSize={ 16 } isSmall={ true } />
+					<Button
 						icon="trash"
-						size={ 16 }
-            isSmall={ true }
-						onClick={ () => deleteItem( key ) }
+						iconSize={ 16 }
+						isSmall={ true }
+						onClick={ () => deleteItem( id ) }
 					/>
 				</div>
 			</div>

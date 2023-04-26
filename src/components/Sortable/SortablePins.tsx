@@ -4,7 +4,6 @@ import {
 	CheckboxControl,
 	TextareaControl,
 	TextControl,
-	IconButton,
 } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
@@ -12,7 +11,6 @@ import React from 'react';
 
 export const PinCard = ( {
 	props,
-	key,
 	updateItem,
 	deleteItem,
 	tags,
@@ -21,11 +19,26 @@ export const PinCard = ( {
 } ) => {
 	const [ isOpen, setIsOpen ] = useState( false );
 
+	if ( ! props.properties ) {
+		console.error( props, 'Missing properties' );
+		return null;
+	}
+
+	const { name, id, website, address, phone, emailAddress } =
+		props.properties;
+
+	function toggleArrayValues( tags, value, newValue: boolean ) {
+		let newTags;
+		if ( newValue ) {
+			tags.push( value );
+		} else {
+			newTags = tags.filter( ( tag ) => tag.value === value );
+		}
+		return newTags;
+	}
+
 	return (
-		<Draggable
-			draggableId={ ( props.properties?.name || 'new' ) + '-' + index }
-			index={ index }
-		>
+		<Draggable draggableId={ ( name || 'new' ) + '-' + id } index={ index }>
 			{ ( provided ) => (
 				<div
 					ref={ provided.innerRef }
@@ -43,55 +56,55 @@ export const PinCard = ( {
 					>
 						<div className={ 'controlgroup-feature-item' }>
 							<h4>
-								({ key }) - { props.properties?.name || 'New' }
+								({ id }) - { name || 'New' }
 							</h4>
-							<IconButton
+							<Button
 								onClick={ () => setIsOpen( ! isOpen ) }
 								isSmall={ true }
-								size={ 16 }
+								iconSize={ 16 }
 								icon={ 'arrow-down' }
 							/>
-							<IconButton
-								onClick={ () => deleteItem( key ) }
+							<Button
+								onClick={ () => deleteItem( id ) }
 								isSmall={ true }
 								icon="trash"
-								size={ 16 }
+								iconSize={ 16 }
 							/>
 						</div>
 						<TextControl
 							label={ __( 'name' ) }
 							style={ { margin: 0 } }
-							value={ props.properties?.name || 'New' }
+							value={ name || 'New' }
 							onChange={ ( newValue ) => {
-								updateItem( index, { name: newValue } );
+								updateItem( id, { name: newValue } );
 							} }
 						></TextControl>
 						<TextControl
 							label={ __( 'phone' ) }
-							value={ props.properties?.phone || '' }
+							value={ phone || '' }
 							onChange={ ( newValue ) => {
-								updateItem( index, { phone: newValue } );
+								updateItem( id, { phone: newValue } );
 							} }
 						></TextControl>
 						<TextControl
 							label={ __( 'email' ) }
-							value={ props.properties?.emailAddress || '' }
+							value={ emailAddress || '' }
 							onChange={ ( newValue ) => {
-								updateItem( index, { email: newValue } );
+								updateItem( id, { email: newValue } );
 							} }
 						></TextControl>
 						<TextControl
 							label={ __( 'website' ) }
-							value={ props.properties?.website || '' }
+							value={ website || '' }
 							onChange={ ( newValue ) => {
-								updateItem( index, { website: newValue } );
+								updateItem( id, { website: newValue } );
 							} }
 						></TextControl>
 						<TextareaControl
 							label={ __( 'Address' ) }
-							value={ props.properties?.address || '' }
+							value={ address || '' }
 							onChange={ ( newValue ) => {
-								updateItem( index, { Address: newValue } );
+								updateItem( id, { Address: newValue } );
 							} }
 						></TextareaControl>
 
@@ -103,14 +116,24 @@ export const PinCard = ( {
 								{ tags.map( ( checkbox, index ) => (
 									<CheckboxControl
 										label={ checkbox.value }
-										value={ 0 }
+										checked={
+											tags.filter(
+												( tag ) =>
+													tag.value === checkbox.value
+											).length
+										}
 										key={ index }
-										onChange={ ( newValue ) =>
-											updateItem(
+										onChange={ ( newValue ) => {
+											// given an array of tags, add the item if the checkbox value is true otherwise remove it from array
+											const newTags = toggleArrayValues(
+												tags,
 												checkbox.value,
 												newValue
-											)
-										}
+											);
+											updateItem( id, {
+												tags: [ newTags ],
+											} );
+										} }
 									/>
 								) ) }
 							</div>
@@ -118,14 +141,21 @@ export const PinCard = ( {
 								{ filters.map( ( checkbox, index ) => (
 									<CheckboxControl
 										label={ checkbox.value }
-										value={ 0 }
+										checked={ filters.includes(
+											checkbox.value
+										) }
 										key={ index }
-										onChange={ ( newValue ) =>
-											updateItem(
-												checkbox.value,
-												newValue
-											)
-										}
+										onChange={ ( newValue ) => {
+											const newFilters =
+												toggleArrayValues(
+													filters,
+													checkbox.value,
+													newValue
+												);
+											updateItem( id, {
+												filters: newFilters,
+											} );
+										} }
 									/>
 								) ) }
 							</div>
@@ -147,7 +177,6 @@ export const PinList = memo( function PinList( {
 	return sortedPins.map( ( pin, index ) => (
 		<PinCard
 			props={ pin }
-			key={ pin.id || index }
 			index={ index }
 			updateItem={ updateItem }
 			deleteItem={ deleteItem }

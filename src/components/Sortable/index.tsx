@@ -4,6 +4,7 @@ import { ItemsList } from './SortableItems';
 import { PinList } from './SortablePins';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
+import { useEffect } from '@wordpress/element';
 
 export const Sortable = ( props: {
 	items: any;
@@ -27,19 +28,33 @@ export const Sortable = ( props: {
 	}
 
 	function updateItem( id: number, newValue: Object ) {
-		const newItems = items.map( ( item: { id: number } ) =>
-			item.id === id ? { ...item, ...newValue } : item
+		let newItems;
+		newItems = items.map( ( item ) =>
+			item.properties.id === id
+				? {
+						...item,
+						properties: {
+							...item.properties,
+							...newValue,
+						},
+				  }
+				: item
 		);
 		setOptions( tax, newItems );
 	}
 
 	function deleteItem( id: number ) {
 		// remove the item from the array
-		const newItems = items.filter(
-			( item: { id: number } ) => item.id !== id
-		);
+		const newItems = items.filter( ( item ) => item.properties.id !== id );
 		setOptions( tax, newItems );
 	}
+
+	useEffect( () => {
+		items.forEach( ( item: any, index: number ) => {
+			if ( ! item?.properties?.id )
+				item.properties = { ...item.properties, id: index };
+		} );
+	}, [] );
 
 	return (
 		<>
