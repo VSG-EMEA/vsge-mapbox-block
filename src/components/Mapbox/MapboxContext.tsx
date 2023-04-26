@@ -4,27 +4,17 @@ import {
 	useRef,
 	useState,
 } from '@wordpress/element';
-import mapboxgl from 'mapbox-gl';
 import { getDefaults } from '../../utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { MutableRefObject, Ref } from 'react';
-
-type MountedMapsContextValue = {
-	map?: mapboxgl.Map | null;
-	popupContent?: any;
-	setPopupContent?: any;
-	setMap?: any;
-	mapRef?: Ref< HTMLDivElement >;
-	geocoderRef?: Ref< HTMLDivElement >;
-	defaults?: any;
-};
+import { MutableRefObject } from 'react';
+import { MountedMapsContextValue } from '../../types';
 
 export const MapboxContext = createContext< MountedMapsContextValue >( {} );
 export const useMap = () => {
 	const { map } = useContext( MapboxContext );
 
 	if ( ! map ) {
-		throw new Error( 'useMap has to be used within <Map.Provider>' );
+		throw new Error( 'useMap has to be used within <MapProvider>' );
 	}
 
 	return map;

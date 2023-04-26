@@ -3,9 +3,9 @@ import mapboxgl from 'mapbox-gl';
 import { MapProvider } from './MapboxContext';
 import { Feature } from '@turf/turf';
 
-export function MarkerPopup( { props } ): JSX.Element {
+export function MarkerPopup( { properties } ): JSX.Element {
 	const { partnership, name, address, city, postalCode, country, state } =
-		props;
+		properties;
 
 	return (
 		<div>
@@ -36,6 +36,7 @@ export function MarkerPopup( { props } ): JSX.Element {
  *                       identify a specific feature and highlight its corresponding
  */
 export function highlightListing( item: Feature ) {
+	console.log( item );
 	document.getElementById( 'feature-listing' )?.classList.add( 'filtered' );
 
 	const activeItem = document.getElementsByClassName( 'active-store' );
@@ -44,9 +45,7 @@ export function highlightListing( item: Feature ) {
 	}
 
 	if ( item.properties ) {
-		const listing = document.getElementById(
-			'listing-' + item.properties.id
-		);
+		const listing = document.getElementById( item.properties.id );
 		listing?.classList.add( 'active-store' );
 	}
 }

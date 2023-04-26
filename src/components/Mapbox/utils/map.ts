@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import { addMarkers, renderListings } from '../MapComponents';
+import { addMarkers } from '../MapComponents';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -8,9 +8,10 @@ import { addMarkers, renderListings } from '../MapComponents';
  * @param {HTMLElement} mapRef     The HTML element that will contain the map.
  * @param {Object}      attributes An object containing various attributes for initializing the map, including
  *                                 latitude, longitude, pitch, bearing, mapZoom, mapStyle, and threeDimensionality.
+ * @param               defaults
  * @return {mapboxgl.Map} a mapboxgl.Map object.
  */
-export function initMap( mapRef, attributes ) {
+export function initMap( mapRef, attributes, defaults ) {
 	const {
 		latitude,
 		longitude,
@@ -36,10 +37,13 @@ export function initMap( mapRef, attributes ) {
 	} );
 
 	map.on( 'load', function () {
-		/*		map.setLayoutProperty( 'country-label', 'text-field', [
+		map.setLayoutProperty( 'country-label', 'text-field', [
 			'get',
-			'name_' + defaults.language.substr( 0, 2 ),
-		] );*/
+			'name_' + defaults?.language?.substring( 0, 2 ) || 'en',
+		] );
+
+		// Add navigation control (the +/- zoom buttons)
+		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );
 
 		map.addSource( 'places', {
 			type: 'geojson',

@@ -14,11 +14,16 @@ import { mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
 import { initGeocoder } from './utils/geocoder';
+import { MapAttributes } from '../../types';
 
 export function MapEdit( {
 	attributes,
 	setAttributes,
 	isSelected,
+}: {
+	attributes: MapAttributes;
+	setAttributes: ( attributes: MapAttributes ) => void;
+	isSelected: boolean;
 } ): JSX.Element {
 	const {
 		latitude,
@@ -52,6 +57,7 @@ export function MapEdit( {
 	function pullMapOptions( currentMap: mapboxgl.Map | undefined ) {
 		if ( currentMap && isSelected )
 			setAttributes( {
+				...attributes,
 				latitude: currentMap.getCenter().lat,
 				longitude: currentMap.getCenter().lng,
 				pitch: currentMap.getPitch(),
