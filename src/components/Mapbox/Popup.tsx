@@ -1,7 +1,18 @@
-import { useContext, useEffect, useRef } from '@wordpress/element';
+import {
+	createRef,
+	render,
+	useContext,
+	useEffect,
+	useRef,
+} from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
-import { MapProvider } from './MapboxContext';
+import {MapboxContext, MapProvider} from './MapboxContext';
 import { Feature } from '@turf/turf';
+import { Icon } from '@wordpress/components';
+import { mapMarker } from '@wordpress/icons';
+import { RefObject } from 'react';
+import { enableListing } from '../../utils/dataset';
+import { Marker } from './Markers';
 
 export function MarkerPopup( { properties } ): JSX.Element {
 	const { partnership, name, address, city, postalCode, country, state } =
@@ -9,10 +20,7 @@ export function MarkerPopup( { properties } ): JSX.Element {
 
 	return (
 		<div>
-			<img
-				src={ '../images/grey-marker.png' }
-				className={ 'gray-marker' }
-			/>
+			<Icon icon={ mapMarker } className={ 'gray-marker' } />
 			<h3>
 				{ partnership } ${ name }
 			</h3>
@@ -60,8 +68,8 @@ export function removePopup() {
 }
 
 export const MapPopup = ( { children, lngLat } ) => {
-	const { map } = useContext( MapProvider );
-	const popupRef = useRef();
+	const { map } = useContext( MapboxContext );
+	const popupRef: RefObject< HTMLDivElement > = createRef();
 
 	useEffect( () => {
 		const popup = new mapboxgl.Popup( {} )
@@ -72,9 +80,5 @@ export const MapPopup = ( { children, lngLat } ) => {
 		return popup.remove;
 	}, [ children, lngLat ] );
 
-	return (
-		<div>
-			<div ref={ popupRef }>{ children }</div>
-		</div>
-	);
+	return <div ref={ popupRef }>{ children }</div>;
 };
