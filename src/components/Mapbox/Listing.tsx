@@ -1,6 +1,18 @@
 import { ListingTag } from './MapComponents';
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
+import { enableListing } from '../../utils/dataset';
+import { MapFilter } from '../../types';
+
+function ListingTags( props: { tags: MapFilter[] } ): JSX.Element | null {
+	return props.tags.length ? (
+		<>
+			{ props.tags.map( ( tag, index ) => (
+				<ListingTag { ...tag } key={ index } />
+			) ) }
+		</>
+	) : null;
+}
 
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
@@ -20,12 +32,14 @@ export const Listing = ( {
 	type: any;
 } ) => {
 	// TODO: replace with a better name for this
-	const tags: { id: number; value: string }[] = properties?.company || [];
-	const filter: { id: number; value: string }[] =
-		properties?.partnership || [];
+	const tags: MapFilter[] = properties?.company || [];
+	const filter: MapFilter[] = properties?.partnership || [];
 
 	return type === 'Feature' ? (
-		<div className={ 'mapbox-sidebar-feature listing' }>
+		<div
+			className={ 'mapbox-sidebar-feature listing' }
+			onClick={ ( e ) => enableListing( map, e.target ) }
+		>
 			<Icon icon={ mapMarker } />
 			<p className="partnership">
 				{ properties.partnership.join( ' ' ) }
@@ -47,9 +61,7 @@ export const Listing = ( {
 						{ properties.website }
 					</a>
 				</p>
-				{ tags.length
-					? tags.map( ( tag ) => <ListingTag { ...tag } /> )
-					: null }
+				<ListingTags tags={ tags } />
 			</div>
 		</div>
 	) : null;
