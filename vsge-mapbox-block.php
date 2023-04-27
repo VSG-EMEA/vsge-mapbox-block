@@ -58,6 +58,5 @@ function vsge_mapbox_block_scripts() {
 	);
 }
 
-add_action( 'wp_enqueue_scripts', 'vsge_mapbox_frontend_scripts' );
 add_action( 'enqueue_block_assets', 'vsge_mapbox_frontend_scripts' );
 add_action( 'enqueue_block_editor_assets', 'vsge_mapbox_block_scripts' );

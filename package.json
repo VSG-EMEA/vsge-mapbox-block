@@ -60,6 +60,7 @@
   "dependencies": {
     "@mapbox/mapbox-gl-geocoder": "^5.0.1",
     "@turf/turf": "^6.5.0",
+    "classnames": "^2.3.2",
     "mapbox-gl": "^2.14.1"
   },
   "engines": {

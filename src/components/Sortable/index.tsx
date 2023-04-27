@@ -1,5 +1,5 @@
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { reorder } from './sortableUtils';
+import { reorder } from './utils';
 import { ItemsList } from './SortableItems';
 import { PinList } from './SortablePins';
 import { __ } from '@wordpress/i18n';

@@ -3,7 +3,7 @@ import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
-import { initMap } from './utils/map';
+import { initMap } from './utils/initMap';
 import mapboxgl from 'mapbox-gl';
 import { initGeocoder } from './utils/geocoder';
 import { MountedMapsContextValue } from '../../types';
