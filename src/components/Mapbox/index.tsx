@@ -6,13 +6,20 @@ import { MapboxContext } from './MapboxContext';
 import { initMap } from './utils/map';
 import mapboxgl from 'mapbox-gl';
 import { initGeocoder } from './utils/geocoder';
+import { MountedMapsContextValue } from '../../types';
 
 export function MapBox( { attributes } ): JSX.Element {
-	const { map, setMap, setGeoCoder, defaults, mapRef, geocoderRef } =
-		useContext( MapboxContext );
+	const {
+		map,
+		setMap,
+		setGeoCoder,
+		defaults,
+		mapRef,
+		geocoderRef,
+	}: MountedMapsContextValue = useContext( MapboxContext );
 
 	useEffect( () => {
-		if ( defaults?.accessToken && mapRef.current ) {
+		if ( defaults?.accessToken && mapRef?.current ) {
 			mapboxgl.accessToken = defaults.accessToken;
 			setMap( initMap( mapRef.current, attributes, defaults ) );
 

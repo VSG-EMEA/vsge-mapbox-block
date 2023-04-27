@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import {addMarkers} from "../Markers";
+import { addMarkers } from '../Markers';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if

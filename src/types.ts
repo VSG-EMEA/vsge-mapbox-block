@@ -1,6 +1,6 @@
 import { Feature, Geometry } from '@turf/turf';
 import mapboxgl from 'mapbox-gl';
-import { Ref, SetStateAction } from 'react';
+import {Ref, RefObject, SetStateAction} from 'react';
 
 export type CoordinatesDef = [ number, number ];
 export type PartnershipDef = number[];
@@ -11,6 +11,8 @@ export type MapboxBlockDefaults = {
 	siteurl: string;
 	language: string;
 };
+
+export type MapFilter = { id: number; value: string };
 
 export type MapStyleDef = {
 	label: string;
@@ -63,13 +65,14 @@ export interface MapItem extends Feature {
 	} | null;
 }
 
+
 export type MountedMapsContextValue = {
-	map?: mapboxgl.Map | null;
+	map: mapboxgl.Map | null;
 	popupContent?: any;
 	setPopupContent?: any;
-	setMap?: SetStateAction< mapboxgl.Map >;
-	setGeoCoder?: SetStateAction< any >;
-	mapRef?: Ref< HTMLDivElement >;
-	geocoderRef?: Ref< HTMLDivElement >;
-	defaults?: MapboxBlockDefaults;
+	setMap: SetStateAction< mapboxgl.Map >;
+	setGeoCoder: SetStateAction< any >;
+	mapRef: RefObject< HTMLDivElement >;
+	geocoderRef: RefObject< HTMLDivElement >;
+	defaults: MapboxBlockDefaults;
 };

@@ -98,5 +98,5 @@ export function initGeocoder(
 		return geocoder;
 	}
 
-	console.log( 'No access token' );
+	console.log( 'No access token given to geocoder' );
 }

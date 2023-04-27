@@ -2,6 +2,9 @@ import { Button, Icon, SelectControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { safeSlug } from '../../utils';
 import { fitInView } from '../../utils/view';
+import {MapFilter} from "../../types";
+
+
 
 /**
  * trasform an array of strings into a select values that could be used with select control
@@ -11,7 +14,7 @@ import { fitInView } from '../../utils/view';
  * @param            selectValues.value
  * @return {SelectControl.Option[]} the select values
  */
-function topbarSelectValue( selectValues: { id: number; value: string } ) {
+function topbarBuildSelectFromArray( selectValues: MapFilter[] ) {
 	const selectItems = selectValues.map( ( item ) => {
 		return { label: item.value, value: safeSlug( item.value ) };
 	} );
@@ -62,7 +65,7 @@ export const TopBar = ( attributes ) => {
 							label: 'Select a partnership',
 							disabled: true,
 						},
-						...topbarSelectValue( mapboxOptions.filters ),
+						...topbarBuildSelectFromArray( mapboxOptions.filters ),
 					] }
 					onChange={ ( selected ) => setFilter( selected ) }
 					__nextHasNoMarginBottom
@@ -75,7 +78,7 @@ export const TopBar = ( attributes ) => {
 					value={ tag }
 					options={ [
 						{ value: '', label: 'Select a tag', disabled: true },
-						...topbarSelectValue( mapboxOptions.tags ),
+						...topbarBuildSelectFromArray( mapboxOptions.tags ),
 					] }
 					onChange={ ( selected ) => setTag( selected ) }
 					__nextHasNoMarginBottom

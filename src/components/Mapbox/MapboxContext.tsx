@@ -6,7 +6,7 @@ import {
 } from '@wordpress/element';
 import { getDefaults } from '../../utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { MutableRefObject } from 'react';
+import { RefObject } from 'react';
 import { MountedMapsContextValue } from '../../types';
 
 export const MapboxContext = createContext< MountedMapsContextValue >( {} );
@@ -28,9 +28,9 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ popupContent, setPopupContent ] = useState( [] );
 	const defaults = getDefaults();
 
-	const mapRef: MutableRefObject< HTMLDivElement | null > =
+	const mapRef: RefObject< HTMLDivElement > =
 		useRef< HTMLDivElement >( null );
-	const geocoderRef: MutableRefObject< HTMLDivElement | null > =
+	const geocoderRef: RefObject< HTMLDivElement > =
 		useRef< HTMLDivElement >( null );
 
 	return (
