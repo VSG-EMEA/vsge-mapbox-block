@@ -1,5 +1,5 @@
 {
-  "name": "mapbox-wordpress-block",
+  "name": "vsge-mapbox-block",
   "description": "a wordpress block that allow to show mapbox maps",
   "version": "0.0.1",
   "author": "codekraft",
@@ -8,7 +8,7 @@
   "typings": "./build/main.d.ts",
   "files": [
     "build/*",
-    "typescript-wp-block.php",
+    "vsge-mapbox-block.php",
     "LICENSE.md",
     "readme.txt"
   ],
@@ -21,7 +21,7 @@
     "format": "wp-scripts format /src",
     "lint:css": "wp-scripts lint-style /src/style",
     "lint:js": "wp-scripts lint-js /src",
-    "wp-env:start": "wp-env start",
+    "wp-env:start": "wp-env start -- -update",
     "wp-env:stop": "wp-env stop",
     "wp-env:destroy": "wp-env destroy",
     "test": "jest --silent=false --coverage",

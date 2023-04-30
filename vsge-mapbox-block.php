@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: VSGE - mapbox block
+ * Plugin Name: VSGE mapbox block
  * Plugin URI: https://github.com/erikyo/typescript-wp-block
  * Description: WordPress mapbox block
  * Version: 0.0.1
@@ -18,7 +18,10 @@ add_action(
 );
 
 function vsge_get_token(): string {
-	return apply_filters('vsge_mapbox_block_key', MAPBOX_TOKEN);
+	if (defined('MAPBOX_TOKEN')) {
+		return apply_filters('vsge_mapbox_block_key', MAPBOX_TOKEN);
+	}
+	return 'no token provided';
 }
 
 /**

@@ -4,7 +4,6 @@
   "title": "MapBox",
   "description": "A block that displays the map using mapbox",
   "keywords": [
-    "wp-block",
     "mapbox"
   ],
   "category": "embed",
@@ -12,5 +11,72 @@
   "style": [
     "file:./build/mapbox-frontend.css",
     "file:./build/style-mapbox-frontend.css"
-  ]
+  ],
+  "supports": {
+    "align": true,
+    "className": true,
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    }
+  },
+  "attributes": {
+    "longitude": {
+      "type": "number",
+      "default": 15.0
+    },
+    "latitude": {
+      "type": "number",
+      "default": 45.0
+    },
+    "pitch": {
+      "type": "number",
+      "default": 0.0
+    },
+    "bearing": {
+      "type": "number",
+      "default": 0.0
+    },
+    "mapZoom": {
+      "type": "number",
+      "default": 5.0
+    },
+    "mapStyle": {
+      "type": "string",
+      "default": "satellite-streets-v11"
+    },
+    "sidebarEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "geocoderEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "tagsEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "filtersEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "fitView": {
+      "type": "boolean",
+      "default": false
+    },
+    "threeDimensionality": {
+      "type": "boolean",
+      "default": false
+    },
+    "mapboxOptions": {
+      "type": "object",
+      "default": {
+        "listings": [],
+        "tags": [],
+        "filters": []
+      }
+    }
+  }
 }

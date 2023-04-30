@@ -1,4 +1,6 @@
 {
-	"core": "WordPress/WordPress",
-	"plugins": ["."]
+  "plugins": ["."],
+  "config": {
+    "MAPBOX_TOKEN": "YOURKEYHERE"
+  }
 }
