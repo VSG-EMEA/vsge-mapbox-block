@@ -69,7 +69,12 @@ export function MapEdit( {
 
 	useEffect( () => {
 		if ( map ) {
-			map.on( 'move', () => pullMapOptions( map ) );
+			const handle = setInterval( () => {
+				map.on( 'move', () => pullMapOptions( map ) );
+			}, 100 );
+			return () => {
+				clearInterval( handle );
+			};
 		}
 	}, [ attributes ] );
 
