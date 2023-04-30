@@ -11,21 +11,22 @@ export const mapboxDefaults: MapboxOptions = {
 	scrollZoom: true,
 };
 
+/**
+ * The mapbox map layout styles
+ *
+ * @see https://docs.mapbox.com/api/maps/styles/#mapbox-styles
+ */
 export const mapStyles: MapStyleDef[] = [
-	{ label: 'streets v11', value: 'streets-v11' },
+	{ label: 'streets v12', value: 'streets-v12' },
 	{
-		label: 'outdoors v11',
-		value: 'outdoors-v11',
+		label: 'outdoors v12',
+		value: 'outdoors-v12',
 	},
-	{ label: 'light v10', value: 'light-v10' },
-	{ label: 'dark v10', value: 'dark-v10' },
+	{ label: 'light v11', value: 'light-v11' },
+	{ label: 'dark v11', value: 'dark-v11' },
 	{
 		label: 'satellite v9',
 		value: 'satellite-v9',
-	},
-	{
-		label: 'satellite streets v11',
-		value: 'satellite-streets-v11',
 	},
 	{
 		label: 'satellite-streets-v12',

@@ -10,6 +10,7 @@ import {
 	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
+import { mapMarker, cog, filter } from '@wordpress/icons';
 import { mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
@@ -39,7 +40,7 @@ export function MapEdit( {
 		fitView,
 		threeDimensionality,
 		mapboxOptions: { tags, filters, listings },
-	} = attributes;
+	}: MapAttributes = attributes;
 
 	const { map, mapRef, setGeoCoder, geocoderRef, defaults } =
 		useContext( MapboxContext );
@@ -109,6 +110,40 @@ export function MapEdit( {
 			}
 		}
 	}, [ attributes.threeDimensionality ] );
+
+	if ( ! defaults.accessToken ) {
+		return (
+			<>
+				<InspectorControls>
+					<Panel>
+						<PanelBody title="Settings">
+							<h3>Mapbox Access Token</h3>
+							<p>
+								<a
+									href="//account.mapbox.com/auth/signup/"
+									target="_blank"
+									rel="noreferrer"
+								>
+									Get a Mapbox Access Token
+								</a>
+							</p>
+						</PanelBody>
+					</Panel>
+				</InspectorControls>
+				<div>
+					<p>
+						<a
+							href="//account.mapbox.com/auth/signup/"
+							target="_blank"
+							rel="noreferrer"
+						>
+							Get a Mapbox Access Token
+						</a>
+					</p>
+				</div>
+			</>
+		);
+	}
 
 	return (
 		<>
@@ -204,13 +239,17 @@ export function MapEdit( {
 						/>
 					</PanelBody>
 				</Panel>
+
 				<Panel>
-					<PanelBody title="Options">
+					<PanelBody title="Options" icon={ cog }>
 						<ToggleControl
 							label={ __( 'Enable Sidebar' ) }
 							checked={ sidebarEnabled }
 							onChange={ ( newValue: boolean ) => {
-								setAttributes( { sidebarEnabled: newValue } );
+								setAttributes( {
+									...attributes,
+									sidebarEnabled: newValue,
+								} );
 								// wait 500 ms then resize the map
 								setTimeout( () => {
 									// get the mapRef element width and height
@@ -221,32 +260,47 @@ export function MapEdit( {
 								}, 100 );
 							} }
 						/>
-						<ToggleControl
-							label={ __( 'Enable Geocoder' ) }
-							checked={ geocoderEnabled }
-							onChange={ ( newValue: boolean ) =>
-								setAttributes( { geocoderEnabled: newValue } )
-							}
-						/>
+						{ sidebarEnabled && (
+							<ToggleControl
+								label={ __( 'Enable Geocoder' ) }
+								checked={ geocoderEnabled }
+								onChange={ ( newValue: boolean ) =>
+									setAttributes( {
+										...attributes,
+										geocoderEnabled: newValue,
+										sidebarEnabled: newValue,
+									} )
+								}
+							/>
+						) }
 						<ToggleControl
 							label={ __( 'Enable Filters' ) }
 							checked={ filtersEnabled }
 							onChange={ ( newValue: boolean ) =>
-								setAttributes( { filtersEnabled: newValue } )
+								setAttributes( {
+									...attributes,
+									filtersEnabled: newValue,
+								} )
 							}
 						/>
 						<ToggleControl
 							label={ __( 'Enable Tag' ) }
 							checked={ tagsEnabled }
 							onChange={ ( newValue: boolean ) =>
-								setAttributes( { tagsEnabled: newValue } )
+								setAttributes( {
+									...attributes,
+									tagsEnabled: newValue,
+								} )
 							}
 						/>
 						<ToggleControl
 							label={ __( 'Enable fitView' ) }
 							checked={ fitView }
 							onChange={ ( newValue: boolean ) =>
-								setAttributes( { fitView: newValue } )
+								setAttributes( {
+									...attributes,
+									fitView: newValue,
+								} )
 							}
 						/>
 						<ToggleControl
@@ -254,41 +308,45 @@ export function MapEdit( {
 							checked={ threeDimensionality }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
+									...attributes,
 									threeDimensionality: newValue,
 								} );
 							} }
 						/>
 					</PanelBody>
 				</Panel>
-				<Panel>
-					<PanelBody title="Filters">
-						{ tagsEnabled === true ? (
-							<>
-								<p>Tags</p>
-								<Sortable
-									items={ tags }
-									tax={ 'tags' }
-									setOptions={ setOptions }
-									mapboxOptions={ false }
-								/>
-							</>
-						) : null }
-						{ filtersEnabled ? (
-							<>
-								<p>Filters</p>
-								<Sortable
-									items={ filters }
-									tax={ 'filters' }
-									setOptions={ setOptions }
-									mapboxOptions={ false }
-								/>
-							</>
-						) : null }
-					</PanelBody>
-				</Panel>
+
+				{ filtersEnabled || tagsEnabled ? (
+					<Panel>
+						<PanelBody title="Filters" icon={ filter }>
+							{ tagsEnabled === true ? (
+								<>
+									<p>Tags</p>
+									<Sortable
+										items={ tags }
+										tax={ 'tags' }
+										setOptions={ setOptions }
+										mapboxOptions={ false }
+									/>
+								</>
+							) : null }
+							{ filtersEnabled ? (
+								<>
+									<p>Filters</p>
+									<Sortable
+										items={ filters }
+										tax={ 'filters' }
+										setOptions={ setOptions }
+										mapboxOptions={ false }
+									/>
+								</>
+							) : null }
+						</PanelBody>
+					</Panel>
+				) : null }
 
 				<Panel>
-					<PanelBody title="Map Pins" icon={ 'marker' }>
+					<PanelBody title="Map Pins" icon={ mapMarker }>
 						<Sortable
 							items={ listings }
 							tax={ 'listings' }

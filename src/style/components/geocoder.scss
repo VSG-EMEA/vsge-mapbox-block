@@ -14,14 +14,14 @@
 		input {
 			border: 0;
 			max-width: calc(100% - 6px);
-			border-bottom: 1px solid var(--wp--preset--color--gray-light);
+			border-bottom: 1px solid var(--wp--preset--color--cyan-bluish-gray);
 			height: $topbar_elements_height;
 			padding: 6px var(--wp--preset--spacing--40) 6px 48px;
 			font-family: var(--wp--preset--font-family--default);
 			font-weight: 300;
 
 			@media #{$mq__phablet} {
-				font-size: var(--wp--preset--spacing--20);
+				font-size: .25rem;
 			}
 		}
 

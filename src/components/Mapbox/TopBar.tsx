@@ -44,52 +44,58 @@ export const TopBar = ( attributes ) => {
 	const [ tag, setTag ] = useState( '' );
 
 	// if no special stuff is required, return null
-	if ( fitView === false || ! mapboxOptions || ! mapboxOptions.filters ) {
-		return null;
+	if ( fitView || filtersEnabled || tagsEnabled ) {
+		return (
+			<div className={ 'map-topbar' }>
+				{ fitView ? (
+					<Button
+						icon={ centerViewIcon }
+						isSmall={ true }
+						className={ 'fit-view' }
+						onClick={ () => fitInView( map, listings ) }
+					>
+						fit-view
+					</Button>
+				) : null }
+
+				{ tagsEnabled ? (
+					<SelectControl
+						className={ 'mapbox-map-filter filter-by-partnership' }
+						value={ filter }
+						options={ [
+							{
+								value: '',
+								label: 'Select a partnership',
+								disabled: true,
+							},
+							...topbarBuildSelectFromArray(
+								mapboxOptions.filters
+							),
+						] }
+						onChange={ ( selected ) => setFilter( selected ) }
+						__nextHasNoMarginBottom
+					/>
+				) : null }
+
+				{ filtersEnabled ? (
+					<SelectControl
+						className={ 'mapbox-map-filter filter-by-tag' }
+						value={ tag }
+						options={ [
+							{
+								value: '',
+								label: 'Select a tag',
+								disabled: true,
+							},
+							...topbarBuildSelectFromArray( mapboxOptions.tags ),
+						] }
+						onChange={ ( selected ) => setTag( selected ) }
+						__nextHasNoMarginBottom
+					/>
+				) : null }
+			</div>
+		);
 	}
 
-	return (
-		<div className={ 'map-topbar' }>
-			{ fitView ? (
-				<Button
-					icon={ centerViewIcon }
-					isSmall={ true }
-					className={ 'fit-view' }
-					onClick={ () => fitInView( map, listings ) }
-				>
-					fit-view
-				</Button>
-			) : null }
-
-			{ tagsEnabled ? (
-				<SelectControl
-					className={ 'mapbox-map-filter filter-by-partnership' }
-					value={ filter }
-					options={ [
-						{
-							value: '',
-							label: 'Select a partnership',
-							disabled: true,
-						},
-						...topbarBuildSelectFromArray( mapboxOptions.filters ),
-					] }
-					onChange={ ( selected ) => setFilter( selected ) }
-					__nextHasNoMarginBottom
-				/>
-			) : null }
-
-			{ filtersEnabled ? (
-				<SelectControl
-					className={ 'mapbox-map-filter filter-by-tag' }
-					value={ tag }
-					options={ [
-						{ value: '', label: 'Select a tag', disabled: true },
-						...topbarBuildSelectFromArray( mapboxOptions.tags ),
-					] }
-					onChange={ ( selected ) => setTag( selected ) }
-					__nextHasNoMarginBottom
-				/>
-			) : null }
-		</div>
-	);
+	return null;
 };

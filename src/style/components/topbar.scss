@@ -2,7 +2,7 @@
 
 	.map-topbar {
 		height: $topbar-height;
-		padding-bottom: var(--wp--preset--spacing--20);
+		padding-bottom: .25rem;
 		display: flex;
 		justify-content: flex-end;
 		align-content: center;
@@ -22,12 +22,12 @@
 		}
 
     .components-input-control__backdrop {
-      border: 1px solid var(--wp--preset--color--gray-light);
+      border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
     }
 
 		button {
       background: var(--wp--preset--color--white);
-			border: 1px solid var(--wp--preset--color--gray-light);
+			border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
 
 			&:focus,
 			&:hover {
@@ -36,13 +36,13 @@
 			}
 
 			&:active {
-				border-color: var(--wp--preset--color--gray-light);
+				border-color: var(--wp--preset--color--cyan-bluish-gray);
 			}
 
 			svg {
 				vertical-align: sub;
 				line-height: $topbar_elements_height;
-        margin-right: var(--wp--preset--spacing--30);
+        margin-right: .5rem;
 			}
 		}
 
