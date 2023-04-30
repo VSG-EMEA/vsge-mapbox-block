@@ -65,7 +65,7 @@ export const TopBar = ( attributes ) => {
 						options={ [
 							{
 								value: '',
-								label: 'Select a partnership',
+								label: 'Select a filter',
 								disabled: true,
 							},
 							...topbarBuildSelectFromArray(
