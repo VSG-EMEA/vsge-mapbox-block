@@ -1,6 +1,6 @@
 import { Feature, Geometry } from '@turf/turf';
 import mapboxgl from 'mapbox-gl';
-import {Ref, RefObject, SetStateAction} from 'react';
+import { Ref, RefObject, SetStateAction } from 'react';
 
 export type CoordinatesDef = [ number, number ];
 export type PartnershipDef = number[];
@@ -31,6 +31,7 @@ export type MapAttributes = {
 	filtersEnabled: boolean;
 	tagsEnabled: boolean;
 	fitView: boolean;
+	elevation: boolean;
 	threeDimensionality: boolean;
 	mapboxOptions: {
 		tags: string[];
@@ -64,7 +65,6 @@ export interface MapItem extends Feature {
 		configurable: boolean;
 	} | null;
 }
-
 
 export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;

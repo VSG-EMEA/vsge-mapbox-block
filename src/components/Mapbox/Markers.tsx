@@ -22,10 +22,13 @@ export function Marker( { onClick, children, feature } ): JSX.Element {
 	);
 }
 
-export function addMarkers( storesEl, map ) {
-	removePopup();
+export function addMarkers( storesEl, map, stores, markers ) {
+	map.addSource( 'places', {
+		type: 'geojson',
+		data: stores,
+	} );
 
-	const markers = [];
+	removePopup();
 
 	// removes all markers
 	markers.forEach( ( marker ) => marker.remove() );

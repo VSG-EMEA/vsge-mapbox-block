@@ -16,6 +16,7 @@ import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
 import { initGeocoder } from './utils/geocoder';
 import { MapAttributes } from '../../types';
+import { setMapElevation, setMapThreeDimensionality } from './utils/initMap';
 
 export function MapEdit( {
 	attributes,
@@ -39,6 +40,7 @@ export function MapEdit( {
 		tagsEnabled,
 		fitView,
 		threeDimensionality,
+		elevation,
 		mapboxOptions: { tags, filters, listings },
 	}: MapAttributes = attributes;
 
@@ -94,27 +96,15 @@ export function MapEdit( {
 
 	useEffect( () => {
 		if ( map ) {
-			if ( attributes.threeDimensionality ) {
-				if ( ! map.getSource( 'mapbox-dem' ) ) {
-					map.addSource( 'mapbox-dem', {
-						type: 'raster-dem',
-						url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-						tileSize: 512,
-						maxzoom: 14,
-					} );
-				}
-
-				// add the DEM source as a terrain layer with exaggerated height
-				map.setTerrain( {
-					source: 'mapbox-dem',
-					exaggeration: 1.5,
-				} );
-			} else if ( map.getSource( 'mapbox-dem' ) ) {
-				map.removeSource( 'mapbox-dem' );
-				map.setTerrain();
-			}
+			setMapThreeDimensionality( map, attributes.threeDimensionality );
 		}
 	}, [ attributes.threeDimensionality ] );
+
+	useEffect( () => {
+		if ( map ) {
+			setMapElevation( map, attributes.elevation );
+		}
+	}, [ attributes.elevation ] );
 
 	if ( ! defaults.accessToken ) {
 		return (
@@ -148,6 +138,14 @@ export function MapEdit( {
 				</div>
 			</>
 		);
+	}
+
+	function refreshMap( timeout: number = 100 ) {
+		// wait 100 ms then resize the map
+		setTimeout( () => {
+			// get the mapRef element width and height
+			if ( mapRef.current?.style ) map?.resize();
+		}, timeout );
 	}
 
 	return (
@@ -255,14 +253,7 @@ export function MapEdit( {
 									...attributes,
 									sidebarEnabled: newValue,
 								} );
-								// wait 500 ms then resize the map
-								setTimeout( () => {
-									// get the mapRef element width and height
-									map?.resize(
-										mapRef.current.style.width,
-										mapRef.current.style.height
-									);
-								}, 100 );
+								refreshMap();
 							} }
 						/>
 						{ sidebarEnabled && (
@@ -301,21 +292,36 @@ export function MapEdit( {
 						<ToggleControl
 							label={ __( 'Enable fitView' ) }
 							checked={ fitView }
-							onChange={ ( newValue: boolean ) =>
+							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
 									...attributes,
 									fitView: newValue,
-								} )
-							}
+								} );
+								refreshMap();
+							} }
 						/>
 						<ToggleControl
-							label={ __( 'Enable map tree dimensionality' ) }
+							label={ __( 'Enable Elevation' ) }
+							checked={ elevation }
+							onChange={ ( newValue: boolean ) => {
+								setAttributes( {
+									...attributes,
+									elevation: newValue,
+								} );
+								refreshMap();
+							} }
+						/>
+						<ToggleControl
+							label={ __( 'Lock map 3d rotation' ) }
 							checked={ threeDimensionality }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
 									...attributes,
 									threeDimensionality: newValue,
+									bearing: newValue ? attributes.bearing : 0,
+									pitch: newValue ? attributes.pitch : 0,
 								} );
+								refreshMap();
 							} }
 						/>
 					</PanelBody>

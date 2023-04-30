@@ -66,6 +66,10 @@
       "type": "boolean",
       "default": false
     },
+    "elevation": {
+      "type": "boolean",
+      "default": false
+    },
     "threeDimensionality": {
       "type": "boolean",
       "default": false
