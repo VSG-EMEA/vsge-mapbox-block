@@ -1,55 +1,66 @@
 import { memo } from '@wordpress/element';
-import { Button, Icon, IconButton, TextControl } from '@wordpress/components';
+import { Button, TextControl } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
 
-const Item = ( { props, index, tax, key, id, updateItem, deleteItem } ) => (
-	<Draggable draggableId={ tax + '-' + id } index={ index }>
-		{ ( provided ) => (
-			<div
-				ref={ provided.innerRef }
-				{ ...provided.draggableProps }
-				{ ...provided.dragHandleProps }
-			>
+const StringItem = ( props ) => {
+	const { value, tax, id, updateItem, deleteItem } = props;
+	return (
+		<Draggable draggableId={ tax + '-' + id } index={ id }>
+			{ ( provided ) => (
 				<div
-					className={ 'dnd-wrap' }
-					style={ {
-						display: 'grid',
-						gridTemplateColumns: ' 1fr auto auto',
-					} }
+					ref={ provided.innerRef }
+					{ ...provided.draggableProps }
+					{ ...provided.dragHandleProps }
 				>
-					<TextControl
-						value={ props.value }
-						onChange={ ( newValue ) =>
-							updateItem( key, tax, { value: newValue } )
-						}
-					></TextControl>
-					<Button icon="move" iconSize={ 16 } isSmall={ true } />
-					<Button
-						icon="trash"
-						iconSize={ 16 }
-						isSmall={ true }
-						onClick={ () => deleteItem( id ) }
-					/>
+					<div
+						className={ 'dnd-wrap' }
+						style={ {
+							display: 'grid',
+							gridTemplateColumns: ' 1fr auto auto',
+						} }
+					>
+						<TextControl
+							value={ value }
+							onChange={ ( newValue ) =>
+								updateItem( id, { value: newValue } )
+							}
+						></TextControl>
+						<Button
+							icon="move"
+							iconSize={ 16 }
+							isSmall={ true }
+							style={ { pointerEvents: 'none' } }
+						/>
+						<Button
+							icon="trash"
+							iconSize={ 16 }
+							isSmall={ true }
+							onClick={ () => deleteItem( id ) }
+						/>
+					</div>
 				</div>
-			</div>
-		) }
-	</Draggable>
-);
+			) }
+		</Draggable>
+	);
+};
 
-export const ItemsList = memo( function ItemsList( {
+export const StringList = memo( function ItemsList( {
 	sortedItems,
 	updateItem,
 	deleteItem,
 	tax,
 } ) {
-	return sortedItems.map( ( el, index ) => (
-		<Item
-			props={ el }
-			index={ index }
-			tax={ tax }
-			key={ el.id }
-			updateItem={ updateItem }
-			deleteItem={ deleteItem }
-		/>
-	) );
+	return (
+		sortedItems &&
+		sortedItems.map( ( el, index ) => (
+			<StringItem
+				value={ el.value }
+				tax={ tax }
+				key={ index }
+				id={ el.id ?? index }
+				updateItem={ updateItem }
+				deleteItem={ deleteItem }
+			/>
+		) )
+	);
 } );

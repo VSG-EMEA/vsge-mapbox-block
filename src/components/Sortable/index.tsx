@@ -1,6 +1,6 @@
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { reorder } from './utils';
-import { ItemsList } from './SortableItems';
+import { StringList } from './SortableItems';
 import { PinList } from './SortablePins';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
@@ -30,6 +30,19 @@ export const Sortable = ( props: {
 	function updateItem( id: number, newValue: Object ) {
 		let newItems;
 		newItems = items.map( ( item ) =>
+			item.id === id
+				? {
+						...item,
+						...newValue,
+				  }
+				: item
+		);
+		setOptions( tax, newItems );
+	}
+
+	function updatePinData( id: number, newValue: Object ) {
+		let newItems;
+		newItems = items.map( ( item ) =>
 			item.properties.id === id
 				? {
 						...item,
@@ -44,6 +57,12 @@ export const Sortable = ( props: {
 	}
 
 	function deleteItem( id: number ) {
+		// remove the item from the array
+		const newItems = items.filter( ( item ) => item.id !== id );
+		setOptions( tax, newItems );
+	}
+
+	function deletePin( id: number ) {
 		// remove the item from the array
 		const newItems = items.filter( ( item ) => item.properties.id !== id );
 		setOptions( tax, newItems );
@@ -74,7 +93,7 @@ export const Sortable = ( props: {
 							{ ...provided.droppableProps }
 						>
 							{ tax !== 'listings' ? (
-								<ItemsList
+								<StringList
 									sortedItems={ items }
 									tax={ tax }
 									updateItem={ updateItem }
@@ -85,8 +104,8 @@ export const Sortable = ( props: {
 									sortedPins={ items }
 									filters={ mapboxOptions.filters }
 									tags={ mapboxOptions.tags }
-									updateItem={ updateItem }
-									deleteItem={ deleteItem }
+									updateItem={ updatePinData }
+                  deletePin={ deletePin }
 								/>
 							) }
 							{ provided.placeholder }
@@ -109,8 +128,15 @@ export const Sortable = ( props: {
 									value: __( 'New' ),
 							  }
 							: {
-									id: items.length,
-									name: __( 'New' ),
+									properties: {
+										id: items.length,
+										name: __( 'New' ),
+										description: '',
+										address: '',
+										location: undefined,
+										itemTags: [],
+										itemFilters: [],
+									},
 							  },
 					] );
 				} }

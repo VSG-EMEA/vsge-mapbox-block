@@ -12,7 +12,7 @@ import React from 'react';
 export const PinCard = ( {
 	props,
 	updateItem,
-	deleteItem,
+	deletePin,
 	tags,
 	filters,
 	index,
@@ -24,13 +24,26 @@ export const PinCard = ( {
 		return null;
 	}
 
-	const { name, id, website, address, phone, emailAddress } =
-		props.properties;
+	const {
+		name,
+		id,
+		website,
+		address,
+		phone,
+		emailAddress,
+		itemTags,
+		itemFilters,
+	} = props.properties;
+
+	function hasThatFilter( filter, filterArray ) {
+		return filterArray ? filterArray.includes( filter ) : false;
+	}
 
 	function toggleArrayValues( tags, value, newValue: boolean ) {
 		let newTags;
+
 		if ( newValue ) {
-			tags.push( value );
+			tags.push( { id: tags.length, value } );
 		} else {
 			newTags = tags.filter( ( tag ) => tag.value === value );
 		}
@@ -65,7 +78,7 @@ export const PinCard = ( {
 								icon={ 'arrow-down' }
 							/>
 							<Button
-								onClick={ () => deleteItem( id ) }
+								onClick={ () => deletePin( id ) }
 								isSmall={ true }
 								icon="trash"
 								iconSize={ 16 }
@@ -116,22 +129,19 @@ export const PinCard = ( {
 								{ tags.map( ( checkbox, index ) => (
 									<CheckboxControl
 										label={ checkbox.value }
-										checked={
-											tags.filter(
-												( tag ) =>
-													tag.value === checkbox.value
-											).length
-										}
+										checked={ hasThatFilter(
+											checkbox.value,
+											itemTags
+										) }
 										key={ index }
 										onChange={ ( newValue ) => {
 											// given an array of tags, add the item if the checkbox value is true otherwise remove it from array
-											const newTags = toggleArrayValues(
-												tags,
-												checkbox.value,
-												newValue
-											);
 											updateItem( id, {
-												tags: [ newTags ],
+												itemTags: toggleArrayValues(
+													itemTags,
+													checkbox.value,
+													newValue
+												),
 											} );
 										} }
 									/>
@@ -141,19 +151,18 @@ export const PinCard = ( {
 								{ filters.map( ( checkbox, index ) => (
 									<CheckboxControl
 										label={ checkbox.value }
-										checked={ filters.includes(
-											checkbox.value
+										checked={ hasThatFilter(
+											checkbox.value,
+											itemFilters
 										) }
 										key={ index }
 										onChange={ ( newValue ) => {
-											const newFilters =
-												toggleArrayValues(
-													filters,
+											updateItem( id, {
+												itemFilters: toggleArrayValues(
+													itemFilters,
 													checkbox.value,
 													newValue
-												);
-											updateItem( id, {
-												filters: newFilters,
+												),
 											} );
 										} }
 									/>
@@ -170,7 +179,7 @@ export const PinCard = ( {
 export const PinList = memo( function PinList( {
 	sortedPins,
 	updateItem,
-	deleteItem,
+	deletePin,
 	tags,
 	filters,
 } ) {
@@ -179,7 +188,7 @@ export const PinList = memo( function PinList( {
 			props={ pin }
 			index={ index }
 			updateItem={ updateItem }
-			deleteItem={ deleteItem }
+			deletePin={ deletePin }
 			tags={ tags }
 			filters={ filters }
 		/>
