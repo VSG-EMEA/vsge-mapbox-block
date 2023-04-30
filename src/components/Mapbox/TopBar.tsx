@@ -1,10 +1,9 @@
 import { Button, Icon, SelectControl } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { useContext, useState } from '@wordpress/element';
 import { safeSlug } from '../../utils';
 import { fitInView } from '../../utils/view';
-import {MapFilter} from "../../types";
-
-
+import { MapFilter, MountedMapsContextValue } from '../../types';
+import { MapboxContext } from './MapboxContext';
 
 /**
  * trasform an array of strings into a select values that could be used with select control
@@ -38,9 +37,16 @@ const centerViewIcon = () => (
 );
 
 export const TopBar = ( attributes ) => {
+	const { map, listings }: MountedMapsContextValue =
+		useContext( MapboxContext );
 	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
 	const [ filter, setFilter ] = useState( '' );
 	const [ tag, setTag ] = useState( '' );
+
+	// if no special stuff is required, return null
+	if ( fitView === false || ! mapboxOptions || ! mapboxOptions.filters ) {
+		return null;
+	}
 
 	return (
 		<div className={ 'map-topbar' }>
@@ -49,7 +55,7 @@ export const TopBar = ( attributes ) => {
 					icon={ centerViewIcon }
 					isSmall={ true }
 					className={ 'fit-view' }
-					onClick={ () => fitInView() }
+					onClick={ () => fitInView( map, listings ) }
 				>
 					fit-view
 				</Button>
