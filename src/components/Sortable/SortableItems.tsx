@@ -51,7 +51,6 @@ export const StringList = memo( function ItemsList( {
 	tax,
 } ) {
 	return (
-		sortedItems &&
 		sortedItems.map( ( el, index ) => (
 			<StringItem
 				value={ el.value }

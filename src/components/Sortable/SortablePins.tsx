@@ -9,14 +9,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 
-export const PinCard = ( {
-	props,
-	updateItem,
-	deletePin,
-	tags,
-	filters,
-	index,
-} ) => {
+export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 	const [ isOpen, setIsOpen ] = useState( false );
 
 	if ( ! props.properties ) {
@@ -51,7 +44,7 @@ export const PinCard = ( {
 	}
 
 	return (
-		<Draggable draggableId={ ( name || 'new' ) + '-' + id } index={ index }>
+		<Draggable draggableId={ 'pin-' + id } index={ id }>
 			{ ( provided ) => (
 				<div
 					ref={ provided.innerRef }
@@ -186,7 +179,7 @@ export const PinList = memo( function PinList( {
 	return sortedPins.map( ( pin, index ) => (
 		<PinCard
 			props={ pin }
-			index={ index }
+			key={ index }
 			updateItem={ updateItem }
 			deletePin={ deletePin }
 			tags={ tags }

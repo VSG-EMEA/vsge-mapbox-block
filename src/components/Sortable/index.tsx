@@ -105,7 +105,7 @@ export const Sortable = ( props: {
 									filters={ mapboxOptions.filters }
 									tags={ mapboxOptions.tags }
 									updateItem={ updatePinData }
-                  deletePin={ deletePin }
+									deletePin={ deletePin }
 								/>
 							) }
 							{ provided.placeholder }
