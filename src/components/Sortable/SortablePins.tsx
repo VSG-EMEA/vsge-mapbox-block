@@ -104,7 +104,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
               type={'email'}
 							value={ emailAddress || '' }
 							onChange={ ( newValue ) => {
-								updateItem( id, { email: newValue } );
+								updateItem( id, { emailAddress: newValue } );
 							} }
 						></TextControl>
 						<TextControl
@@ -119,7 +119,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 							label={ __( 'Address' ) }
 							value={ address || '' }
 							onChange={ ( newValue ) => {
-								updateItem( id, { Address: newValue } );
+								updateItem( id, { address: newValue } );
 							} }
 						></TextareaControl>
 
