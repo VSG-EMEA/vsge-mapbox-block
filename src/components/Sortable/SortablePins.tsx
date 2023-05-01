@@ -8,6 +8,7 @@ import {
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
+import { MapFilter } from '../../types';
 
 export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 	const [ isOpen, setIsOpen ] = useState( false );
@@ -28,23 +29,27 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 		itemFilters,
 	} = props.properties;
 
-	function hasThatFilter( filter, filterArray ) {
-		return filterArray ? filterArray.includes( filter ) : false;
+	function hasThatFilter( filter, filterItems ) {
+		return filterItems ? filterItems.filter( item => item.value === filter ).length : false;
 	}
 
-	function toggleArrayValues( tags, value, newValue: boolean ) {
-		let newTags;
-
+	function toggleArrayValues(
+		mapFilter: MapFilter[] = [],
+		value: string,
+		newValue: boolean
+	): MapFilter[] {
 		if ( newValue ) {
-			tags.push( { id: tags.length, value } );
+			mapFilter.push( { id: tags.length, value } );
 		} else {
-			newTags = tags.filter( ( tag ) => tag.value === value );
+			mapFilter = mapFilter.filter(
+				( filter ) => filter.value === value
+			);
 		}
-		return newTags;
+		return mapFilter;
 	}
 
 	return (
-		<Draggable draggableId={ 'pin-' + id } index={ id }>
+		<Draggable draggableId={ 'pin-' + id } index={ id } key={ id }>
 			{ ( provided ) => (
 				<div
 					ref={ provided.innerRef }
@@ -79,6 +84,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 						</div>
 						<TextControl
 							label={ __( 'name' ) }
+              type={'text'}
 							style={ { margin: 0 } }
 							value={ name || 'New' }
 							onChange={ ( newValue ) => {
@@ -87,6 +93,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 						></TextControl>
 						<TextControl
 							label={ __( 'phone' ) }
+              type={'phone'}
 							value={ phone || '' }
 							onChange={ ( newValue ) => {
 								updateItem( id, { phone: newValue } );
@@ -94,6 +101,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 						></TextControl>
 						<TextControl
 							label={ __( 'email' ) }
+              type={'email'}
 							value={ emailAddress || '' }
 							onChange={ ( newValue ) => {
 								updateItem( id, { email: newValue } );
@@ -101,6 +109,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 						></TextControl>
 						<TextControl
 							label={ __( 'website' ) }
+              type={'url'}
 							value={ website || '' }
 							onChange={ ( newValue ) => {
 								updateItem( id, { website: newValue } );

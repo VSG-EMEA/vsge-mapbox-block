@@ -68,13 +68,6 @@ export const Sortable = ( props: {
 		setOptions( tax, newItems );
 	}
 
-	useEffect( () => {
-		items.forEach( ( item: any, index: number ) => {
-			if ( ! item?.properties?.id )
-				item.properties = { ...item.properties, id: index };
-		} );
-	}, [] );
-
 	return (
 		<>
 			<DragDropContext

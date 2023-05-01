@@ -5,7 +5,7 @@ import { Draggable } from 'react-beautiful-dnd';
 const StringItem = ( props ) => {
 	const { value, tax, id, updateItem, deleteItem } = props;
 	return (
-		<Draggable draggableId={ tax + '-' + id } index={ id }>
+		<Draggable draggableId={ tax + '-' + id } index={ id } key={ id }>
 			{ ( provided ) => (
 				<div
 					ref={ provided.innerRef }
@@ -50,16 +50,14 @@ export const StringList = memo( function ItemsList( {
 	deleteItem,
 	tax,
 } ) {
-	return (
-		sortedItems.map( ( el, index ) => (
-			<StringItem
-				value={ el.value }
-				tax={ tax }
-				key={ index }
-				id={ el.id ?? index }
-				updateItem={ updateItem }
-				deleteItem={ deleteItem }
-			/>
-		) )
-	);
+	return sortedItems.map( ( el, index ) => (
+		<StringItem
+			value={ el.value }
+			tax={ tax }
+			key={ index }
+			id={ el.id ?? index }
+			updateItem={ updateItem }
+			deleteItem={ deleteItem }
+		/>
+	) );
 } );
