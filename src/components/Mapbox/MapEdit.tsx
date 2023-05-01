@@ -11,8 +11,9 @@ import {
 	ToggleControl,
 	__experimentalUnitControl as UnitControl,
 	Button,
+	TextareaControl,
 } from '@wordpress/components';
-import { mapMarker, cog, filter, settings } from '@wordpress/icons';
+import { mapMarker, cog, filter, settings, update } from '@wordpress/icons';
 import { mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
@@ -438,6 +439,22 @@ export function MapEdit( {
 							tax={ 'listings' }
 							setOptions={ setOptions }
 							mapboxOptions={ attributes.mapboxOptions }
+						/>
+					</PanelBody>
+				</Panel>
+
+				<Panel>
+					<PanelBody title="Export" icon={ update }>
+						<TextareaControl
+							value={ JSON.stringify( attributes.mapboxOptions ) }
+							onChange={ ( e ) => {
+								if ( typeof JSON.parse( e ) === 'object' ) {
+									setAttributes( {
+										...attributes,
+										mapboxOptions: JSON.parse( e ),
+									} );
+								}
+							} }
 						/>
 					</PanelBody>
 				</Panel>
