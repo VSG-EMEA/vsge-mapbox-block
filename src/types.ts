@@ -26,13 +26,15 @@ export type MapAttributes = {
 	bearing: number;
 	mapZoom: number;
 	mapStyle: string;
+	mapHeight: string;
 	sidebarEnabled: boolean;
 	geocoderEnabled: boolean;
 	filtersEnabled: boolean;
 	tagsEnabled: boolean;
 	fitView: boolean;
 	elevation: boolean;
-	threeDimensionality: boolean;
+	freeViewCamera: boolean;
+	mouseWheelZoom: boolean;
 	mapboxOptions: {
 		tags: string[];
 		filters: string[];
