@@ -12,9 +12,9 @@ import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
 import { RefObject } from 'react';
 
-export function MarkerPopup( { properties } ): JSX.Element {
+export function MarkerPopup( props ): JSX.Element {
 	const { partnership, name, address, city, postalCode, country, state } =
-		properties;
+		props;
 
 	return (
 		<div>

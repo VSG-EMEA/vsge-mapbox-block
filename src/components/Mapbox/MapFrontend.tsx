@@ -4,7 +4,7 @@ import { MapBox } from './index';
 export function MapFrontend( { attributes } ): JSX.Element {
 	return (
 		<MapProvider>
-			<MapBox attributes={ attributes } />
+			<MapBox attributes={ attributes } markers={ [] } />
 		</MapProvider>
 	);
 }

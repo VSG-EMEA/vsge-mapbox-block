@@ -1,14 +1,14 @@
 import { Map } from './Map';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
-import { useEffect, useContext } from '@wordpress/element';
+import { useEffect, useContext, useState } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { initMap } from './utils/initMap';
 import mapboxgl from 'mapbox-gl';
 import { initGeocoder } from './utils/geocoder';
 import { MountedMapsContextValue } from '../../types';
 
-export function MapBox( { attributes } ): JSX.Element {
+export function MapBox( { attributes, markers } ): JSX.Element {
 	const {
 		map,
 		setMap,
@@ -24,7 +24,7 @@ export function MapBox( { attributes } ): JSX.Element {
 			mapboxgl.accessToken = defaults.accessToken;
 
 			// Initialize map and store the map instance
-			setMap( initMap( mapRef.current, attributes, defaults ) );
+			setMap( initMap( mapRef.current, attributes, defaults, markers ) );
 
 			if ( attributes.geocoderEnabled ) {
 				setGeoCoder(

@@ -9,7 +9,9 @@ import { getDefaults } from '../../utils';
 import { RefObject } from 'react';
 import { MountedMapsContextValue } from '../../types';
 
-export const MapboxContext = createContext< MountedMapsContextValue >( {} );
+export const MapboxContext = createContext< MountedMapsContextValue >( {
+	map: null,
+} );
 export const useMap = () => {
 	const { map } = useContext( MapboxContext );
 
@@ -26,6 +28,7 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ listings, setListings ] = useState( null );
 	const [ lngLat, setLngLat ] = useState( { lng: null, lat: null } );
 	const [ popupContent, setPopupContent ] = useState( [] );
+	const [ markers, setMarkers ] = useState( [] );
 	const defaults = getDefaults();
 
 	const mapRef: RefObject< HTMLDivElement > =
@@ -44,6 +47,8 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 				setLngLat,
 				listings,
 				setListings,
+				markers,
+				setMarkers,
 				defaults,
 				mapRef,
 				geoCoder,

@@ -1,16 +1,13 @@
 import { Button, Icon } from '@wordpress/components';
-import { removePopup } from './Popup';
+import { MarkerPopup, removePopup } from './Popup';
 import { RefObject } from 'react';
-import { createRef, render } from '@wordpress/element';
+import { createRef, render, useContext } from '@wordpress/element';
 import { enableListing } from '../../utils/dataset';
 import mapboxgl from 'mapbox-gl';
 import { mapMarker } from '@wordpress/icons';
+import { MapboxContext } from './MapboxContext';
 
 export function Marker( { onClick, children, feature } ): JSX.Element {
-	const _onClick = () => {
-		onClick( feature.properties.description );
-	};
-
 	return (
 		<Button
 			onClick={ onClick }
@@ -22,19 +19,18 @@ export function Marker( { onClick, children, feature } ): JSX.Element {
 	);
 }
 
-export function addMarkers( storesEl, map, stores, markers ) {
+export function addMarkers( stores, map ): mapboxgl.Marker[] {
+
+  // Create an array to store the Markers
+  const markers: mapboxgl.Marker[] = [];
+
 	map.addSource( 'places', {
 		type: 'geojson',
 		data: stores,
 	} );
 
-	removePopup();
-
-	// removes all markers
-	markers.forEach( ( marker ) => marker.remove() );
-
 	/* For each feature in the GeoJSON object above: */
-	storesEl.features.forEach( function ( marker, i ) {
+	stores.features.forEach( function ( marker, i ) {
 		if ( marker?.geometry ) {
 			const ref: RefObject< HTMLDivElement > = createRef();
 			// Create a new DOM node and save it to the React ref
@@ -57,13 +53,18 @@ export function addMarkers( storesEl, map, stores, markers ) {
 			);
 
 			// Add markers to the map at all points
-			const newMarker = new mapboxgl.Marker( ref.current, {
-				offset: [ 0, -24 ],
-			} )
-				.setLngLat( marker.geometry.coordinates )
+			const newMarker: mapboxgl.Marker = new mapboxgl.Marker(
+				ref.current,
+				{
+					offset: [ 0, -24 ],
+				}
+			)
+				.setLngLat( marker.geometry.coordinates || [ 0, 0 ] )
 				.addTo( map );
 
 			markers.push( newMarker );
 		}
 	} );
+
+	return markers;
 }

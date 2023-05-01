@@ -72,9 +72,9 @@ export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;
 	popupContent?: any;
 	setPopupContent?: any;
-	setMap: SetStateAction< mapboxgl.Map >;
-	setGeoCoder: SetStateAction< any >;
-	mapRef: RefObject< HTMLDivElement >;
-	geocoderRef: RefObject< HTMLDivElement >;
-	defaults: MapboxBlockDefaults;
+	setMap?: SetStateAction< mapboxgl.Map >;
+	setGeoCoder?: SetStateAction< any >;
+	mapRef?: RefObject< HTMLDivElement >;
+	geocoderRef?: RefObject< HTMLDivElement >;
+	defaults?: MapboxBlockDefaults;
 };

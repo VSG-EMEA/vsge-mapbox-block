@@ -10,7 +10,7 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { MapFilter } from '../../types';
 
-export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
+export const PinCard = ( { props, updatePin, deletePin, tags, filters } ) => {
 	const [ isOpen, setIsOpen ] = useState( false );
 
 	if ( ! props.properties ) {
@@ -30,7 +30,18 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 	} = props.properties;
 
 	function hasThatFilter( filter, filterItems ) {
-		return filterItems ? filterItems.filter( item => item.value === filter ).length : false;
+		return filterItems
+			? filterItems.filter( ( item ) => item.value === filter ).length
+			: false;
+	}
+
+	function updateItemProps( data: any ) {
+		updatePin( id, {
+			properties: {
+				...props.properties,
+				...data,
+			},
+		} );
 	}
 
 	function toggleArrayValues(
@@ -84,42 +95,42 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 						</div>
 						<TextControl
 							label={ __( 'name' ) }
-              type={'text'}
+							type={ 'text' }
 							style={ { margin: 0 } }
 							value={ name || 'New' }
 							onChange={ ( newValue ) => {
-								updateItem( id, { name: newValue } );
+								updateItemProps( { name: newValue } );
 							} }
 						></TextControl>
 						<TextControl
 							label={ __( 'phone' ) }
-              type={'phone'}
+							type={ 'phone' }
 							value={ phone || '' }
 							onChange={ ( newValue ) => {
-								updateItem( id, { phone: newValue } );
+								updateItemProps( { phone: newValue } );
 							} }
 						></TextControl>
 						<TextControl
 							label={ __( 'email' ) }
-              type={'email'}
+							type={ 'email' }
 							value={ emailAddress || '' }
 							onChange={ ( newValue ) => {
-								updateItem( id, { emailAddress: newValue } );
+								updateItemProps( { emailAddress: newValue } );
 							} }
 						></TextControl>
 						<TextControl
 							label={ __( 'website' ) }
-              type={'url'}
+							type={ 'url' }
 							value={ website || '' }
 							onChange={ ( newValue ) => {
-								updateItem( id, { website: newValue } );
+								updateItemProps( { website: newValue } );
 							} }
 						></TextControl>
 						<TextareaControl
 							label={ __( 'Address' ) }
 							value={ address || '' }
 							onChange={ ( newValue ) => {
-								updateItem( id, { address: newValue } );
+								updateItemProps( { address: newValue } );
 							} }
 						></TextareaControl>
 
@@ -138,7 +149,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 										key={ index }
 										onChange={ ( newValue ) => {
 											// given an array of tags, add the item if the checkbox value is true otherwise remove it from array
-											updateItem( id, {
+											updateItemProps( {
 												itemTags: toggleArrayValues(
 													itemTags,
 													checkbox.value,
@@ -159,7 +170,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 										) }
 										key={ index }
 										onChange={ ( newValue ) => {
-											updateItem( id, {
+											updateItemProps( {
 												itemFilters: toggleArrayValues(
 													itemFilters,
 													checkbox.value,
@@ -180,7 +191,7 @@ export const PinCard = ( { props, updateItem, deletePin, tags, filters } ) => {
 
 export const PinList = memo( function PinList( {
 	sortedPins,
-	updateItem,
+	updatePin,
 	deletePin,
 	tags,
 	filters,
@@ -189,7 +200,7 @@ export const PinList = memo( function PinList( {
 		<PinCard
 			props={ pin }
 			key={ index }
-			updateItem={ updateItem }
+			updatePin={ updatePin }
 			deletePin={ deletePin }
 			tags={ tags }
 			filters={ filters }

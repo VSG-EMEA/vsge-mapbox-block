@@ -1,6 +1,6 @@
 import { MapboxContext, useMap } from './MapboxContext';
 import mapboxgl from 'mapbox-gl';
-import { useContext, useEffect } from '@wordpress/element';
+import { useContext, useEffect, useState } from '@wordpress/element';
 import { MapBox } from './index';
 import { InspectorControls } from '@wordpress/block-editor';
 import {
@@ -12,7 +12,7 @@ import {
 	__experimentalUnitControl as UnitControl,
 	Button,
 } from '@wordpress/components';
-import { mapMarker, cog, filter } from '@wordpress/icons';
+import { mapMarker, cog, filter, settings } from '@wordpress/icons';
 import { mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
@@ -23,11 +23,11 @@ import {
 	setMapThreeDimensionality,
 	setMapWheelZoom,
 } from './utils/initMap';
+import { MarkerPopup } from './Popup';
 
 export function MapEdit( {
 	attributes,
 	setAttributes,
-	isSelected,
 }: {
 	attributes: MapAttributes;
 	setAttributes: ( attributes: MapAttributes ) => void;
@@ -52,8 +52,31 @@ export function MapEdit( {
 		mapboxOptions: { tags, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef, setGeoCoder, geocoderRef, defaults } =
+	const { map, mapRef, setGeoCoder, geocoderRef, defaults, markers } =
 		useContext( MapboxContext );
+
+	function listenForMarkerClick( map ) {
+		map.on( 'click', 'places', ( e ) => {
+			console.log( e );
+			const labels = e.features?.map( ( feature ) => (
+				<MarkerPopup
+					key={ feature.properties?.id }
+					{ ...feature.properties }
+				/>
+			) );
+
+			console.log( e.lngLat );
+
+			// setPopupContent( labels );
+			// setLngLat( e.lngLat );
+		} );
+	}
+
+	useEffect( () => {
+		if ( map ) {
+			listenForMarkerClick( map );
+		}
+	}, [ map ] );
 
 	const setOptions = ( key: string, value: string | number | boolean ) => {
 		setAttributes( {
@@ -107,35 +130,35 @@ export function MapEdit( {
 
 	useEffect( () => {
 		if ( map ) {
-			map.setStyle( 'mapbox://styles/mapbox/' + attributes.mapStyle );
+			map.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
 		}
-	}, [ attributes.mapStyle ] );
+	}, [ mapStyle ] );
 
 	useEffect( () => {
-		if ( map && attributes.geocoderEnabled ) {
+		if ( map && geocoderEnabled ) {
 			setGeoCoder(
 				initGeocoder( geocoderRef, map, attributes, defaults )
 			);
 		}
-	}, [ attributes.geocoderEnabled ] );
+	}, [ geocoderEnabled ] );
 
 	useEffect( () => {
 		if ( map ) {
-			setMapThreeDimensionality( map, attributes.freeViewCamera );
+			setMapThreeDimensionality( map, freeViewCamera );
 		}
-	}, [ attributes.freeViewCamera ] );
+	}, [ freeViewCamera ] );
 
 	useEffect( () => {
 		if ( map ) {
-			setMapElevation( map, attributes.elevation );
+			setMapElevation( map, elevation );
 		}
-	}, [ attributes.elevation ] );
+	}, [ elevation ] );
 
 	useEffect( () => {
 		if ( map ) {
-			setMapWheelZoom( map, attributes.mouseWheelZoom );
+			setMapWheelZoom( map, mouseWheelZoom );
 		}
-	}, [ attributes.mouseWheelZoom ] );
+	}, [ mouseWheelZoom ] );
 
 	if ( ! defaults.accessToken ) {
 		return (
@@ -195,7 +218,6 @@ export function MapEdit( {
 									setAttributes( {
 										...attributes,
 										geocoderEnabled: newValue,
-										sidebarEnabled: newValue,
 									} );
 								} }
 							/>
@@ -249,8 +271,8 @@ export function MapEdit( {
 								setAttributes( {
 									...attributes,
 									freeViewCamera: newValue,
-									bearing: newValue ? attributes.bearing : 0,
-									pitch: newValue ? attributes.pitch : 0,
+									bearing: newValue ? bearing : 0,
+									pitch: newValue ? pitch : 0,
 								} );
 								refreshMap();
 							} }
@@ -269,7 +291,7 @@ export function MapEdit( {
 					</PanelBody>
 				</Panel>
 				<Panel>
-					<PanelBody title="Settings">
+					<PanelBody title="Settings" icon={ settings }>
 						<h2>{ __( 'Camera Options' ) }</h2>
 						{ map && (
 							<Button
@@ -282,7 +304,7 @@ export function MapEdit( {
 						<h2>{ __( 'Camera Fine tuning' ) }</h2>
 						<RangeControl
 							label={ __( 'Latitude' ) }
-							value={ attributes.latitude }
+							value={ latitude }
 							min={ -90 }
 							max={ 90 }
 							step={ 0.0001 }
@@ -297,7 +319,7 @@ export function MapEdit( {
 						/>
 						<RangeControl
 							label={ __( 'Longitude' ) }
-							value={ attributes.longitude }
+							value={ longitude }
 							min={ -180 }
 							max={ 180 }
 							step={ 0.0001 }
@@ -312,7 +334,7 @@ export function MapEdit( {
 						/>
 						<RangeControl
 							label={ 'pitch' }
-							value={ attributes.pitch }
+							value={ pitch }
 							min={ 0 }
 							max={ 90 }
 							step={ 0.01 }
@@ -326,7 +348,7 @@ export function MapEdit( {
 						/>
 						<RangeControl
 							label={ 'bearing' }
-							value={ attributes.bearing }
+							value={ bearing }
 							min={ -180 }
 							max={ 180 }
 							step={ 0.01 }
@@ -340,7 +362,7 @@ export function MapEdit( {
 						/>
 						<RangeControl
 							label={ 'Zoom' }
-							value={ attributes.mapZoom }
+							value={ mapZoom }
 							min={ 0 }
 							max={ 15 }
 							step={ 0.01 }
@@ -354,7 +376,7 @@ export function MapEdit( {
 						/>
 						<SelectControl
 							options={ mapStyles }
-							value={ attributes.mapStyle }
+							value={ mapStyle }
 							label={ 'Style' }
 							onChange={ ( newValue: string ) => {
 								setAttributes( {
@@ -368,7 +390,7 @@ export function MapEdit( {
 							} }
 						/>
 						<UnitControl
-							value={ attributes.mapHeight }
+							value={ mapHeight }
 							label={ __( 'Map Height' ) }
 							onChange={ ( newValue: string ) => {
 								setAttributes( {
@@ -420,7 +442,7 @@ export function MapEdit( {
 					</PanelBody>
 				</Panel>
 			</InspectorControls>
-			<MapBox attributes={ attributes } />
+			<MapBox attributes={ attributes } markers={ markers } />
 		</>
 	);
 }

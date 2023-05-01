@@ -19,9 +19,11 @@ export function setMapElevation( map: mapboxgl.Map, hasElevation: boolean ) {
 				exaggeration: 1.5,
 			} );
 		} else {
+      // unset terrain elevation
+			map.setTerrain();
+      // unload the DEM source
 			if ( map.getSource( 'mapbox-dem' ) )
 				map.removeSource( 'mapbox-dem' );
-			map.setTerrain();
 		}
 	}
 }
@@ -66,9 +68,10 @@ export function setMapWheelZoom( map: mapboxgl.Map, mouseWheelZoom: boolean ) {
  * @param {Object}      attributes An object containing various attributes for initializing the map, including
  *                                 latitude, longitude, pitch, bearing, mapZoom, mapStyle, and freeViewCamera.
  * @param               defaults
+ * @param               markers
  * @return {mapboxgl.Map} a mapboxgl.Map object.
  */
-export function initMap( mapRef, attributes, defaults ) {
+export function initMap( mapRef, attributes, defaults, markers = [] ) {
 	const {
 		latitude,
 		longitude,
@@ -86,8 +89,6 @@ export function initMap( mapRef, attributes, defaults ) {
 		features: mapboxOptions.listings,
 	};
 
-	const markers = [];
-
 	const map = new mapboxgl.Map( {
 		container: mapRef,
 		style: 'mapbox://styles/mapbox/' + mapStyle,
@@ -101,8 +102,7 @@ export function initMap( mapRef, attributes, defaults ) {
 	} );
 
 	map.on( 'load', function () {
-
-    setMapElevation( map, attributes.elevation );
+		setMapElevation( map, attributes.elevation );
 
 		if ( map.getLayer( 'country-label' ) )
 			map.setLayoutProperty( 'country-label', 'text-field', [
@@ -110,10 +110,18 @@ export function initMap( mapRef, attributes, defaults ) {
 				'name_' + defaults?.language?.substring( 0, 2 ) || 'en',
 			] );
 
+		map.addSource( 'geojson-stores', {
+			type: 'geojson',
+			data: mapboxOptions.listings,
+		} );
+
 		// Add navigation control (the +/- zoom buttons)
 		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );
 
-		addMarkers( stores, map, stores, markers );
+		// removes all markers
+		markers.forEach( ( marker ) => marker.remove() );
+
+		markers = addMarkers( stores, map );
 
 		setMapThreeDimensionality( map, attributes.freeViewCamera );
 	} );

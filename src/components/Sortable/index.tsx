@@ -40,16 +40,12 @@ export const Sortable = ( props: {
 		setOptions( tax, newItems );
 	}
 
-	function updatePinData( id: number, newValue: Object ) {
-		let newItems;
-		newItems = items.map( ( item ) =>
+	function updatePin( id: number, newValue: Object ) {
+		const newItems = items.map( ( item ) =>
 			item.properties.id === id
 				? {
 						...item,
-						properties: {
-							...item.properties,
-							...newValue,
-						},
+						...newValue,
 				  }
 				: item
 		);
@@ -97,7 +93,7 @@ export const Sortable = ( props: {
 									sortedPins={ items }
 									filters={ mapboxOptions.filters }
 									tags={ mapboxOptions.tags }
-									updateItem={ updatePinData }
+									updatePin={ updatePin }
 									deletePin={ deletePin }
 								/>
 							) }
