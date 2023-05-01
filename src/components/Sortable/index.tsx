@@ -114,17 +114,22 @@ export const Sortable = ( props: {
 						tax !== 'listings'
 							? {
 									id: items.length,
-									value: __( 'New' ),
+									value: __( 'New' ) + ' ' + tax,
 							  }
 							: {
+									type: 'Feature',
 									properties: {
 										id: items.length,
-										name: __( 'New' ),
+										name: __( 'New Marker' ),
 										description: '',
 										address: '',
 										location: undefined,
 										itemTags: [],
 										itemFilters: [],
+									},
+									geometry: {
+										type: 'Point',
+										coordinates: [ 0, 0 ],
 									},
 							  },
 					] );
