@@ -44,7 +44,11 @@
     },
     "mapStyle": {
       "type": "string",
-      "default": "satellite-streets-v11"
+      "default": "satellite-streets-v12"
+    },
+    "mapHeight": {
+      "type": "number",
+      "default": "80vh"
     },
     "sidebarEnabled": {
       "type": "boolean",
@@ -70,9 +74,13 @@
       "type": "boolean",
       "default": false
     },
-    "threeDimensionality": {
+    "freeViewCamera": {
       "type": "boolean",
       "default": false
+    },
+    "mouseWheelZoom": {
+      "type": "boolean",
+      "default": true
     },
     "mapboxOptions": {
       "type": "object",

@@ -9,6 +9,8 @@ import {
 	RangeControl,
 	SelectControl,
 	ToggleControl,
+	__experimentalUnitControl as UnitControl,
+	Button,
 } from '@wordpress/components';
 import { mapMarker, cog, filter } from '@wordpress/icons';
 import { mapStyles } from '../../constants';
@@ -16,7 +18,11 @@ import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
 import { initGeocoder } from './utils/geocoder';
 import { MapAttributes } from '../../types';
-import { setMapElevation, setMapThreeDimensionality } from './utils/initMap';
+import {
+	setMapElevation,
+	setMapThreeDimensionality,
+	setMapWheelZoom,
+} from './utils/initMap';
 
 export function MapEdit( {
 	attributes,
@@ -34,13 +40,15 @@ export function MapEdit( {
 		bearing,
 		mapZoom,
 		mapStyle,
+		mapHeight,
 		sidebarEnabled,
 		geocoderEnabled,
 		filtersEnabled,
 		tagsEnabled,
-		fitView,
-		threeDimensionality,
 		elevation,
+		fitView,
+		freeViewCamera,
+		mouseWheelZoom,
 		mapboxOptions: { tags, filters, listings },
 	}: MapAttributes = attributes;
 
@@ -58,7 +66,7 @@ export function MapEdit( {
 	};
 
 	function pullMapOptions( currentMap: mapboxgl.Map | undefined ) {
-		if ( currentMap && isSelected )
+		if ( currentMap )
 			setAttributes( {
 				...attributes,
 				latitude: currentMap.getCenter().lat,
@@ -69,6 +77,16 @@ export function MapEdit( {
 			} );
 	}
 
+	function refreshMap( timeout: number = 100 ) {
+		// wait 100 ms then resize the map
+		setTimeout( () => {
+			// get the mapRef element width and height
+			if ( mapRef.current?.style ) map?.resize();
+		}, timeout );
+	}
+
+	/*
+	LIVE UPDATES DISABLED DUE LOW PERFORMANCE
 	useEffect( () => {
 		if ( map ) {
 			const handle = setInterval( () => {
@@ -78,7 +96,14 @@ export function MapEdit( {
 				clearInterval( handle );
 			};
 		}
-	}, [ attributes ] );
+	}, [
+		attributes.latitude,
+		attributes.longitude,
+		attributes.pitch,
+		attributes.bearing,
+		attributes.mapZoom,
+	] );
+	*/
 
 	useEffect( () => {
 		if ( map ) {
@@ -96,15 +121,21 @@ export function MapEdit( {
 
 	useEffect( () => {
 		if ( map ) {
-			setMapThreeDimensionality( map, attributes.threeDimensionality );
+			setMapThreeDimensionality( map, attributes.freeViewCamera );
 		}
-	}, [ attributes.threeDimensionality ] );
+	}, [ attributes.freeViewCamera ] );
 
 	useEffect( () => {
 		if ( map ) {
 			setMapElevation( map, attributes.elevation );
 		}
 	}, [ attributes.elevation ] );
+
+	useEffect( () => {
+		if ( map ) {
+			setMapWheelZoom( map, attributes.mouseWheelZoom );
+		}
+	}, [ attributes.mouseWheelZoom ] );
 
 	if ( ! defaults.accessToken ) {
 		return (
@@ -140,109 +171,9 @@ export function MapEdit( {
 		);
 	}
 
-	function refreshMap( timeout: number = 100 ) {
-		// wait 100 ms then resize the map
-		setTimeout( () => {
-			// get the mapRef element width and height
-			if ( mapRef.current?.style ) map?.resize();
-		}, timeout );
-	}
-
 	return (
 		<>
 			<InspectorControls>
-				<Panel>
-					<PanelBody title="Settings">
-						<RangeControl
-							label={ __( 'Latitude' ) }
-							value={ latitude }
-							min={ -90 }
-							max={ 90 }
-							step={ 0.0001 }
-							onChange={ ( newValue ) => {
-								setAttributes( {
-									...attributes,
-									latitude: newValue,
-								} );
-								if ( map && newValue )
-									map.setCenter( [ newValue, longitude ] );
-							} }
-						/>
-						<RangeControl
-							label={ __( 'Longitude' ) }
-							value={ longitude }
-							min={ -180 }
-							max={ 180 }
-							step={ 0.0001 }
-							onChange={ ( newValue ) => {
-								setAttributes( {
-									...attributes,
-									longitude: newValue,
-								} );
-								if ( newValue )
-									map?.setCenter( [ latitude, newValue ] );
-							} }
-						/>
-						<RangeControl
-							label={ 'pitch' }
-							value={ pitch }
-							min={ 0 }
-							max={ 90 }
-							step={ 0.01 }
-							onChange={ ( newValue ) => {
-								setAttributes( {
-									...attributes,
-									pitch: newValue,
-								} );
-								if ( newValue ) map?.setPitch( newValue );
-							} }
-						/>
-						<RangeControl
-							label={ 'bearing' }
-							value={ bearing }
-							min={ -180 }
-							max={ 180 }
-							step={ 0.01 }
-							onChange={ ( newValue ) => {
-								setAttributes( {
-									...attributes,
-									bearing: newValue,
-								} );
-								if ( newValue ) map?.setBearing( newValue );
-							} }
-						/>
-						<RangeControl
-							label={ 'Zoom' }
-							value={ mapZoom }
-							min={ 0 }
-							max={ 15 }
-							step={ 0.01 }
-							onChange={ ( newValue ) => {
-								setAttributes( {
-									...attributes,
-									mapZoom: newValue,
-								} );
-								if ( newValue ) map?.setZoom( newValue );
-							} }
-						/>
-						<SelectControl
-							options={ mapStyles }
-							value={ mapStyle }
-							label={ 'Style' }
-							onChange={ ( newValue: number ) => {
-								setAttributes( {
-									...attributes,
-									mapStyle: newValue,
-								} );
-								if ( newValue )
-									map?.setStyle(
-										'mapbox://styles/mapbox/' + newValue
-									);
-							} }
-						/>
-					</PanelBody>
-				</Panel>
-
 				<Panel>
 					<PanelBody title="Options" icon={ cog }>
 						<ToggleControl
@@ -260,13 +191,13 @@ export function MapEdit( {
 							<ToggleControl
 								label={ __( 'Enable Geocoder' ) }
 								checked={ geocoderEnabled }
-								onChange={ ( newValue: boolean ) =>
+								onChange={ ( newValue: boolean ) => {
 									setAttributes( {
 										...attributes,
 										geocoderEnabled: newValue,
 										sidebarEnabled: newValue,
-									} )
-								}
+									} );
+								} }
 							/>
 						) }
 						<ToggleControl
@@ -312,16 +243,138 @@ export function MapEdit( {
 							} }
 						/>
 						<ToggleControl
-							label={ __( 'Lock map 3d rotation' ) }
-							checked={ threeDimensionality }
+							label={ __( 'Enable camera 3d rotation' ) }
+							checked={ freeViewCamera }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
 									...attributes,
-									threeDimensionality: newValue,
+									freeViewCamera: newValue,
 									bearing: newValue ? attributes.bearing : 0,
 									pitch: newValue ? attributes.pitch : 0,
 								} );
 								refreshMap();
+							} }
+						/>
+						<ToggleControl
+							label={ __( 'Enable Zoom with mouse wheel' ) }
+							checked={ mouseWheelZoom }
+							onChange={ ( newValue: boolean ) => {
+								setAttributes( {
+									...attributes,
+									mouseWheelZoom: newValue,
+								} );
+								refreshMap();
+							} }
+						/>
+					</PanelBody>
+				</Panel>
+				<Panel>
+					<PanelBody title="Settings">
+						<h2>{ __( 'Camera Options' ) }</h2>
+						{ map && (
+							<Button
+								variant="secondary"
+								onClick={ () => pullMapOptions( map ) }
+							>
+								{ __( 'Get Current view' ) }
+							</Button>
+						) }
+						<h2>{ __( 'Camera Fine tuning' ) }</h2>
+						<RangeControl
+							label={ __( 'Latitude' ) }
+							value={ attributes.latitude }
+							min={ -90 }
+							max={ 90 }
+							step={ 0.0001 }
+							onChange={ ( newValue ) => {
+								setAttributes( {
+									...attributes,
+									latitude: newValue || 0,
+								} );
+								if ( map && newValue )
+									map.setCenter( [ newValue, longitude ] );
+							} }
+						/>
+						<RangeControl
+							label={ __( 'Longitude' ) }
+							value={ attributes.longitude }
+							min={ -180 }
+							max={ 180 }
+							step={ 0.0001 }
+							onChange={ ( newValue ) => {
+								setAttributes( {
+									...attributes,
+									longitude: newValue || 0,
+								} );
+								if ( newValue )
+									map?.setCenter( [ latitude, newValue ] );
+							} }
+						/>
+						<RangeControl
+							label={ 'pitch' }
+							value={ attributes.pitch }
+							min={ 0 }
+							max={ 90 }
+							step={ 0.01 }
+							onChange={ ( newValue ) => {
+								setAttributes( {
+									...attributes,
+									pitch: newValue || 0,
+								} );
+								if ( newValue ) map?.setPitch( newValue );
+							} }
+						/>
+						<RangeControl
+							label={ 'bearing' }
+							value={ attributes.bearing }
+							min={ -180 }
+							max={ 180 }
+							step={ 0.01 }
+							onChange={ ( newValue ) => {
+								setAttributes( {
+									...attributes,
+									bearing: newValue || 0,
+								} );
+								if ( newValue ) map?.setBearing( newValue );
+							} }
+						/>
+						<RangeControl
+							label={ 'Zoom' }
+							value={ attributes.mapZoom }
+							min={ 0 }
+							max={ 15 }
+							step={ 0.01 }
+							onChange={ ( newValue ) => {
+								setAttributes( {
+									...attributes,
+									mapZoom: newValue || 0,
+								} );
+								if ( newValue ) map?.setZoom( newValue );
+							} }
+						/>
+						<SelectControl
+							options={ mapStyles }
+							value={ attributes.mapStyle }
+							label={ 'Style' }
+							onChange={ ( newValue: string ) => {
+								setAttributes( {
+									...attributes,
+									mapStyle: newValue,
+								} );
+								if ( newValue )
+									map?.setStyle(
+										'mapbox://styles/mapbox/' + newValue
+									);
+							} }
+						/>
+						<UnitControl
+							value={ attributes.mapHeight }
+							label={ __( 'Map Height' ) }
+							onChange={ ( newValue: string ) => {
+								setAttributes( {
+									...attributes,
+									mapHeight: newValue || '',
+								} );
 							} }
 						/>
 					</PanelBody>
@@ -332,7 +385,7 @@ export function MapEdit( {
 						<PanelBody title="Filters" icon={ filter }>
 							{ tagsEnabled === true ? (
 								<>
-									<p>Tags</p>
+									<h2>Tags</h2>
 									<Sortable
 										items={ tags }
 										tax={ 'tags' }
@@ -343,7 +396,7 @@ export function MapEdit( {
 							) : null }
 							{ filtersEnabled ? (
 								<>
-									<p>Filters</p>
+									<h2>Filters</h2>
 									<Sortable
 										items={ filters }
 										tax={ 'filters' }
