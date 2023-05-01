@@ -60,14 +60,14 @@ function Save( { attributes }: BlockSaveProps< MapAttributes > ): JSX.Element {
 
 					{ attributes.tagsEnabled ? (
 						<select className={ 'filter-by-partnership' }>
-							<option value="" selected>
+							<option value="" selected key={ 0 }>
 								{ __( 'Filters' ) }
 							</option>
 							{ attributes.mapboxOptions.filters.map(
-								( option: any ) => (
+								( option: any, index: number ) => (
 									<option
 										value={ option.value }
-										key={ option.key }
+										key={ option.id }
 									>
 										{ option.value }
 									</option>
@@ -78,14 +78,14 @@ function Save( { attributes }: BlockSaveProps< MapAttributes > ): JSX.Element {
 
 					{ attributes.filtersEnabled ? (
 						<select className={ 'filter-by-tag' }>
-							<option value="" selected>
+							<option value="" selected key={ 0 }>
 								{ __( 'Tags' ) }
 							</option>
 							{ attributes.mapboxOptions.tags.map(
-								( option: any ) => (
+								( option: any, index: number ) => (
 									<option
 										value={ option.value }
-										key={ option.key }
+										key={ option.id }
 									>
 										{ option.value }
 									</option>
