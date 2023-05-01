@@ -20,7 +20,10 @@ export function MapBox( { attributes } ): JSX.Element {
 
 	useEffect( () => {
 		if ( defaults?.accessToken && mapRef?.current ) {
+			// Provide access token
 			mapboxgl.accessToken = defaults.accessToken;
+
+			// Initialize map and store the map instance
 			setMap( initMap( mapRef.current, attributes, defaults ) );
 
 			if ( attributes.geocoderEnabled ) {
@@ -34,7 +37,10 @@ export function MapBox( { attributes } ): JSX.Element {
 	}, [ mapRef ] );
 
 	return (
-		<div className={ 'map-wrapper' }>
+		<div
+			className={ 'map-wrapper' }
+			style={ { minHeight: attributes.mapHeight } }
+		>
 			{ attributes.sidebarEnabled ? (
 				<Sidebar
 					attributes={ attributes }

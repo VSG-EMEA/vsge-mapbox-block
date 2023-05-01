@@ -17,27 +17,27 @@ export const mapboxDefaults: MapboxOptions = {
  * @see https://docs.mapbox.com/api/maps/styles/#mapbox-styles
  */
 export const mapStyles: MapStyleDef[] = [
-	{ label: 'streets v12', value: 'streets-v12' },
+	{ label: 'streets', value: 'streets-v12' },
 	{
-		label: 'outdoors v12',
+		label: 'outdoors',
 		value: 'outdoors-v12',
 	},
-	{ label: 'light v11', value: 'light-v11' },
-	{ label: 'dark v11', value: 'dark-v11' },
+	{ label: 'light', value: 'light-v11' },
+	{ label: 'dark', value: 'dark-v11' },
 	{
-		label: 'satellite v9',
+		label: 'satellite',
 		value: 'satellite-v9',
 	},
 	{
-		label: 'satellite-streets-v12',
+		label: 'satellite streets',
 		value: 'satellite-streets-v12',
 	},
 	{
-		label: 'navigation day v1',
+		label: 'navigation day',
 		value: 'navigation-day-v1',
 	},
 	{
-		label: 'navigation night v1',
+		label: 'navigation night',
 		value: 'navigation-night-v1',
 	},
 ];

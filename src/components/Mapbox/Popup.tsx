@@ -11,8 +11,6 @@ import { Feature } from '@turf/turf';
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
 import { RefObject } from 'react';
-import { enableListing } from '../../utils/dataset';
-import { Marker } from './Markers';
 
 export function MarkerPopup( { properties } ): JSX.Element {
 	const { partnership, name, address, city, postalCode, country, state } =
