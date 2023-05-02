@@ -10,7 +10,14 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { MapFilter } from '../../types';
 
-export const PinCard = ( { props, updatePin, deletePin, tags, filters } ) => {
+export const PinCard = ( {
+	props,
+	updatePin,
+	deletePin,
+	setPinPosition,
+	tags,
+	filters,
+} ) => {
 	const [ isOpen, setIsOpen ] = useState( false );
 
 	if ( ! props.properties ) {
@@ -133,6 +140,24 @@ export const PinCard = ( { props, updatePin, deletePin, tags, filters } ) => {
 								updateItemProps( { address: newValue } );
 							} }
 						></TextareaControl>
+						<TextControl
+							label={ __( 'lat' ) }
+							value={ props.geometry.coordinates[ 0 ] }
+							disabled={ true }
+							onChange={ () => null }
+						/>
+						<TextControl
+							label={ __( 'lang' ) }
+							value={ props.geometry.coordinates[ 1 ] }
+							disabled={ true }
+							onChange={ () => null }
+						/>
+						<Button
+							variant={ 'secondary' }
+							onClick={ () => setPinPosition( id ) }
+						>
+							{ __( 'get position' ) }
+						</Button>
 
 						<div
 							className={ 'flexRow' }
@@ -193,6 +218,7 @@ export const PinList = memo( function PinList( {
 	sortedPins,
 	updatePin,
 	deletePin,
+	setPinPosition,
 	tags,
 	filters,
 } ) {
@@ -202,6 +228,7 @@ export const PinList = memo( function PinList( {
 			key={ index }
 			updatePin={ updatePin }
 			deletePin={ deletePin }
+			setPinPosition={ setPinPosition }
 			tags={ tags }
 			filters={ filters }
 		/>
