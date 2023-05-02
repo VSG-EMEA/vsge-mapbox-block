@@ -11,7 +11,7 @@ export function initGeocoder(
 	if ( defaults.accessToken ) {
 		const geocoder = new MapboxGeocoder( {
 			accessToken: defaults.accessToken,
-			mapboxgl,
+			mapboxgl: map,
 			lang: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
 			marker: {
