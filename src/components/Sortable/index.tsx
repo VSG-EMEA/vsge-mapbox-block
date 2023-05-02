@@ -4,7 +4,9 @@ import { StringList } from './SortableItems';
 import { PinList } from './SortablePins';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
+import { useContext, useEffect } from '@wordpress/element';
+import { MapboxContext } from '../Mapbox/MapboxContext';
+import { addTemplate } from '@wordpress/icons';
 
 export const Sortable = ( props: {
 	items: any;
@@ -13,17 +15,29 @@ export const Sortable = ( props: {
 	mapboxOptions: any;
 } ): JSX.Element => {
 	const { items, tax, setOptions, mapboxOptions } = props;
-	function onDragEnd( result: {
+
+	const { lngLat } = useContext( MapboxContext );
+
+	/**
+	 * Fired when the drag ends on a droppable item
+	 *
+	 * @param item
+	 * @param item.destination
+	 * @param item.destination.index
+	 * @param item.source
+	 * @param item.source.index
+	 */
+	function onDragEnd( item: {
 		destination: { index: any };
 		source: { index: any };
 	} ) {
 		// dropped outside the list
-		if ( ! result.destination ) {
+		if ( ! item.destination ) {
 			return;
 		}
 		setOptions(
 			tax,
-			reorder( items, result.source.index, result.destination.index )
+			reorder( items, item.source.index, item.destination.index )
 		);
 	}
 
@@ -46,6 +60,21 @@ export const Sortable = ( props: {
 				? {
 						...item,
 						...newValue,
+				  }
+				: item
+		);
+		setOptions( tax, newItems );
+	}
+
+	function setPinPosition( id: number ) {
+		const newItems = items.map( ( item ) =>
+			item.properties.id === id
+				? {
+						...item,
+						geometry: {
+							type: 'point',
+							coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
+						},
 				  }
 				: item
 		);
@@ -95,6 +124,7 @@ export const Sortable = ( props: {
 									tags={ mapboxOptions.tags }
 									updatePin={ updatePin }
 									deletePin={ deletePin }
+									setPinPosition={ setPinPosition }
 								/>
 							) }
 							{ provided.placeholder }
@@ -103,7 +133,7 @@ export const Sortable = ( props: {
 				</Droppable>
 			</DragDropContext>
 			<Button
-				icon={ 'plus' }
+				icon={ addTemplate }
 				text={ __( 'Add new' ) }
 				type={ 'link' }
 				className={ 'add-new-sortable-item' }
