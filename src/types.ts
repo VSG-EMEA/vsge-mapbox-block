@@ -1,6 +1,6 @@
 import { Feature, Geometry } from '@turf/turf';
-import mapboxgl from 'mapbox-gl';
-import { Ref, RefObject, SetStateAction } from 'react';
+import mapboxgl, { LngLat } from 'mapbox-gl';
+import { Dispatch, Ref, RefObject, SetStateAction } from 'react';
 
 export type CoordinatesDef = [ number, number ];
 export type PartnershipDef = number[];
@@ -70,9 +70,10 @@ export interface MapItem extends Feature {
 
 export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;
+	lngLat?: LngLat;
 	popupContent?: any;
 	setPopupContent?: any;
-	setMap?: SetStateAction< mapboxgl.Map >;
+	setMap: Dispatch< SetStateAction< null > >;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
 	geocoderRef?: RefObject< HTMLDivElement >;

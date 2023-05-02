@@ -13,7 +13,7 @@ import {
 	Button,
 	TextareaControl,
 } from '@wordpress/components';
-import { mapMarker, cog, filter, settings, update } from '@wordpress/icons';
+import { navigation, cog, tag, tool, update } from '@wordpress/icons';
 import { mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
@@ -24,7 +24,6 @@ import {
 	setMapThreeDimensionality,
 	setMapWheelZoom,
 } from './utils/initMap';
-import { MarkerPopup } from './Popup';
 
 export function MapEdit( {
 	attributes,
@@ -53,31 +52,14 @@ export function MapEdit( {
 		mapboxOptions: { tags, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef, setGeoCoder, geocoderRef, defaults, markers } =
+	const { map, mapRef, setGeoCoder, geocoderRef, defaults, lngLat } =
 		useContext( MapboxContext );
-
-	function listenForMarkerClick( map ) {
-		map.on( 'click', 'places', ( e ) => {
-			console.log( e );
-			const labels = e.features?.map( ( feature ) => (
-				<MarkerPopup
-					key={ feature.properties?.id }
-					{ ...feature.properties }
-				/>
-			) );
-
-			console.log( e.lngLat );
-
-			// setPopupContent( labels );
-			// setLngLat( e.lngLat );
-		} );
-	}
 
 	useEffect( () => {
 		if ( map ) {
-			listenForMarkerClick( map );
+			console.log( lngLat );
 		}
-	}, [ map ] );
+	}, [ lngLat ] );
 
 	const setOptions = ( key: string, value: string | number | boolean ) => {
 		setAttributes( {
@@ -161,7 +143,7 @@ export function MapEdit( {
 		}
 	}, [ mouseWheelZoom ] );
 
-	if ( ! defaults.accessToken ) {
+	if ( ! defaults?.accessToken ) {
 		return (
 			<>
 				<InspectorControls>
@@ -207,6 +189,9 @@ export function MapEdit( {
 								setAttributes( {
 									...attributes,
 									sidebarEnabled: newValue,
+									geocoderEnabled: newValue
+										? attributes.sidebarEnabled
+										: false,
 								} );
 								refreshMap();
 							} }
@@ -292,7 +277,7 @@ export function MapEdit( {
 					</PanelBody>
 				</Panel>
 				<Panel>
-					<PanelBody title="Settings" icon={ settings }>
+					<PanelBody title="Settings" icon={ tool }>
 						<h2>{ __( 'Camera Options' ) }</h2>
 						{ map && (
 							<Button
@@ -405,7 +390,7 @@ export function MapEdit( {
 
 				{ filtersEnabled || tagsEnabled ? (
 					<Panel>
-						<PanelBody title="Filters" icon={ filter }>
+						<PanelBody title="Filters" icon={ tag }>
 							{ tagsEnabled === true ? (
 								<>
 									<h2>Tags</h2>
@@ -433,7 +418,7 @@ export function MapEdit( {
 				) : null }
 
 				<Panel>
-					<PanelBody title="Map Pins" icon={ mapMarker }>
+					<PanelBody title="Map Pins" icon={ navigation }>
 						<Sortable
 							items={ listings }
 							tax={ 'listings' }
@@ -459,7 +444,7 @@ export function MapEdit( {
 					</PanelBody>
 				</Panel>
 			</InspectorControls>
-			<MapBox attributes={ attributes } markers={ markers } />
+			<MapBox attributes={ attributes } />
 		</>
 	);
 }

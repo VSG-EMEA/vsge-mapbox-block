@@ -19,9 +19,9 @@ export function setMapElevation( map: mapboxgl.Map, hasElevation: boolean ) {
 				exaggeration: 1.5,
 			} );
 		} else {
-      // unset terrain elevation
+			// unset terrain elevation
 			map.setTerrain();
-      // unload the DEM source
+			// unload the DEM source
 			if ( map.getSource( 'mapbox-dem' ) )
 				map.removeSource( 'mapbox-dem' );
 		}
@@ -84,11 +84,6 @@ export function initMap( mapRef, attributes, defaults, markers = [] ) {
 		mapboxOptions,
 	} = attributes;
 
-	const stores = {
-		type: 'FeatureCollection',
-		features: mapboxOptions.listings,
-	};
-
 	const map = new mapboxgl.Map( {
 		container: mapRef,
 		style: 'mapbox://styles/mapbox/' + mapStyle,
@@ -102,26 +97,37 @@ export function initMap( mapRef, attributes, defaults, markers = [] ) {
 	} );
 
 	map.on( 'load', function () {
+		// Set the map's terrain layer.
 		setMapElevation( map, attributes.elevation );
 
+		// Set up the language.
 		if ( map.getLayer( 'country-label' ) )
 			map.setLayoutProperty( 'country-label', 'text-field', [
 				'get',
 				'name_' + defaults?.language?.substring( 0, 2 ) || 'en',
 			] );
 
+		// Add a GeoJSON source for the stores
 		map.addSource( 'geojson-stores', {
 			type: 'geojson',
-			data: mapboxOptions.listings,
+			data: {
+				type: 'FeatureCollection',
+				features: [ mapboxOptions.listings ],
+			},
+		} );
+
+		// Add a layer showing the places.
+		map.addLayer( {
+			id: 'geojson-stores',
+			type: 'symbol',
+			source: 'geojson-stores',
+			layout: {
+				'icon-allow-overlap': true,
+			},
 		} );
 
 		// Add navigation control (the +/- zoom buttons)
 		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );
-
-		// removes all markers
-		markers.forEach( ( marker ) => marker.remove() );
-
-		markers = addMarkers( stores, map );
 
 		setMapThreeDimensionality( map, attributes.freeViewCamera );
 	} );
