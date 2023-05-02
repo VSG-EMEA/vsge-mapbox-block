@@ -20,17 +20,11 @@ export function Marker( { onClick, children, feature } ): JSX.Element {
 }
 
 export function addMarkers( stores, map ): mapboxgl.Marker[] {
-
-  // Create an array to store the Markers
-  const markers: mapboxgl.Marker[] = [];
-
-	map.addSource( 'places', {
-		type: 'geojson',
-		data: stores,
-	} );
+	// Create an array to store the Markers
+	const markers: mapboxgl.Marker[] = [];
 
 	/* For each feature in the GeoJSON object above: */
-	stores.features.forEach( function ( marker, i ) {
+	stores.features.forEach( function ( marker ) {
 		if ( marker?.geometry ) {
 			const ref: RefObject< HTMLDivElement > = createRef();
 			// Create a new DOM node and save it to the React ref
@@ -40,6 +34,7 @@ export function addMarkers( stores, map ): mapboxgl.Marker[] {
 				<Marker
 					onClick={ () => enableListing( map, marker ) }
 					feature={ marker }
+					data-marker-id={ marker.id }
 				>
 					<Icon
 						icon={ mapMarker }

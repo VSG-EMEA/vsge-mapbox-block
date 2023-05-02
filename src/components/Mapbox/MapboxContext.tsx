@@ -11,6 +11,7 @@ import { MountedMapsContextValue } from '../../types';
 
 export const MapboxContext = createContext< MountedMapsContextValue >( {
 	map: null,
+	setMap: () => {},
 } );
 export const useMap = () => {
 	const { map } = useContext( MapboxContext );
@@ -26,7 +27,7 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ map, setMap ] = useState( null );
 	const [ geoCoder, setGeoCoder ] = useState( null );
 	const [ listings, setListings ] = useState( null );
-	const [ lngLat, setLngLat ] = useState( { lng: null, lat: null } );
+	const [ lngLat, setLngLat ] = useState( [ 0, 0 ] );
 	const [ popupContent, setPopupContent ] = useState( [] );
 	const [ markers, setMarkers ] = useState( [] );
 	const defaults = getDefaults();

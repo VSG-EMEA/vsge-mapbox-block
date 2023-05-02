@@ -42,7 +42,7 @@ export const Listing = ( {
 		>
 			<Icon icon={ mapMarker } />
 			<p className="partnership">
-				{ properties.partnership.join( ' ' ) }
+				{ properties.partnership?.join( ' ' ) }
 			</p>
 			<h4 className="title">{ properties.name }</h4>
 			<div>
