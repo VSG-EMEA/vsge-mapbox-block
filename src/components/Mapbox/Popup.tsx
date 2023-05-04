@@ -1,36 +1,40 @@
-import {
-	createRef,
-	render,
-	useContext,
-	useEffect,
-	useRef,
-} from '@wordpress/element';
+import { createRef, createRoot, render } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
-import {MapboxContext, MapProvider} from './MapboxContext';
 import { Feature } from '@turf/turf';
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
 import { RefObject } from 'react';
 
-export function MarkerPopup( props ): JSX.Element {
-	const { partnership, name, address, city, postalCode, country, state } =
-		props;
+export const MarkerPopup = ( props ): JSX.Element => {
+	const {
+		itemTags,
+		itemFilters,
+		name,
+		address,
+		city,
+		postalCode,
+		country,
+		state,
+		onClick,
+	} = props;
 
 	return (
 		<div>
 			<Icon icon={ mapMarker } className={ 'gray-marker' } />
+			<a onClick={ () => onClick() } />
 			<h3>
-				{ partnership } ${ name }
+				{ itemTags?.join( ' ' ) } { name }
 			</h3>
 			<h4>{ address }</h4>
 			<p>
 				{ city } { postalCode } { country }
 				<br />
 				{ state ? ' (' + state + ')' : '' }
+				{ itemFilters?.join( ' ' ) }
 			</p>
 		</div>
 	);
-}
+};
 
 /**
  * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
@@ -51,32 +55,34 @@ export function highlightListing( item: Feature ) {
 	}
 
 	if ( item.properties ) {
-		const listing = document.getElementById( item.properties.id );
+		const listing = document.getElementById( item.id );
 		listing?.classList.add( 'active-store' );
 	}
 }
 
 /**
  * The function removes the active popup from the DOM.
+ *
+ * @param mapRef
  */
-export function removePopup() {
+export function removePopup( mapRef ) {
 	// removes the active popup
-	const popUps = document.getElementsByClassName( 'mapboxgl-popup' );
+	const popUps = mapRef.querySelectorAll( '.mapboxgl-popup' );
 	if ( popUps[ 0 ] ) popUps[ 0 ].remove();
 }
 
-export const MapPopup = ( { children, lngLat } ) => {
-	const { map } = useContext( MapboxContext );
+export const addPopup = (map, marker ) => {
 	const popupRef: RefObject< HTMLDivElement > = createRef();
 
-	useEffect( () => {
-		const popup = new mapboxgl.Popup( {} )
-			.setLngLat( lngLat )
-			.setDOMContent( popupRef.current )
-			.addTo( map );
+	// Create a new DOM root and save it to the React ref
+	popupRef.current = document.createElement( 'div' );
+	const root = createRoot( popupRef.current );
 
-		return popup.remove;
-	}, [ children, lngLat ] );
+	// Render a Marker Component on our new DOM node
+	root.render( <MarkerPopup { ...marker.properties } /> );
 
-	return <div ref={ popupRef }>{ children }</div>;
+	return new mapboxgl.Popup( {} )
+		.setLngLat( marker.geometry.coordinates )
+		.setDOMContent( popupRef.current )
+		.addTo( map );
 };

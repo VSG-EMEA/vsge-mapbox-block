@@ -1,65 +1,77 @@
 import { Button, Icon } from '@wordpress/components';
-import { MarkerPopup, removePopup } from './Popup';
 import { RefObject } from 'react';
-import { createRef, render, useContext } from '@wordpress/element';
+import { createRef, createRoot, render, useContext } from '@wordpress/element';
 import { enableListing } from '../../utils/dataset';
-import mapboxgl from 'mapbox-gl';
 import { mapMarker } from '@wordpress/icons';
+import mapboxgl from 'mapbox-gl';
+import { MountedMapsContextValue } from '../../types';
 import { MapboxContext } from './MapboxContext';
+import { safeSlug } from '../../utils';
 
-export function Marker( { onClick, children, feature } ): JSX.Element {
+// Removes all markers on the map
+export function removeMarkers( markers: mapboxgl.Marker[] ) {
+	markers.forEach( ( marker ) => marker.remove() );
+}
+
+export function addMarkers(
+	markers: mapboxgl.MapboxGeoJSONFeature[],
+	map: mapboxgl.Map
+): mapboxgl.Marker[] {
+	return markers.map( ( marker ) => {
+		/* For each feature in the GeoJSON object above add a marker */
+		return addMarker( marker, map );
+	} );
+}
+
+export function Marker( { onClick, feature } ): JSX.Element {
+	const { map, marker }: MountedMapsContextValue =
+		useContext( MapboxContext );
 	return (
 		<Button
-			onClick={ onClick }
-			className={ 'marker' }
-			id={ 'marker-' + feature.id }
+			onClick={ ( e ) => {
+				e.preventDefault();
+				enableListing( map, marker );
+			} }
+			className={ 'marker marker-' + safeSlug( feature.properties.name ) }
+			id={ 'marker-' + feature.id || 'temp' }
+			data-id={ feature.id || 'none' }
+			data-marker-type={ feature.type }
+			data-marker-name={ safeSlug( feature.properties.name ) }
 		>
-			{ children }
+			<Icon
+				icon={ feature.properties.icon || defaultMarkerStyle.icon }
+				size={ feature.properties.size || defaultMarkerStyle.size }
+				style={ {
+					fill: feature.properties.color || defaultMarkerStyle.color,
+				} }
+			/>
 		</Button>
 	);
 }
 
-export function addMarkers( stores, map ): mapboxgl.Marker[] {
-	// Create an array to store the Markers
-	const markers: mapboxgl.Marker[] = [];
+const defaultMarkerStyle: { size: number; color: string; icon: any } = {
+	icon: mapMarker,
+	size: 48,
+	color: 'white',
+};
 
-	/* For each feature in the GeoJSON object above: */
-	stores.features.forEach( function ( marker ) {
-		if ( marker?.geometry ) {
-			const ref: RefObject< HTMLDivElement > = createRef();
-			// Create a new DOM node and save it to the React ref
-			ref.current = document.createElement( 'div' );
-			// Render a Marker Component on our new DOM node
-			render(
-				<Marker
-					onClick={ () => enableListing( map, marker ) }
-					feature={ marker }
-					data-marker-id={ marker.id }
-				>
-					<Icon
-						icon={ mapMarker }
-						size={ 48 }
-						style={ {
-							fill: 'white',
-						} }
-					/>
-				</Marker>,
-				ref.current
-			);
+export function addMarker( marker, map: mapboxgl.Map ): mapboxgl.Marker {
+	if ( marker?.geometry ) {
+		const ref: RefObject< HTMLDivElement > = createRef();
+		// Create a new DOM root and save it to the React ref
+		ref.current = document.createElement( 'div' );
+		const root = createRoot( ref.current );
+		// Render a Marker Component on our new DOM node
+		root.render( <Marker feature={ marker } /> );
 
-			// Add markers to the map at all points
-			const newMarker: mapboxgl.Marker = new mapboxgl.Marker(
-				ref.current,
-				{
-					offset: [ 0, -24 ],
-				}
-			)
-				.setLngLat( marker.geometry.coordinates || [ 0, 0 ] )
-				.addTo( map );
-
-			markers.push( newMarker );
-		}
-	} );
-
-	return markers;
+		// Add markers to the map at all points
+		return new mapboxgl.Marker( ref.current, {
+			offset: [
+				0,
+				( marker.properties.size || defaultMarkerStyle.size ) * -0.5,
+			],
+		} )
+			.setLngLat( marker.geometry.coordinates || [ 0, 0 ] )
+			.addTo( map );
+	}
 }
