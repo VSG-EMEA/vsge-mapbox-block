@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { useContext, useEffect } from '@wordpress/element';
 import { MapboxContext } from '../Mapbox/MapboxContext';
-import { addTemplate } from '@wordpress/icons';
+import { plusCircle } from '@wordpress/icons';
 
 export const Sortable = ( props: {
 	items: any;
@@ -54,21 +54,9 @@ export const Sortable = ( props: {
 		setOptions( tax, newItems );
 	}
 
-	function updatePin( id: number, newValue: Object ) {
-		const newItems = items.map( ( item ) =>
-			item.properties.id === id
-				? {
-						...item,
-						...newValue,
-				  }
-				: item
-		);
-		setOptions( tax, newItems );
-	}
-
 	function setPinPosition( id: number ) {
 		const newItems = items.map( ( item ) =>
-			item.properties.id === id
+			item.id === id
 				? {
 						...item,
 						geometry: {
@@ -87,11 +75,12 @@ export const Sortable = ( props: {
 		setOptions( tax, newItems );
 	}
 
-	function deletePin( id: number ) {
-		// remove the item from the array
-		const newItems = items.filter( ( item ) => item.properties.id !== id );
-		setOptions( tax, newItems );
-	}
+	useEffect( () => {
+		items.forEach( ( item: any, index: number ) => {
+			if ( ! item?.id )
+				item = { ...item, id: index };
+		} );
+	}, [] );
 
 	return (
 		<>
@@ -122,8 +111,8 @@ export const Sortable = ( props: {
 									sortedPins={ items }
 									filters={ mapboxOptions.filters }
 									tags={ mapboxOptions.tags }
-									updatePin={ updatePin }
-									deletePin={ deletePin }
+									updateItem={ updateItem }
+									deleteItem={ deleteItem }
 									setPinPosition={ setPinPosition }
 								/>
 							) }
@@ -133,7 +122,7 @@ export const Sortable = ( props: {
 				</Droppable>
 			</DragDropContext>
 			<Button
-				icon={ addTemplate }
+				icon={ plusCircle }
 				text={ __( 'Add new' ) }
 				type={ 'link' }
 				className={ 'add-new-sortable-item' }
@@ -143,13 +132,13 @@ export const Sortable = ( props: {
 						...items,
 						tax !== 'listings'
 							? {
-									id: items.length,
+									id: items.length || 0,
 									value: __( 'New' ) + ' ' + tax,
 							  }
 							: {
+									id: items.length || 0,
 									type: 'Feature',
 									properties: {
-										id: items.length,
 										name: __( 'New Marker' ),
 										description: '',
 										address: '',
@@ -159,7 +148,10 @@ export const Sortable = ( props: {
 									},
 									geometry: {
 										type: 'Point',
-										coordinates: [ 0, 0 ],
+										coordinates: [
+											lngLat?.lng,
+											lngLat?.lat,
+										] || [ 0, 0 ],
 									},
 							  },
 					] );

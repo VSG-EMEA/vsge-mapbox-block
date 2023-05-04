@@ -12,22 +12,21 @@ import { MapFilter } from '../../types';
 
 export const PinCard = ( {
 	props,
-	updatePin,
-	deletePin,
+	updateItem,
+	deleteItem,
 	setPinPosition,
 	tags,
 	filters,
 } ) => {
 	const [ isOpen, setIsOpen ] = useState( false );
 
-	if ( ! props.properties ) {
+	if ( ! props?.properties ) {
 		console.error( props, 'Missing properties' );
 		return null;
 	}
 
 	const {
 		name,
-		id,
 		website,
 		address,
 		phone,
@@ -43,7 +42,7 @@ export const PinCard = ( {
 	}
 
 	function updateItemProps( data: any ) {
-		updatePin( id, {
+		updateItem( props.id, {
 			properties: {
 				...props.properties,
 				...data,
@@ -67,7 +66,11 @@ export const PinCard = ( {
 	}
 
 	return (
-		<Draggable draggableId={ 'pin-' + id } index={ id } key={ id }>
+		<Draggable
+			draggableId={ 'pin-' + props.id }
+			index={ props.id }
+			key={ props.id }
+		>
 			{ ( provided ) => (
 				<div
 					ref={ provided.innerRef }
@@ -85,7 +88,7 @@ export const PinCard = ( {
 					>
 						<div className={ 'controlgroup-feature-item' }>
 							<h4>
-								({ id }) - { name || 'New' }
+								({ props.id }) - { name || 'New' }
 							</h4>
 							<Button
 								onClick={ () => setIsOpen( ! isOpen ) }
@@ -94,7 +97,7 @@ export const PinCard = ( {
 								icon={ 'arrow-down' }
 							/>
 							<Button
-								onClick={ () => deletePin( id ) }
+								onClick={ () => deleteItem( props.id ) }
 								isSmall={ true }
 								icon="trash"
 								iconSize={ 16 }
@@ -111,7 +114,7 @@ export const PinCard = ( {
 						></TextControl>
 						<TextControl
 							label={ __( 'phone' ) }
-							type={ 'phone' }
+							type={ 'tel' }
 							value={ phone || '' }
 							onChange={ ( newValue ) => {
 								updateItemProps( { phone: newValue } );
@@ -154,7 +157,7 @@ export const PinCard = ( {
 						/>
 						<Button
 							variant={ 'secondary' }
-							onClick={ () => setPinPosition( id ) }
+							onClick={ () => setPinPosition( props.id ) }
 						>
 							{ __( 'get position' ) }
 						</Button>
@@ -216,8 +219,8 @@ export const PinCard = ( {
 
 export const PinList = memo( function PinList( {
 	sortedPins,
-	updatePin,
-	deletePin,
+	updateItem,
+	deleteItem,
 	setPinPosition,
 	tags,
 	filters,
@@ -226,8 +229,8 @@ export const PinList = memo( function PinList( {
 		<PinCard
 			props={ pin }
 			key={ index }
-			updatePin={ updatePin }
-			deletePin={ deletePin }
+			updateItem={ updateItem }
+			deleteItem={ deleteItem }
 			setPinPosition={ setPinPosition }
 			tags={ tags }
 			filters={ filters }

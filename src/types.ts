@@ -1,5 +1,5 @@
-import { Feature, Geometry } from '@turf/turf';
-import mapboxgl, { LngLat } from 'mapbox-gl';
+import { Feature, Geometry, Properties } from '@turf/turf';
+import mapboxgl, { LngLat, MapboxGeoJSONFeature } from 'mapbox-gl';
 import { Dispatch, Ref, RefObject, SetStateAction } from 'react';
 
 export type CoordinatesDef = [ number, number ];
@@ -36,9 +36,13 @@ export type MapAttributes = {
 	freeViewCamera: boolean;
 	mouseWheelZoom: boolean;
 	mapboxOptions: {
+		pin: {
+			icon: string;
+			color: string;
+		};
 		tags: string[];
 		filters: string[];
-		listings: string[];
+		listings: MapboxGeoJSONFeature[];
 	};
 };
 
@@ -71,9 +75,9 @@ export interface MapItem extends Feature {
 export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;
 	lngLat?: LngLat;
-	popupContent?: any;
-	setPopupContent?: any;
-	setMap: Dispatch< SetStateAction< null > >;
+	markers?: mapboxgl.MapboxGeoJSONFeature[];
+	setMap: Dispatch< SetStateAction< mapboxgl.Map > >;
+	setMarkers: Dispatch< SetStateAction< mapboxgl.MapboxGeoJSONFeature[] > >;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
 	geocoderRef?: RefObject< HTMLDivElement >;
