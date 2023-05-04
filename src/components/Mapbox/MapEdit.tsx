@@ -1,19 +1,23 @@
-import { MapboxContext, useMap } from './MapboxContext';
-import mapboxgl from 'mapbox-gl';
-import { useContext, useEffect, useState } from '@wordpress/element';
+import { MapboxContext } from './MapboxContext';
+import mapboxgl, { MapboxGeoJSONFeature, MapMouseEvent } from 'mapbox-gl';
+import { useContext, useEffect } from '@wordpress/element';
 import { MapBox } from './index';
 import { InspectorControls } from '@wordpress/block-editor';
 import {
-	Panel,
-	PanelBody,
-	RangeControl,
-	SelectControl,
-	ToggleControl,
 	__experimentalUnitControl as UnitControl,
 	Button,
+	ColorPicker,
+	Icon,
+	Panel,
+	PanelBody,
+	PanelRow,
+	RangeControl,
+	SelectControl,
 	TextareaControl,
+	TextControl,
+	ToggleControl,
 } from '@wordpress/components';
-import { navigation, cog, tag, tool, update } from '@wordpress/icons';
+import { cog, list, mapMarker, tag, tool, update } from '@wordpress/icons';
 import { mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
@@ -24,6 +28,7 @@ import {
 	setMapThreeDimensionality,
 	setMapWheelZoom,
 } from './utils/initMap';
+import IconType = Icon.IconType;
 
 export function MapEdit( {
 	attributes,
@@ -34,6 +39,7 @@ export function MapEdit( {
 	isSelected: boolean;
 } ): JSX.Element {
 	const {
+		align,
 		latitude,
 		longitude,
 		pitch,
@@ -49,17 +55,11 @@ export function MapEdit( {
 		fitView,
 		freeViewCamera,
 		mouseWheelZoom,
-		mapboxOptions: { tags, filters, listings },
+		mapboxOptions: { pin, tags, filters, listings },
 	}: MapAttributes = attributes;
 
 	const { map, mapRef, setGeoCoder, geocoderRef, defaults, lngLat } =
 		useContext( MapboxContext );
-
-	useEffect( () => {
-		if ( map ) {
-			console.log( lngLat );
-		}
-	}, [ lngLat ] );
 
 	const setOptions = ( key: string, value: string | number | boolean ) => {
 		setAttributes( {
@@ -87,29 +87,15 @@ export function MapEdit( {
 		// wait 100 ms then resize the map
 		setTimeout( () => {
 			// get the mapRef element width and height
-			if ( mapRef.current?.style ) map?.resize();
+			if ( mapRef?.current?.style ) map?.resize();
 		}, timeout );
 	}
 
-	/*
-	LIVE UPDATES DISABLED DUE LOW PERFORMANCE
 	useEffect( () => {
 		if ( map ) {
-			const handle = setInterval( () => {
-				map.on( 'move', () => pullMapOptions( map ) );
-			}, 100 );
-			return () => {
-				clearInterval( handle );
-			};
+			refreshMap();
 		}
-	}, [
-		attributes.latitude,
-		attributes.longitude,
-		attributes.pitch,
-		attributes.bearing,
-		attributes.mapZoom,
-	] );
-	*/
+	}, [ align ] );
 
 	useEffect( () => {
 		if ( map ) {
@@ -418,7 +404,7 @@ export function MapEdit( {
 				) : null }
 
 				<Panel>
-					<PanelBody title="Map Pins" icon={ navigation }>
+					<PanelBody title="Map Pins" icon={ list }>
 						<Sortable
 							items={ listings }
 							tax={ 'listings' }
@@ -429,7 +415,62 @@ export function MapEdit( {
 				</Panel>
 
 				<Panel>
-					<PanelBody title="Export" icon={ update }>
+					<PanelBody
+						title="Pointer"
+						icon={ mapMarker }
+						initialOpen={ false }
+					>
+						<PanelRow>
+							<TextControl
+								label={ __( 'Marker' ) }
+								value={ pin?.icon || 'mapMarker' }
+								onChange={ ( newValue ) =>
+									setAttributes( {
+										...attributes,
+										mapboxOptions: {
+											...attributes.mapboxOptions,
+											pin: {
+												...attributes.mapboxOptions
+													?.pin,
+												icon: newValue || 'mapMarker',
+											},
+										},
+									} )
+								}
+							/>
+							<Button
+								icon={ ( pin?.icon as IconType ) || mapMarker }
+								iconSize={ 16 }
+								isSmall={ true }
+								onClick={ () => {} }
+							/>
+						</PanelRow>
+						<h3>Pick an icon color</h3>
+						<ColorPicker
+							color={ pin?.color || '#fff' }
+							defaultValue="#fff"
+							onChange={ ( newValue ) =>
+								setAttributes( {
+									...attributes,
+									mapboxOptions: {
+										...attributes.mapboxOptions,
+										pin: {
+											...attributes.mapboxOptions?.pin,
+											color: newValue || '#fff',
+										},
+									},
+								} )
+							}
+						/>
+					</PanelBody>
+				</Panel>
+
+				<Panel>
+					<PanelBody
+						title="Export"
+						icon={ update }
+						initialOpen={ false }
+					>
 						<TextareaControl
 							value={ JSON.stringify( attributes.mapboxOptions ) }
 							onChange={ ( e ) => {
