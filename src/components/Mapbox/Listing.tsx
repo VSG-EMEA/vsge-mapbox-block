@@ -3,6 +3,7 @@ import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
 import { enableListing } from '../../utils/dataset';
 import { MapFilter } from '../../types';
+import mapboxgl from 'mapbox-gl';
 
 function ListingTags( props: { tags: MapFilter[] } ): JSX.Element | null {
 	return props.tags.length ? (
@@ -17,20 +18,27 @@ function ListingTags( props: { tags: MapFilter[] } ): JSX.Element | null {
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
  *
- * @param {Object} Props
- * @param {Object} Props.properties The `Listing` function takes in an object with two properties: `properties` and `type`.
- * @param {Object} Props.type       properties` is of type `any` and is used to store the properties of a feature. `type` is also of
- *                                  type `any` and is used to determine if the feature is of
+ * @param          jsonFeature.jsonFeature
+ * @param {Object} jsonFeature
+ * @param {Map}    map
+ * @param          jsonFeature.map
  * @return A React component that renders a listing of properties if the type is 'Feature', and
  * returns null otherwise. The listing includes the name, phone, and address of the property.
  */
 export const Listing = ( {
-	properties,
-	type,
+	jsonFeature,
+  map,
 }: {
-	properties: any;
-	type: any;
+	jsonFeature: mapboxgl.MapboxGeoJSONFeature;
+  map?: mapboxgl.Map | null;
 } ) => {
+	const {
+		properties,
+		type,
+	}: {
+		properties: any;
+		type: any;
+	} = jsonFeature;
 	// TODO: replace with a better name for this
 	const tags: MapFilter[] = properties?.company || [];
 	const filter: MapFilter[] = properties?.partnership || [];
@@ -38,7 +46,6 @@ export const Listing = ( {
 	return type === 'Feature' ? (
 		<div
 			className={ 'mapbox-sidebar-feature listing' }
-			onClick={ ( e ) => enableListing( map, e.target ) }
 		>
 			<Icon icon={ mapMarker } />
 			<p className="partnership">
