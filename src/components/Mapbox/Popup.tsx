@@ -1,31 +1,32 @@
 import { createRef, createRoot, render } from '@wordpress/element';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { Feature } from '@turf/turf';
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
+import MarkerProps, { MapItem } from '../../types';
 import { RefObject } from 'react';
 
-export const MarkerPopup = ( props ): JSX.Element => {
-	const {
-		itemTags,
-		itemFilters,
-		name,
-		address,
-		city,
-		postalCode,
-		country,
-		state,
-		onClick,
-	} = props;
-
+export function MarkerPopup( {
+	itemTags,
+	itemFilters,
+	name,
+	address,
+	city,
+	postalCode,
+	country,
+	state,
+	onClick,
+}: MarkerProps ) {
 	return (
 		<div>
-			<Icon icon={ mapMarker } className={ 'gray-marker' } />
-			<a onClick={ () => onClick() } />
-			<h3>
-				{ itemTags?.join( ' ' ) } { name }
-			</h3>
-			<h4>{ address }</h4>
+			<Icon icon={ mapMarker } />
+			<a onClick={ onClick } />
+			{ itemTags?.length && (
+				<h3>
+					{ itemTags?.join( ' ' ) } { name }
+				</h3>
+			) }
+			{ address && <h4>{ address }</h4> }
 			<p>
 				{ city } { postalCode } { country }
 				<br />
@@ -34,7 +35,7 @@ export const MarkerPopup = ( props ): JSX.Element => {
 			</p>
 		</div>
 	);
-};
+}
 
 /**
  * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
@@ -71,7 +72,7 @@ export function removePopup( mapRef ) {
 	if ( popUps[ 0 ] ) popUps[ 0 ].remove();
 }
 
-export const addPopup = (map, marker ) => {
+export function addPopup( map: mapboxgl.Map, marker: MapItem ): mapboxgl.Popup {
 	const popupRef: RefObject< HTMLDivElement > = createRef();
 
 	// Create a new DOM root and save it to the React ref
@@ -82,7 +83,7 @@ export const addPopup = (map, marker ) => {
 	root.render( <MarkerPopup { ...marker.properties } /> );
 
 	return new mapboxgl.Popup( {} )
-		.setLngLat( marker.geometry.coordinates )
+		.setLngLat( marker?.geometry?.coordinates as LngLatLike )
 		.setDOMContent( popupRef.current )
 		.addTo( map );
-};
+}

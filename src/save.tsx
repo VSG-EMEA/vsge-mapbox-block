@@ -1,5 +1,5 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import { BlockAttributes, BlockSaveProps } from '@wordpress/blocks';
+import { BlockSaveProps } from '@wordpress/blocks';
 import { Map } from './components/Mapbox/Map';
 import { getDefaults } from './utils';
 import { Listing } from './components/Mapbox/Listing';
@@ -40,7 +40,11 @@ function Save( { attributes }: BlockSaveProps< MapAttributes > ): JSX.Element {
 					<div className="feature-listing">
 						{ attributes.mapboxOptions.listings.map(
 							( data: any, index: number ) => (
-								<Listing { ...data } key={ index } />
+								<Listing
+									jsonFeature={ data }
+                  key={ index }
+                  map={ null }
+                />
 							)
 						) }
 					</div>

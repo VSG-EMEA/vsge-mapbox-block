@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import { addMarkers } from '../Markers';
+import { MapAttributes, MapboxBlockDefaults } from '../../../types';
 
 export function setMapElevation( map: mapboxgl.Map, hasElevation: boolean ) {
 	if ( map ) {
@@ -67,11 +67,14 @@ export function setMapWheelZoom( map: mapboxgl.Map, mouseWheelZoom: boolean ) {
  * @param {HTMLElement} mapRef     The HTML element that will contain the map.
  * @param {Object}      attributes An object containing various attributes for initializing the map, including
  *                                 latitude, longitude, pitch, bearing, mapZoom, mapStyle, and freeViewCamera.
- * @param               defaults
- * @param               markers
+ * @param {Object}      defaults   An object containing default values for the map.
  * @return {mapboxgl.Map} a mapboxgl.Map object.
  */
-export function initMap( mapRef, attributes, defaults, markers = [] ) {
+export function initMap(
+	mapRef: string | HTMLDivElement,
+	attributes: MapAttributes,
+	defaults: MapboxBlockDefaults
+) {
 	const {
 		latitude,
 		longitude,
@@ -100,6 +103,11 @@ export function initMap( mapRef, attributes, defaults, markers = [] ) {
 		// Set the map's terrain layer.
 		setMapElevation( map, attributes.elevation );
 
+		// Add navigation control (the +/- zoom buttons)
+		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );
+
+		setMapThreeDimensionality( map, attributes.freeViewCamera );
+
 		// Set up the language.
 		if ( map.getLayer( 'country-label' ) )
 			map.setLayoutProperty( 'country-label', 'text-field', [
@@ -112,7 +120,7 @@ export function initMap( mapRef, attributes, defaults, markers = [] ) {
 			type: 'geojson',
 			data: {
 				type: 'FeatureCollection',
-				features: [ mapboxOptions.listings ],
+				features: mapboxOptions.listings,
 			},
 		} );
 
@@ -125,11 +133,6 @@ export function initMap( mapRef, attributes, defaults, markers = [] ) {
 				'icon-allow-overlap': true,
 			},
 		} );
-
-		// Add navigation control (the +/- zoom buttons)
-		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );
-
-		setMapThreeDimensionality( map, attributes.freeViewCamera );
 	} );
 
 	return map;

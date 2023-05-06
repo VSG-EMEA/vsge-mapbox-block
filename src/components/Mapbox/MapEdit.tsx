@@ -120,6 +120,7 @@ export function MapEdit( {
 	useEffect( () => {
 		if ( map ) {
 			setMapElevation( map, elevation );
+      refreshMap();
 		}
 	}, [ elevation ] );
 

@@ -1,7 +1,7 @@
 // Filter the type of reseller with the select in the top bar
 import { Feature } from '@turf/turf';
 import { flyToStore } from './view';
-import { highlightListing, MarkerPopup } from '../components/Mapbox/Popup';
+import { highlightListing, addPopup } from '../components/Mapbox/Popup';
 
 /**
  * The function prepares stores by assigning IDs to them and returning them as a geojson object.
@@ -38,7 +38,7 @@ export function enableListing( map, marker ) {
 	flyToStore( map, marker );
 
 	// 2. Close all other popups and display popup for clicked store
-	MarkerPopup( marker );
+	//addPopup( map, marker );
 
 	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
 	highlightListing( marker );

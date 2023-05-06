@@ -13,9 +13,12 @@ import { pin } from '@wordpress/icons';
 import { initGeocoder } from './utils/geocoder';
 import { MapAttributes, MountedMapsContextValue } from '../../types';
 import { addMarker, addMarkers } from './Markers';
-import { addPopup, removePopup } from './Popup';
+import { addPopup } from './Popup';
 
-export function tempMarker( id: number = 0, coordinates = [ 0, 0 ] ) {
+export function tempMarker(
+	id: number | undefined = undefined,
+	coordinates: number[] | undefined = undefined
+) {
 	return {
 		type: 'Feature',
 		id,
@@ -38,10 +41,10 @@ function removeMarkerById(
 	return markersList.filter( ( marker ) => marker.id !== id );
 }
 
-function getMarkerData(
+export function getMarkerData(
 	id: number,
 	markersList: mapboxgl.MapboxGeoJSONFeature[]
-) {
+): MapboxGeoJSONFeature | undefined {
 	return markersList.find( ( marker ) => marker.id === id );
 }
 
@@ -57,6 +60,7 @@ export function MapBox( {
 		defaults,
 		mapRef,
 		geocoderRef,
+		lngLat,
 		setLngLat,
 		setMarkers,
 		markers,
@@ -78,24 +82,31 @@ export function MapBox( {
 				// store the last clicked position
 				setLngLat( e.lngLat );
 
-				const bbox = [
-					[ e.point.x - 0.0005, e.point.y - 0.0005 ],
-					[ e.point.x + 0.0005, e.point.y + 0.0005 ],
-				];
 				// Find features intersecting the bounding box.
 				// const selectedFeatures = map.queryRenderedFeatures( bbox );
 				const clickedEl = e.originalEvent.target.parentElement;
 
 				if ( markers && clickedEl?.nodeName === 'BUTTON' ) {
 					if ( clickedEl.dataset?.markerName === 'temp' ) {
-						return addPopup( map, {} );
+						addPopup( map, {
+							properties: {
+								name: 'add a marker?',
+							},
+							geometry: {
+								type: 'Point',
+								coordinates: [ e.lngLat.lng, e.lngLat.lat ],
+							},
+						} );
+					} else {
+						const markerData = getMarkerData(
+							parseInt( clickedEl.dataset?.id, 10 ),
+							markers
+						);
+						if ( markerData ) {
+							return addPopup( map, markerData );
+						}
+						console.log( markerData );
 					}
-					const thisMarker = getMarkerData(
-						Number( clickedEl.dataset?.id ),
-						markers
-					);
-
-					return addPopup( map, thisMarker );
 				}
 
 				removeTempMarkers( mapRef );
@@ -136,20 +147,16 @@ export function MapBox( {
 					);
 				}
 			} );
-		}
-	}, [ map ] );
 
-	useEffect( () => {
-		if ( map && markers?.length ) {
-			map.on( 'load', () => {
+			if ( markers?.length ) {
 				// add markers to the map
 				addMarkers( markers, map );
 
 				// highlight the first listing
 				listenForClick( map );
-			} );
+			}
 		}
-	}, [ markers ] );
+	}, [ map ] );
 
 	return (
 		<div

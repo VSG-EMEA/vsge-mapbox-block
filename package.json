@@ -51,7 +51,7 @@
     "@wordpress/env": "^5.16.0",
     "@wordpress/i18n": "^4.31.0",
     "@wordpress/jest-preset-default": "^11.2.0",
-    "@wordpress/scripts": "^26.2.0",
+    "@wordpress/scripts": "^25.5.1",
     "babel-jest": "^29.5.0",
     "jest-puppeteer": "^8.0.6",
     "react-beautiful-dnd": "^13.1.1",

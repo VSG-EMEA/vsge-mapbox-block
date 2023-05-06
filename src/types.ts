@@ -1,5 +1,5 @@
 import { Feature, Geometry, Properties } from '@turf/turf';
-import mapboxgl, { LngLat, MapboxGeoJSONFeature } from 'mapbox-gl';
+import mapboxgl, { LngLat, LngLatLike, MapboxGeoJSONFeature } from 'mapbox-gl';
 import { Dispatch, Ref, RefObject, SetStateAction } from 'react';
 
 export type CoordinatesDef = [ number, number ];
@@ -20,6 +20,7 @@ export type MapStyleDef = {
 };
 
 export type MapAttributes = {
+	align: string;
 	latitude: number;
 	longitude: number;
 	pitch: number;
@@ -83,3 +84,15 @@ export type MountedMapsContextValue = {
 	geocoderRef?: RefObject< HTMLDivElement >;
 	defaults?: MapboxBlockDefaults;
 };
+
+export default interface MarkerProps {
+	itemTags?: string[];
+	itemFilters?: string[];
+	name: string;
+	address?: string;
+	city?: string;
+	postalCode?: string;
+	country?: string;
+	state?: string;
+	onClick?: () => void;
+}

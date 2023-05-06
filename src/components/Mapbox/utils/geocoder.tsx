@@ -1,6 +1,33 @@
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
-import { mapboxgl } from 'mapbox-gl';
+import { RefObject } from 'react';
+import { createRef, createRoot, useContext } from '@wordpress/element';
+import { tempMarker } from '../index';
+import mapboxgl from 'mapbox-gl';
+import { Marker } from '../Marker';
+import { MapboxContext } from '../MapboxContext';
+
+export function GeoMarker() {
+	const map = useContext( MapboxContext );
+	return (
+		<Marker
+			feature={ { type: 'Feature', id: undefined, properties: { name: 'geocoder' } } }
+			map={ map }
+		/>
+	);
+}
+
+const initGeomarker = (): mapboxgl.Marker => {
+	const markerRef: RefObject< HTMLDivElement > = createRef();
+	// Create a new DOM root and save it to the React ref
+	markerRef.current = document.createElement( 'div' );
+	const root = createRoot( markerRef.current );
+	// Render a Marker Component on our new DOM node
+	root.render( <GeoMarker /> );
+
+	// Add markers to the map.
+	return new mapboxgl.Marker( markerRef.current );
+};
 
 export function initGeocoder(
 	geocoderRef,
@@ -14,17 +41,13 @@ export function initGeocoder(
 			mapboxgl: map,
 			lang: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
-			marker: {
-				element: document.createElement( 'div' ),
-				color: 'grey',
-				offset: [ 0, -23 ],
-			},
+			element: initGeomarker( tempMarker() ),
 			flyTo: {
 				bearing: 0,
 				// These options control the flight curve, making it move
 				// slowly and zoom out almost completely before starting
 				// to pan.
-				speed: 0.2, // make the flying slow
+				speed: 0.5, // make the flying slow
 				curve: 1, // change the speed at which it zooms out
 				// This can be any easing function: it takes a number between
 				// 0 and 1 and returns another number between 0 and 1.

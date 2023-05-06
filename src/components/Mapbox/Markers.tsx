@@ -1,12 +1,7 @@
-import { Button, Icon } from '@wordpress/components';
 import { RefObject } from 'react';
-import { createRef, createRoot, render, useContext } from '@wordpress/element';
-import { enableListing } from '../../utils/dataset';
-import { mapMarker } from '@wordpress/icons';
+import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
-import { MountedMapsContextValue } from '../../types';
-import { MapboxContext } from './MapboxContext';
-import { safeSlug } from '../../utils';
+import { defaultMarkerStyle, Marker } from './Marker';
 
 // Removes all markers on the map
 export function removeMarkers( markers: mapboxgl.Marker[] ) {
@@ -23,38 +18,6 @@ export function addMarkers(
 	} );
 }
 
-export function Marker( { onClick, feature } ): JSX.Element {
-	const { map, marker }: MountedMapsContextValue =
-		useContext( MapboxContext );
-	return (
-		<Button
-			onClick={ ( e ) => {
-				e.preventDefault();
-				enableListing( map, marker );
-			} }
-			className={ 'marker marker-' + safeSlug( feature.properties.name ) }
-			id={ 'marker-' + feature.id || 'temp' }
-			data-id={ feature.id || 'none' }
-			data-marker-type={ feature.type }
-			data-marker-name={ safeSlug( feature.properties.name ) }
-		>
-			<Icon
-				icon={ feature.properties.icon || defaultMarkerStyle.icon }
-				size={ feature.properties.size || defaultMarkerStyle.size }
-				style={ {
-					fill: feature.properties.color || defaultMarkerStyle.color,
-				} }
-			/>
-		</Button>
-	);
-}
-
-const defaultMarkerStyle: { size: number; color: string; icon: any } = {
-	icon: mapMarker,
-	size: 48,
-	color: 'white',
-};
-
 export function addMarker( marker, map: mapboxgl.Map ): mapboxgl.Marker {
 	if ( marker?.geometry ) {
 		const ref: RefObject< HTMLDivElement > = createRef();
@@ -62,7 +25,7 @@ export function addMarker( marker, map: mapboxgl.Map ): mapboxgl.Marker {
 		ref.current = document.createElement( 'div' );
 		const root = createRoot( ref.current );
 		// Render a Marker Component on our new DOM node
-		root.render( <Marker feature={ marker } /> );
+		root.render( <Marker feature={ marker } map={ map } /> );
 
 		// Add markers to the map at all points
 		return new mapboxgl.Marker( ref.current, {

@@ -85,6 +85,11 @@
     "mapboxOptions": {
       "type": "object",
       "default": {
+        "pin": {
+          "icon": "",
+          "size": 48,
+          "color": "white"
+        },
         "listings": [],
         "tags": [],
         "filters": []
