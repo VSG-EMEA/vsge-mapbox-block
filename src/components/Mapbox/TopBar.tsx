@@ -14,10 +14,9 @@ import { MapboxContext } from './MapboxContext';
  * @return {SelectControl.Option[]} the select values
  */
 function topbarBuildSelectFromArray( selectValues: MapFilter[] ) {
-	const selectItems = selectValues.map( ( item ) => {
+	return selectValues.map( ( item ) => {
 		return { label: item.value, value: safeSlug( item.value ) };
 	} );
-	return selectItems;
 }
 
 const centerViewIcon = () => (
@@ -58,10 +57,10 @@ export const TopBar = ( attributes ) => {
 					</Button>
 				) : null }
 
-				{ tagsEnabled ? (
+				{ tagsEnabled.length ? (
 					<SelectControl
 						className={ 'mapbox-map-filter filter-by-partnership' }
-						value={ filter }
+						value={ filter || undefined }
 						options={ [
 							{
 								value: '',
@@ -77,10 +76,10 @@ export const TopBar = ( attributes ) => {
 					/>
 				) : null }
 
-				{ filtersEnabled ? (
+				{ filtersEnabled.length ? (
 					<SelectControl
 						className={ 'mapbox-map-filter filter-by-tag' }
-						value={ tag }
+						value={ tag || undefined }
 						options={ [
 							{
 								value: '',

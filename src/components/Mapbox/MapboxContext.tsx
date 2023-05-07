@@ -4,7 +4,7 @@ import {
 	useRef,
 	useState,
 } from '@wordpress/element';
-import { getDefaults } from '../../utils';
+import { getMapDefaults } from '../../utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RefObject } from 'react';
 import { MountedMapsContextValue } from '../../types';
@@ -13,15 +13,6 @@ import mapboxgl from 'mapbox-gl';
 export const MapboxContext = createContext< MountedMapsContextValue >(
 	{} as MountedMapsContextValue
 );
-export const useMap = () => {
-	const { map } = useContext( MapboxContext );
-
-	if ( ! map ) {
-		throw new Error( 'useMap has to be used within <MapProvider>' );
-	}
-
-	return map;
-};
 
 export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ map, setMap ] = useState( null );
@@ -31,12 +22,10 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ markers, setMarkers ] = useState(
 		[] as mapboxgl.MapboxGeoJSONFeature[]
 	);
-	const defaults = getDefaults();
+	const mapDefaults = getMapDefaults();
 
-	const mapRef: RefObject< HTMLDivElement > =
-		useRef< HTMLDivElement >( null );
-	const geocoderRef: RefObject< HTMLDivElement > =
-		useRef< HTMLDivElement >( null );
+	const mapRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement >();
+	const geocoderRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement >();
 
 	return (
 		<MapboxContext.Provider
@@ -49,7 +38,7 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 				setListings,
 				markers,
 				setMarkers,
-				defaults,
+				mapDefaults,
 				mapRef,
 				geoCoder,
 				setGeoCoder,
@@ -60,3 +49,13 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 		</MapboxContext.Provider>
 	);
 }
+
+export const useMap = () => {
+	const { map } = useContext( MapboxContext );
+
+	if ( ! map ) {
+		throw new Error( 'useMap has to be used within <MapProvider>' );
+	}
+
+	return map;
+};

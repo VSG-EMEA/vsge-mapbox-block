@@ -7,13 +7,12 @@ import { MapboxBlockDefaults } from '../types';
  * `siteurl`, and `language`. The values of these properties are being taken from the `mapboxBlockData`
  * object. If `mapboxBlockData` is falsy, then nothing is returned.
  */
-export const getDefaults = (): MapboxBlockDefaults | undefined => {
-	if ( mapboxBlockData )
-		return {
-			accessToken: mapboxBlockData.accessToken,
-			siteurl: mapboxBlockData.siteurl,
-			language: mapboxBlockData.language,
-		};
+export const getMapDefaults = (): MapboxBlockDefaults => {
+	return {
+		accessToken: mapboxBlockData.accessToken,
+		siteurl: mapboxBlockData.siteurl,
+		language: mapboxBlockData.language,
+	};
 };
 
 /**

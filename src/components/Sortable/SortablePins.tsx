@@ -145,13 +145,13 @@ export const PinCard = ( {
 						></TextareaControl>
 						<TextControl
 							label={ __( 'lat' ) }
-							value={ props.geometry.coordinates[ 0 ] }
+							value={ props.geometry.coordinates[ 0 ] || 0 }
 							disabled={ true }
 							onChange={ () => null }
 						/>
 						<TextControl
 							label={ __( 'lang' ) }
-							value={ props.geometry.coordinates[ 1 ] }
+							value={ props.geometry.coordinates[ 1 ] || 0 }
 							disabled={ true }
 							onChange={ () => null }
 						/>

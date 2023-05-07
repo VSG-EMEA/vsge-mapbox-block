@@ -77,12 +77,12 @@ export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;
 	lngLat?: LngLat;
 	markers?: mapboxgl.MapboxGeoJSONFeature[];
-	setMap: Dispatch< SetStateAction< mapboxgl.Map > >;
+	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
 	setMarkers: Dispatch< SetStateAction< mapboxgl.MapboxGeoJSONFeature[] > >;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
 	geocoderRef?: RefObject< HTMLDivElement >;
-	defaults?: MapboxBlockDefaults;
+	mapDefaults?: MapboxBlockDefaults;
 };
 
 export default interface MarkerProps {

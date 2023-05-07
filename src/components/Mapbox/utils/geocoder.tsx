@@ -2,16 +2,20 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
 import { RefObject } from 'react';
 import { createRef, createRoot, useContext } from '@wordpress/element';
-import { tempMarker } from '../index';
 import mapboxgl from 'mapbox-gl';
 import { Marker } from '../Marker';
 import { MapboxContext } from '../MapboxContext';
+import { tempMarker } from '../utils';
 
 export function GeoMarker() {
 	const map = useContext( MapboxContext );
 	return (
 		<Marker
-			feature={ { type: 'Feature', id: undefined, properties: { name: 'geocoder' } } }
+			feature={ {
+				type: 'Feature',
+				id: undefined,
+				properties: { name: 'geocoder' },
+			} }
 			map={ map }
 		/>
 	);

@@ -3,64 +3,30 @@ import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
-import { initMap } from './utils/initMap';
-import mapboxgl, {
-	MapboxGeoJSONFeature,
-	MapMouseEvent,
-	Point,
-} from 'mapbox-gl';
-import { pin } from '@wordpress/icons';
+import { initMap, tempMarker } from './utils';
+import mapboxgl, { MapMouseEvent, Point } from 'mapbox-gl';
 import { initGeocoder } from './utils/geocoder';
-import { MapAttributes, MountedMapsContextValue } from '../../types';
+import {
+	MapAttributes,
+	MapboxBlockDefaults,
+	MountedMapsContextValue,
+} from '../../types';
 import { addMarker, addMarkers } from './Markers';
 import { addPopup } from './Popup';
 
-export function tempMarker(
-	id: number | undefined = undefined,
-	coordinates: number[] | undefined = undefined
-) {
-	return {
-		type: 'Feature',
-		id,
-		properties: {
-			name: 'temp',
-			icon: pin,
-			color: 'green',
-		},
-		geometry: {
-			type: 'Point',
-			coordinates,
-		},
-	};
-}
-
-function removeMarkerById(
-	id: number,
-	markersList: MapboxGeoJSONFeature[]
-): MapboxGeoJSONFeature[] {
-	return markersList.filter( ( marker ) => marker.id !== id );
-}
-
-export function getMarkerData(
-	id: number,
-	markersList: mapboxgl.MapboxGeoJSONFeature[]
-): MapboxGeoJSONFeature | undefined {
-	return markersList.find( ( marker ) => marker.id === id );
-}
-
 export function MapBox( {
 	attributes,
+	mapDefaults,
 }: {
 	attributes: MapAttributes;
+	mapDefaults: MapboxBlockDefaults;
 } ): JSX.Element {
 	const {
 		map,
 		setMap,
 		setGeoCoder,
-		defaults,
 		mapRef,
 		geocoderRef,
-		lngLat,
 		setLngLat,
 		setMarkers,
 		markers,
@@ -123,27 +89,30 @@ export function MapBox( {
 	}
 
 	useEffect( () => {
-		if ( defaults?.accessToken && mapRef?.current ) {
+		if ( mapDefaults?.accessToken && mapRef?.current ) {
 			// Provide access token
-			mapboxgl.accessToken = defaults.accessToken;
+			mapboxgl.accessToken = mapDefaults.accessToken;
 
 			// Initialize map and store the map instance
-			setMap( initMap( mapRef.current, attributes, defaults ) );
+			setMap( initMap( mapRef.current, attributes, mapDefaults ) );
 
 			// Add the stored listings to the markers list
 			setMarkers( attributes.mapboxOptions.listings );
 		} else {
 			console.log( 'No access token' );
 		}
-	}, [ mapRef ] );
 
-	useEffect( () => {
 		if ( map ) {
 			map.on( 'load', () => {
 				// Add geocoder
 				if ( attributes.sidebarEnabled && attributes.geocoderEnabled ) {
 					setGeoCoder(
-						initGeocoder( geocoderRef, map, attributes, defaults )
+						initGeocoder(
+							geocoderRef,
+							map,
+							attributes,
+							mapDefaults
+						)
 					);
 				}
 			} );
@@ -156,7 +125,33 @@ export function MapBox( {
 				listenForClick( map );
 			}
 		}
-	}, [ map ] );
+	}, [ mapRef ] );
+
+	useEffect( () => {
+		if ( map && attributes.geocoderEnabled ) {
+			setGeoCoder(
+				initGeocoder( geocoderRef, map, attributes, mapDefaults )
+			);
+		}
+	}, [ attributes.geocoderEnabled ] );
+
+	if ( typeof mapDefaults?.accessToken !== 'string' ) {
+		return (
+			<>
+				<div>
+					<p>
+						<a
+							href="//account.mapbox.com/auth/signup/"
+							target="_blank"
+							rel="noreferrer"
+						>
+							Get a Mapbox Access Token
+						</a>
+					</p>
+				</div>
+			</>
+		);
+	}
 
 	return (
 		<div

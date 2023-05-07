@@ -24,16 +24,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	// Then create a Mapbox map React element for each element with the class "wp-block-vsge-mapbox"
 	if ( mapboxWrapper.length > 0 ) {
 		mapboxWrapper.forEach( ( mapElement ) => {
-			const attributes = mapElement.dataset;
-			const mapboxBlockAttributes = JSON.parse(
-				attributes.mapboxAttributes
-			);
-
-			mapboxBlockAttributes
-				? createMapRoot( mapElement, {
-						attributes: mapboxBlockAttributes,
-				  } )
-				: null;
+			createMapRoot( mapElement, {
+				attributes: mapElement.dataset,
+			} );
 		} );
 	}
 } );

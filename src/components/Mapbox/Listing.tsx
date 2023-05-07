@@ -1,9 +1,16 @@
-import { ListingTag } from './MapComponents';
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
-import { enableListing } from '../../utils/dataset';
 import { MapFilter } from '../../types';
 import mapboxgl from 'mapbox-gl';
+
+export const ListingTag = ( props ) => {
+	const { tag, value } = props;
+	return (
+		<span className={ value } title={ value }>
+			{ tag }
+		</span>
+	);
+};
 
 function ListingTags( props: { tags: MapFilter[] } ): JSX.Element | null {
 	return props.tags.length ? (
@@ -20,17 +27,16 @@ function ListingTags( props: { tags: MapFilter[] } ): JSX.Element | null {
  *
  * @param          jsonFeature.jsonFeature
  * @param {Object} jsonFeature
- * @param {Map}    map
  * @param          jsonFeature.map
  * @return A React component that renders a listing of properties if the type is 'Feature', and
  * returns null otherwise. The listing includes the name, phone, and address of the property.
  */
 export const Listing = ( {
 	jsonFeature,
-  map,
+	map = null,
 }: {
 	jsonFeature: mapboxgl.MapboxGeoJSONFeature;
-  map?: mapboxgl.Map | null;
+	map?: mapboxgl.Map | null;
 } ) => {
 	const {
 		properties,
@@ -44,9 +50,7 @@ export const Listing = ( {
 	const filter: MapFilter[] = properties?.partnership || [];
 
 	return type === 'Feature' ? (
-		<div
-			className={ 'mapbox-sidebar-feature listing' }
-		>
+		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
 			<p className="partnership">
 				{ properties.partnership?.join( ' ' ) }
