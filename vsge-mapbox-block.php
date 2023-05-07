@@ -30,8 +30,6 @@ add_action( 'init', function () {
 function add_attributes_to_block( $attributes = [], $content = '' ) {
 	$escaped_data_attributes = [];
 
-	print_r($attributes);
-
 	foreach ( $attributes as $key => $value ) {
 		if ( is_bool( $value ) ) {
 			$value = $value ? 'true' : 'false';

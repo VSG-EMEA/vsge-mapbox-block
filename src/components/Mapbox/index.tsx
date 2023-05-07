@@ -5,7 +5,7 @@ import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { initMap, tempMarker } from './utils';
 import mapboxgl, { MapMouseEvent, Point } from 'mapbox-gl';
-import { initGeocoder } from './utils/geocoder';
+import { initGeocoder } from './Geocoder';
 import {
 	MapAttributes,
 	MapboxBlockDefaults,

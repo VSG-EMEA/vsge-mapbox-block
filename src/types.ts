@@ -1,6 +1,6 @@
-import { Feature, Geometry, Properties } from '@turf/turf';
-import mapboxgl, { LngLat, LngLatLike, MapboxGeoJSONFeature } from 'mapbox-gl';
-import { Dispatch, Ref, RefObject, SetStateAction } from 'react';
+import { Feature, Geometry } from '@turf/turf';
+import mapboxgl, { LngLat, MapboxGeoJSONFeature } from 'mapbox-gl';
+import { Dispatch, RefObject, SetStateAction } from 'react';
 
 export type CoordinatesDef = [ number, number ];
 export type PartnershipDef = number[];

@@ -21,7 +21,6 @@ import { cog, list, mapMarker, tag, tool, update } from '@wordpress/icons';
 import { mapStyles } from './constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from './components/Sortable';
-import { initGeocoder } from './components/Mapbox/utils/geocoder';
 import { MapAttributes } from './types';
 import {
 	setMapElevation,
