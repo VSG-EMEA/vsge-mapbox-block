@@ -8,8 +8,6 @@ import { MapBox } from './';
 import { MapProvider } from './MapboxContext';
 import { getMapDefaults } from '../../utils';
 import { MapAttributes } from '../../types';
-import { MapHTMLAttributes } from 'react';
-import { MapboxOptions } from 'mapbox-gl';
 
 export function createMapRoot( el: HTMLElement, attributes ) {
 	// initialize the map with React
@@ -49,7 +47,8 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			const attributes: MapAttributes = {
 				...rawAttributes,
 				mapboxOptions: JSON.parse(
-					rawAttributes.mapboxOptions || '{}'
+					rawAttributes.mapboxOptions ||
+						'{ "pin": { "icon": "", "size": 48, "color": "white" }, "listings": [], "tags": [], "filters": [] }'
 				),
 				bearing: Number( rawAttributes.bearing ),
 				elevation: Boolean( rawAttributes.elevation ),
