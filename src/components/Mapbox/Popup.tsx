@@ -11,28 +11,24 @@ export function MarkerPopup( {
 	itemFilters,
 	name,
 	address,
-	city,
-	postalCode,
-	country,
+  description,
 	state,
 	onClick,
 }: MarkerProps ) {
 	return (
 		<div>
 			<Icon icon={ mapMarker } />
-			<a onClick={ onClick } />
-			{ itemTags?.length && (
-				<h3>
-					{ itemTags?.join( ' ' ) } { name }
-				</h3>
-			) }
-			{ address && <h4>{ address }</h4> }
-			<p>
-				{ city } { postalCode } { country }
-				<br />
-				{ state ? ' (' + state + ')' : '' }
-				{ itemFilters?.join( ' ' ) }
-			</p>
+			<a onClick={ onClick }>
+				{ itemFilters?.length || <h4>{ itemFilters?.join( ' ' ) }</h4> }
+				<h3>{ name }</h3>
+				{ address || <h4>{ address }</h4> }
+				<p>
+					{ description }
+					<br />
+					{ state ?? ' (' + state + ')' }
+				</p>
+				<p>{ itemTags?.length || itemTags?.join( ' ' ) }</p>
+			</a>
 		</div>
 	);
 }
