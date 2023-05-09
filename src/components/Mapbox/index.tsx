@@ -3,7 +3,7 @@ import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
-import { initMap, tempMarker } from './utils';
+import { getMarkerData, initMap, tempMarker } from './utils';
 import mapboxgl, { MapMouseEvent, Point } from 'mapbox-gl';
 import { initGeocoder } from './Geocoder';
 import {
@@ -13,6 +13,7 @@ import {
 } from '../../types';
 import { addMarker, addMarkers } from './Markers';
 import { addPopup } from './Popup';
+import { enableListing } from '../../utils/dataset';
 
 export function MapBox( {
 	attributes,
@@ -63,6 +64,7 @@ export function MapBox( {
 								coordinates: [ e.lngLat.lng, e.lngLat.lat ],
 							},
 						} );
+						enableListing( map, clickedEl.dataset?.id );
 					} else {
 						const markerData = getMarkerData(
 							parseInt( clickedEl.dataset?.id, 10 ),
@@ -101,7 +103,9 @@ export function MapBox( {
 		} else {
 			console.log( 'No access token' );
 		}
+	}, [ mapRef ] );
 
+	useEffect( () => {
 		if ( map ) {
 			map.on( 'load', () => {
 				// Add geocoder
@@ -116,16 +120,16 @@ export function MapBox( {
 					);
 				}
 			} );
-
-			if ( markers?.length ) {
-				// add markers to the map
-				addMarkers( markers, map );
-
-				// highlight the first listing
-				listenForClick( map );
-			}
 		}
-	}, [ mapRef ] );
+
+		if ( map && markers?.length ) {
+			// add markers to the map
+			addMarkers( markers, map );
+
+			// highlight the first listing
+			listenForClick( map );
+		}
+	}, [ map ] );
 
 	useEffect( () => {
 		if ( map && attributes.geocoderEnabled ) {
