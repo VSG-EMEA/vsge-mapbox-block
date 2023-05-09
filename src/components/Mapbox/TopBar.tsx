@@ -57,10 +57,10 @@ export const TopBar = ( attributes ) => {
 					</Button>
 				) : null }
 
-				{ tagsEnabled.length ? (
+				{ tagsEnabled ? (
 					<SelectControl
 						className={ 'mapbox-map-filter filter-by-partnership' }
-						value={ filter || undefined }
+						value={ filter }
 						options={ [
 							{
 								value: '',
@@ -76,10 +76,10 @@ export const TopBar = ( attributes ) => {
 					/>
 				) : null }
 
-				{ filtersEnabled.length ? (
+				{ filtersEnabled ? (
 					<SelectControl
 						className={ 'mapbox-map-filter filter-by-tag' }
-						value={ tag || undefined }
+						value={ tag }
 						options={ [
 							{
 								value: '',
