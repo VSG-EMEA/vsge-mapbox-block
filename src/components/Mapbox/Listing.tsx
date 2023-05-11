@@ -27,16 +27,19 @@ function ListingTags( props: { tags: MapFilter[] } ): JSX.Element | null {
  *
  * @param          jsonFeature.jsonFeature
  * @param {Object} jsonFeature
- * @param          jsonFeature.map
+ * @param {mapboxgl.Map} jsonFeature.map
+ * @param {Function} jsonFeature.onClick
  * @return A React component that renders a listing of properties if the type is 'Feature', and
  * returns null otherwise. The listing includes the name, phone, and address of the property.
  */
 export const Listing = ( {
 	jsonFeature,
 	map = null,
+	onClick = null,
 }: {
 	jsonFeature: mapboxgl.MapboxGeoJSONFeature;
 	map?: mapboxgl.Map | null;
+	onClick?: Function;
 } ) => {
 	const {
 		properties,

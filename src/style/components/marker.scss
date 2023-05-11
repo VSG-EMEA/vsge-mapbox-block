@@ -2,8 +2,9 @@
   .marker {
     border: none;
     cursor: pointer;
-    height: 48px;
-    width: 48px;
+    height: 36px;
+    width: 36px;
+    padding: 0;
     background: transparent;
 
     &#marker-geocoder {

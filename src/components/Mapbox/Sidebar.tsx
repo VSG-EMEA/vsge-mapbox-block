@@ -6,11 +6,11 @@ import { MountedMapsContextValue } from '../../types';
 import { useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 
-function Listings( props: { listings: Feature[] }, map: mapboxgl.Map ) {
+function Listings( props: { listings: Feature[] }, map: mapboxgl.Map, onClick: Function ) {
 	return (
 		<div className={ 'feature-listing' }>
 			{ props.listings.map( ( data: any, index: number ) => (
-				<Listing jsonFeature={ data } key={ index } map={ map } />
+				<Listing jsonFeature={ data } key={ index } map={ map } onClick={onClick} />
 			) ) }
 		</div>
 	);

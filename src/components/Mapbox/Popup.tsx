@@ -1,24 +1,25 @@
 import { createRef, createRoot, render } from '@wordpress/element';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
-import { Feature } from '@turf/turf';
+import { Feature, Geometry } from '@turf/turf';
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
 import MarkerProps, { MapItem } from '../../types';
 import { RefObject } from 'react';
+import MarkerPropsCustom from '../../types';
 
 export function MarkerPopup( {
 	itemTags,
 	itemFilters,
 	name,
 	address,
-  description,
+	description,
+	website,
 	state,
-	onClick,
 }: MarkerProps ) {
 	return (
 		<div>
-			<Icon icon={ mapMarker } />
-			<a onClick={ onClick }>
+			<a href={ website }>
+				<Icon icon={ mapMarker } />
 				{ itemFilters?.length || <h4>{ itemFilters?.join( ' ' ) }</h4> }
 				<h3>{ name }</h3>
 				{ address || <h4>{ address }</h4> }
@@ -29,6 +30,13 @@ export function MarkerPopup( {
 				</p>
 				<p>{ itemTags?.length || itemTags?.join( ' ' ) }</p>
 			</a>
+		</div>
+	);
+}
+export function MarkerPopupCustom( { children }: MarkerPropsCustom ) {
+	return (
+		<div>
+			<a>{ children }</a>
 		</div>
 	);
 }
@@ -68,7 +76,11 @@ export function removePopup( mapRef ) {
 	if ( popUps[ 0 ] ) popUps[ 0 ].remove();
 }
 
-export function addPopup( map: mapboxgl.Map, marker: MapItem ): mapboxgl.Popup {
+export function addPopup(
+	map: mapboxgl.Map,
+	marker: { geometry: Geometry; properties?: MarkerProps },
+	children: JSX.Element | null = null
+): mapboxgl.Popup {
 	const popupRef: RefObject< HTMLDivElement > = createRef();
 
 	// Create a new DOM root and save it to the React ref
@@ -76,7 +88,13 @@ export function addPopup( map: mapboxgl.Map, marker: MapItem ): mapboxgl.Popup {
 	const root = createRoot( popupRef.current );
 
 	// Render a Marker Component on our new DOM node
-	root.render( <MarkerPopup { ...marker.properties } /> );
+	root.render(
+		children ? (
+			<MarkerPopupCustom children={ children } />
+		) : (
+			<MarkerPopup { ...marker.properties } />
+		)
+	);
 
 	return new mapboxgl.Popup( {} )
 		.setLngLat( marker?.geometry?.coordinates as LngLatLike )
