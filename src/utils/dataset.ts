@@ -2,6 +2,8 @@
 import { Feature } from '@turf/turf';
 import { flyToStore } from './view';
 import { highlightListing, addPopup } from '../components/Mapbox/Popup';
+import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
+import { MapItem, MarkerItem } from '../types';
 
 /**
  * The function prepares stores by assigning IDs to them and returning them as a geojson object.
@@ -33,12 +35,14 @@ export function filterStores( stores, terms ) {
 	return filteredStores;
 }
 
-export function enableListing( map, marker ) {
+export function enableListing( map: mapboxgl.Map, marker: MarkerItem ) {
+	console.log( marker );
+
 	// 1. Fly to the point
 	flyToStore( map, marker );
 
 	// 2. Close all other popups and display popup for clicked store
-	//addPopup( map, marker );
+	addPopup( map, marker );
 
 	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
 	highlightListing( marker );

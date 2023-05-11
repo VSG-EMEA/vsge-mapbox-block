@@ -451,6 +451,7 @@ export function MapEdit( {
 			<MapBox
 				attributes={ attributes }
 				mapDefaults={ getMapDefaults() }
+				isEditor={ true }
 			/>
 		</div>
 	);

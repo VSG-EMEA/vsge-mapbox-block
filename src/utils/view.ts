@@ -1,6 +1,6 @@
 import mapboxgl, { Coordinate, MapboxGeoJSONFeature, Marker } from 'mapbox-gl';
 import { Feature } from '@turf/turf';
-import { CoordinatesDef } from '../types';
+import { CoordinatesDef, MapItem, MarkerItem } from '../types';
 
 /**
  * The function recenterView takes a map and default values and flies the map to the default center and
@@ -38,13 +38,14 @@ export function recenterView( map, defaults ) {
  */
 export function flyToStore(
 	map: mapboxgl.Map,
-	store: MapboxGeoJSONFeature,
+	store: MarkerItem,
 	zoom: number = 8
 ) {
-	return map.flyTo( {
-		center: store.geometry.coordinates,
-		zoom,
-	} );
+	if ( store?.geometry?.coordinates.length )
+		return map.flyTo( {
+			center: store.geometry.coordinates,
+			zoom,
+		} );
 }
 
 /**

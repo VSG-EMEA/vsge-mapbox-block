@@ -85,14 +85,31 @@ export type MountedMapsContextValue = {
 	mapDefaults?: MapboxBlockDefaults;
 };
 
-export default interface MarkerProps {
+export interface MarkerProps {
 	itemTags?: string[];
 	itemFilters?: string[];
 	name: string;
+	description: string;
 	address?: string;
 	city?: string;
 	postalCode?: string;
 	country?: string;
 	state?: string;
-	onClick?: () => void;
+	website?: string;
+}
+
+export interface MarkerPropsCustom {
+	children: JSX.Element;
+}
+
+export interface MarkerItem {
+	geometry: Geometry;
+	properties?: MarkerProps;
+}
+
+export interface MarkerHTMLElement extends HTMLElement {
+	dataset: {
+		id: string;
+		markerName: string;
+	};
 }
