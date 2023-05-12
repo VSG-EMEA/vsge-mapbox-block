@@ -82,3 +82,4 @@ export function normalize( string: string ) {
 	}
 	return '';
 }
+

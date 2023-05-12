@@ -2,8 +2,8 @@
 import { Feature } from '@turf/turf';
 import { flyToStore } from './view';
 import { highlightListing, addPopup } from '../components/Mapbox/Popup';
-import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
-import { MapItem, MarkerItem } from '../types';
+import mapboxgl from 'mapbox-gl';
+import { MarkerItem } from '../types';
 
 /**
  * The function prepares stores by assigning IDs to them and returning them as a geojson object.
@@ -47,3 +47,36 @@ export function enableListing( map: mapboxgl.Map, marker: MarkerItem ) {
 	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
 	highlightListing( marker );
 }
+
+/**
+ * Given a JsonFeature array of objects, return the next ID to use
+ *
+ * @param {Object} arr the array of objects with a `id` property
+ * @return {number} the next ID
+ */
+export function getNextId( arr ) {
+	return (
+		arr.reduce( ( max, obj ) => {
+			return obj.id > max ? obj.id : max;
+		}, 0 ) + 1 ?? 0
+	);
+}
+
+/**
+ * Reorder the list of stores
+ *
+ * @param list       the list of stores
+ * @param startIndex the index of the first item
+ * @param endIndex   the index of the last item
+ */
+export const reorder = (
+	list: Iterable< any > | ArrayLike< unknown >,
+	startIndex: number,
+	endIndex: number
+): Iterable< unknown > | ArrayLike< unknown > => {
+	const result = Array.from( list );
+	const [ removed ] = result.splice( startIndex, 1 );
+	result.splice( endIndex, 0, removed );
+
+	return result;
+};
