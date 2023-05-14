@@ -1,10 +1,10 @@
 module.exports = ( api ) => {
-	api.cache( true );
+  api.cache.using( () => process.env.NODE_ENV );
 
-	return {
-		presets: [
+  return {
+    presets: [
       '@babel/preset-typescript',
       '@wordpress/babel-preset-default',
-		],
-	};
+    ],
+  };
 };

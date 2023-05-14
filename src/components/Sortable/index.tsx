@@ -1,18 +1,21 @@
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { reorder } from './utils';
-import { StringList } from './SortableItems';
-import { PinList } from './SortablePins';
+import { StringItem } from './SortableItems';
+import { PinCard } from './SortablePins';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { useContext, useEffect } from '@wordpress/element';
 import { MapboxContext } from '../Mapbox/MapboxContext';
 import { plusCircle } from '@wordpress/icons';
+import React from 'react';
+import { getNextId, reorder } from '../../utils/dataset';
+import { MapboxOptions } from '../../types';
+import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
 export const Sortable = ( props: {
-	items: any;
+	items: MapboxGeoJSONFeature;
 	tax: string;
-	setOptions: any;
-	mapboxOptions: any;
+	setOptions: Function;
+	mapboxOptions: MapboxOptions;
 } ): JSX.Element => {
 	const { items, tax, setOptions, mapboxOptions } = props;
 
@@ -27,10 +30,11 @@ export const Sortable = ( props: {
 	 * @param item.source
 	 * @param item.source.index
 	 */
-	function onDragEnd( item: {
+	function _onDragEnd( item: {
 		destination: { index: any };
 		source: { index: any };
 	} ) {
+    console.log( item, items, 'dropped' );
 		// dropped outside the list
 		if ( ! item.destination ) {
 			return;
@@ -77,8 +81,7 @@ export const Sortable = ( props: {
 
 	useEffect( () => {
 		items.forEach( ( item: any, index: number ) => {
-			if ( ! item?.id )
-				item = { ...item, id: index };
+			if ( ! item?.id ) item = { ...item, id: index };
 		} );
 	}, [] );
 
@@ -86,7 +89,7 @@ export const Sortable = ( props: {
 		<>
 			<DragDropContext
 				onDragEnd={ ( result: DropResult ) =>
-					onDragEnd( {
+					_onDragEnd( {
 						destination: result.destination,
 						source: result.source,
 					} )
@@ -99,23 +102,29 @@ export const Sortable = ( props: {
 							ref={ provided.innerRef }
 							{ ...provided.droppableProps }
 						>
-							{ tax !== 'listings' ? (
-								<StringList
-									sortedItems={ items }
-									tax={ tax }
-									updateItem={ updateItem }
-									deleteItem={ deleteItem }
-								/>
-							) : (
-								<PinList
-									sortedPins={ items }
-									filters={ mapboxOptions.filters }
-									tags={ mapboxOptions.tags }
-									updateItem={ updateItem }
-									deleteItem={ deleteItem }
-									setPinPosition={ setPinPosition }
-								/>
-							) }
+							{ tax !== 'listings'
+								? items?.map( ( item, index ) => (
+										<StringItem
+											item={ item }
+											tax={ tax }
+											key={ item.id }
+											index={ index }
+											updateItem={ updateItem }
+											deleteItem={ deleteItem }
+										/>
+								  ) )
+								: items?.map( ( item, index ) => (
+										<PinCard
+											item={ item }
+											key={ item.id }
+											index={ index }
+											updateItem={ updateItem }
+											deleteItem={ deleteItem }
+											setPinPosition={ setPinPosition }
+											tags={ mapboxOptions.tags }
+											filters={ mapboxOptions.filters }
+										/>
+								  ) ) }
 							{ provided.placeholder }
 						</div>
 					) }
@@ -128,18 +137,24 @@ export const Sortable = ( props: {
 				className={ 'add-new-sortable-item' }
 				style={ { width: '100%' } }
 				onClick={ () => {
+					const nextID = getNextId( items );
 					setOptions( tax, [
 						...items,
 						tax !== 'listings'
 							? {
-									id: items.length || 0,
-									value: __( 'New' ) + ' ' + tax,
+									id: nextID,
+									value: [ __( 'New' ), tax, nextID ].join(
+										' '
+									),
 							  }
 							: {
-									id: items.length || 0,
+									id: nextID,
 									type: 'Feature',
 									properties: {
-										name: __( 'New Marker' ),
+										name: [
+											__( 'New Marker' ),
+											nextID,
+										].join( ' ' ),
 										description: '',
 										address: '',
 										location: undefined,

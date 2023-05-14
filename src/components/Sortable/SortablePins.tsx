@@ -1,4 +1,4 @@
-import { memo, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
@@ -7,11 +7,12 @@ import {
 } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
 import { MapFilter } from '../../types';
+import { getNextId } from '../../utils/dataset';
 
 export const PinCard = ( {
-	props,
+	item,
+	index,
 	updateItem,
 	deleteItem,
 	setPinPosition,
@@ -20,8 +21,8 @@ export const PinCard = ( {
 } ) => {
 	const [ isOpen, setIsOpen ] = useState( false );
 
-	if ( ! props?.properties ) {
-		console.error( props, 'Missing properties' );
+	if ( ! item?.properties ) {
+		console.error( item, 'Missing properties' );
 		return null;
 	}
 
@@ -33,7 +34,7 @@ export const PinCard = ( {
 		emailAddress,
 		itemTags,
 		itemFilters,
-	} = props.properties;
+	} = item.properties;
 
 	function hasThatFilter( filter, filterItems ) {
 		return filterItems
@@ -42,40 +43,36 @@ export const PinCard = ( {
 	}
 
 	function updateItemProps( data: any ) {
-		updateItem( props.id, {
+		updateItem( item.id, {
 			properties: {
-				...props.properties,
+				...item.properties,
 				...data,
 			},
 		} );
 	}
 
-	function toggleArrayValues(
+	function updateMapFilter(
 		mapFilter: MapFilter[] = [],
 		value: string,
 		newValue: boolean
-	): MapFilter[] {
+	) {
 		if ( newValue ) {
-			mapFilter.push( { id: tags.length, value } );
-		} else {
-			mapFilter = mapFilter.filter(
-				( filter ) => filter.value === value
-			);
+			return [ ...mapFilter, { id: getNextId( mapFilter ), value } ];
 		}
-		return mapFilter;
+		return mapFilter.filter( ( filter ) => filter.value !== value );
 	}
 
 	return (
 		<Draggable
-			draggableId={ 'pin-' + props.id }
-			index={ props.id }
-			key={ props.id }
+			draggableId={ 'draggable-marker-' + item.id }
+			index={ index }
 		>
 			{ ( provided ) => (
 				<div
 					ref={ provided.innerRef }
 					{ ...provided.draggableProps }
 					{ ...provided.dragHandleProps }
+					className={ 'draggable-index-' + index }
 				>
 					<div
 						className={ 'dnd-wrap' + ( isOpen ? ' is-open' : '' ) }
@@ -88,7 +85,7 @@ export const PinCard = ( {
 					>
 						<div className={ 'controlgroup-feature-item' }>
 							<h4>
-								({ props.id }) - { name || 'New' }
+								({ item.id }) - { name || 'New' }
 							</h4>
 							<Button
 								onClick={ () => setIsOpen( ! isOpen ) }
@@ -97,7 +94,7 @@ export const PinCard = ( {
 								icon={ 'arrow-down' }
 							/>
 							<Button
-								onClick={ () => deleteItem( props.id ) }
+								onClick={ () => deleteItem( item.id ) }
 								isSmall={ true }
 								icon="trash"
 								iconSize={ 16 }
@@ -145,19 +142,19 @@ export const PinCard = ( {
 						></TextareaControl>
 						<TextControl
 							label={ __( 'lat' ) }
-							value={ props.geometry.coordinates[ 0 ] || 0 }
+							value={ item.geometry.coordinates[ 0 ] || 0 }
 							disabled={ true }
 							onChange={ () => null }
 						/>
 						<TextControl
 							label={ __( 'lang' ) }
-							value={ props.geometry.coordinates[ 1 ] || 0 }
+							value={ item.geometry.coordinates[ 1 ] || 0 }
 							disabled={ true }
 							onChange={ () => null }
 						/>
 						<Button
 							variant={ 'secondary' }
-							onClick={ () => setPinPosition( props.id ) }
+							onClick={ () => setPinPosition( item.id ) }
 						>
 							{ __( 'get position' ) }
 						</Button>
@@ -167,7 +164,8 @@ export const PinCard = ( {
 							style={ { display: 'flex', gap: '24px' } }
 						>
 							<div>
-								{ tags.map( ( checkbox, index ) => (
+								<h4>Tags</h4>
+								{ tags?.map( ( checkbox, index ) => (
 									<CheckboxControl
 										label={ checkbox.value }
 										checked={ hasThatFilter(
@@ -178,7 +176,7 @@ export const PinCard = ( {
 										onChange={ ( newValue ) => {
 											// given an array of tags, add the item if the checkbox value is true otherwise remove it from array
 											updateItemProps( {
-												itemTags: toggleArrayValues(
+												itemTags: updateMapFilter(
 													itemTags,
 													checkbox.value,
 													newValue
@@ -189,7 +187,8 @@ export const PinCard = ( {
 								) ) }
 							</div>
 							<div>
-								{ filters.map( ( checkbox, index ) => (
+								<h4>Filter</h4>
+								{ filters?.map( ( checkbox, index ) => (
 									<CheckboxControl
 										label={ checkbox.value }
 										checked={ hasThatFilter(
@@ -199,7 +198,7 @@ export const PinCard = ( {
 										key={ index }
 										onChange={ ( newValue ) => {
 											updateItemProps( {
-												itemFilters: toggleArrayValues(
+												itemFilters: updateMapFilter(
 													itemFilters,
 													checkbox.value,
 													newValue
@@ -216,24 +215,3 @@ export const PinCard = ( {
 		</Draggable>
 	);
 };
-
-export const PinList = memo( function PinList( {
-	sortedPins,
-	updateItem,
-	deleteItem,
-	setPinPosition,
-	tags,
-	filters,
-} ) {
-	return sortedPins.map( ( pin, index ) => (
-		<PinCard
-			props={ pin }
-			key={ index }
-			updateItem={ updateItem }
-			deleteItem={ deleteItem }
-			setPinPosition={ setPinPosition }
-			tags={ tags }
-			filters={ filters }
-		/>
-	) );
-} );

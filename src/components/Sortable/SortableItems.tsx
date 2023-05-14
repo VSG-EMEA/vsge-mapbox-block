@@ -2,10 +2,10 @@ import { memo } from '@wordpress/element';
 import { Button, TextControl } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
 
-const StringItem = ( props ) => {
-	const { value, tax, id, updateItem, deleteItem } = props;
+export const StringItem = ( { tax, item, index, updateItem, deleteItem }) => {
+
 	return (
-		<Draggable draggableId={ tax + '-' + id } index={ id } key={ id }>
+		<Draggable draggableId={ tax + '-' + item.id } index={ index }>
 			{ ( provided ) => (
 				<div
 					ref={ provided.innerRef }
@@ -20,9 +20,9 @@ const StringItem = ( props ) => {
 						} }
 					>
 						<TextControl
-							value={ value }
+							value={ item.value }
 							onChange={ ( newValue ) =>
-								updateItem( id, { value: newValue } )
+								updateItem( item.id, { value: newValue } )
 							}
 						></TextControl>
 						<Button
@@ -35,7 +35,7 @@ const StringItem = ( props ) => {
 							icon="trash"
 							iconSize={ 16 }
 							isSmall={ true }
-							onClick={ () => deleteItem( id ) }
+							onClick={ () => deleteItem( item.id ) }
 						/>
 					</div>
 				</div>
@@ -43,21 +43,3 @@ const StringItem = ( props ) => {
 		</Draggable>
 	);
 };
-
-export const StringList = memo( function ItemsList( {
-	sortedItems,
-	updateItem,
-	deleteItem,
-	tax,
-} ) {
-	return sortedItems.map( ( el, index ) => (
-		<StringItem
-			value={ el.value }
-			tax={ tax }
-			key={ index }
-			id={ el.id ?? index }
-			updateItem={ updateItem }
-			deleteItem={ deleteItem }
-		/>
-	) );
-} );

@@ -19,6 +19,16 @@ export type MapStyleDef = {
 	value: string;
 };
 
+export type MapboxOptions = {
+	pin: {
+		icon: string;
+		color: string;
+	};
+	tags: string[];
+	filters: string[];
+	listings: MapboxGeoJSONFeature[];
+};
+
 export type MapAttributes = {
 	align: string;
 	latitude: number;
@@ -36,15 +46,7 @@ export type MapAttributes = {
 	elevation: boolean;
 	freeViewCamera: boolean;
 	mouseWheelZoom: boolean;
-	mapboxOptions: {
-		pin: {
-			icon: string;
-			color: string;
-		};
-		tags: string[];
-		filters: string[];
-		listings: MapboxGeoJSONFeature[];
-	};
+	mapboxOptions: MapboxOptions;
 };
 
 export interface ExtraProperties {
