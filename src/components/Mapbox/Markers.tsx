@@ -1,7 +1,19 @@
 import { RefObject } from 'react';
 import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
-import { defaultMarkerStyle, Marker } from './Marker';
+import { Marker } from './Marker';
+import { DefaultMarker } from './Pin';
+
+// Default marker style
+export const defaultMarkerStyle: { icon: JSX.Element } =
+	// eslint-disable-next-line prettier/prettier
+  DefaultMarker( { color: 'red', size: 48 } )
+;
+
+export const tempMarkerStyle: { icon: JSX.Element } =
+	// eslint-disable-next-line prettier/prettier
+  DefaultMarker( { color: 'green', size: 48 } )
+;
 
 // Removes all markers on the map
 export function removeMarkers( markers: mapboxgl.Marker[] ) {
@@ -31,7 +43,7 @@ export function addMarker( marker, map: mapboxgl.Map ): mapboxgl.Marker {
 		return new mapboxgl.Marker( ref.current, {
 			offset: [
 				0,
-				( marker.properties.size || defaultMarkerStyle.size ) * -0.5,
+				( Number( marker.properties.size ) as number ) * -0.5 || 0,
 			],
 		} )
 			.setLngLat( marker.geometry.coordinates || [ 0, 0 ] )

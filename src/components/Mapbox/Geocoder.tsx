@@ -6,20 +6,31 @@ import mapboxgl from 'mapbox-gl';
 import { Marker } from './Marker';
 import { MapboxContext } from './MapboxContext';
 import { tempMarker } from './utils';
+import { tempMarkerStyle } from './Markers';
+import { getNextId } from '../../utils/dataset';
 
-export function GeoMarker() {
-	const map = useContext( MapboxContext );
+export const GeoMarker = ( { coordinates = undefined } ): JSX.Element => {
+	const { map, markers } = useContext( MapboxContext );
 	return (
 		<Marker
 			feature={ {
 				type: 'Feature',
-				id: undefined,
-				properties: { name: 'geocoder' },
+				id: getNextId( markers ),
+				properties: {
+					name: 'geocoder',
+					icon: tempMarkerStyle,
+					iconColor: 'blue',
+					iconSize: 32,
+				},
+				geometry: {
+					type: 'Point',
+					coordinates,
+				},
 			} }
 			map={ map }
 		/>
 	);
-}
+};
 
 const initGeomarker = (): mapboxgl.Marker => {
 	const markerRef: RefObject< HTMLDivElement > = createRef();
@@ -45,7 +56,7 @@ export function initGeocoder(
 			mapboxgl: map,
 			lang: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
-			element: initGeomarker( tempMarker() ),
+			element: initGeomarker( <GeoMarker coordinates={undefined} /> ),
 			flyTo: {
 				bearing: 0,
 				// These options control the flight curve, making it move
