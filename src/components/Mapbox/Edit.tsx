@@ -408,23 +408,6 @@ export function MapEdit( {
 								onClick={ () => {} }
 							/>
 						</PanelRow>
-						<h3>Pick an icon color</h3>
-						<ColorPicker
-							color={ pin?.color || '#fff' }
-							defaultValue="#fff"
-							onChange={ ( newValue ) =>
-								setAttributes( {
-									...attributes,
-									mapboxOptions: {
-										...attributes.mapboxOptions,
-										pin: {
-											...attributes.mapboxOptions?.pin,
-											color: newValue || '#fff',
-										},
-									},
-								} )
-							}
-						/>
 					</PanelBody>
 				</Panel>
 

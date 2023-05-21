@@ -2,9 +2,17 @@ import { useState } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
+	ColorPicker,
+	Flex,
+	Popover,
+	FlexItem,
+	RangeControl,
+	Slot,
+	SelectControl,
 	TextareaControl,
 	TextControl,
 } from '@wordpress/components';
+import { upload } from '@wordpress/icons';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
 import { MapFilter } from '../../types';
@@ -20,6 +28,10 @@ export const PinCard = ( {
 	filters,
 } ) => {
 	const [ isOpen, setIsOpen ] = useState( false );
+	const [ showColorPicker, setShowColorPicker ] = useState( false );
+	const toggleVisible = () => {
+		setShowColorPicker( ( state ) => ! state );
+	};
 
 	if ( ! item?.properties ) {
 		console.error( item, 'Missing properties' );
@@ -32,6 +44,8 @@ export const PinCard = ( {
 		address,
 		phone,
 		emailAddress,
+		iconSize,
+		iconColor,
 		itemTags,
 		itemFilters,
 	} = item.properties;
@@ -43,6 +57,7 @@ export const PinCard = ( {
 	}
 
 	function updateItemProps( data: any ) {
+		console.log( item );
 		updateItem( item.id, {
 			properties: {
 				...item.properties,
@@ -108,6 +123,7 @@ export const PinCard = ( {
 							onChange={ ( newValue ) => {
 								updateItemProps( { name: newValue } );
 							} }
+							__nextHasNoMarginBottom
 						></TextControl>
 						<TextControl
 							label={ __( 'phone' ) }
@@ -116,6 +132,7 @@ export const PinCard = ( {
 							onChange={ ( newValue ) => {
 								updateItemProps( { phone: newValue } );
 							} }
+							__nextHasNoMarginBottom
 						></TextControl>
 						<TextControl
 							label={ __( 'email' ) }
@@ -124,6 +141,7 @@ export const PinCard = ( {
 							onChange={ ( newValue ) => {
 								updateItemProps( { emailAddress: newValue } );
 							} }
+							__nextHasNoMarginBottom
 						></TextControl>
 						<TextControl
 							label={ __( 'website' ) }
@@ -132,6 +150,7 @@ export const PinCard = ( {
 							onChange={ ( newValue ) => {
 								updateItemProps( { website: newValue } );
 							} }
+							__nextHasNoMarginBottom
 						></TextControl>
 						<TextareaControl
 							label={ __( 'Address' ) }
@@ -139,31 +158,71 @@ export const PinCard = ( {
 							onChange={ ( newValue ) => {
 								updateItemProps( { address: newValue } );
 							} }
+							__nextHasNoMarginBottom
 						></TextareaControl>
-						<TextControl
-							label={ __( 'lat' ) }
-							value={ item.geometry.coordinates[ 0 ] || 0 }
-							disabled={ true }
-							onChange={ () => null }
-						/>
-						<TextControl
-							label={ __( 'lang' ) }
-							value={ item.geometry.coordinates[ 1 ] || 0 }
-							disabled={ true }
-							onChange={ () => null }
-						/>
-						<Button
-							variant={ 'secondary' }
-							onClick={ () => setPinPosition( item.id ) }
-						>
-							{ __( 'get position' ) }
-						</Button>
 
-						<div
-							className={ 'flexRow' }
-							style={ { display: 'flex', gap: '24px' } }
-						>
-							<div>
+						<Flex justify={ 'bottom' }>
+							<SelectControl
+								label={ __( 'type' ) }
+								value={ item.type }
+								options={ [
+									{
+										value: 'point',
+										label: 'Point',
+									},
+								] }
+								onChange={ ( newValue ) => {
+									updateItemProps( {
+										geometry: {
+											...item.geometry,
+											type: newValue,
+										},
+									} );
+								} }
+							/>
+							<TextControl
+								label={ __( 'lat' ) }
+								value={ item.geometry.coordinates[ 0 ] || 0 }
+								disabled={ true }
+								onChange={ ( newValue ) =>
+									updateItemProps( {
+										geometry: {
+											...item.geometry,
+											coordinates: [
+												item.geometry.coordinates[ 0 ],
+												newValue,
+											],
+										},
+									} )
+								}
+							/>
+							<TextControl
+								label={ __( 'lang' ) }
+								value={ item.geometry.coordinates[ 1 ] || 0 }
+								disabled={ true }
+								onChange={ ( newValue ) =>
+									updateItemProps( {
+										geometry: {
+											...item.geometry,
+											coordinates: [
+												newValue,
+												item.geometry.coordinates[ 1 ],
+											],
+										},
+									} )
+								}
+							/>
+							<Button
+								icon={ upload }
+								variant={ 'secondary' }
+								onClick={ () => setPinPosition( item.id ) }
+								label={ __( 'Add Pin' ) }
+								showTooltip={ true }
+							/>
+						</Flex>
+
+						<Flex direction={ 'row' } justify={ 'top' }>
+							<FlexItem>
 								<h4>Tags</h4>
 								{ tags?.map( ( checkbox, index ) => (
 									<CheckboxControl
@@ -173,6 +232,7 @@ export const PinCard = ( {
 											itemTags
 										) }
 										key={ index }
+										className={ 'sortable-pins-checkbox' }
 										onChange={ ( newValue ) => {
 											// given an array of tags, add the item if the checkbox value is true otherwise remove it from array
 											updateItemProps( {
@@ -185,8 +245,8 @@ export const PinCard = ( {
 										} }
 									/>
 								) ) }
-							</div>
-							<div>
+							</FlexItem>
+							<FlexItem>
 								<h4>Filter</h4>
 								{ filters?.map( ( checkbox, index ) => (
 									<CheckboxControl
@@ -196,6 +256,7 @@ export const PinCard = ( {
 											itemFilters
 										) }
 										key={ index }
+										className={ 'sortable-pins-checkbox' }
 										onChange={ ( newValue ) => {
 											updateItemProps( {
 												itemFilters: updateMapFilter(
@@ -207,8 +268,53 @@ export const PinCard = ( {
 										} }
 									/>
 								) ) }
-							</div>
-						</div>
+							</FlexItem>
+						</Flex>
+
+						<h4>Marker</h4>
+						<RangeControl
+							value={ iconSize }
+							onChange={ ( newValue ) => {
+								updateItemProps( { iconSize: newValue } );
+							} }
+							min={ 0 }
+							max={ 100 }
+							step={ 1 }
+						/>
+
+						<Button
+							onClick={ () =>
+								setShowColorPicker( ! showColorPicker )
+							}
+							variant={ 'tertiary' }
+							className="marker-button"
+							iconSize={ 16 }
+							icon={ 'paint-brush' }
+							aria-label={ __( 'Marker' ) }
+							aria-haspopup="true"
+							aria-expanded={ showColorPicker }
+						>
+							<span
+								className="color-preview"
+								style={ {
+									backgroundColor: iconColor?.hex || '#000',
+								} }
+							></span>
+							Marker
+							{ showColorPicker && (
+								<Popover>
+									<ColorPicker
+										defaultValue={ '#000' }
+										color={ iconColor }
+										onChangeComplete={ ( newValue ) => {
+											updateItemProps( {
+												iconColor: newValue,
+											} );
+										} }
+									/>
+								</Popover>
+							) }
+						</Button>
 					</div>
 				</div>
 			) }
