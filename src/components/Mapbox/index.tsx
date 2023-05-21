@@ -14,6 +14,7 @@ import {
 } from '../../types';
 import { addMarker, addMarkers } from './Markers';
 import { addPopup } from './Popup';
+import { getNextId } from '../../utils/dataset';
 
 export function MapBox( {
 	attributes,
@@ -40,10 +41,10 @@ export function MapBox( {
 	}
 
 	function removeTempMarkers(
-		mapRef: React.RefObject< HTMLDivElement > | undefined
+		maboxRef: React.RefObject< HTMLDivElement > | undefined
 	) {
-		if ( mapRef?.current ) {
-			mapRef?.current
+		if ( maboxRef?.current ) {
+			maboxRef?.current
 				.querySelectorAll( '.marker-temp' )
 				.forEach( ( marker ) => marker.remove() );
 		}
@@ -54,6 +55,8 @@ export function MapBox( {
 			map.on( 'click', ( e: MapMouseEvent ) => {
 				// store the last clicked position
 				setLngLat( e.lngLat );
+
+        console.log(e);
 
 				// Find features intersecting the bounding box.
 				// const selectedFeatures = map.queryRenderedFeatures( bbox );
@@ -79,7 +82,7 @@ export function MapBox( {
 							return addPopup(
 								map,
 								{
-									id: null,
+									id: getNextId( markers ),
 									geometry: {
 										type: 'Point',
 										coordinates:
@@ -93,7 +96,7 @@ export function MapBox( {
 						addPopup(
 							map,
 							{
-								id: null,
+								id: getNextId( markers ),
 								geometry: {
 									type: 'Point',
 									coordinates:
@@ -112,7 +115,7 @@ export function MapBox( {
 
 				removeTempMarkers( mapRef );
 
-				const newTempMarker = tempMarker( markers?.length, [
+				const newTempMarker = tempMarker( getNextId( markers ), [
 					e.lngLat.lng,
 					e.lngLat.lat,
 				] );

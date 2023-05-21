@@ -1,6 +1,8 @@
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { MapAttributes, MapboxBlockDefaults } from '../../types';
 import { pin } from '@wordpress/icons';
+import { DefaultMarker } from './Pin';
+import { tempMarkerStyle } from './Markers';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -32,6 +34,7 @@ export function initMap(
 	const map = new mapboxgl.Map( {
 		container: mapRef,
 		style: 'mapbox://styles/mapbox/' + mapStyle,
+		projection: 'globe',
 		antialias: true,
 		center: [ longitude, latitude ],
 		zoom: mapZoom,
@@ -148,8 +151,9 @@ export function tempMarker(
 		id,
 		properties: {
 			name: 'temp',
-			icon: pin,
-			color: 'green',
+			icon: tempMarkerStyle,
+			iconColor: 'green',
+			iconSize: 32,
 		},
 		geometry: {
 			type: 'Point',

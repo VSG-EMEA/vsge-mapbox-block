@@ -56,7 +56,7 @@ export function enableListing( map: mapboxgl.Map, marker: MarkerItem ) {
  */
 export function getNextId( arr ) {
 	return (
-		arr.reduce( ( max, obj ) => {
+		arr?.reduce( ( max, obj ) => {
 			return obj.id > max ? obj.id : max;
 		}, 0 ) + 1 ?? 0
 	);
