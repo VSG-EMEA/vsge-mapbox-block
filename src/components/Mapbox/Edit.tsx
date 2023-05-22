@@ -1,12 +1,11 @@
 import { MapboxContext } from './MapboxContext';
-import mapboxgl, { MapboxGeoJSONFeature, MapMouseEvent } from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import { useContext, useEffect } from '@wordpress/element';
 import { MapBox } from './index';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	__experimentalUnitControl as UnitControl,
 	Button,
-	ColorPicker,
 	Icon,
 	Panel,
 	PanelBody,
@@ -18,7 +17,7 @@ import {
 	ToggleControl,
 } from '@wordpress/components';
 import { cog, list, mapMarker, tag, tool, update } from '@wordpress/icons';
-import { mapStyles } from '../../constants';
+import { mapProjections, mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
 import { MapAttributes } from '../../types';
@@ -30,7 +29,6 @@ import {
 import IconType = Icon.IconType;
 import classNames from 'classnames';
 import { getMapDefaults } from '../../utils';
-import { removeMarkers } from './Markers';
 
 export function MapEdit( {
 	attributes,
@@ -48,6 +46,7 @@ export function MapEdit( {
 		bearing,
 		mapZoom,
 		mapStyle,
+		mapProjection,
 		mapHeight,
 		sidebarEnabled,
 		geocoderEnabled,
@@ -235,7 +234,9 @@ export function MapEdit( {
 
 						<Button
 							variant="secondary"
-							onClick={ () => pullMapOptions( map ) }
+							onClick={ () => {
+								if ( map ) pullMapOptions( map );
+							} }
 						>
 							{ __( 'Get Current view' ) }
 						</Button>
@@ -326,6 +327,18 @@ export function MapEdit( {
 									map?.setStyle(
 										'mapbox://styles/mapbox/' + newValue
 									);
+							} }
+						/>
+						<SelectControl
+							options={ mapProjections }
+							value={ mapProjection }
+							label={ 'Map Projection' }
+							onChange={ ( newValue: string ) => {
+								setAttributes( {
+									...attributes,
+									mapProjection: newValue,
+								} );
+								if ( newValue ) map?.setProjection( newValue );
 							} }
 						/>
 						<UnitControl
