@@ -30,6 +30,7 @@ import {
 import IconType = Icon.IconType;
 import classNames from 'classnames';
 import { getMapDefaults } from '../../utils';
+import { removeMarkers } from './Markers';
 
 export function MapEdit( {
 	attributes,
@@ -59,8 +60,7 @@ export function MapEdit( {
 		mapboxOptions: { pin, tags, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef, setGeoCoder, geocoderRef, defaults, lngLat } =
-		useContext( MapboxContext );
+	const { map, mapRef, markers, setMarkers } = useContext( MapboxContext );
 
 	const setOptions = ( key: string, value: string | number | boolean ) => {
 		setAttributes( {
@@ -70,6 +70,8 @@ export function MapEdit( {
 				[ key ]: value,
 			},
 		} );
+		removeMarkers( markers );
+		setMarkers( attributes.mapboxOptions.listings );
 	};
 
 	function pullMapOptions( currentMap: mapboxgl.Map | undefined ) {
@@ -230,12 +232,14 @@ export function MapEdit( {
 				<Panel>
 					<PanelBody title="Settings" icon={ tool }>
 						<h2>{ __( 'Camera Options' ) }</h2>
+
 						<Button
 							variant="secondary"
 							onClick={ () => pullMapOptions( map ) }
 						>
 							{ __( 'Get Current view' ) }
 						</Button>
+
 						<h2>{ __( 'Camera Fine tuning' ) }</h2>
 						<RangeControl
 							label={ __( 'Latitude' ) }

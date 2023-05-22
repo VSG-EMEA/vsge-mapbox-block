@@ -6,19 +6,10 @@
     border-radius: 2px;
     margin: 0 0 6px;
 
-    .components-base-control__field,
     h4 {
       margin: 0;
       text-overflow: ellipsis;
       overflow: hidden;
-    }
-
-    span,
-    button {
-      margin: 0;
-      padding: 0;
-      min-width: 32px;
-      align-self: center;
     }
 
     input {
@@ -39,6 +30,14 @@
         border: 0;
       }
     }
+
+    .sortable-pins-checkbox {
+      display: flex;
+      label {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
   }
 
   .sortable-listings {
@@ -49,17 +48,21 @@
       &.is-open {
         height: auto;
       }
+    }
+  }
 
-      .components-base-control,
-      span,
-      button {
-        margin: 0 0 0.15rem;
-        padding: 0;
-      }
-
-      .components-checkbox-control__input-container {
-        margin: 0 0.25rem 0;
-      }
+  .marker-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    .color-preview {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #ccc;
+      display: inline-block;
+      margin-right: 10px;
+      background-color: #666;
     }
   }
 
