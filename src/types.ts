@@ -1,6 +1,7 @@
-import { Feature, Geometry } from '@turf/turf';
+import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import mapboxgl, { LngLat } from 'mapbox-gl';
 import { Dispatch, RefObject, SetStateAction } from 'react';
+import { GeometryObject } from '@turf/helpers/dist/js/lib/geojson';
 
 export type CoordinatesDef = [ number, number ];
 
@@ -19,6 +20,7 @@ export type MapStyleDef = {
 
 export interface MapBoxListing extends mapboxgl.MapboxGeoJSONFeature {
 	id: number;
+	properties: MarkerProps;
 }
 
 export type MapboxOptions = {
@@ -76,6 +78,8 @@ export interface MarkerProps {
 	country?: string;
 	state?: string;
 	website?: string;
+	iconSize?: number;
+	iconColor?: string;
 	itemTags?: MapFilter[];
 	itemFilters?: MapFilter[];
 }

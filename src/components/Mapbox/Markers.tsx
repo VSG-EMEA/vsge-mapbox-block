@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 import { createRef, createRoot } from '@wordpress/element';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { Marker } from './Marker';
 import { DefaultMarker } from './Pin';
 import { getMarkerData } from './utils';
@@ -23,7 +23,7 @@ export const geoMarkerStyle: JSX.Element = DefaultMarker( {
 } );
 
 function getMarkerEL( marker: MarkerItem ): mapboxgl.Marker {
-  // fails
+	// fails
 	return marker;
 }
 
@@ -42,7 +42,10 @@ export function addMarkers(
 	} );
 }
 
-export function addMarker( marker, map: mapboxgl.Map ): mapboxgl.Marker {
+export function addMarker(
+	marker: MarkerItem,
+	map: mapboxgl.Map
+): mapboxgl.Marker {
 	if ( marker?.geometry ) {
 		const ref: RefObject< HTMLDivElement > = createRef();
 		// Create a new DOM root and save it to the React ref
@@ -53,9 +56,9 @@ export function addMarker( marker, map: mapboxgl.Map ): mapboxgl.Marker {
 
 		// Add markers to the map at all points
 		return new mapboxgl.Marker( ref.current, {
-			offset: [ 0, marker.properties.iconSize * -0.5 || 0 ],
+			offset: [ 0, ( marker?.properties?.iconSize || 0 ) * -0.5 ],
 		} )
-			.setLngLat( marker.geometry.coordinates || [ 0, 0 ] )
+			.setLngLat( marker?.geometry?.coordinates as LngLatLike || [ 0, 0 ] )
 			.addTo( map );
 	}
 }

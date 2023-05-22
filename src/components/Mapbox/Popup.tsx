@@ -38,9 +38,10 @@ export function MarkerPopup( props ) {
 		</div>
 	);
 }
-export function MarkerPopupCustom( { children }: MarkerPropsCustom ) {
-	return <div>{ children }</div>;
-}
+
+export const MarkerPopupCustom = ( { children }: MarkerPropsCustom ) => (
+	<>{ children }</>
+);
 
 /**
  * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
@@ -90,7 +91,7 @@ export function addPopup(
 
 	// Render a Marker Component on our new DOM node
 	root.render(
-		__children ? (
+		children ? (
 			<MarkerPopupCustom children={ children } />
 		) : (
 			<MarkerPopup { ...marker.properties } />

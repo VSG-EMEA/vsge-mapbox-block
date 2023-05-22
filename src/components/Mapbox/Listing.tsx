@@ -7,8 +7,8 @@ import { TagList } from './TagItem';
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
  *
- * @param                jsonFeature.jsonFeature
  * @param {Object}       jsonFeature
+ * @param {Object}       jsonFeature.jsonFeature
  * @param {mapboxgl.Map} jsonFeature.map
  * @param {Function}     jsonFeature.onClick
  * @return A React component that renders a listing of properties if the type is 'Feature', and
@@ -21,8 +21,8 @@ export const Listing = ( {
 	map?: mapboxgl.Map | null;
 	onClick?: Function;
 } ) => {
-	const { properties, type } = jsonFeature as { properties: MarkerProps; type: string };
-	return type === 'Feature' ? (
+	const { properties } = jsonFeature;
+	return (
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
 			<p className="partnership">
@@ -39,7 +39,7 @@ export const Listing = ( {
 						href={ 'tel:' + properties.telephone }
 						className="email-link"
 					>
-						{ properties.phone }
+						{ properties.telephone }
 					</a>
 				</p>
 				<p>
@@ -53,5 +53,5 @@ export const Listing = ( {
 				<TagList tags={ properties.itemTags } />
 			</div>
 		</div>
-	) : null;
+	);
 };
