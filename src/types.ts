@@ -19,6 +19,10 @@ export type MapStyleDef = {
 	value: string;
 };
 
+export interface MapBoxListing extends mapboxgl.MapboxGeoJSONFeature {
+	id: number;
+}
+
 export type MapboxOptions = {
 	pin: {
 		icon: string;
@@ -26,7 +30,7 @@ export type MapboxOptions = {
 	};
 	tags: string[];
 	filters: string[];
-	listings: MapboxGeoJSONFeature[];
+	listings: MapBoxListing[];
 };
 
 export type MapAttributes = {
@@ -49,24 +53,21 @@ export type MapAttributes = {
 	mapboxOptions: MapboxOptions;
 };
 
-export interface ExtraProperties {
-	id?: number | null;
+export interface MarkerProps {
+	itemTags?: string[];
+	itemFilters?: string[];
 	name: string;
-	phone?: string;
+	description?: string;
 	address?: string;
 	city?: string;
-	country?: string;
 	postalCode?: string;
-	state: string;
-	emailAddress?: string;
+	country?: string;
+	state?: string;
 	website?: string;
-	partnership: PartnershipDef;
-	company: CompaniesDef;
 }
-
 export interface MapItem extends Feature {
 	geometry: Geometry;
-	properties: ExtraProperties;
+	properties: MarkerProps;
 	distance?: {
 		value: number;
 		writable: boolean;
@@ -78,27 +79,14 @@ export interface MapItem extends Feature {
 export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;
 	lngLat?: LngLat;
-	markers?: mapboxgl.MapboxGeoJSONFeature[];
+	markers?: MapBoxListing[];
 	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
-	setMarkers: Dispatch< SetStateAction< mapboxgl.MapboxGeoJSONFeature[] > >;
+	setMarkers: Dispatch< SetStateAction< MapBoxListing[] > >;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
 	geocoderRef?: RefObject< HTMLDivElement >;
 	mapDefaults?: MapboxBlockDefaults;
 };
-
-export interface MarkerProps {
-	itemTags?: string[];
-	itemFilters?: string[];
-	name: string;
-	description: string;
-	address?: string;
-	city?: string;
-	postalCode?: string;
-	country?: string;
-	state?: string;
-	website?: string;
-}
 
 export interface MarkerPropsCustom {
 	children: JSX.Element;
@@ -107,6 +95,7 @@ export interface MarkerPropsCustom {
 export interface MarkerItem {
 	geometry: Geometry;
 	properties?: MarkerProps;
+	element?: HTMLElement;
 }
 
 export interface MarkerHTMLElement extends HTMLElement {

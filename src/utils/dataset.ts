@@ -2,7 +2,7 @@
 import { Feature } from '@turf/turf';
 import { flyToStore } from './view';
 import { highlightListing, addPopup } from '../components/Mapbox/Popup';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { MarkerItem } from '../types';
 
 /**
@@ -54,10 +54,10 @@ export function enableListing( map: mapboxgl.Map, marker: MarkerItem ) {
  * @param {Object} arr the array of objects with a `id` property
  * @return {number} the next ID
  */
-export function getNextId( arr ) {
+export function getNextId( arr: any ): number {
 	return (
-		arr?.reduce( ( max, obj ) => {
-			return obj.id > max ? obj.id : max;
+		arr?.reduce( ( max: number, obj: any ) => {
+			return obj?.id > max ? obj.id : max;
 		}, 0 ) + 1 ?? 0
 	);
 }

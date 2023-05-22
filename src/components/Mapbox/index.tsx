@@ -4,7 +4,7 @@ import { TopBar } from './TopBar';
 import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { getMarkerData, initMap, tempMarker } from './utils';
-import mapboxgl, { MapMouseEvent, Point } from 'mapbox-gl';
+import mapboxgl, { Coordinate, LngLat, MapMouseEvent, Point } from 'mapbox-gl';
 import { initGeocoder } from './Geocoder';
 import {
 	MapAttributes,
@@ -12,9 +12,10 @@ import {
 	MarkerHTMLElement,
 	MountedMapsContextValue,
 } from '../../types';
-import { addMarker, addMarkers } from './Markers';
+import { addMarker, addMarkers, removeMarkers } from './Markers';
 import { addPopup } from './Popup';
 import { getNextId } from '../../utils/dataset';
+import { RefObject } from 'react';
 
 export function MapBox( {
 	attributes,
@@ -40,6 +41,15 @@ export function MapBox( {
 		setMarkers( attributes.mapboxOptions.listings );
 	}
 
+	function removeMarker(
+		id: number,
+		maboxRef: React.RefObject< HTMLDivElement >
+	) {
+		if ( maboxRef?.current ) {
+			// maboxRef?.current.querySelector( '.marker-' + id ).remove();
+		}
+	}
+
 	function removeTempMarkers(
 		maboxRef: React.RefObject< HTMLDivElement > | undefined
 	) {
@@ -50,77 +60,70 @@ export function MapBox( {
 		}
 	}
 
-	function listenForClick( map: mapboxgl.Map ) {
-		if ( map ) {
-			map.on( 'click', ( e: MapMouseEvent ) => {
+	function listenForClick( currentMap: mapboxgl.Map ) {
+		if ( currentMap ) {
+			currentMap.on( 'click', ( e: MapMouseEvent ) => {
 				// store the last clicked position
 				setLngLat( e.lngLat );
+				const clickedPoint = [ e.lngLat.lng, e.lngLat.lat ];
 
-        console.log(e);
+				console.log( e );
+
+				const clickedFeatures = currentMap.queryRenderedFeatures(
+					e.point
+				);
 
 				// Find features intersecting the bounding box.
-				// const selectedFeatures = map.queryRenderedFeatures( bbox );
-				const clickedEl: MarkerHTMLElement = e.originalEvent
-					?.target as HTMLElement;
+				const clickedEl = (
+					e.originalEvent?.target as HTMLElement
+				 )?.closest( 'button' ) as MarkerHTMLElement | null;
 
-				if (
-					! markers?.length &&
-					clickedEl?.parentElement?.nodeName === 'BUTTON'
-				) {
-					const MarkerElement =
-						clickedEl.parentElement as MarkerHTMLElement;
+				if ( markers?.length && clickedEl?.nodeName === 'BUTTON' ) {
 					// get the marker data
 					const markerData = getMarkerData(
-						parseInt( MarkerElement.dataset?.id, 10 ),
+						parseInt( clickedEl.dataset?.id, 10 ),
 						markers
 					);
 
-					if ( MarkerElement.dataset?.markerName === 'temp' ) {
+					if ( clickedEl.dataset?.markerName === 'temp' ) {
 						// add the popup
 						if ( isEditor ) {
 							// prints the popup that allow the editor to add a new marker
 							return addPopup(
-								map,
+								currentMap,
 								{
-									id: getNextId( markers ),
 									geometry: {
-										type: 'Point',
-										coordinates:
-											markerData.geometry.coordinates,
+										coordinates: clickedPoint,
 									},
 								},
 								<p>Add a new Marker?</p>
 							);
 						}
+
 						// prints the popup that allow the user to find a location
 						addPopup(
-							map,
+							currentMap,
 							{
-								id: getNextId( markers ),
 								geometry: {
-									type: 'Point',
-									coordinates:
-										markerData.geometry.coordinates,
+									coordinates: clickedPoint,
 								},
 							},
 							<p>Find A location?</p>
 						);
-					} else {
-						// prints the standard marker
-						if ( markerData ) {
-							return addPopup( map, markerData );
-						}
+					} else if ( markerData ) {
+						// popup the marker data on the currentMap
+						return addPopup( currentMap, markerData );
 					}
 				}
 
 				removeTempMarkers( mapRef );
 
-				const newTempMarker = tempMarker( getNextId( markers ), [
-					e.lngLat.lng,
-					e.lngLat.lat,
-				] );
+				const newTempMarker = tempMarker(
+					getNextId( markers ),
+					clickedPoint
+				);
 
-				addMarker( newTempMarker, map );
+				addMarker( newTempMarker, currentMap );
 
 				setMarkers( [ ...markers, newTempMarker ] );
 			} );
@@ -169,6 +172,14 @@ export function MapBox( {
 	}, [ map ] );
 
 	useEffect( () => {
+		if ( map ) {
+			// removeMarkers( markers )
+			// highlight the first listing
+			addMarkers( attributes.mapboxOptions.listings, map );
+		}
+	}, [ attributes.mapboxOptions.listings ] );
+
+	useEffect( () => {
 		if ( map && attributes.geocoderEnabled ) {
 			setGeoCoder(
 				initGeocoder( geocoderRef, map, attributes, mapDefaults )
@@ -204,7 +215,7 @@ export function MapBox( {
 			) : null }
 			<div className={ 'map-container' }>
 				<TopBar { ...attributes } />
-				<Map mapRef={ mapRef } />
+				<Map mapRef={ mapRef as RefObject< HTMLDivElement > | null } />
 			</div>
 		</div>
 	);
