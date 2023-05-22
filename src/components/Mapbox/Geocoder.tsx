@@ -6,11 +6,13 @@ import mapboxgl from 'mapbox-gl';
 import { Marker } from './Marker';
 import { MapboxContext } from './MapboxContext';
 import { tempMarker } from './utils';
-import { tempMarkerStyle } from './Markers';
+import { defaultMarkerStyle, geoMarkerStyle, tempMarkerStyle } from './Markers';
 import { getNextId } from '../../utils/dataset';
+import { MapAttributes, MapboxBlockDefaults } from '../../types';
 
-export const GeoMarker = ( { coordinates = undefined } ): JSX.Element => {
-	const { map, markers } = useContext( MapboxContext );
+export const GeoMarker = ( props ): JSX.Element => {
+	const { coordinates, map } = props;
+	const { markers } = useContext( MapboxContext );
 	return (
 		<Marker
 			feature={ {
@@ -18,9 +20,6 @@ export const GeoMarker = ( { coordinates = undefined } ): JSX.Element => {
 				id: getNextId( markers ),
 				properties: {
 					name: 'geocoder',
-					icon: tempMarkerStyle,
-					iconColor: 'blue',
-					iconSize: 32,
 				},
 				geometry: {
 					type: 'Point',
@@ -28,35 +27,36 @@ export const GeoMarker = ( { coordinates = undefined } ): JSX.Element => {
 				},
 			} }
 			map={ map }
+			children={ geoMarkerStyle }
 		/>
 	);
 };
 
-const initGeomarker = (): mapboxgl.Marker => {
+const initGeomarker = ( map: mapboxgl.Map ): mapboxgl.Marker => {
 	const markerRef: RefObject< HTMLDivElement > = createRef();
 	// Create a new DOM root and save it to the React ref
 	markerRef.current = document.createElement( 'div' );
 	const root = createRoot( markerRef.current );
 	// Render a Marker Component on our new DOM node
-	root.render( <GeoMarker /> );
+	root.render( <GeoMarker map={ map } /> );
 
 	// Add markers to the map.
 	return new mapboxgl.Marker( markerRef.current );
 };
 
 export function initGeocoder(
-	geocoderRef,
-	map,
-	attributes,
-	defaults
-): MapboxGeocoder {
+	geocoderRef: React.RefObject< HTMLDivElement > | undefined,
+	map: mapboxgl.Map,
+	attributes: MapAttributes,
+	defaults: MapboxBlockDefaults
+): MapboxGeocoder | undefined {
 	if ( defaults.accessToken ) {
 		const geocoder = new MapboxGeocoder( {
 			accessToken: defaults.accessToken,
 			mapboxgl: map,
 			lang: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
-			element: initGeomarker( <GeoMarker coordinates={undefined} /> ),
+			element: initGeomarker( map ),
 			flyTo: {
 				bearing: 0,
 				// These options control the flight curve, making it move
