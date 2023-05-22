@@ -16,6 +16,26 @@ import { addMarker, addMarkers, removeMarkers } from './Markers';
 import { addPopup } from './Popup';
 import { getNextId } from '../../utils/dataset';
 import { RefObject } from 'react';
+import { Button } from '@wordpress/components';
+
+export function removeMarker(
+	id: number,
+	maboxRef: React.RefObject< HTMLDivElement >
+) {
+	if ( maboxRef?.current ) {
+		maboxRef?.current.querySelector( '#marker-' + id )?.remove();
+	}
+}
+
+export function removeTempMarkers(
+	maboxRef: React.RefObject< HTMLDivElement > | undefined
+) {
+	if ( maboxRef?.current ) {
+		maboxRef?.current
+			.querySelectorAll( '.marker-temp' )
+			.forEach( ( marker ) => marker.remove() );
+	}
+}
 
 export function MapBox( {
 	attributes,
@@ -39,25 +59,6 @@ export function MapBox( {
 
 	function restoreInitialMarkers() {
 		setMarkers( attributes.mapboxOptions.listings );
-	}
-
-	function removeMarker(
-		id: number,
-		maboxRef: React.RefObject< HTMLDivElement >
-	) {
-		if ( maboxRef?.current ) {
-			// maboxRef?.current.querySelector( '.marker-' + id ).remove();
-		}
-	}
-
-	function removeTempMarkers(
-		maboxRef: React.RefObject< HTMLDivElement > | undefined
-	) {
-		if ( maboxRef?.current ) {
-			maboxRef?.current
-				.querySelectorAll( '.marker-temp' )
-				.forEach( ( marker ) => marker.remove() );
-		}
 	}
 
 	function listenForClick( currentMap: mapboxgl.Map ) {
@@ -160,24 +161,16 @@ export function MapBox( {
 					);
 				}
 			} );
-		}
 
-		if ( map && markers?.length ) {
-			// add markers to the map
-			addMarkers( markers, map );
+			if ( markers?.length ) {
+				// add markers to the map
+				addMarkers( markers, map );
+			}
 
-			// highlight the first listing
+			// Listen for clicks on the map
 			listenForClick( map );
 		}
 	}, [ map ] );
-
-	useEffect( () => {
-		if ( map ) {
-			// removeMarkers( markers )
-			// highlight the first listing
-			addMarkers( attributes.mapboxOptions.listings, map );
-		}
-	}, [ attributes.mapboxOptions.listings ] );
 
 	useEffect( () => {
 		if ( map && attributes.geocoderEnabled ) {
