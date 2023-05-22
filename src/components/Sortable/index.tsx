@@ -6,13 +6,13 @@ import { Button } from '@wordpress/components';
 import { useContext, useEffect } from '@wordpress/element';
 import { MapboxContext } from '../Mapbox/MapboxContext';
 import { plusCircle } from '@wordpress/icons';
-import React from 'react';
+import React, { MapHTMLAttributes } from 'react';
 import { getNextId, reorder } from '../../utils/dataset';
-import { MapboxOptions } from '../../types';
-import { MapboxGeoJSONFeature } from 'mapbox-gl';
+import { MapBoxListing, MapboxOptions } from '../../types';
+import { LngLat, MapboxGeoJSONFeature } from 'mapbox-gl';
 
 export const Sortable = ( props: {
-	items: MapboxGeoJSONFeature;
+	items: MapBoxListing[];
 	tax: string;
 	setOptions: Function;
 	mapboxOptions: MapboxOptions;
@@ -34,7 +34,7 @@ export const Sortable = ( props: {
 		destination: { index: any };
 		source: { index: any };
 	} ) {
-    console.log( item, items, 'dropped' );
+		console.log( item, items, 'dropped' );
 		// dropped outside the list
 		if ( ! item.destination ) {
 			return;
@@ -45,10 +45,9 @@ export const Sortable = ( props: {
 		);
 	}
 
-	function updateItem( id: number, newValue: Object ) {
-		let newItems;
-		newItems = items.map( ( item ) =>
-			item.id === id
+	function updateItem( newValue: MapBoxListing ) {
+		const newItems = props.items.map( ( item ) =>
+			item.id === newValue.id
 				? {
 						...item,
 						...newValue,
@@ -58,19 +57,29 @@ export const Sortable = ( props: {
 		setOptions( tax, newItems );
 	}
 
-	function setPinPosition( id: number ) {
-		const newItems = items.map( ( item ) =>
+	function updateMarkerPosition(
+		Listings: MapBoxListing[],
+		id: number,
+		markerCoords: mapboxgl.LngLat | undefined
+	) {
+		const newItems = Listings.map( ( item ) =>
 			item.id === id
 				? {
 						...item,
 						geometry: {
 							type: 'point',
-							coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
+							coordinates: markerCoords || [
+								lngLat?.lng || 0,
+								lngLat?.lat || 0,
+							],
 						},
 				  }
 				: item
 		);
-		setOptions( tax, newItems );
+	}
+
+	function setPinPosition( id: number, coords: LngLat | undefined = lngLat ) {
+		updateMarkerPosition( items, id, coords );
 	}
 
 	function deleteItem( id: number ) {
@@ -120,7 +129,6 @@ export const Sortable = ( props: {
 											index={ index }
 											updateItem={ updateItem }
 											deleteItem={ deleteItem }
-											setPinPosition={ setPinPosition }
 											tags={ mapboxOptions.tags }
 											filters={ mapboxOptions.filters }
 										/>
@@ -164,9 +172,9 @@ export const Sortable = ( props: {
 									geometry: {
 										type: 'Point',
 										coordinates: [
-											lngLat?.lng,
-											lngLat?.lat,
-										] || [ 0, 0 ],
+											lngLat?.lng || 0,
+											lngLat?.lat || 0,
+										],
 									},
 							  },
 					] );

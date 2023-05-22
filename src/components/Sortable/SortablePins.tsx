@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useContext, useState } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
@@ -12,60 +12,51 @@ import {
 	TextareaControl,
 	TextControl,
 } from '@wordpress/components';
-import { upload } from '@wordpress/icons';
+import { upload, download } from '@wordpress/icons';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
-import { MapFilter } from '../../types';
+import { MapBoxListing, MapFilter } from '../../types';
 import { getNextId } from '../../utils/dataset';
+import { Position } from 'geojson';
+import { MapboxContext } from '../Mapbox/MapboxContext';
 
 export const PinCard = ( {
 	item,
 	index,
 	updateItem,
 	deleteItem,
-	setPinPosition,
 	tags,
 	filters,
 } ) => {
+	const { lngLat } = useContext( MapboxContext );
 	const [ isOpen, setIsOpen ] = useState( false );
 	const [ showColorPicker, setShowColorPicker ] = useState( false );
-	const toggleVisible = () => {
-		setShowColorPicker( ( state ) => ! state );
-	};
+	const [ itemData, setItemData ] = useState( item as MapBoxListing );
 
 	if ( ! item?.properties ) {
 		console.error( item, 'Missing properties' );
 		return null;
 	}
 
-	const {
-		name,
-		website,
-		address,
-		phone,
-		emailAddress,
-		iconSize,
-		iconColor,
-		itemTags,
-		itemFilters,
-	} = item.properties;
-
+	/**
+	 * Check if a filter is present in the default filters array
+	 *
+	 * @param filter      the filter
+	 * @param filterItems the filters array to check against
+	 */
 	function hasThatFilter( filter, filterItems ) {
 		return filterItems
 			? filterItems.filter( ( item ) => item.value === filter ).length
 			: false;
 	}
 
-	function updateItemProps( data: any ) {
-		console.log( item );
-		updateItem( item.id, {
-			properties: {
-				...item.properties,
-				...data,
-			},
-		} );
-	}
-
+	/**
+	 * This function updates the map filter/tag array of the item
+	 *
+	 * @param mapFilter the current map filter
+	 * @param value     the current value
+	 * @param newValue  the new value
+	 */
 	function updateMapFilter(
 		mapFilter: MapFilter[] = [],
 		value: string,
@@ -79,7 +70,7 @@ export const PinCard = ( {
 
 	return (
 		<Draggable
-			draggableId={ 'draggable-marker-' + item.id }
+			draggableId={ 'draggable-marker-' + itemData.id }
 			index={ index }
 		>
 			{ ( provided ) => (
@@ -98,9 +89,11 @@ export const PinCard = ( {
 							marginBottom: '4px',
 						} }
 					>
+						{ /** Listing Headline */ }
 						<div className={ 'controlgroup-feature-item' }>
 							<h4>
-								({ item.id }) - { name || 'New' }
+								({ itemData.id }) -{ ' ' }
+								{ itemData.properties?.name || 'New' }
 							</h4>
 							<Button
 								onClick={ () => setIsOpen( ! isOpen ) }
@@ -109,62 +102,94 @@ export const PinCard = ( {
 								icon={ 'arrow-down' }
 							/>
 							<Button
-								onClick={ () => deleteItem( item.id ) }
+								onClick={ () => deleteItem( itemData.id ) }
 								isSmall={ true }
 								icon="trash"
 								iconSize={ 16 }
 							/>
 						</div>
+
+						{ /** main Item Data */ }
 						<TextControl
 							label={ __( 'name' ) }
 							type={ 'text' }
 							style={ { margin: 0 } }
-							value={ name || 'New' }
+							value={ itemData.properties?.name || 'New' }
 							onChange={ ( newValue ) => {
-								updateItemProps( { name: newValue } );
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										name: newValue,
+									},
+								} );
 							} }
-							__nextHasNoMarginBottom
+							__nextHasNoMarginBottom={ true }
 						></TextControl>
 						<TextControl
 							label={ __( 'phone' ) }
 							type={ 'tel' }
-							value={ phone || '' }
+							value={ itemData.properties?.phone || '' }
 							onChange={ ( newValue ) => {
-								updateItemProps( { phone: newValue } );
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										phone: newValue,
+									},
+								} );
 							} }
-							__nextHasNoMarginBottom
+							__nextHasNoMarginBottom={ true }
 						></TextControl>
 						<TextControl
 							label={ __( 'email' ) }
 							type={ 'email' }
-							value={ emailAddress || '' }
+							value={ itemData.properties?.emailAddress || '' }
 							onChange={ ( newValue ) => {
-								updateItemProps( { emailAddress: newValue } );
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										emailAddress: newValue,
+									},
+								} );
 							} }
-							__nextHasNoMarginBottom
+							__nextHasNoMarginBottom={ true }
 						></TextControl>
 						<TextControl
 							label={ __( 'website' ) }
 							type={ 'url' }
-							value={ website || '' }
+							value={ itemData.properties?.website || '' }
 							onChange={ ( newValue ) => {
-								updateItemProps( { website: newValue } );
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										website: newValue,
+									},
+								} );
 							} }
-							__nextHasNoMarginBottom
+							__nextHasNoMarginBottom={ true }
 						></TextControl>
 						<TextareaControl
 							label={ __( 'Address' ) }
-							value={ address || '' }
+							value={ itemData.properties?.address || '' }
 							onChange={ ( newValue ) => {
-								updateItemProps( { address: newValue } );
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										address: newValue,
+									},
+								} );
 							} }
-							__nextHasNoMarginBottom
+							__nextHasNoMarginBottom={ true }
 						></TextareaControl>
 
 						<Flex justify={ 'bottom' }>
 							<SelectControl
 								label={ __( 'type' ) }
-								value={ item.type }
+								value={ itemData.type }
 								options={ [
 									{
 										value: 'point',
@@ -172,9 +197,10 @@ export const PinCard = ( {
 									},
 								] }
 								onChange={ ( newValue ) => {
-									updateItemProps( {
+									setItemData( {
+										...itemData,
 										geometry: {
-											...item.geometry,
+											...itemData.geometry,
 											type: newValue,
 										},
 									} );
@@ -182,32 +208,38 @@ export const PinCard = ( {
 							/>
 							<TextControl
 								label={ __( 'lat' ) }
-								value={ item.geometry.coordinates[ 0 ] || 0 }
+								value={
+									itemData.geometry.coordinates[ 0 ] || 0
+								}
 								disabled={ true }
 								onChange={ ( newValue ) =>
-									updateItemProps( {
+									setItemData( {
 										geometry: {
-											...item.geometry,
+											...itemData.geometry,
 											coordinates: [
-												item.geometry.coordinates[ 0 ],
+												itemData.geometry
+													.coordinates[ 0 ] || 0,
 												newValue,
-											],
+											] as Position[],
 										},
 									} )
 								}
 							/>
 							<TextControl
 								label={ __( 'lang' ) }
-								value={ item.geometry.coordinates[ 1 ] || 0 }
+								value={
+									itemData.geometry.coordinates[ 1 ] || 0
+								}
 								disabled={ true }
 								onChange={ ( newValue ) =>
-									updateItemProps( {
+									setItemData( {
 										geometry: {
-											...item.geometry,
+											...itemData.geometry,
 											coordinates: [
 												newValue,
-												item.geometry.coordinates[ 1 ],
-											],
+												itemData.geometry
+													.coordinates[ 1 ],
+											] as Position[],
 										},
 									} )
 								}
@@ -215,12 +247,24 @@ export const PinCard = ( {
 							<Button
 								icon={ upload }
 								variant={ 'secondary' }
-								onClick={ () => setPinPosition( item.id ) }
+								onClick={ () =>
+									setItemData( {
+										...itemData,
+										geometry: {
+											type: 'Point',
+											coordinates: [
+												lngLat?.lng || 0,
+												lngLat?.lat || 0,
+											],
+										},
+									} )
+								}
 								label={ __( 'Add Pin' ) }
 								showTooltip={ true }
 							/>
 						</Flex>
 
+						{ /** Tags */ }
 						<Flex direction={ 'row' } justify={ 'top' }>
 							<FlexItem>
 								<h4>Tags</h4>
@@ -229,18 +273,23 @@ export const PinCard = ( {
 										label={ checkbox.value }
 										checked={ hasThatFilter(
 											checkbox.value,
-											itemTags
+											itemData.properties?.itemTags
 										) }
 										key={ index }
 										className={ 'sortable-pins-checkbox' }
 										onChange={ ( newValue ) => {
 											// given an array of tags, add the item if the checkbox value is true otherwise remove it from array
-											updateItemProps( {
-												itemTags: updateMapFilter(
-													itemTags,
-													checkbox.value,
-													newValue
-												),
+											setItemData( {
+												...itemData,
+												properties: {
+													...itemData.properties,
+													itemTags: updateMapFilter(
+														itemData.properties
+															?.itemTags,
+														checkbox.value,
+														newValue
+													),
+												},
 											} );
 										} }
 									/>
@@ -253,17 +302,23 @@ export const PinCard = ( {
 										label={ checkbox.value }
 										checked={ hasThatFilter(
 											checkbox.value,
-											itemFilters
+											itemData.properties?.itemFilters
 										) }
 										key={ index }
 										className={ 'sortable-pins-checkbox' }
 										onChange={ ( newValue ) => {
-											updateItemProps( {
-												itemFilters: updateMapFilter(
-													itemFilters,
-													checkbox.value,
-													newValue
-												),
+											setItemData( {
+												...itemData,
+												properties: {
+													...itemData.properties,
+													itemFilters:
+														updateMapFilter(
+															itemData.properties
+																?.itemFilters,
+															checkbox.value,
+															newValue
+														),
+												},
 											} );
 										} }
 									/>
@@ -271,11 +326,18 @@ export const PinCard = ( {
 							</FlexItem>
 						</Flex>
 
+						{ /** Marker Style */ }
 						<h4>Marker</h4>
 						<RangeControl
-							value={ iconSize }
+							value={ itemData.properties?.iconSize }
 							onChange={ ( newValue ) => {
-								updateItemProps( { iconSize: newValue } );
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										iconSize: newValue,
+									},
+								} );
 							} }
 							min={ 0 }
 							max={ 100 }
@@ -297,7 +359,9 @@ export const PinCard = ( {
 							<span
 								className="color-preview"
 								style={ {
-									backgroundColor: iconColor?.hex || '#000',
+									backgroundColor:
+										itemData.properties?.iconColor?.hex ||
+										'#000',
 								} }
 							></span>
 							Marker
@@ -305,15 +369,28 @@ export const PinCard = ( {
 								<Popover>
 									<ColorPicker
 										defaultValue={ '#000' }
-										color={ iconColor }
+										color={ itemData.properties?.iconColor }
 										onChangeComplete={ ( newValue ) => {
-											updateItemProps( {
-												iconColor: newValue,
+											setItemData( {
+												...itemData,
+												properties: {
+													...itemData.properties,
+													iconColor: newValue,
+												},
 											} );
 										} }
 									/>
 								</Popover>
 							) }
+						</Button>
+						<Button
+							onClick={ () => updateItem( itemData ) }
+							label={ __( 'Save item data' ) }
+							variant={ 'primary' }
+							iconSize={ 16 }
+							icon={ download }
+						>
+							{ __( 'Save item data' ) }
 						</Button>
 					</div>
 				</div>

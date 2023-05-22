@@ -2,8 +2,7 @@ import { memo } from '@wordpress/element';
 import { Button, TextControl } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
 
-export const StringItem = ( { tax, item, index, updateItem, deleteItem }) => {
-
+export const StringItem = ( { tax, item, index, updateItem, deleteItem } ) => {
 	return (
 		<Draggable draggableId={ tax + '-' + item.id } index={ index }>
 			{ ( provided ) => (
@@ -22,7 +21,10 @@ export const StringItem = ( { tax, item, index, updateItem, deleteItem }) => {
 						<TextControl
 							value={ item.value }
 							onChange={ ( newValue ) =>
-								updateItem( item.id, { value: newValue } )
+								updateItem( {
+									...item,
+									value: newValue,
+								} )
 							}
 						></TextControl>
 						<Button
