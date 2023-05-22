@@ -3,8 +3,13 @@ import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
-import { getMarkerData, initMap, tempMarker } from './utils';
-import mapboxgl, { Coordinate, LngLat, MapMouseEvent, Point } from 'mapbox-gl';
+import {
+	defaultMarkerProps,
+	getMarkerData,
+	initMap,
+	tempMarker,
+} from './utils';
+import mapboxgl, { MapMouseEvent, Point } from 'mapbox-gl';
 import { initGeocoder } from './Geocoder';
 import {
 	MapAttributes,
@@ -12,7 +17,7 @@ import {
 	MarkerHTMLElement,
 	MountedMapsContextValue,
 } from '../../types';
-import { addMarker, addMarkers, removeMarkers } from './Markers';
+import { addMarker, addMarkers } from './Markers';
 import { addPopup } from './Popup';
 import { getNextId } from '../../utils/dataset';
 import { RefObject } from 'react';
@@ -52,6 +57,7 @@ export function MapBox( {
 		setGeoCoder,
 		mapRef,
 		geocoderRef,
+		lngLat,
 		setLngLat,
 		setMarkers,
 		markers,
@@ -59,6 +65,22 @@ export function MapBox( {
 
 	function restoreInitialMarkers() {
 		setMarkers( attributes.mapboxOptions.listings );
+	}
+
+	function addNewListing() {
+		if ( map )
+			addMarker(
+				{
+					id: getNextId( markers ),
+					type: 'Feature',
+					props: defaultMarkerProps,
+					geometry: {
+						type: 'Point',
+						coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
+					},
+				},
+				map
+			);
 	}
 
 	function listenForClick( currentMap: mapboxgl.Map ) {
@@ -82,7 +104,7 @@ export function MapBox( {
 				if ( markers?.length && clickedEl?.nodeName === 'BUTTON' ) {
 					// get the marker data
 					const markerData = getMarkerData(
-						parseInt( clickedEl.dataset?.id, 10 ),
+						Number( clickedEl.dataset?.id || 0 ),
 						markers
 					);
 
@@ -97,7 +119,9 @@ export function MapBox( {
 										coordinates: clickedPoint,
 									},
 								},
-								<p>Add a new Marker?</p>
+								<Button onClick={ () => addNewListing() }>
+									Add a new Marker?
+								</Button>
 							);
 						}
 
