@@ -57,7 +57,7 @@ export const TopBar = ( attributes ) => {
 					</Button>
 				) : null }
 
-				{ tagsEnabled ? (
+				{ filtersEnabled ? (
 					<SelectControl
 						className={ 'mapbox-map-filter filter-by-partnership' }
 						value={ filter }
@@ -76,7 +76,7 @@ export const TopBar = ( attributes ) => {
 					/>
 				) : null }
 
-				{ filtersEnabled ? (
+				{ tagsEnabled ? (
 					<SelectControl
 						className={ 'mapbox-map-filter filter-by-tag' }
 						value={ tag }
