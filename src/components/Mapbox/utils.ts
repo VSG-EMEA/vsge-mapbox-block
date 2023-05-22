@@ -1,7 +1,5 @@
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
-import { MapAttributes, MapboxBlockDefaults } from '../../types';
-import { pin } from '@wordpress/icons';
-import { DefaultMarker } from './Pin';
+import { MapAttributes, MapboxBlockDefaults, MapBoxListing, MarkerPropsCustom } from '../../types';
 import { tempMarkerStyle } from './Markers';
 
 /**
@@ -18,7 +16,7 @@ export function initMap(
 	mapRef: string | HTMLDivElement,
 	attributes: MapAttributes,
 	defaults: MapboxBlockDefaults
-) {
+): mapboxgl.Map {
 	const {
 		latitude,
 		longitude,
@@ -171,7 +169,7 @@ function removeMarkerById(
 
 export function getMarkerData(
 	id: number,
-	markersList: mapboxgl.MapboxGeoJSONFeature[]
-): MapboxGeoJSONFeature | undefined {
+	markersList: MapBoxListing[]
+): MapBoxListing | undefined {
 	return markersList.find( ( marker ) => marker.id === id );
 }

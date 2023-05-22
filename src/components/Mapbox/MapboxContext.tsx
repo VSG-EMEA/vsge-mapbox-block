@@ -7,7 +7,7 @@ import {
 import { getMapDefaults } from '../../utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RefObject } from 'react';
-import { MountedMapsContextValue } from '../../types';
+import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import mapboxgl from 'mapbox-gl';
 
 export const MapboxContext = createContext< MountedMapsContextValue >(
@@ -19,9 +19,7 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ geoCoder, setGeoCoder ] = useState( null );
 	const [ listings, setListings ] = useState( null );
 	const [ lngLat, setLngLat ] = useState( [ 0, 0 ] );
-	const [ markers, setMarkers ] = useState(
-		[] as mapboxgl.MapboxGeoJSONFeature[]
-	);
+	const [ markers, setMarkers ] = useState( [] as MapBoxListing[] );
 	const mapDefaults = getMapDefaults();
 
 	const mapRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement >();
