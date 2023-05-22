@@ -12,7 +12,7 @@ import {
 	TextareaControl,
 	TextControl,
 } from '@wordpress/components';
-import { upload, download } from '@wordpress/icons';
+import { upload, download, reset } from '@wordpress/icons';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
 import { MapBoxListing, MapFilter } from '../../types';
@@ -23,7 +23,7 @@ import { MapboxContext } from '../Mapbox/MapboxContext';
 export const PinCard = ( {
 	item,
 	index,
-	updateItem,
+	updateItem: updateListing,
 	deleteItem,
 	tags,
 	filters,
@@ -68,6 +68,23 @@ export const PinCard = ( {
 		return mapFilter.filter( ( filter ) => filter.value !== value );
 	}
 
+	function resetListing() {
+		return setItemData( item );
+	}
+
+	function setMarkerColor( newValue ) {
+
+    console.log(newValue)
+
+		setItemData( {
+			...itemData,
+			properties: {
+				...itemData.properties,
+				iconColor: newValue,
+			},
+		} );
+	}
+
 	return (
 		<Draggable
 			draggableId={ 'draggable-marker-' + itemData.id }
@@ -93,7 +110,7 @@ export const PinCard = ( {
 						<div className={ 'controlgroup-feature-item' }>
 							<h4>
 								({ itemData.id }) -{ ' ' }
-								{ itemData.properties?.name || 'New' }
+								{ itemData.properties?.name || __( 'New' ) }
 							</h4>
 							<Button
 								onClick={ () => setIsOpen( ! isOpen ) }
@@ -368,29 +385,30 @@ export const PinCard = ( {
 							{ showColorPicker && (
 								<Popover>
 									<ColorPicker
-										defaultValue={ '#000' }
+										defaultValue={ '#f00' }
 										color={ itemData.properties?.iconColor }
-										onChangeComplete={ ( newValue ) => {
-											setItemData( {
-												...itemData,
-												properties: {
-													...itemData.properties,
-													iconColor: newValue,
-												},
-											} );
-										} }
+										onChangeComplete={ setMarkerColor }
 									/>
 								</Popover>
 							) }
 						</Button>
 						<Button
-							onClick={ () => updateItem( itemData ) }
+							onClick={ () => updateListing( itemData ) }
 							label={ __( 'Save item data' ) }
 							variant={ 'primary' }
 							iconSize={ 16 }
 							icon={ download }
 						>
-							{ __( 'Save item data' ) }
+							{ __( 'Save changes' ) }
+						</Button>
+						<Button
+							onClick={ () => resetListing( itemData.id ) }
+							label={ __( 'Reset' ) }
+							variant={ 'secondary' }
+							iconSize={ 16 }
+							icon={ reset }
+						>
+							{ __( 'Reset' ) }
 						</Button>
 					</div>
 				</div>

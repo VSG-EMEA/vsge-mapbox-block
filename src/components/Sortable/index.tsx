@@ -9,7 +9,8 @@ import { plusCircle } from '@wordpress/icons';
 import React, { MapHTMLAttributes } from 'react';
 import { getNextId, reorder } from '../../utils/dataset';
 import { MapBoxListing, MapboxOptions } from '../../types';
-import { LngLat, MapboxGeoJSONFeature } from 'mapbox-gl';
+import { removeMarker } from '../Mapbox';
+import { defaultMarkerProps } from '../Mapbox/utils';
 
 export const Sortable = ( props: {
 	items: MapBoxListing[];
@@ -17,7 +18,7 @@ export const Sortable = ( props: {
 	setOptions: Function;
 	mapboxOptions: MapboxOptions;
 } ): JSX.Element => {
-	const { items, tax, setOptions, mapboxOptions } = props;
+	const { items, tax, setOptions, mapboxRef, mapboxOptions } = props;
 
 	const { lngLat } = useContext( MapboxContext );
 
@@ -78,21 +79,42 @@ export const Sortable = ( props: {
 		);
 	}
 
-	function setPinPosition( id: number, coords: LngLat | undefined = lngLat ) {
-		updateMarkerPosition( items, id, coords );
+	function addNewListing( nextId: number ) {
+		const newListing: Pick<
+			MapBoxListing,
+			'id' | 'type' | 'properties' | 'geometry'
+		> = {
+			id: nextId,
+			type: 'Feature',
+			properties: {
+				...defaultMarkerProps,
+				name: [ __( 'New Marker' ), String( nextId ) ].join( ' ' ),
+			},
+			geometry: {
+				type: 'Point',
+				coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
+			},
+		};
+		setOptions( 'listings', [ ...items, newListing ] );
+	}
+
+	function addNewSortableItem( nextId: number ) {
+		setOptions( tax, [
+			...items,
+			{
+				id: nextId,
+				value: [ __( 'New' ), tax, nextId ].join( ' ' ),
+			},
+		] );
 	}
 
 	function deleteItem( id: number ) {
 		// remove the item from the array
+		console.log( id, 'removed' );
 		const newItems = items.filter( ( item ) => item.id !== id );
+		removeMarker( id, mapboxRef );
 		setOptions( tax, newItems );
 	}
-
-	useEffect( () => {
-		items.forEach( ( item: any, index: number ) => {
-			if ( ! item?.id ) item = { ...item, id: index };
-		} );
-	}, [] );
 
 	return (
 		<>
@@ -145,39 +167,9 @@ export const Sortable = ( props: {
 				className={ 'add-new-sortable-item' }
 				style={ { width: '100%' } }
 				onClick={ () => {
-					const nextID = getNextId( items );
-					setOptions( tax, [
-						...items,
-						tax !== 'listings'
-							? {
-									id: nextID,
-									value: [ __( 'New' ), tax, nextID ].join(
-										' '
-									),
-							  }
-							: {
-									id: nextID,
-									type: 'Feature',
-									properties: {
-										name: [
-											__( 'New Marker' ),
-											nextID,
-										].join( ' ' ),
-										description: '',
-										address: '',
-										location: undefined,
-										itemTags: [],
-										itemFilters: [],
-									},
-									geometry: {
-										type: 'Point',
-										coordinates: [
-											lngLat?.lng || 0,
-											lngLat?.lat || 0,
-										],
-									},
-							  },
-					] );
+					tax !== 'listings'
+						? addNewSortableItem( getNextId( items ) )
+						: addNewListing( getNextId( items ) );
 				} }
 			/>
 		</>
