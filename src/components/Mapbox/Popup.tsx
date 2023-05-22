@@ -1,20 +1,24 @@
 import { createRef, createRoot, render } from '@wordpress/element';
-import mapboxgl, { LngLatLike } from 'mapbox-gl';
-import { Feature, Geometry } from '@turf/turf';
+import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
+import { Feature } from '@turf/turf';
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
-import MarkerProps, { MapItem } from '../../types';
+import { MapBoxListing, MarkerProps } from '../../types';
 import { RefObject } from 'react';
 import MarkerPropsCustom from '../../types';
+import { children } from '@wordpress/blocks';
 
 export function MarkerPopup( {
 	itemTags,
 	itemFilters,
 	name,
-	address,
 	description,
-	website,
+	address,
+	city,
+	postalCode,
+	country,
 	state,
+	website,
 }: MarkerProps ) {
 	return (
 		<div>
@@ -26,7 +30,7 @@ export function MarkerPopup( {
 				<p>
 					{ description }
 					<br />
-					{ state ?? ' (' + state + ')' }
+					{ `${ city } ${ postalCode } ${ country } (${ state })` }
 				</p>
 				<p>{ itemTags?.length || itemTags?.join( ' ' ) }</p>
 			</a>
@@ -78,8 +82,8 @@ export function removePopup( mapRef ) {
 
 export function addPopup(
 	map: mapboxgl.Map,
-	marker: { geometry: Geometry; properties?: MarkerProps },
-	children: JSX.Element | null = null
+	marker: MapBoxListing | { geometry: { coordinates: number[] } },
+	__children: JSX.Element | null = null
 ): mapboxgl.Popup {
 	const popupRef: RefObject< HTMLDivElement > = createRef();
 
@@ -89,15 +93,15 @@ export function addPopup(
 
 	// Render a Marker Component on our new DOM node
 	root.render(
-		children ? (
-			<MarkerPopupCustom children={ children } />
+		__children ? (
+			<MarkerPopupCustom children={ __children } />
 		) : (
 			<MarkerPopup { ...marker.properties } />
 		)
 	);
 
 	return new mapboxgl.Popup( {} )
-		.setLngLat( marker?.geometry?.coordinates as LngLatLike )
+		.setLngLat( marker?.geometry?.coordinates as LngLat )
 		.setDOMContent( popupRef.current )
 		.addTo( map );
 }
