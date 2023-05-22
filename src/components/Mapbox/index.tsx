@@ -23,15 +23,6 @@ import { getNextId } from '../../utils/dataset';
 import { RefObject } from 'react';
 import { Button } from '@wordpress/components';
 
-export function removeMarker(
-	id: number,
-	maboxRef: React.RefObject< HTMLDivElement >
-) {
-	if ( maboxRef?.current ) {
-		maboxRef?.current.querySelector( '#marker-' + id )?.remove();
-	}
-}
-
 export function removeTempMarkers(
 	maboxRef: React.RefObject< HTMLDivElement > | undefined
 ) {
@@ -67,20 +58,28 @@ export function MapBox( {
 		setMarkers( attributes.mapboxOptions.listings );
 	}
 
-	function addNewListing() {
-		if ( map )
-			addMarker(
-				{
-					id: getNextId( markers ),
-					type: 'Feature',
-					props: defaultMarkerProps,
-					geometry: {
-						type: 'Point',
-						coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
-					},
+	function removeMarker( id: number ) {
+		if ( mapRef?.current ) {
+			mapRef?.current.querySelector( '#marker-' + id )?.remove();
+		}
+	}
+
+	function addNewListing( id: number ) {
+		if ( map ) {
+			const newItem = {
+				id,
+				name: 'New Listing',
+				type: 'Feature',
+				properties: defaultMarkerProps,
+				geometry: {
+					type: 'Point',
+					coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
 				},
-				map
-			);
+			};
+			removeMarker( id, mapRef );
+			addMarker( newItem, map );
+			setMarkers( [ ...markers, newItem ] );
+		}
 	}
 
 	function listenForClick( currentMap: mapboxgl.Map ) {
@@ -119,7 +118,11 @@ export function MapBox( {
 										coordinates: clickedPoint,
 									},
 								},
-								<Button onClick={ () => addNewListing() }>
+								<Button
+									onClick={ () =>
+										addNewListing( getNextId( markers ) )
+									}
+								>
 									Add a new Marker?
 								</Button>
 							);

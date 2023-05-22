@@ -9,7 +9,6 @@ import { plusCircle } from '@wordpress/icons';
 import React, { MapHTMLAttributes } from 'react';
 import { getNextId, reorder } from '../../utils/dataset';
 import { MapBoxListing, MapboxOptions } from '../../types';
-import { removeMarker } from '../Mapbox';
 import { defaultMarkerProps } from '../Mapbox/utils';
 
 export const Sortable = ( props: {
@@ -18,7 +17,7 @@ export const Sortable = ( props: {
 	setOptions: Function;
 	mapboxOptions: MapboxOptions;
 } ): JSX.Element => {
-	const { items, tax, setOptions, mapboxRef, mapboxOptions } = props;
+	const { items, tax, setOptions, mapRef, mapboxOptions } = props;
 
 	const { lngLat } = useContext( MapboxContext );
 
@@ -112,7 +111,8 @@ export const Sortable = ( props: {
 		// remove the item from the array
 		console.log( id, 'removed' );
 		const newItems = items.filter( ( item ) => item.id !== id );
-		removeMarker( id, mapboxRef );
+    // TODO: remove marker from map if it exists before continuing
+		// removeMarker( id );
 		setOptions( tax, newItems );
 	}
 
@@ -167,9 +167,11 @@ export const Sortable = ( props: {
 				className={ 'add-new-sortable-item' }
 				style={ { width: '100%' } }
 				onClick={ () => {
-					tax !== 'listings'
-						? addNewSortableItem( getNextId( items ) )
-						: addNewListing( getNextId( items ) );
+					if ( tax !== 'listings' ) {
+						addNewSortableItem( getNextId( items ) );
+					} else {
+						addNewListing( getNextId( items ) );
+					}
 				} }
 			/>
 		</>

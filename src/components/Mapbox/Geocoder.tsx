@@ -5,7 +5,7 @@ import { createRef, createRoot, useContext } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { Marker } from './Marker';
 import { MapboxContext } from './MapboxContext';
-import { tempMarker } from './utils';
+import { defaultMarkerProps, tempMarker } from './utils';
 import { defaultMarkerStyle, geoMarkerStyle, tempMarkerStyle } from './Markers';
 import { getNextId } from '../../utils/dataset';
 import { MapAttributes, MapboxBlockDefaults } from '../../types';
@@ -19,6 +19,7 @@ export const GeoMarker = ( props ): JSX.Element => {
 				type: 'Feature',
 				id: getNextId( markers ),
 				properties: {
+					...defaultMarkerProps,
 					name: 'geocoder',
 				},
 				geometry: {

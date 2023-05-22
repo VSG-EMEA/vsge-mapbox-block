@@ -1,6 +1,6 @@
 import { MapboxOptions } from 'mapbox-gl';
 import { __ } from '@wordpress/i18n';
-import { MapboxBlockDefaults, MapStyleDef } from './types';
+import { MapboxBlockDefaults, selectOptions } from './types';
 
 declare global {
 	let mapboxBlockData: MapboxBlockDefaults;
@@ -16,7 +16,7 @@ export const mapboxDefaults: MapboxOptions = {
  *
  * @see https://docs.mapbox.com/api/maps/styles/#mapbox-styles
  */
-export const mapStyles: MapStyleDef[] = [
+export const mapStyles: selectOptions[] = [
 	{ label: 'streets', value: 'streets-v12' },
 	{
 		label: 'outdoors',
@@ -40,6 +40,17 @@ export const mapStyles: MapStyleDef[] = [
 		label: 'navigation night',
 		value: 'navigation-night-v1',
 	},
+];
+
+export const mapProjections: selectOptions[] = [
+	{ label: 'Albers', value: 'albers' },
+	{ label: 'Equal Earth', value: 'equalEarth' },
+	{ label: 'Equirectangular', value: 'equirectangular' },
+	{ label: 'Lambert Conformal Conic', value: 'lambertConformalConic' },
+	{ label: 'Mercator', value: 'mercator' },
+	{ label: 'Natural Earth', value: 'naturalEarth' },
+	{ label: 'Winkel Tripel', value: 'winkelTripel' },
+	{ label: 'Globe', value: 'globe' },
 ];
 
 export const pointerOffset = { offset: [ 0, -23 ] };

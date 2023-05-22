@@ -1,7 +1,6 @@
-import { Feature, Geometry, GeometryCollection } from '@turf/turf';
-import mapboxgl, { LngLat } from 'mapbox-gl';
+import { Feature, Geometry } from '@turf/turf';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { Dispatch, RefObject, SetStateAction } from 'react';
-import { GeometryObject } from '@turf/helpers/dist/js/lib/geojson';
 
 export type CoordinatesDef = [ number, number ];
 
@@ -13,7 +12,7 @@ export type MapboxBlockDefaults = {
 
 export type MapFilter = { id: number; value: string };
 
-export type MapStyleDef = {
+export type selectOptions = {
 	label: string;
 	value: string;
 };
@@ -40,6 +39,7 @@ export type MapAttributes = {
 	bearing: number;
 	mapZoom: number;
 	mapStyle: string;
+	mapProjection: string;
 	mapHeight: string;
 	sidebarEnabled: boolean;
 	geocoderEnabled: boolean;
@@ -96,10 +96,10 @@ export interface MapItem extends Feature {
 
 export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;
-	lngLat?: LngLat;
+	lngLat?: LngLatLike;
 	markers?: MapBoxListing[];
 	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
-	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
+	setLngLat: Dispatch< SetStateAction< LngLatLike | null > >;
 	setMarkers: Dispatch< SetStateAction< MapBoxListing[] > >;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
