@@ -22,16 +22,6 @@ export const geoMarkerStyle: JSX.Element = DefaultMarker( {
 	size: 48,
 } );
 
-function getMarkerEL( marker: MarkerItem ): mapboxgl.Marker {
-	// fails
-	return marker;
-}
-
-// Removes all markers on the map
-export function removeMarkers( markers: MarkerItem[] ) {
-	markers.forEach( ( marker ) => getMarkerEL( marker ).remove() );
-}
-
 export function addMarkers(
 	markers: mapboxgl.MapboxGeoJSONFeature[],
 	map: mapboxgl.Map

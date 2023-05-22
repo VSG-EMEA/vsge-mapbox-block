@@ -8,22 +8,25 @@ import { getMapDefaults } from '../../utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RefObject } from 'react';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
 
 export const MapboxContext = createContext< MountedMapsContextValue >(
 	{} as MountedMapsContextValue
 );
 
 export function MapProvider( { children }: { children: JSX.Element } ) {
-	const [ map, setMap ] = useState( null );
+	const [ map, setMap ] = useState< mapboxgl.Map | null >( null );
 	const [ geoCoder, setGeoCoder ] = useState( null );
 	const [ listings, setListings ] = useState( null );
-	const [ lngLat, setLngLat ] = useState( [ 0, 0 ] );
+	const [ lngLat, setLngLat ] = useState( [ 0, 0 ] as LngLatLike );
 	const [ markers, setMarkers ] = useState( [] as MapBoxListing[] );
 	const mapDefaults = getMapDefaults();
 
-	const mapRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement >();
-	const geocoderRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement >();
+	const mapRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement | null >(
+		null
+	);
+	const geocoderRef: RefObject< HTMLDivElement > =
+		useRef< HTMLDivElement | null >( null );
 
 	return (
 		<MapboxContext.Provider

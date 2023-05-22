@@ -25,11 +25,7 @@ export const Listing = ( {
 	return (
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
-			<p className="partnership">
-				{ properties.itemFilters
-					?.map( ( item ) => item.value )
-					.join( ' ' ) }
-			</p>
+			<TagList tags={ properties.itemFilters } />
 			<h4 className="title">{ properties.name }</h4>
 			<div>
 				<p>{ properties.address }</p>

@@ -6,7 +6,7 @@ import { DefaultMarker } from './Pin';
 export function Marker( { feature, map, children = undefined } ): JSX.Element {
 	return (
 		<Button
-			onClick={ ( e ) => {
+			onClick={ () => {
 				enableListing( map, feature );
 			} }
 			className={ 'marker marker-' + safeSlug( feature.properties.name ) } // this is important to prevent duplicates
