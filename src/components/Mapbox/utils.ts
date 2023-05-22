@@ -1,6 +1,25 @@
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
-import { MapAttributes, MapboxBlockDefaults, MapBoxListing, MarkerPropsCustom } from '../../types';
+import {
+	MapAttributes,
+	MapboxBlockDefaults,
+	MapBoxListing,
+	MarkerPropsCustom,
+} from '../../types';
 import { tempMarkerStyle } from './Markers';
+import { __ } from '@wordpress/i18n';
+
+export const defaultMarkerProps = {
+	name: __( 'New Marker' ),
+	description: '',
+	address: '',
+	location: '',
+	city: '',
+	cap: '',
+	iconSize: 32,
+	iconColor: '#FF0000',
+	itemTags: [],
+	itemFilters: [],
+};
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -32,7 +51,6 @@ export function initMap(
 	const map = new mapboxgl.Map( {
 		container: mapRef,
 		style: 'mapbox://styles/mapbox/' + mapStyle,
-		projection: 'globe',
 		antialias: true,
 		center: [ longitude, latitude ],
 		zoom: mapZoom,
@@ -84,6 +102,7 @@ export function initMap(
 export function setMapElevation( map: mapboxgl.Map, hasElevation: boolean ) {
 	if ( map ) {
 		if ( hasElevation ) {
+			map.setProjection( 'globe' );
 			if ( ! map.getSource( 'mapbox-dem' ) ) {
 				map.addSource( 'mapbox-dem', {
 					type: 'raster-dem',
@@ -99,6 +118,7 @@ export function setMapElevation( map: mapboxgl.Map, hasElevation: boolean ) {
 				exaggeration: 1.5,
 			} );
 		} else {
+			map.setProjection( 'mercator' );
 			// unset terrain elevation
 			map.setTerrain();
 			// unload the DEM source

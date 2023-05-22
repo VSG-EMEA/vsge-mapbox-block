@@ -1,10 +1,8 @@
 import { Feature, Geometry } from '@turf/turf';
-import mapboxgl, { LngLat, MapboxGeoJSONFeature } from 'mapbox-gl';
+import mapboxgl, { LngLat } from 'mapbox-gl';
 import { Dispatch, RefObject, SetStateAction } from 'react';
 
 export type CoordinatesDef = [ number, number ];
-export type PartnershipDef = number[];
-export type CompaniesDef = number[];
 
 export type MapboxBlockDefaults = {
 	accessToken: string;
@@ -25,8 +23,7 @@ export interface MapBoxListing extends mapboxgl.MapboxGeoJSONFeature {
 
 export type MapboxOptions = {
 	pin: {
-		icon: string;
-		color: string;
+		icons: string[];
 	};
 	tags: string[];
 	filters: string[];
@@ -53,17 +50,34 @@ export type MapAttributes = {
 	mapboxOptions: MapboxOptions;
 };
 
+/**
+ * the mapbox single listing
+ *
+ * @type {MapBoxListing}
+ * @property {number}   id          the id
+ * @property {string}   name        the name
+ * @property {string}   description the description
+ * @property {string=}  city        the city
+ * @property {string=}  postalCode  the postal code
+ * @property {string=}  country     the country
+ * @property {string=}  address     the address
+ * @property {string=}  state       the state
+ * @property {string=}  website     the website
+ * @property {string[]} tags        the tags
+ * @property {string[]} filters     the filters
+ */
 export interface MarkerProps {
-	itemTags?: string[];
-	itemFilters?: string[];
 	name: string;
 	description?: string;
+	telephone?: string;
 	address?: string;
 	city?: string;
 	postalCode?: string;
 	country?: string;
 	state?: string;
 	website?: string;
+	itemTags?: MapFilter[];
+	itemFilters?: MapFilter[];
 }
 export interface MapItem extends Feature {
 	geometry: Geometry;
@@ -81,6 +95,7 @@ export type MountedMapsContextValue = {
 	lngLat?: LngLat;
 	markers?: MapBoxListing[];
 	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
+	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
 	setMarkers: Dispatch< SetStateAction< MapBoxListing[] > >;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;

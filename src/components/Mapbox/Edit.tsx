@@ -70,7 +70,7 @@ export function MapEdit( {
 				[ key ]: value,
 			},
 		} );
-		removeMarkers( markers );
+		// removeMarkers( markers );
 		setMarkers( attributes.mapboxOptions.listings );
 	};
 

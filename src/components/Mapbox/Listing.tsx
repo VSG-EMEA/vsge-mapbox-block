@@ -1,29 +1,8 @@
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
-import { MapBoxListing, MapFilter, MarkerProps } from '../../types';
+import { MapBoxListing, MarkerProps } from '../../types';
 import mapboxgl from 'mapbox-gl';
-
-export const ListingTag = ( props: { tag: MapFilter } ) => {
-	const { id, value } = props.tag;
-	return (
-		<span className={ 'tag-' + id } title={ value }>
-			{ value }
-		</span>
-	);
-};
-
-export function ListingTags( props: {
-	tags: MapFilter[] | undefined;
-} ): JSX.Element | null {
-	const { tags } = props;
-	return (
-		<>
-			{ tags?.map( ( tag, index: number ) => (
-				<ListingTag tag={ tag } key={ index } />
-			) ) }
-		</>
-	);
-}
+import { TagList } from './TagItem';
 
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
@@ -37,22 +16,12 @@ export function ListingTags( props: {
  */
 export const Listing = ( {
 	jsonFeature,
-	map = null,
-	onClick = null,
 }: {
 	jsonFeature: MapBoxListing;
 	map?: mapboxgl.Map | null;
 	onClick?: Function;
 } ) => {
-	const {
-		properties,
-		type,
-	}: {
-		properties: MarkerProps;
-		type: any;
-	} = jsonFeature;
-	// TODO: replace with a better name for this
-
+	const { properties, type } = jsonFeature as { properties: MarkerProps; type: string };
 	return type === 'Feature' ? (
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
@@ -81,7 +50,7 @@ export const Listing = ( {
 						{ properties.website }
 					</a>
 				</p>
-				<ListingTags tags={ properties.itemTags } />
+				<TagList tags={ properties.itemTags } />
 			</div>
 		</div>
 	) : null;
