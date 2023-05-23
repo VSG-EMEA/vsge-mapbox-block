@@ -5,22 +5,39 @@ import { createRef, createRoot, useContext } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { Marker } from './Marker';
 import { MapboxContext } from './MapboxContext';
-import { defaultMarkerProps, tempMarker } from './utils';
-import { defaultMarkerStyle, geoMarkerStyle, tempMarkerStyle } from './Markers';
 import { getNextId } from '../../utils/dataset';
-import { MapAttributes, MapboxBlockDefaults } from '../../types';
+import {
+	MapAttributes,
+	MapboxBlockDefaults,
+	MapItem,
+	MarkerItem,
+} from '../../types';
+import {
+	defaultMarkerProps,
+	defaultMarkerSize,
+	geoMarkerStyle,
+} from './defaults';
 
+/* This is a TypeScript React function that returns a JSX element representing a marker for the
+geocoder search result. It receives `props` as an argument, which contains `coordinates` and `map`
+properties. It also uses the `useContext` hook to access the `markers` state from the
+`MapboxContext`. It then returns a `Marker` component with the necessary properties to display the
+geocoder marker on the map. The `feature` property contains the marker's `id`, `properties`, and
+`geometry`. The `map` property is the map object where the marker will be added. The `children`
+property is the style for the marker. */
 export const GeoMarker = ( props ): JSX.Element => {
-	const { coordinates, map } = props;
-	const { markers } = useContext( MapboxContext );
+	const { id, coordinates, map } = props;
 	return (
 		<Marker
 			feature={ {
 				type: 'Feature',
-				id: getNextId( markers ),
+				id,
 				properties: {
 					...defaultMarkerProps,
 					name: 'geocoder',
+					icon: geoMarkerStyle,
+					iconSize: defaultMarkerSize,
+					iconColor: '#44f',
 				},
 				geometry: {
 					type: 'Point',
@@ -33,13 +50,21 @@ export const GeoMarker = ( props ): JSX.Element => {
 	);
 };
 
-const initGeomarker = ( map: mapboxgl.Map ): mapboxgl.Marker => {
+/**
+ * This function initializes a map marker using a React component and adds it to a Mapbox map.
+ *
+ * @param id
+ * @param map - mapboxgl.Map - This is an instance of the Mapbox GL JS map object on which the marker
+ *            will be placed.
+ * @return A mapboxgl.Marker object is being returned.
+ */
+const initGeomarker = ( id: number, map: mapboxgl.Map ): mapboxgl.Marker => {
 	const markerRef: RefObject< HTMLDivElement > = createRef();
 	// Create a new DOM root and save it to the React ref
 	markerRef.current = document.createElement( 'div' );
 	const root = createRoot( markerRef.current );
 	// Render a Marker Component on our new DOM node
-	root.render( <GeoMarker map={ map } /> );
+	root.render( <GeoMarker id={ id } map={ map } /> );
 
 	// Add markers to the map.
 	return new mapboxgl.Marker( markerRef.current );
@@ -49,7 +74,8 @@ export function initGeocoder(
 	geocoderRef: React.RefObject< HTMLDivElement > | undefined,
 	map: mapboxgl.Map,
 	attributes: MapAttributes,
-	defaults: MapboxBlockDefaults
+	defaults: MapboxBlockDefaults,
+	markers: MapItem[]
 ): MapboxGeocoder | undefined {
 	if ( defaults.accessToken ) {
 		const geocoder = new MapboxGeocoder( {
@@ -57,7 +83,7 @@ export function initGeocoder(
 			mapboxgl: map,
 			lang: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
-			element: initGeomarker( map ),
+			element: initGeomarker( getNextId( markers ), map ),
 			flyTo: {
 				bearing: 0,
 				// These options control the flight curve, making it move
@@ -73,7 +99,10 @@ export function initGeocoder(
 			},
 		} );
 
-		geocoderRef.current.appendChild( geocoder.onAdd( map ) );
+		if ( geocoderRef )
+			( geocoderRef.current as HTMLElement ).appendChild(
+				geocoder.onAdd( map )
+			);
 
 		geocoder.on( 'clear', function () {
 			// document
@@ -86,7 +115,7 @@ export function initGeocoder(
 		} );
 
 		geocoder.on( 'result', ( ev ) => {
-			console.log( ev?.result );
+			console.log( ev );
 			// save the search results
 			/*searchResult = ev.result.geometry;
 
