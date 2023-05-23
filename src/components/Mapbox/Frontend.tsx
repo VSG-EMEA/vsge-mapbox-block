@@ -9,6 +9,15 @@ import { MapProvider } from './MapboxContext';
 import { getMapDefaults } from '../../utils';
 import { MapAttributes } from '../../types';
 
+/**
+ * This function creates a React component that renders a MapBox map with given attributes and default
+ * settings.
+ *
+ * @param {HTMLElement} el         - HTMLElement - the HTML element where the map will be rendered
+ * @param               attributes - The `attributes` parameter is an object that contains the configuration options
+ *                                 for the MapBox component, such as the map's center coordinates, zoom level, and map style. These
+ *                                 options are passed down to the MapBox component as props.
+ */
 export function createMapRoot( el: HTMLElement, attributes ) {
 	// initialize the map with React
 	const componentRoot = createRoot( el );
