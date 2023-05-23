@@ -1,8 +1,32 @@
-import { memo } from '@wordpress/element';
 import { Button, TextControl } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
+import { MapBoxListing, MapFilter, MapItem } from '../../types';
 
-export const StringItem = ( { tax, item, index, updateItem, deleteItem } ) => {
+/**
+ * A sortable item that allow to add a string to the given array and sort it
+ *
+ * @param props            The item data
+ * @param props.tax        the item Taxonomy
+ * @param props.item       the item data
+ * @param props.index      the item index
+ * @param props.updateItem a function to update the item data
+ * @param props.deleteItem a function to delete the item
+ * @class
+ */
+export const StringItem = ( props ) => {
+	const {
+		tax,
+		item,
+		index,
+		updateItem,
+		deleteItem,
+	}: {
+		tax: string;
+		item: MapFilter;
+		index: number;
+		updateItem: Function;
+		deleteItem: Function;
+	} = props;
 	return (
 		<Draggable draggableId={ tax + '-' + item.id } index={ index }>
 			{ ( provided ) => (

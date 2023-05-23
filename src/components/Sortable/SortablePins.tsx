@@ -7,7 +7,6 @@ import {
 	Popover,
 	FlexItem,
 	RangeControl,
-	Slot,
 	SelectControl,
 	TextareaControl,
 	TextControl,
@@ -20,14 +19,15 @@ import { getNextId } from '../../utils/dataset';
 import { Position } from 'geojson';
 import { MapboxContext } from '../Mapbox/MapboxContext';
 
-export const PinCard = ( {
-	item,
-	index,
-	updateItem: updateListing,
-	deleteItem,
-	tags,
-	filters,
+export const PinCard = ( props: {
+	item: MapBoxListing;
+	index: number;
+	updateItem: Function;
+	deleteItem: Function;
+	tags: MapFilter[];
+	filters: MapFilter[];
 } ) => {
+	const { item, index, updateItem, deleteItem, tags, filters } = props;
 	const { lngLat } = useContext( MapboxContext );
 	const [ isOpen, setIsOpen ] = useState( false );
 	const [ showColorPicker, setShowColorPicker ] = useState( false );
@@ -42,11 +42,14 @@ export const PinCard = ( {
 	 * Check if a filter is present in the default filters array
 	 *
 	 * @param filter      the filter
-	 * @param filterItems the filters array to check against
+	 * @param filterArray the filters array to check against
 	 */
-	function hasThatFilter( filter, filterItems ) {
-		return filterItems
-			? filterItems.filter( ( item ) => item.value === filter ).length
+	function hasThatFilter( filter: string, filterArray: MapFilter[] ) {
+		return filterArray
+			? filterArray.filter(
+					( currentFilter: MapFilter ) =>
+						currentFilter.value === filter
+			  ).length
 			: false;
 	}
 
@@ -68,19 +71,26 @@ export const PinCard = ( {
 		return mapFilter.filter( ( filter ) => filter.value !== value );
 	}
 
+	/**
+	 * This function resets the listing initial data
+	 */
 	function resetListing() {
 		return setItemData( item );
 	}
 
-	function setMarkerColor( newValue ) {
-
-    console.log(newValue)
+	/**
+	 * This function sets the marker color
+	 *
+	 * @param newValue the new value of the color picker
+	 */
+	function setMarkerColor( newValue: ColorPicker.OnChangeCompleteValue ) {
+		console.log( newValue );
 
 		setItemData( {
 			...itemData,
 			properties: {
 				...itemData.properties,
-				iconColor: newValue,
+				iconColor: newValue.hex,
 			},
 		} );
 	}
@@ -377,7 +387,7 @@ export const PinCard = ( {
 								className="color-preview"
 								style={ {
 									backgroundColor:
-										itemData.properties?.iconColor?.hex ||
+										itemData.properties?.iconColor ||
 										'#000',
 								} }
 							></span>
@@ -393,7 +403,7 @@ export const PinCard = ( {
 							) }
 						</Button>
 						<Button
-							onClick={ () => updateListing( itemData ) }
+							onClick={ () => updateItem( itemData ) }
 							label={ __( 'Save item data' ) }
 							variant={ 'primary' }
 							iconSize={ 16 }

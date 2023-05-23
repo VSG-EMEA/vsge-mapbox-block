@@ -6,20 +6,33 @@ import { Button } from '@wordpress/components';
 import { useContext, useEffect } from '@wordpress/element';
 import { MapboxContext } from '../Mapbox/MapboxContext';
 import { plusCircle } from '@wordpress/icons';
-import React, { MapHTMLAttributes } from 'react';
 import { getNextId, reorder } from '../../utils/dataset';
-import { MapBoxListing, MapboxOptions } from '../../types';
-import { defaultMarkerProps } from '../Mapbox/utils';
+import { MapBoxListing, MapboxOptions, MapFilter, MapItem } from '../../types';
+import { LngLatLike } from 'mapbox-gl';
+import { defaultMarkerProps } from '../Mapbox/defaults';
+import { removePopup } from '../Mapbox/Popup';
 
-export const Sortable = ( props: {
-	items: MapBoxListing[];
+interface SortableProps {
+	items: MapFilter[];
 	tax: string;
 	setOptions: Function;
-	mapboxOptions: MapboxOptions;
-} ): JSX.Element => {
-	const { items, tax, setOptions, mapRef, mapboxOptions } = props;
+	mapboxOptions?: MapboxOptions;
+}
 
-	const { lngLat } = useContext( MapboxContext );
+export const Sortable = ( props: SortableProps ): JSX.Element => {
+	const {
+		items,
+		tax,
+		setOptions,
+		mapboxOptions,
+	}: {
+		items: MapFilter[] | MapItem[];
+		tax: string;
+		setOptions: Function;
+		mapboxOptions?: MapboxOptions;
+	} = props;
+
+	const { lngLat, mapRef } = useContext( MapboxContext );
 
 	/**
 	 * Fired when the drag ends on a droppable item
@@ -34,7 +47,6 @@ export const Sortable = ( props: {
 		destination: { index: any };
 		source: { index: any };
 	} ) {
-		console.log( item, items, 'dropped' );
 		// dropped outside the list
 		if ( ! item.destination ) {
 			return;
@@ -45,6 +57,14 @@ export const Sortable = ( props: {
 		);
 	}
 
+	/**
+	 * This function updates an item in a list of items using the new value provided.
+	 *
+	 * @param {MapBoxListing} newValue - newValue is a parameter of type MapBoxListing, which is an object
+	 *                                 containing updated information for an item. This function is used to update an item in an array of
+	 *                                 items (props.items) by finding the item with a matching id and replacing its properties with the
+	 *                                 updated values from newValue. The updated array
+	 */
 	function updateItem( newValue: MapBoxListing ) {
 		const newItems = props.items.map( ( item ) =>
 			item.id === newValue.id
@@ -57,10 +77,22 @@ export const Sortable = ( props: {
 		setOptions( tax, newItems );
 	}
 
+	/**
+	 * This function updates the position of a marker in a list of MapBox listings.
+	 *
+	 * @param {MapBoxListing[]} Listings     - An array of MapBoxListing objects, which likely contain
+	 *                                       information about locations and their coordinates.
+	 * @param {number}          id           - The id parameter is a number that represents the unique identifier of a
+	 *                                       MapBoxListing item. It is used to identify the specific item in the Listings array that needs to be
+	 *                                       updated.
+	 * @param {LngLatLike}      markerCoords - markerCoords is a variable of type LngLatLike, which represents
+	 *                                       the longitude and latitude coordinates of a marker on a map. It is used in the function to update
+	 *                                       the coordinates of a specific marker in a list of MapBoxListing objects.
+	 */
 	function updateMarkerPosition(
 		Listings: MapBoxListing[],
 		id: number,
-		markerCoords: mapboxgl.LngLat | undefined
+		markerCoords: LngLatLike
 	) {
 		const newItems = Listings.map( ( item ) =>
 			item.id === id
@@ -78,6 +110,12 @@ export const Sortable = ( props: {
 		);
 	}
 
+	/**
+	 * The function adds a new MapBoxListing to a list of items with a unique ID and default properties.
+	 *
+	 * @param {number} nextId - The nextId parameter is a number that represents the ID of the next
+	 *                        listing to be added. It is used to assign a unique ID to the new listing being created.
+	 */
 	function addNewListing( nextId: number ) {
 		const newListing: Pick<
 			MapBoxListing,
@@ -94,9 +132,17 @@ export const Sortable = ( props: {
 				coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
 			},
 		};
+		removePopup( mapRef );
 		setOptions( 'listings', [ ...items, newListing ] );
 	}
 
+	/**
+	 * This function adds a new sortable item to a list of options with a unique ID and a value.
+	 *
+	 * @param {number} nextId - The nextId parameter is a number that represents the ID of the next
+	 *                        sortable item to be added. It is used to generate a unique ID for the new item and is passed as a
+	 *                        parameter to the addNewSortableItem function.
+	 */
 	function addNewSortableItem( nextId: number ) {
 		setOptions( tax, [
 			...items,
@@ -107,11 +153,17 @@ export const Sortable = ( props: {
 		] );
 	}
 
+	/**
+	 * This function removes an item from an array and updates the options.
+	 *
+	 * @param {number} id - The id parameter is a number that represents the unique identifier of the item
+	 *                    that needs to be deleted from an array.
+	 */
 	function deleteItem( id: number ) {
 		// remove the item from the array
 		console.log( id, 'removed' );
 		const newItems = items.filter( ( item ) => item.id !== id );
-    // TODO: remove marker from map if it exists before continuing
+		// TODO: remove marker from map if it exists before continuing
 		// removeMarker( id );
 		setOptions( tax, newItems );
 	}
@@ -144,15 +196,17 @@ export const Sortable = ( props: {
 											deleteItem={ deleteItem }
 										/>
 								  ) )
-								: items?.map( ( item, index ) => (
+								: items?.map( ( item, index: number ) => (
 										<PinCard
 											item={ item }
 											key={ item.id }
 											index={ index }
 											updateItem={ updateItem }
 											deleteItem={ deleteItem }
-											tags={ mapboxOptions.tags }
-											filters={ mapboxOptions.filters }
+											tags={ mapboxOptions?.tags || [] }
+											filters={
+												mapboxOptions?.filters || []
+											}
 										/>
 								  ) ) }
 							{ provided.placeholder }
@@ -163,15 +217,13 @@ export const Sortable = ( props: {
 			<Button
 				icon={ plusCircle }
 				text={ __( 'Add new' ) }
-				type={ 'link' }
 				className={ 'add-new-sortable-item' }
 				style={ { width: '100%' } }
 				onClick={ () => {
 					if ( tax !== 'listings' ) {
-						addNewSortableItem( getNextId( items ) );
-					} else {
-						addNewListing( getNextId( items ) );
+						return addNewSortableItem( getNextId( items ) );
 					}
+					return addNewListing( getNextId( items ) );
 				} }
 			/>
 		</>
