@@ -3,25 +3,17 @@ import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { Marker } from './Marker';
 import { DefaultMarker } from './Pin';
-import { getMarkerData } from './utils';
 import { MarkerItem } from '../../types';
 
-// Default marker style
-export const defaultMarkerStyle: JSX.Element = DefaultMarker( {
-	color: 'red',
-	size: 48,
-} );
-
-export const tempMarkerStyle: JSX.Element = DefaultMarker( {
-	color: 'green',
-	size: 48,
-} );
-
-export const geoMarkerStyle: JSX.Element = DefaultMarker( {
-	color: 'blue',
-	size: 48,
-} );
-
+/**
+ * This function adds markers to a map based on a GeoJSON object.
+ *
+ * @param {mapboxgl.MapboxGeoJSONFeature[]} markers - An array of MapboxGeoJSONFeature objects
+ *                                                  representing the markers to be added to the map.
+ * @param                                   map     - The `map` parameter is a `mapboxgl.Map` object representing the Mapbox map instance on
+ *                                                  which the markers will be added.
+ * @return an array of `mapboxgl.Marker` objects.
+ */
 export function addMarkers(
 	markers: mapboxgl.MapboxGeoJSONFeature[],
 	map: mapboxgl.Map
@@ -32,6 +24,14 @@ export function addMarkers(
 	} );
 }
 
+/**
+ * This function adds a marker to a Mapbox map using a Marker Component rendered on a new DOM node.
+ *
+ * @param {MarkerItem} marker - A MarkerItem object that contains information about the marker,
+ *                            including its geometry and properties.
+ * @param              map    - The `map` parameter is an instance of the `mapboxgl.Map` class, which represents a
+ *                            Mapbox map. It is used to add the marker to the map and set its position.
+ */
 export function addMarker(
 	marker: MarkerItem,
 	map: mapboxgl.Map
@@ -48,7 +48,9 @@ export function addMarker(
 		return new mapboxgl.Marker( ref.current, {
 			offset: [ 0, ( marker?.properties?.iconSize || 0 ) * -0.5 ],
 		} )
-			.setLngLat( marker?.geometry?.coordinates as LngLatLike || [ 0, 0 ] )
+			.setLngLat(
+				( marker?.geometry?.coordinates as LngLatLike ) || [ 0, 0 ]
+			)
 			.addTo( map );
 	}
 }

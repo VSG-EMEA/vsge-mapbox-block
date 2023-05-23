@@ -6,6 +6,20 @@ import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import { useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 
+/**
+ * This is a TypeScript React component that renders a list of MapBox listings with a click event
+ * handler.
+ *
+ * @param            props          - An object with a property "listings" which is an array of MapBoxListing objects.
+ * @param            props.listings
+ * @param            map            - The `map` parameter is an instance of the Mapbox GL JS map object, which is used to
+ *                                  display and interact with the map on the web page. It is passed as a parameter to the `Listings`
+ *                                  component so that it can be used by the child `Listing` components to interact
+ * @param {Function} onClick        - The `onClick` parameter is a function that is passed down to the
+ *                                  `Listing` component as a prop. It is used to handle click events on the listing item.
+ * @return A React component that renders a list of `Listing` components based on the `listings` prop
+ * passed to it, along with a `map` and `onClick` function.
+ */
 function Listings(
 	props: { listings: MapBoxListing[] },
 	map: mapboxgl.Map,
