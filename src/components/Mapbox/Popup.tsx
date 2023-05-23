@@ -1,86 +1,27 @@
-import { createRef, createRoot, render } from '@wordpress/element';
+import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
-import { Feature } from '@turf/turf';
-import { Icon } from '@wordpress/components';
-import { mapMarker } from '@wordpress/icons';
-import { MapBoxListing, MarkerProps } from '../../types';
+import { MapBoxListing, MarkerItem } from '../../types';
 import { RefObject } from 'react';
-import MarkerPropsCustom from '../../types';
-import { TagList } from './TagItem';
-
-export function MarkerPopup( props ) {
-	const {
-		itemTags,
-		itemFilters,
-		name,
-		description,
-		address,
-		city,
-		postalCode,
-		country,
-		state,
-		website,
-	}: MarkerProps = props;
-	return (
-		<div>
-			<a href={ website }>
-				<Icon icon={ mapMarker } />
-				{ itemFilters?.length || <h4>{ itemFilters?.join( ' ' ) }</h4> }
-				<h3>{ name }</h3>
-				{ address || <h4>{ address }</h4> }
-				<p>
-					{ description }
-					<br />
-					{ `${ city } ${ postalCode } ${ country } (${ state })` }
-				</p>
-				<TagList tags={ itemTags } />
-			</a>
-		</div>
-	);
-}
-
-export const MarkerPopupCustom = ( { children }: MarkerPropsCustom ) => (
-	<>{ children }</>
-);
+import { PopupContent, PopupCustom } from './PopupContent';
+import { defaultMarkerSize } from './defaults';
 
 /**
- * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
- * class from any previously active feature.
+ * This function adds a popup to a Mapbox map with custom content or default content based on a
+ * marker's properties.
  *
- * @param {Feature} item - The `item` parameter is of type `Feature`, which is likely an object
- *                       representing a geographic feature on a map. It may contain properties such as the feature's ID,
- *                       coordinates, and other attributes. The function `highlightListing` is using this parameter to
- *                       identify a specific feature and highlight its corresponding
+ * @param                      map             - The mapboxgl.Map object representing the map on which the popup will be displayed.
+ * @param {MapBoxListing}      marker          - The marker parameter is
+ *                                             either a MapBoxListing object or an object with a geometry property that contains coordinates in the
+ *                                             LngLatLike format. It is used to set the location of the popup on the map.
+ * @param {JSX.Element | null} [children=null] - The `children` parameter is an optional JSX element
+ *                                             that can be passed as a child to the `PopupCustom` component. If provided, it will be rendered
+ *                                             inside the popup. If not provided, the `PopupContent` component will be rendered with the properties
+ *                                             of the `marker` object.
+ * @return A `mapboxgl.Popup` object is being returned.
  */
-export function highlightListing( item: Feature ) {
-	console.log( item );
-	document.getElementById( 'feature-listing' )?.classList.add( 'filtered' );
-
-	const activeItem = document.getElementsByClassName( 'active-store' );
-	if ( activeItem[ 0 ] ) {
-		activeItem[ 0 ].classList.remove( 'active-store' );
-	}
-
-	if ( item.properties ) {
-		const listing = document.getElementById( item.id );
-		listing?.classList.add( 'active-store' );
-	}
-}
-
-/**
- * The function removes the active popup from the DOM.
- *
- * @param mapRef
- */
-export function removePopup( mapRef ) {
-	// removes the active popup
-	const popUps = mapRef.querySelectorAll( '.mapboxgl-popup' );
-	if ( popUps[ 0 ] ) popUps[ 0 ].remove();
-}
-
 export function addPopup(
 	map: mapboxgl.Map,
-	marker: MapBoxListing | { geometry: { coordinates: number[] } },
+	marker: MarkerItem,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup {
 	const popupRef: RefObject< HTMLDivElement > = createRef();
@@ -92,14 +33,27 @@ export function addPopup(
 	// Render a Marker Component on our new DOM node
 	root.render(
 		children ? (
-			<MarkerPopupCustom children={ children } />
+			<PopupCustom children={ children } />
 		) : (
-			<MarkerPopup { ...marker.properties } />
+			<PopupContent { ...marker.properties } />
 		)
 	);
 
-	return new mapboxgl.Popup( {} )
-		.setLngLat( marker?.geometry?.coordinates as LngLat )
+	return new mapboxgl.Popup( {
+		offset: ( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,
+	} )
+		.setLngLat( marker?.geometry?.coordinates as LngLatLike )
 		.setDOMContent( popupRef.current )
 		.addTo( map );
+}
+
+/**
+ * The function removes the active popup from the DOM.
+ *
+ * @param mapRef
+ */
+export function removePopup( mapRef ) {
+	// removes the active popup
+	const popUps = mapRef.current.querySelectorAll( '.mapboxgl-popup' );
+	if ( popUps[ 0 ] ) popUps[ 0 ].remove();
 }
