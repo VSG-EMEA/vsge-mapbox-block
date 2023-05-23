@@ -1,9 +1,10 @@
 // Filter the type of reseller with the select in the top bar
 import { Feature } from '@turf/turf';
 import { flyToStore } from './view';
-import { highlightListing, addPopup } from '../components/Mapbox/Popup';
-import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
+import { addPopup } from '../components/Mapbox/Popup';
+import mapboxgl from 'mapbox-gl';
 import { MarkerItem } from '../types';
+import { highlightListing } from '../components/Mapbox/utils';
 
 /**
  * The function prepares stores by assigning IDs to them and returning them as a geojson object.

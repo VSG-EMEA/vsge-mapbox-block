@@ -1,5 +1,5 @@
 import { Feature, Geometry } from '@turf/turf';
-import mapboxgl, { LngLatLike } from 'mapbox-gl';
+import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
 import { Dispatch, RefObject, SetStateAction } from 'react';
 
 export type CoordinatesDef = [ number, number ];
@@ -12,22 +12,12 @@ export type MapboxBlockDefaults = {
 
 export type MapFilter = { id: number; value: string };
 
-export type selectOptions = {
-	label: string;
-	value: string;
-};
-
-export interface MapBoxListing extends mapboxgl.MapboxGeoJSONFeature {
-	id: number;
-	properties: MarkerProps;
-}
-
 export type MapboxOptions = {
 	pin: {
 		icons: string[];
 	};
-	tags: string[];
-	filters: string[];
+	tags: MapFilter[];
+	filters: MapFilter[];
 	listings: MapBoxListing[];
 };
 
@@ -51,6 +41,42 @@ export type MapAttributes = {
 	mouseWheelZoom: boolean;
 	mapboxOptions: MapboxOptions;
 };
+
+export interface MapItem extends Feature {
+	geometry: Geometry;
+	properties: MarkerProps;
+	distance?: {
+		value: number;
+		writable: boolean;
+		enumerable: boolean;
+		configurable: boolean;
+	} | null;
+}
+
+export type MountedMapsContextValue = {
+	map: mapboxgl.Map | null;
+	lngLat?: LngLat;
+	markers?: MapBoxListing[];
+	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
+	listings?: MapBoxListing[];
+	setListings: Dispatch< SetStateAction< mapboxgl.Map | null > >;
+	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
+	setMarkers: Dispatch< SetStateAction< MapBoxListing[] > >;
+	setGeoCoder?: SetStateAction< any >;
+	mapRef?: RefObject< HTMLDivElement >;
+	geocoderRef?: RefObject< HTMLDivElement >;
+	mapDefaults?: MapboxBlockDefaults;
+};
+
+export type selectOptions = {
+	label: string;
+	value: string;
+};
+
+export interface MapBoxListing extends mapboxgl.MapboxGeoJSONFeature {
+	id: number;
+	properties: MarkerProps;
+}
 
 /**
  * the mapbox single listing
@@ -77,35 +103,13 @@ export interface MarkerProps {
 	postalCode?: string;
 	country?: string;
 	state?: string;
+	emailAddress?: string;
 	website?: string;
 	iconSize?: number;
 	iconColor?: string;
 	itemTags?: MapFilter[];
 	itemFilters?: MapFilter[];
 }
-export interface MapItem extends Feature {
-	geometry: Geometry;
-	properties: MarkerProps;
-	distance?: {
-		value: number;
-		writable: boolean;
-		enumerable: boolean;
-		configurable: boolean;
-	} | null;
-}
-
-export type MountedMapsContextValue = {
-	map: mapboxgl.Map | null;
-	lngLat?: LngLatLike;
-	markers?: MapBoxListing[];
-	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
-	setLngLat: Dispatch< SetStateAction< LngLatLike | null > >;
-	setMarkers: Dispatch< SetStateAction< MapBoxListing[] > >;
-	setGeoCoder?: SetStateAction< any >;
-	mapRef?: RefObject< HTMLDivElement >;
-	geocoderRef?: RefObject< HTMLDivElement >;
-	mapDefaults?: MapboxBlockDefaults;
-};
 
 export interface MarkerPropsCustom {
 	children: JSX.Element;
