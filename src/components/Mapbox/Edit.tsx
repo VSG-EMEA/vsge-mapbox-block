@@ -59,8 +59,18 @@ export function MapEdit( {
 		mapboxOptions: { pin, tags, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef, markers, setMarkers } = useContext( MapboxContext );
+	const { map, mapRef} =
+		useContext( MapboxContext );
 
+	/**
+	 * This function sets options for a Mapbox map and updates the markers accordingly.
+	 *
+	 * @param {string}                    key   - A string representing the key of a property in the `mapboxOptions` object that
+	 *                                          needs to be updated.
+	 * @param {string | number | boolean} value - The `value` parameter can be a string, number, or boolean
+	 *                                          data type. It is used to set the value of a specific option in the `mapboxOptions` object. The
+	 *                                          `mapboxOptions` object is a property of the `attributes` object, which is being updated using the
+	 */
 	const setOptions = ( key: string, value: string | number | boolean ) => {
 		setAttributes( {
 			...attributes,
@@ -69,10 +79,15 @@ export function MapEdit( {
 				[ key ]: value,
 			},
 		} );
-		// removeMarkers( markers );
-		setMarkers( attributes.mapboxOptions.listings );
 	};
 
+	/**
+	 * This function updates the attributes of a map based on the current map's center, pitch, bearing, and
+	 * zoom.
+	 *
+	 * @param {mapboxgl.Map | undefined} currentMap - currentMap is a variable of type mapboxgl.Map or
+	 *                                              undefined. It represents the current map object that is being used.
+	 */
 	function pullMapOptions( currentMap: mapboxgl.Map | undefined ) {
 		if ( currentMap )
 			setAttributes( {
@@ -85,6 +100,12 @@ export function MapEdit( {
 			} );
 	}
 
+	/**
+	 * This function refreshes a map by resizing it after a specified timeout.
+	 *
+	 * @param {number} [timeout=100] - The timeout parameter is a number that specifies the amount of time
+	 *                               in milliseconds to wait before resizing the map. By default, it is set to 100 milliseconds.
+	 */
 	function refreshMap( timeout: number = 100 ) {
 		// wait 100 ms then resize the map
 		setTimeout( () => {
@@ -364,7 +385,6 @@ export function MapEdit( {
 										items={ tags }
 										tax={ 'tags' }
 										setOptions={ setOptions }
-										mapboxOptions={ false }
 									/>
 								</>
 							) : null }
@@ -375,7 +395,6 @@ export function MapEdit( {
 										items={ filters }
 										tax={ 'filters' }
 										setOptions={ setOptions }
-										mapboxOptions={ false }
 									/>
 								</>
 							) : null }

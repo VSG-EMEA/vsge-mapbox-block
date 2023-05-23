@@ -1,6 +1,7 @@
 {
   "plugins": ["."],
+  "core": "WordPress/WordPress#6.2",
   "config": {
-    "MAPBOX_TOKEN": "YOURKEYHERE"
+    "MAPBOX_TOKEN": "pk.eyJ1IjoiZXJpa3lvODMiLCJhIjoiY2s0ODdsY3o3MGluYzNucGFtb2FrZHdrMyJ9.sRLoCT52O3gEt255QRj4zA"
   }
 }

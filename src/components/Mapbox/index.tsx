@@ -3,25 +3,23 @@ import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
-import {
-	defaultMarkerProps,
-	getMarkerData,
-	initMap,
-	tempMarker,
-} from './utils';
-import mapboxgl, { MapMouseEvent, Point } from 'mapbox-gl';
+import { getMarkerData, initMap } from './utils';
+import mapboxgl, { LngLatLike, MapMouseEvent, Point } from 'mapbox-gl';
 import { initGeocoder } from './Geocoder';
 import {
 	MapAttributes,
 	MapboxBlockDefaults,
+	MapBoxListing,
 	MarkerHTMLElement,
+	MarkerItem,
 	MountedMapsContextValue,
 } from '../../types';
 import { addMarker, addMarkers } from './Markers';
-import { addPopup } from './Popup';
+import { addPopup, removePopup } from './Popup';
 import { getNextId } from '../../utils/dataset';
 import { RefObject } from 'react';
 import { Button } from '@wordpress/components';
+import { defaultMarkerProps, defaultMarkerStyle, tempMarker } from './defaults';
 
 export function removeTempMarkers(
 	maboxRef: React.RefObject< HTMLDivElement > | undefined
@@ -48,35 +46,60 @@ export function MapBox( {
 		setGeoCoder,
 		mapRef,
 		geocoderRef,
-		lngLat,
 		setLngLat,
 		setMarkers,
 		markers,
 	}: MountedMapsContextValue = useContext( MapboxContext );
 
+	/**
+	 * The function restores the initial markers on a map using a setMarkers function and a listings
+	 * attribute.
+	 */
 	function restoreInitialMarkers() {
 		setMarkers( attributes.mapboxOptions.listings );
 	}
 
+	/**
+	 * This function removes a marker from a map using its ID.
+	 *
+	 * @param {number} id - The `id` parameter is a number that represents the unique identifier of a
+	 *                    marker that needs to be removed from a map.
+	 */
 	function removeMarker( id: number ) {
 		if ( mapRef?.current ) {
 			mapRef?.current.querySelector( '#marker-' + id )?.remove();
 		}
 	}
 
-	function addNewListing( id: number ) {
+	/**
+	 * This function adds a new marker to a map with a given ID and coordinates.
+	 *
+	 * @param {number}     id           - A number representing the unique identifier for the new listing being added.
+	 * @param {LngLatLike} clickedPoint - LngLatLike is a type that represents a longitude and latitude
+	 *                                  coordinate pair on a map. In this function, clickedPoint is the location where the user clicked on
+	 *                                  the map, and it is used to set the coordinates of a new marker that will be added to the map.
+	 */
+	function addNewListing( id: number, clickedPoint: LngLatLike ) {
 		if ( map ) {
 			const newItem = {
 				id,
 				name: 'New Listing',
 				type: 'Feature',
-				properties: defaultMarkerProps,
+				properties: {
+					...defaultMarkerProps,
+					iconSize: 48,
+					iconColor: '#0FF',
+					icon: defaultMarkerStyle,
+				},
 				geometry: {
 					type: 'Point',
-					coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
+					coordinates: clickedPoint,
 				},
-			};
-			removeMarker( id, mapRef );
+			} as MarkerItem;
+			// remove previous marker and popup
+			removeMarker( id );
+			removePopup( mapRef );
+			// then add the new marker and store the new marker in the markers array
 			addMarker( newItem, map );
 			setMarkers( [ ...markers, newItem ] );
 		}
@@ -87,7 +110,10 @@ export function MapBox( {
 			currentMap.on( 'click', ( e: MapMouseEvent ) => {
 				// store the last clicked position
 				setLngLat( e.lngLat );
-				const clickedPoint = [ e.lngLat.lng, e.lngLat.lat ];
+				const clickedPoint = [
+					e.lngLat.lng,
+					e.lngLat.lat,
+				] as LngLatLike;
 
 				console.log( e );
 
@@ -102,7 +128,7 @@ export function MapBox( {
 
 				if ( markers?.length && clickedEl?.nodeName === 'BUTTON' ) {
 					// get the marker data
-					const markerData = getMarkerData(
+					const markerData: MapBoxListing | undefined = getMarkerData(
 						Number( clickedEl.dataset?.id || 0 ),
 						markers
 					);
@@ -114,13 +140,16 @@ export function MapBox( {
 							return addPopup(
 								currentMap,
 								{
-									geometry: {
+									geometry: markerData?.geometry || {
 										coordinates: clickedPoint,
 									},
 								},
 								<Button
 									onClick={ () =>
-										addNewListing( getNextId( markers ) )
+										addNewListing(
+											getNextId( markers ),
+											clickedPoint
+										)
 									}
 								>
 									Add a new Marker?
@@ -144,6 +173,9 @@ export function MapBox( {
 					}
 				}
 
+				/**
+				 * Otherwise the user doesn't click on a marker
+				 */
 				removeTempMarkers( mapRef );
 
 				const newTempMarker = tempMarker(
@@ -183,7 +215,8 @@ export function MapBox( {
 							geocoderRef,
 							map,
 							attributes,
-							mapDefaults
+							mapDefaults,
+							markers
 						)
 					);
 				}
@@ -199,14 +232,25 @@ export function MapBox( {
 		}
 	}, [ map ] );
 
+	// Geocoder
+	// this is needed because it can be enabled and disabled
 	useEffect( () => {
 		if ( map && attributes.geocoderEnabled ) {
 			setGeoCoder(
-				initGeocoder( geocoderRef, map, attributes, mapDefaults )
+				initGeocoder(
+					geocoderRef,
+					map,
+					attributes,
+					mapDefaults,
+					markers
+				)
 			);
 		}
 	}, [ attributes.geocoderEnabled ] );
 
+	/**
+	 * if the access key isn't provided
+	 */
 	if ( typeof mapDefaults?.accessToken !== 'string' ) {
 		return (
 			<>
@@ -225,6 +269,9 @@ export function MapBox( {
 		);
 	}
 
+	/**
+	 * The mapbox component
+	 */
 	return (
 		<div
 			className={ 'map-wrapper' }
