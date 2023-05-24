@@ -413,39 +413,7 @@ export function MapEdit( {
 					</PanelBody>
 				</Panel>
 
-				<Panel>
-					<PanelBody
-						title="Pointer"
-						icon={ mapMarker }
-						initialOpen={ false }
-					>
-						<PanelRow>
-							<TextControl
-								label={ __( 'Marker' ) }
-								value={ pin?.icon || 'mapMarker' }
-								onChange={ ( newValue ) =>
-									setAttributes( {
-										...attributes,
-										mapboxOptions: {
-											...attributes.mapboxOptions,
-											pin: {
-												...attributes.mapboxOptions
-													?.pin,
-												icon: newValue || 'mapMarker',
-											},
-										},
-									} )
-								}
-							/>
-							<Button
-								icon={ ( pin?.icon as IconType ) || mapMarker }
-								iconSize={ 16 }
-								isSmall={ true }
-								onClick={ () => {} }
-							/>
-						</PanelRow>
-					</PanelBody>
-				</Panel>
+				<PanelIcons icons={ icons } setOptions={ setOptions } />
 
 				<Panel>
 					<PanelBody
