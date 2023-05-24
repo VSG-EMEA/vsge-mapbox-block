@@ -14,7 +14,7 @@ import {
 import { upload, download, reset } from '@wordpress/icons';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
-import { MapBoxListing, MapFilter } from '../../types';
+import { MapBoxListing, MapFilter, MarkerIcon } from '../../types';
 import { getNextId } from '../../utils/dataset';
 import { Position } from 'geojson';
 import { MapboxContext } from '../Mapbox/MapboxContext';
@@ -26,8 +26,9 @@ export const PinCard = ( props: {
 	deleteItem: Function;
 	tags: MapFilter[];
 	filters: MapFilter[];
+	icons: MarkerIcon[];
 } ) => {
-	const { item, index, updateItem, deleteItem, tags, filters } = props;
+	const { item, index, updateItem, deleteItem, tags, filters, icons } = props;
 	const { lngLat } = useContext( MapboxContext );
 	const [ isOpen, setIsOpen ] = useState( false );
 	const [ showColorPicker, setShowColorPicker ] = useState( false );
@@ -84,8 +85,6 @@ export const PinCard = ( props: {
 	 * @param newValue the new value of the color picker
 	 */
 	function setMarkerColor( newValue: ColorPicker.OnChangeCompleteValue ) {
-		console.log( newValue );
-
 		setItemData( {
 			...itemData,
 			properties: {
@@ -369,6 +368,25 @@ export const PinCard = ( props: {
 							min={ 0 }
 							max={ 100 }
 							step={ 1 }
+						/>
+						<SelectControl
+							label={ __( 'Select a Marker' ) }
+							value={ itemData.properties?.icon }
+							options={ icons.map( ( icon ) => {
+								return {
+									value: icon.name,
+									label: icon.name,
+								};
+							} ) }
+							onChange={ ( newValue ) => {
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										icon: newValue,
+									},
+								} );
+							} }
 						/>
 
 						<Button
