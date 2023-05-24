@@ -13,29 +13,43 @@ export function PopupContent( props ) {
 	const {
 		itemTags,
 		itemFilters,
-		name,
-		description,
-		address,
-		city,
-		postalCode,
-		country,
-		state,
-		website,
+		name = '',
+		description = '',
+		telephone = '',
+		address = '',
+		city = '',
+		postalCode = '',
+		country = '',
+		state = '',
+		emailAddress = '',
+		website = '',
 	}: MarkerProps = props;
 	return (
 		<div>
+			<Icon icon={ mapMarker } />
+			{ itemFilters?.length || (
+				<TagList
+					tags={ itemFilters }
+					className={ 'popup-filter-list' }
+				/>
+			) }
 			<a href={ website }>
-				<Icon icon={ mapMarker } />
-				{ itemFilters?.length || <h4>{ itemFilters?.join( ' ' ) }</h4> }
 				<h3>{ name }</h3>
-				{ address || <h4>{ address }</h4> }
-				<p>
-					{ description }
-					<br />
-					{ `${ city } ${ postalCode } ${ country } (${ state })` }
-				</p>
-				<TagList tags={ itemTags } />
+				<p>{ address }</p>
 			</a>
+			<p>{ description }</p>
+			<p>{ `${ city } ${ postalCode } ${ country } ${ state }` }</p>
+			{ emailAddress || (
+				<a href={ 'mailto:' + emailAddress } className={ 'email' }>
+					<p>{ emailAddress }</p>
+				</a>
+			) }
+			{ telephone || (
+				<a href={ 'tel:' + telephone }>
+					<p>{ telephone }</p>
+				</a>
+			) }
+			<TagList tags={ itemTags } className={ 'popup-tag-list' } />
 		</div>
 	);
 }

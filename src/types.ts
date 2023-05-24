@@ -12,10 +12,14 @@ export type MapboxBlockDefaults = {
 
 export type MapFilter = { id: number; value: string };
 
+export interface MarkerIcon {
+	id: number;
+	name: string;
+	content: SVGElement;
+}
+
 export type MapboxOptions = {
-	pin: {
-		icons: string[];
-	};
+	icons: MarkerIcon[];
 	tags: MapFilter[];
 	filters: MapFilter[];
 	listings: MapBoxListing[];
@@ -73,9 +77,13 @@ export type selectOptions = {
 	value: string;
 };
 
-export interface MapBoxListing extends mapboxgl.MapboxGeoJSONFeature {
+export interface MapBoxListing {
 	id: number;
 	properties: MarkerProps;
+	geometry: {
+		type: string;
+		coordinates: CoordinatesDef;
+	};
 }
 
 /**
@@ -105,6 +113,7 @@ export interface MarkerProps {
 	state?: string;
 	emailAddress?: string;
 	website?: string;
+	icon?: string;
 	iconSize?: number;
 	iconColor?: string;
 	itemTags?: MapFilter[];
