@@ -35,7 +35,7 @@ export function addMarkers(
 export function addMarker(
 	marker: MarkerItem,
 	map: mapboxgl.Map
-): mapboxgl.Marker {
+): mapboxgl.Marker | undefined {
 	if ( marker?.geometry ) {
 		const ref: RefObject< HTMLDivElement > = createRef();
 		// Create a new DOM root and save it to the React ref

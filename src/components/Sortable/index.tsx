@@ -207,6 +207,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 											filters={
 												mapboxOptions?.filters || []
 											}
+											icons={ mapboxOptions?.icons || [] }
 										/>
 								  ) ) }
 							{ provided.placeholder }

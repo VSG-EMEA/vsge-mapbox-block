@@ -16,7 +16,15 @@ import {
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
-import { cog, list, mapMarker, tag, tool, update } from '@wordpress/icons';
+import {
+	cog,
+	list,
+	mapMarker,
+	plusCircle,
+	tag,
+	tool,
+	update,
+} from '@wordpress/icons';
 import { mapProjections, mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
@@ -29,6 +37,8 @@ import {
 import IconType = Icon.IconType;
 import classNames from 'classnames';
 import { getMapDefaults } from '../../utils';
+import { getNextId } from '../../utils/dataset';
+import { PanelIcons } from './PanelIcons';
 
 export function MapEdit( {
 	attributes,
@@ -56,11 +66,10 @@ export function MapEdit( {
 		fitView,
 		freeViewCamera,
 		mouseWheelZoom,
-		mapboxOptions: { pin, tags, filters, listings },
+		mapboxOptions: { tags, icons, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef} =
-		useContext( MapboxContext );
+	const { map, mapRef } = useContext( MapboxContext );
 
 	/**
 	 * This function sets options for a Mapbox map and updates the markers accordingly.

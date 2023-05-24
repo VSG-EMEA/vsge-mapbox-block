@@ -40,6 +40,16 @@
     }
   }
 
+  .icon-item {
+    display: flex;
+    height: 96px;
+    .icon-item-preview {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+    }
+  }
+
   .sortable-listings {
     .dnd-wrap {
       height: 36px;

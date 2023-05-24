@@ -95,7 +95,7 @@ export function MapBox( {
 					type: 'Point',
 					coordinates: clickedPoint,
 				},
-			} as MarkerItem;
+			};
 			// remove previous marker and popup
 			removeMarker( id );
 			removePopup( mapRef );
@@ -140,8 +140,10 @@ export function MapBox( {
 							return addPopup(
 								currentMap,
 								{
-									geometry: markerData?.geometry || {
-										coordinates: clickedPoint,
+									geometry: {
+										coordinates:
+											markerData?.geometry.coordinates ||
+											clickedPoint,
 									},
 								},
 								<Button
