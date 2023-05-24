@@ -26,13 +26,14 @@ each `MapFilter` object in the array. The `key` prop is set to the `index` of ea
 array. The `TagList` component is exported so it can be used in other parts of the codebase. */
 export function TagList( props: {
 	tags: MapFilter[] | undefined;
+  className?: string
 } ): JSX.Element | null {
-	const { tags } = props;
+	const { tags, className } = props;
 	return (
-		<>
+		<span className={ className ?? 'tag-list' }>
 			{ tags?.map( ( tag, index: number ) => (
 				<TagItem tag={ tag } key={ index } />
 			) ) }
-		</>
+		</span>
 	);
 }

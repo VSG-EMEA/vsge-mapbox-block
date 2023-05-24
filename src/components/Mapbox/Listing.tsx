@@ -25,7 +25,10 @@ export const Listing = ( {
 	return (
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
-			<TagList tags={ properties.itemFilters } />
+			<TagList
+				tags={ properties.itemFilters }
+				className={ 'sidebar-filter-list' }
+			/>
 			<h4 className="title">{ properties.name }</h4>
 			<div>
 				<p>{ properties.address }</p>
@@ -46,7 +49,10 @@ export const Listing = ( {
 						{ properties.website }
 					</a>
 				</p>
-				<TagList tags={ properties.itemTags } />
+				<TagList
+					tags={ properties.itemTags }
+					className={ 'sidebar-tag-list' }
+				/>
 			</div>
 		</div>
 	);
