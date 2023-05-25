@@ -10,6 +10,7 @@ import {
 	SelectControl,
 	TextareaControl,
 	TextControl,
+	PanelRow,
 } from '@wordpress/components';
 import { upload, download, reset } from '@wordpress/icons';
 import { Draggable } from 'react-beautiful-dnd';
@@ -420,24 +421,26 @@ export const PinCard = ( props: {
 								</Popover>
 							) }
 						</Button>
-						<Button
-							onClick={ () => updateItem( itemData ) }
-							label={ __( 'Save item data' ) }
-							variant={ 'primary' }
-							iconSize={ 16 }
-							icon={ download }
-						>
-							{ __( 'Save changes' ) }
-						</Button>
-						<Button
-							onClick={ () => resetListing( itemData.id ) }
-							label={ __( 'Reset' ) }
-							variant={ 'secondary' }
-							iconSize={ 16 }
-							icon={ reset }
-						>
-							{ __( 'Reset' ) }
-						</Button>
+						<PanelRow>
+							<Button
+								onClick={ () => updateItem( itemData ) }
+								label={ __( 'Save item data' ) }
+								variant={ 'primary' }
+								iconSize={ 16 }
+								icon={ download }
+							>
+								{ __( 'Save changes' ) }
+							</Button>
+							<Button
+								onClick={ () => resetListing( itemData.id ) }
+								label={ __( 'Reset' ) }
+								variant={ 'secondary' }
+								iconSize={ 16 }
+								icon={ reset }
+							>
+								{ __( 'Reset' ) }
+							</Button>
+						</PanelRow>
 					</div>
 				</div>
 			) }
