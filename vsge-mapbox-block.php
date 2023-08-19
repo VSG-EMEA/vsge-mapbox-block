@@ -62,7 +62,8 @@ function vsge_get_token(): string {
  */
 function vsge_mapbox_frontend_scripts(): void {
 	$asset = include VSGE_MB_PLUGIN_DIR . '/build/mapbox-frontend.asset.php';
-	wp_enqueue_script(
+
+	wp_register_script(
 		'vsge-mapbox-frontend',
 		VSGE_MB_PLUGIN_URL . '/build/mapbox-frontend.js',
 		$asset['dependencies'],
@@ -89,7 +90,8 @@ add_action( 'wp_enqueue_scripts', 'vsge_mapbox_frontend_scripts' );
  */
 function vsge_mapbox_block_scripts(): void {
 	$asset = include VSGE_MB_PLUGIN_DIR . '/build/mapbox.asset.php';
-	wp_enqueue_script(
+
+	wp_register_script(
 		'vsge-mapbox-block',
 		VSGE_MB_PLUGIN_URL . 'build/mapbox.js',
 		$asset['dependencies'],

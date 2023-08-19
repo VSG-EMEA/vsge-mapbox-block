@@ -95,5 +95,7 @@
         "filters": []
       }
     }
-  }
+  },
+  "viewScript": "vsge-mapbox-frontend",
+  "editorScript": "vsge-mapbox-block"
 }
