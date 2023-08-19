@@ -38,10 +38,12 @@
     // next to the .js files
     "outDir": "build",
     "typeRoots": [
-      "./node_modules/@types",
-      "./types"
+      "./node_modules",
+      "./node_modules/@types"
     ],
     "types": [
+      "mapbox-gl",
+      "mapbox__mapbox-gl-geocoder",
       "puppeteer",
       "jest-environment-puppeteer",
       "expect-puppeteer"
