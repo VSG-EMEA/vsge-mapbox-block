@@ -14,42 +14,45 @@ export function PopupContent( props ) {
 		itemTags,
 		itemFilters,
 		name = '',
-		description = '',
-		telephone = '',
+		phone = '',
 		address = '',
 		city = '',
 		postalCode = '',
 		country = '',
-		state = '',
 		emailAddress = '',
 		website = '',
 	}: MarkerProps = props;
 	return (
-		<div>
-			<Icon icon={ mapMarker } />
-			{ itemFilters?.length || (
-				<TagList
-					tags={ itemFilters }
-					className={ 'popup-filter-list' }
-				/>
-			) }
-			<a href={ website }>
-				<h3>{ name }</h3>
-				<p>{ address }</p>
-			</a>
-			<p>{ description }</p>
-			<p>{ `${ city } ${ postalCode } ${ country } ${ state }` }</p>
-			{ emailAddress || (
-				<a href={ 'mailto:' + emailAddress } className={ 'email' }>
-					<p>{ emailAddress }</p>
-				</a>
-			) }
-			{ telephone || (
-				<a href={ 'tel:' + telephone }>
-					<p>{ telephone }</p>
-				</a>
-			) }
-			<TagList tags={ itemTags } className={ 'popup-tag-list' } />
+		<div className={ 'mapbox-popup-inner' } style={ { display: 'flex' } }>
+			<div>
+				<Icon icon={ mapMarker } size={ 36 } />
+			</div>
+			<div>
+				{ itemFilters?.length ? (
+					<TagList
+						tags={ itemFilters }
+						className={ 'popup-filter-list' }
+					/>
+				) : null }
+				{ website && (
+					<a href={ website }>
+						<h3>{ name }</h3>
+					</a>
+				) }
+				{ address && <p>{ address }</p> }
+				<p>{ `${ city } - ${ country } ${ postalCode }` }</p>
+				{ emailAddress || (
+					<a href={ 'mailto:' + emailAddress } className={ 'email' }>
+						<p>{ emailAddress }</p>
+					</a>
+				) }
+				{ phone || (
+					<a href={ 'tel:' + phone }>
+						<p>{ phone }</p>
+					</a>
+				) }
+				<TagList tags={ itemTags } className={ 'popup-tag-list' } />
+			</div>
 		</div>
 	);
 }
