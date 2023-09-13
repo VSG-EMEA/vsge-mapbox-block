@@ -21,38 +21,59 @@ export const Listing = ( {
 	map?: mapboxgl.Map | null;
 	onClick?: Function;
 } ) => {
-	const { properties } = jsonFeature;
+	const {
+		properties: {
+			name,
+			phone,
+			address,
+			itemTags,
+			itemFilters,
+			emailAddress,
+			website,
+		},
+	} = jsonFeature;
 	return (
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
-			<TagList
-				tags={ properties.itemFilters }
-				className={ 'sidebar-filter-list' }
-			/>
-			<h4 className="title">{ properties.name }</h4>
 			<div>
-				<p>{ properties.address }</p>
-				<p>
-					Phone:{ ' ' }
-					<a
-						href={ 'tel:' + properties.telephone }
-						className="email-link"
-					>
-						{ properties.telephone }
-					</a>
-				</p>
-				<p>
-					<a
-						href={ '//' + properties.website }
-						className="website-link"
-					>
-						{ properties.website }
-					</a>
-				</p>
-				<TagList
-					tags={ properties.itemTags }
-					className={ 'sidebar-tag-list' }
-				/>
+				<TagList tags={ itemFilters } className={ 'sidebar-filter-list' } />
+				<h4 className="title">{ name }</h4>
+				{ address && <p>{ address }</p> }
+				{ phone && (
+					<p>
+						Phone:{ ' ' }
+						<a href={ 'tel:' + phone } className="email-link">
+							{ phone }
+						</a>
+					</p>
+				) }
+				{ emailAddress && (
+					<p>
+						Email:{ ' ' }
+						<a
+							href={ 'mailto:' + emailAddress }
+							className="email-link"
+						>
+							{ emailAddress }
+						</a>
+					</p>
+				) }
+				{ website && (
+					<p>
+						Website:{ ' ' }
+						<a href={ '//' + website } className="website-link">
+							{ website }
+						</a>
+					</p>
+				) }
+				{ itemTags?.length ? (
+					<>
+						<TagList
+							tags={ itemTags }
+							className={ 'sidebar-tag-list' }
+						/>
+					</>
+				) : null }
 			</div>
 		</div>
 	);
