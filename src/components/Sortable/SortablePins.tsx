@@ -15,7 +15,12 @@ import {
 import { upload, download, reset } from '@wordpress/icons';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
-import { MapBoxListing, MapFilter, MarkerIcon } from '../../types';
+import {
+	MapBoxListing,
+	tagArray,
+	MarkerIcon,
+	tagCollection,
+} from '../../types';
 import { getNextId } from '../../utils/dataset';
 import { Position } from 'geojson';
 import { MapboxContext } from '../Mapbox/MapboxContext';
@@ -25,8 +30,8 @@ export const PinCard = ( props: {
 	index: number;
 	updateItem: Function;
 	deleteItem: Function;
-	tags: MapFilter[];
-	filters: MapFilter[];
+	tags: tagCollection[];
+	filters: tagCollection[];
 	icons: MarkerIcon[];
 } ) => {
 	const { item, index, updateItem, deleteItem, tags, filters, icons } = props;
@@ -36,7 +41,7 @@ export const PinCard = ( props: {
 	const [ itemData, setItemData ] = useState( item as MapBoxListing );
 
 	if ( ! item?.properties ) {
-		console.error( item, 'Missing properties' );
+		console.error( 'Missing properties for item', item );
 		return null;
 	}
 
@@ -46,12 +51,14 @@ export const PinCard = ( props: {
 	 * @param filter      the filter
 	 * @param filterArray the filters array to check against
 	 */
-	function hasThatFilter( filter: string, filterArray: MapFilter[] ) {
+	function hasThatFilter(
+		filter: string,
+		filterArray: string[] | undefined
+	): boolean {
 		return filterArray
-			? filterArray.filter(
-					( currentFilter: MapFilter ) =>
-						currentFilter.value === filter
-			  ).length
+			? filterArray.filter( ( currentFilter: string ) =>
+					filterArray.includes( filter )
+			  ).length > 0
 			: false;
 	}
 
@@ -60,17 +67,19 @@ export const PinCard = ( props: {
 	 *
 	 * @param mapFilter the current map filter
 	 * @param value     the current value
-	 * @param newValue  the new value
+	 * @param isChecked the new value
 	 */
 	function updateMapFilter(
-		mapFilter: MapFilter[] = [],
+		mapFilter: tagArray[] = [],
 		value: string,
-		newValue: boolean
+		isChecked: boolean
 	) {
-		if ( newValue ) {
-			return [ ...mapFilter, { id: getNextId( mapFilter ), value } ];
+		// if newvalue is true add the value to the array
+		if ( isChecked ) {
+			return [ ...mapFilter, value ];
 		}
-		return mapFilter.filter( ( filter ) => filter.value !== value );
+		// otherwise remove the value
+		return mapFilter.filter( ( filter ) => filter !== value );
 	}
 
 	/**
@@ -151,7 +160,6 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-							__nextHasNoMarginBottom={ true }
 						></TextControl>
 						<TextControl
 							label={ __( 'phone' ) }
@@ -166,7 +174,6 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-							__nextHasNoMarginBottom={ true }
 						></TextControl>
 						<TextControl
 							label={ __( 'email' ) }
@@ -181,7 +188,6 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-							__nextHasNoMarginBottom={ true }
 						></TextControl>
 						<TextControl
 							label={ __( 'website' ) }
@@ -196,7 +202,34 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-							__nextHasNoMarginBottom={ true }
+						></TextControl>
+						<TextControl
+							label={ __( 'Country' ) }
+							type={ 'text' }
+							value={ itemData.properties?.country || '' }
+							onChange={ ( newValue ) => {
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										country: newValue,
+									},
+								} );
+							} }
+						></TextControl>
+						<TextControl
+							label={ __( 'Country Code' ) }
+							type={ 'text' }
+							value={ itemData.properties?.countryCode || '' }
+							onChange={ ( newValue ) => {
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										countryCode: newValue,
+									},
+								} );
+							} }
 						></TextControl>
 						<TextareaControl
 							label={ __( 'Address' ) }
@@ -274,7 +307,8 @@ export const PinCard = ( props: {
 							<Button
 								icon={ upload }
 								variant={ 'secondary' }
-								onClick={ () =>
+								disabled={ ! lngLat?.lng || ! lngLat?.lat }
+								onClick={ () => {
 									setItemData( {
 										...itemData,
 										geometry: {
@@ -284,8 +318,8 @@ export const PinCard = ( props: {
 												lngLat?.lat || 0,
 											],
 										},
-									} )
-								}
+									} );
+								} }
 								label={ __( 'Add Pin' ) }
 								showTooltip={ true }
 							/>
@@ -293,18 +327,20 @@ export const PinCard = ( props: {
 
 						{ /** Tags */ }
 						<Flex direction={ 'row' } justify={ 'top' }>
-							<FlexItem>
+							<FlexItem
+								style={ { width: '50%', alignSelf: 'start' } }
+							>
 								<h4>Tags</h4>
-								{ tags?.map( ( checkbox, index ) => (
+
+								{ tags?.map( ( checkbox, i ) => (
 									<CheckboxControl
 										label={ checkbox.value }
-										checked={ hasThatFilter(
-											checkbox.value,
-											itemData.properties?.itemTags
+										checked={ itemData.properties?.itemTags?.includes(
+											checkbox.value
 										) }
-										key={ index }
+										key={ i }
 										className={ 'sortable-pins-checkbox' }
-										onChange={ ( newValue ) => {
+										onChange={ ( isChecked ) => {
 											// given an array of tags, add the item if the checkbox value is true otherwise remove it from array
 											setItemData( {
 												...itemData,
@@ -314,7 +350,7 @@ export const PinCard = ( props: {
 														itemData.properties
 															?.itemTags,
 														checkbox.value,
-														newValue
+														isChecked
 													),
 												},
 											} );
@@ -322,18 +358,19 @@ export const PinCard = ( props: {
 									/>
 								) ) }
 							</FlexItem>
-							<FlexItem>
+							<FlexItem
+								style={ { width: '50%', alignSelf: 'start' } }
+							>
 								<h4>Filter</h4>
-								{ filters?.map( ( checkbox, index ) => (
+								{ filters?.map( ( checkbox, i ) => (
 									<CheckboxControl
 										label={ checkbox.value }
-										checked={ hasThatFilter(
-											checkbox.value,
-											itemData.properties?.itemFilters
+										checked={ itemData.properties?.itemFilters?.includes(
+											checkbox.value
 										) }
-										key={ index }
+										key={ i }
 										className={ 'sortable-pins-checkbox' }
-										onChange={ ( newValue ) => {
+										onChange={ ( isChecked ) => {
 											setItemData( {
 												...itemData,
 												properties: {
@@ -343,7 +380,7 @@ export const PinCard = ( props: {
 															itemData.properties
 																?.itemFilters,
 															checkbox.value,
-															newValue
+															isChecked
 														),
 												},
 											} );
@@ -373,12 +410,15 @@ export const PinCard = ( props: {
 						<SelectControl
 							label={ __( 'Select a Marker' ) }
 							value={ itemData.properties?.icon }
-							options={ icons.map( ( icon ) => {
-								return {
-									value: icon.name,
-									label: icon.name,
-								};
-							} ) }
+							options={ [
+								{ value: 'default', label: __( 'Default' ) },
+								...icons.map( ( icon ) => {
+									return {
+										value: icon.name,
+										label: icon.name,
+									};
+								} ),
+							] }
 							onChange={ ( newValue ) => {
 								setItemData( {
 									...itemData,
@@ -432,7 +472,7 @@ export const PinCard = ( props: {
 								{ __( 'Save changes' ) }
 							</Button>
 							<Button
-								onClick={ () => resetListing( itemData.id ) }
+								onClick={ () => resetListing() }
 								label={ __( 'Reset' ) }
 								variant={ 'secondary' }
 								iconSize={ 16 }
