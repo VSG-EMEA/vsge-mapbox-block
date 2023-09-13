@@ -2,7 +2,7 @@ import { Button, Icon, SelectControl } from '@wordpress/components';
 import { useContext, useState } from '@wordpress/element';
 import { safeSlug } from '../../utils';
 import { fitInView } from '../../utils/view';
-import { MapFilter, MountedMapsContextValue } from '../../types';
+import { tagArray, MountedMapsContextValue } from '../../types';
 import { MapboxContext } from './MapboxContext';
 
 /**
@@ -13,7 +13,7 @@ import { MapboxContext } from './MapboxContext';
  * @param            selectValues.value
  * @return {SelectControl.Option[]} the select values
  */
-function topbarBuildSelectFromArray( selectValues: MapFilter[] ) {
+function topbarBuildSelectFromArray( selectValues: tagArray[] ) {
 	return selectValues.map( ( item ) => {
 		return { label: item.value, value: safeSlug( item.value ) };
 	} );

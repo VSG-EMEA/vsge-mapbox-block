@@ -53,8 +53,8 @@ export function locateNearestStore( result: Coord, storesArray: MapItem[] ) {
  * the bounding box, and the second array contains the coordinates of the upper right corner of the
  * bounding box.
  */
-export function getBbox( sortedStores: Feature[], id: number, results: Coord ) {
-	console.log( sortedStores[ id ].geometry );
+export function getBbox( sortedStores, id: number, results ) {
+	console.log( "Store geometry", sortedStores[ id ].geometry );
 
 	const lats = [
 		sortedStores[ id ].geometry.coordinates[ 1 ],

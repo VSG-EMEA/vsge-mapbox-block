@@ -8,7 +8,7 @@ import {
 	PanelRow,
 	TextControl,
 } from '@wordpress/components';
-import { mapMarker, plusCircle, image} from '@wordpress/icons';
+import { mapMarker, plusCircle, image } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { getNextId } from '../../utils/dataset';
 import { MarkerIcon } from '../../types';
