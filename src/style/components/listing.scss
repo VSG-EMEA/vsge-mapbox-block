@@ -1,13 +1,19 @@
 .wp-block-vsge-mapbox .map-wrapper {
 	.mapbox-sidebar-feature {
-		display: block;
+    display: flex;
+    gap: .5rem;
 		position: relative;
 		border-bottom: 1px solid #eee;
-		padding: 16px 16px 16px 48px;
-		margin: 0 0 var(--wp--preset--spacing--40);
+		padding: 1.3rem 1rem;
+		margin: 0 1px .5rem 0;
 		border-radius: 2px;
 		background: #f3f3f3;
 		text-decoration: none;
+
+    .sidebar-filter-list {
+      display: flex;
+      flex-direction: column;
+    }
 
 		&:last-child {
 			border-bottom: none;
@@ -28,10 +34,9 @@
 			}
 		}
 
+
 		svg {
-			position: absolute;
-			left: 12px;
-			top: 18px;
+      align-self: flex-start;
 		}
 
 		p.partnership {
