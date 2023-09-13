@@ -48,3 +48,19 @@ export const getListStyle = ( isDraggingOver: any ): object => ( {
 	padding: grid,
 	width: 250,
 } );
+
+/**
+ * This function checks if the input array has exactly two elements. If it doesn't, it returns false.
+ * If the array has two elements, it checks if the first number is between -180 and 180 (longitude range) and
+ * if the second number is between -90 and 90 (latitude range). If both conditions are met, it returns true;
+ * otherwise, it returns false.
+ *
+ * @param arr the array of numbers (likely to be [longitude, latitude])
+ */
+export function areValidCoordinates( arr: [ number, number ] ): boolean {
+	const [ longitude, latitude ] = arr;
+	const validLongitude = longitude >= -180 && longitude <= 180;
+	const validLatitude = latitude >= -90 && latitude <= 90;
+
+	return arr.length === 2 && validLongitude && validLatitude;
+}
