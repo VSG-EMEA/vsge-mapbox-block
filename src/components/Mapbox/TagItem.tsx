@@ -1,20 +1,22 @@
-import { MapFilter } from '../../types';
+import { ReactElement, JSXElementConstructor, ReactNode } from 'react';
+import { tagArray } from '../../types';
 
 /**
  * This is a TypeScript React component that renders a tag item with a specific ID and value.
  *
- * @param props     - props is an object that contains a single property called "tag". This property is of
- *                  type MapFilter.
+ * @param props       - props is an object that contains a single property called "tag". This property is of
+ *                    type MapFilter.
  * @param props.tag
+ * @param props.key
+ * @param props.index
  * @return The `TagItem` component is being returned, which renders a `span` element with a class name
  * based on the `id` of the `MapFilter` object passed as a prop, and displays the `value` of the
  * `MapFilter` object as its content.
  */
-export const TagItem = ( props: { tag: MapFilter } ) => {
-	const { id, value } = props.tag;
+export const TagItem = ( props: { index: number; tag: string } ) => {
 	return (
-		<span className={ 'tag-' + id } title={ value }>
-			{ value }
+		<span className={ 'tag-' + String( props.index ) } title={ props.tag }>
+			{ props.tag }
 		</span>
 	);
 };
@@ -25,15 +27,15 @@ JSX element that maps over the `tags` array (if it exists) and renders a `TagIte
 each `MapFilter` object in the array. The `key` prop is set to the `index` of each item in the
 array. The `TagList` component is exported so it can be used in other parts of the codebase. */
 export function TagList( props: {
-	tags: MapFilter[] | undefined;
-  className?: string
+	tags: string[] | undefined;
+	className?: string;
 } ): JSX.Element | null {
 	const { tags, className } = props;
-	return (
+	return tags?.length ? (
 		<span className={ className ?? 'tag-list' }>
 			{ tags?.map( ( tag, index: number ) => (
-				<TagItem tag={ tag } key={ index } />
+				<TagItem tag={ tag } key={ index } index={ index } />
 			) ) }
 		</span>
-	);
+	) : null;
 }
