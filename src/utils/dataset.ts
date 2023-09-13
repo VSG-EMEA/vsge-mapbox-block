@@ -37,7 +37,8 @@ export function filterStores( stores, terms ) {
 }
 
 export function enableListing( map: mapboxgl.Map, marker: MarkerItem ) {
-	console.log( marker );
+
+  console.log( "Listing enabled" , marker );
 
 	// 1. Fly to the point
 	flyToStore( map, marker );

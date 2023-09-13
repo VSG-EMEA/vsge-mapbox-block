@@ -57,7 +57,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				...rawAttributes,
 				mapboxOptions: JSON.parse(
 					rawAttributes.mapboxOptions ||
-						'{ "pin": { "icon": "", "size": 48, "color": "white" }, "listings": [], "tags": [], "filters": [] }'
+						'{ "listings": [], "tags": [], "filters": [] }'
 				),
 				bearing: Number( rawAttributes.bearing ),
 				elevation: Boolean( rawAttributes.elevation ),

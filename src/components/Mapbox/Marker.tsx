@@ -37,7 +37,7 @@ export function Marker( {
 		>
 			{ children || (
 				<DefaultMarker
-					color={ feature.properties.iconColor }
+					color={ feature.properties.iconColor?.hex || '#004a83' }
 					size={ feature.properties.iconSize as number }
 				/>
 			) }
