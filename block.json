@@ -42,6 +42,10 @@
       "type": "number",
       "default": 5.0
     },
+    "mapProjection": {
+      "type": "string",
+      "default": "mercator"
+    },
     "mapStyle": {
       "type": "string",
       "default": "satellite-streets-v12"
@@ -85,11 +89,6 @@
     "mapboxOptions": {
       "type": "object",
       "default": {
-        "pin": {
-          "icon": "",
-          "size": 48,
-          "color": "white"
-        },
         "listings": [],
         "tags": [],
         "filters": []
