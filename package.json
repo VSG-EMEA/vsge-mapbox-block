@@ -57,7 +57,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "jest-puppeteer": "^8.0.6",
     "react-beautiful-dnd": "^13.1.1",
-    "typescript": "^5.1.6",
+    "typescript": "^5.2.2",
     "mapbox-gl": "^2.14.1",
     "@mapbox/mapbox-gl-geocoder": "^5.0.1"
   },

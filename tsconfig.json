@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "es2015",
+    "target": "ESNext",
+    "module": "ESNext",
     "jsx": "react-jsx",
-    "lib": [
-      "es5", "es6", "dom", "dom.iterable"
-    ],
     // Search under node_modules for non-relative imports.
     "moduleResolution": "node",
     "sourceMap": true,
@@ -28,9 +25,6 @@
     "declarationMap": true,
     "declarationDir": "build/types",
     "emitDeclarationOnly": true,
-
-    // Don't emit; allow Babel to transform
-    "noEmit": true,
     "pretty": true,
 
     // Types should go into this directory.
@@ -38,8 +32,8 @@
     // next to the .js files
     "outDir": "build",
     "typeRoots": [
-      "./node_modules",
-      "./node_modules/@types"
+      "node_modules/@types",
+      "@types"
     ],
     "types": [
       "mapbox-gl",
