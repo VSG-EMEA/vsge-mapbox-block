@@ -11,7 +11,6 @@ import {
 	MapboxBlockDefaults,
 	MapBoxListing,
 	MarkerHTMLElement,
-	MarkerItem,
 	MountedMapsContextValue,
 } from '../../types';
 import { addMarker, addMarkers } from './Markers';
@@ -19,7 +18,7 @@ import { addPopup, removePopup } from './Popup';
 import { getNextId } from '../../utils/dataset';
 import { RefObject } from 'react';
 import { Button } from '@wordpress/components';
-import { defaultMarkerProps, defaultMarkerStyle, tempMarker } from './defaults';
+import { defaultMarkerProps, generateTempMarkerData } from './defaults';
 
 export function removeTempMarkers(
 	maboxRef: React.RefObject< HTMLDivElement > | undefined
@@ -81,15 +80,15 @@ export function MapBox( {
 	 */
 	function addNewListing( id: number, clickedPoint: LngLatLike ) {
 		if ( map ) {
-			const newItem = {
+			const mapBoxListing: MapBoxListing = {
 				id,
-				name: 'New Listing',
 				type: 'Feature',
 				properties: {
 					...defaultMarkerProps,
+					name: 'New Listing',
 					iconSize: 48,
 					iconColor: '#0FF',
-					icon: defaultMarkerStyle,
+					icon: 'pin',
 				},
 				geometry: {
 					type: 'Point',
@@ -100,8 +99,8 @@ export function MapBox( {
 			removeMarker( id );
 			removePopup( mapRef );
 			// then add the new marker and store the new marker in the markers array
-			addMarker( newItem, map );
-			setMarkers( [ ...markers, newItem ] );
+			addMarker( mapBoxListing, map );
+			setMarkers( [ ...markers, mapBoxListing ] );
 		}
 	}
 
@@ -180,13 +179,16 @@ export function MapBox( {
 				 */
 				removeTempMarkers( mapRef );
 
-				const newTempMarker = tempMarker(
+				// Generate the metadata for the pin marker if nothing was clicked
+				const newTempMarker = generateTempMarkerData(
 					getNextId( markers ),
 					clickedPoint
 				);
 
+				// add the new marker to the map
 				addMarker( newTempMarker, currentMap );
 
+				// store the new marker in the markers array
 				setMarkers( [ ...markers, newTempMarker ] );
 			} );
 		}
