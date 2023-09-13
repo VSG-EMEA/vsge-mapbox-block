@@ -14,9 +14,11 @@ import {
 } from '../../types';
 import {
 	defaultMarkerProps,
-	defaultMarkerSize,
+	defaultMarkerSize, generateGeocoderMarkerData,
+	generateTempMarkerData,
 	geoMarkerStyle,
 } from './defaults';
+import { addMarker } from './Markers';
 
 /* This is a TypeScript React function that returns a JSX element representing a marker for the
 geocoder search result. It receives `props` as an argument, which contains `coordinates` and `map`
@@ -35,7 +37,7 @@ export const GeoMarker = ( props ): JSX.Element => {
 				properties: {
 					...defaultMarkerProps,
 					name: 'geocoder',
-					icon: geoMarkerStyle,
+					icon: 'geocoder',
 					iconSize: defaultMarkerSize,
 					iconColor: '#44f',
 				},
@@ -83,7 +85,7 @@ export function initGeocoder(
 			mapboxgl: map,
 			lang: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
-			element: initGeomarker( getNextId( markers ), map ),
+			element: null,
 			flyTo: {
 				bearing: 0,
 				// These options control the flight curve, making it move
