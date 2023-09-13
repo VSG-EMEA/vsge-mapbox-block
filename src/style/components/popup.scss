@@ -16,7 +16,7 @@
 
 		&-content {
 			font-weight: 400;
-			padding: 16px 16px 10px 64px;
+			padding: 1rem 1.3rem;
 			min-width: 280px;
 			line-height: var(--text__line-height-headline);
 
@@ -26,14 +26,23 @@
 			}
 		}
 
+    .mapbox-popup-inner {
+      gap: 1rem
+    }
+
 		&-anchor-bottom .mapboxgl-popup-tip {
 			filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.1));
 		}
 
+    a {
+      text-decoration: inherit;
+    }
+
 		h3 {
-			margin: 0 0 4px;
 			font-weight: 600;
-			font-size: 15px;
+			font-size: 16px;
+      margin: 0;
+      color: var(--wp--preset--color--primary);
 		}
 
 		h4 {
