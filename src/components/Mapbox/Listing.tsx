@@ -25,6 +25,9 @@ export const Listing = ( {
 		properties: {
 			name,
 			phone,
+			city,
+			country,
+			countryCode,
 			address,
 			itemTags,
 			itemFilters,
@@ -36,7 +39,10 @@ export const Listing = ( {
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
 			<div>
-				<TagList tags={ itemFilters } className={ 'sidebar-filter-list' } />
+				<TagList
+					tags={ itemFilters }
+					className={ 'sidebar-filter-list' }
+				/>
 				<h4 className="title">{ name }</h4>
 				{ address && <p>{ address }</p> }
 				{ phone && (
@@ -44,6 +50,21 @@ export const Listing = ( {
 						Phone:{ ' ' }
 						<a href={ 'tel:' + phone } className="email-link">
 							{ phone }
+						</a>
+					</p>
+				) }
+
+				<p>
+					{ address && address }
+					<br />
+					{ country && country } - { city && city } ({ countryCode })
+				</p>
+
+				{ website && (
+					<p>
+						Website:{ ' ' }
+						<a href={ '//' + website } className="website-link">
+							{ website }
 						</a>
 					</p>
 				) }
@@ -55,14 +76,6 @@ export const Listing = ( {
 							className="email-link"
 						>
 							{ emailAddress }
-						</a>
-					</p>
-				) }
-				{ website && (
-					<p>
-						Website:{ ' ' }
-						<a href={ '//' + website } className="website-link">
-							{ website }
 						</a>
 					</p>
 				) }
