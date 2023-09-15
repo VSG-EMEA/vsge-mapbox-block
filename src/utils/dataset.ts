@@ -3,7 +3,7 @@ import { Feature } from '@turf/turf';
 import { flyToStore } from './view';
 import { addPopup } from '../components/Mapbox/Popup';
 import mapboxgl from 'mapbox-gl';
-import { MarkerItem } from '../types';
+import { MapBoxListing, MarkerItem } from '../types';
 import { highlightListing } from '../components/Mapbox/utils';
 
 /**
@@ -36,9 +36,8 @@ export function filterStores( stores, terms ) {
 	return filteredStores;
 }
 
-export function enableListing( map: mapboxgl.Map, marker: MarkerItem ) {
-
-  console.log( "Listing enabled" , marker );
+export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
+	console.log( 'Listing enabled', marker );
 
 	// 1. Fly to the point
 	flyToStore( map, marker );

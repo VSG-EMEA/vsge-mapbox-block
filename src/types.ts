@@ -10,9 +10,9 @@ export type MapboxBlockDefaults = {
 	language: string;
 };
 
-export type tagArray = string[];
+export type TagArray = string[];
 
-export type tagCollection = { id: number; value: string };
+export type TagCollection = { id: number; value: string };
 
 export interface MarkerIcon {
 	id: number;
@@ -22,8 +22,8 @@ export interface MarkerIcon {
 
 export type MapboxOptions = {
 	icons: MarkerIcon[];
-	tags: tagCollection[];
-	filters: tagCollection[];
+	tags: TagCollection[];
+	filters: TagCollection[];
 	listings: MapBoxListing[];
 };
 
@@ -117,11 +117,11 @@ export interface MarkerProps {
 	state?: string;
 	emailAddress?: string;
 	website?: string;
-	icon?: string | number;
+	icon?: string;
 	iconSize?: number;
 	iconColor?: string;
-	itemTags?: tagArray[];
-	itemFilters?: tagArray[];
+	itemTags?: TagArray[];
+	itemFilters?: TagArray[];
 }
 
 export interface MarkerPropsCustom {

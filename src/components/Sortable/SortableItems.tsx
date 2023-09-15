@@ -1,6 +1,6 @@
 import { Button, TextControl } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
-import { MapBoxListing, tagArray, MapItem } from '../../types';
+import { MapBoxListing, TagArray, MapItem } from '../../types';
 
 /**
  * A sortable item that allow to add a string to the given array and sort it
@@ -22,7 +22,7 @@ export const StringItem = ( props ) => {
 		deleteItem,
 	}: {
 		tax: string;
-		item: tagArray;
+		item: TagArray;
 		index: number;
 		updateItem: Function;
 		deleteItem: Function;

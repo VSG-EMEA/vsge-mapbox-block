@@ -7,13 +7,13 @@ import { useContext, useEffect } from '@wordpress/element';
 import { MapboxContext } from '../Mapbox/MapboxContext';
 import { plusCircle } from '@wordpress/icons';
 import { getNextId, reorder } from '../../utils/dataset';
-import { MapBoxListing, MapboxOptions, tagArray, MapItem } from '../../types';
+import { MapBoxListing, MapboxOptions, TagArray, MapItem } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
 import { defaultMarkerProps } from '../Mapbox/defaults';
 import { removePopup } from '../Mapbox/Popup';
 
 interface SortableProps {
-	items: tagArray[];
+	items: TagArray[];
 	tax: string;
 	setOptions: Function;
 	mapboxOptions?: MapboxOptions;
@@ -26,7 +26,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 		setOptions,
 		mapboxOptions,
 	}: {
-		items: tagArray[] | MapItem[];
+		items: TagArray[] | MapItem[];
 		tax: string;
 		setOptions: Function;
 		mapboxOptions?: MapboxOptions;

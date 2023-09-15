@@ -17,9 +17,9 @@ import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
 import {
 	MapBoxListing,
-	tagArray,
+	TagArray,
 	MarkerIcon,
-	tagCollection,
+	TagCollection,
 } from '../../types';
 import { getNextId } from '../../utils/dataset';
 import { Position } from 'geojson';
@@ -30,8 +30,8 @@ export const PinCard = ( props: {
 	index: number;
 	updateItem: Function;
 	deleteItem: Function;
-	tags: tagCollection[];
-	filters: tagCollection[];
+	tags: TagCollection[];
+	filters: TagCollection[];
 	icons: MarkerIcon[];
 } ) => {
 	const { item, index, updateItem, deleteItem, tags, filters, icons } = props;
@@ -70,7 +70,7 @@ export const PinCard = ( props: {
 	 * @param isChecked the new value
 	 */
 	function updateMapFilter(
-		mapFilter: tagArray[] = [],
+		mapFilter: TagArray[] = [],
 		value: string,
 		isChecked: boolean
 	) {
@@ -414,7 +414,7 @@ export const PinCard = ( props: {
 								{ value: 'default', label: __( 'Default' ) },
 								...icons.map( ( icon ) => {
 									return {
-										value: icon.name,
+										value: 'custom-' + String( icon.id ),
 										label: icon.name,
 									};
 								} ),
