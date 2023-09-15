@@ -2,7 +2,7 @@ import { Button, Icon, SelectControl } from '@wordpress/components';
 import { useContext, useState } from '@wordpress/element';
 import { safeSlug } from '../../utils';
 import { fitInView } from '../../utils/view';
-import { tagArray, MountedMapsContextValue } from '../../types';
+import { TagArray, MountedMapsContextValue } from '../../types';
 import { MapboxContext } from './MapboxContext';
 
 /**
@@ -13,7 +13,7 @@ import { MapboxContext } from './MapboxContext';
  * @param            selectValues.value
  * @return {SelectControl.Option[]} the select values
  */
-function topbarBuildSelectFromArray( selectValues: tagArray[] ) {
+function topbarBuildSelectFromArray( selectValues: TagArray[] ) {
 	return selectValues.map( ( item ) => {
 		return { label: item.value, value: safeSlug( item.value ) };
 	} );
@@ -43,58 +43,52 @@ export const TopBar = ( attributes ) => {
 	const [ tag, setTag ] = useState( '' );
 
 	// if no special stuff is required, return null
-	if ( fitView || filtersEnabled || tagsEnabled ) {
-		return (
-			<div className={ 'map-topbar' }>
-				{ fitView ? (
-					<Button
-						icon={ centerViewIcon }
-						isSmall={ true }
-						className={ 'fit-view' }
-						onClick={ () => fitInView( map, listings ) }
-					>
-						fit-view
-					</Button>
-				) : null }
+	return (
+		<div className={ 'map-topbar' }>
+			{ fitView ? (
+				<Button
+					icon={ centerViewIcon }
+					isSmall={ true }
+					className={ 'fit-view' }
+					onClick={ () => fitInView( map, listings ) }
+				>
+					fit-view
+				</Button>
+			) : null }
 
-				{ filtersEnabled ? (
-					<SelectControl
-						className={ 'mapbox-map-filter filter-by-partnership' }
-						value={ filter }
-						options={ [
-							{
-								value: '',
-								label: 'Select a filter',
-								disabled: true,
-							},
-							...topbarBuildSelectFromArray(
-								mapboxOptions.filters
-							),
-						] }
-						onChange={ ( selected ) => setFilter( selected ) }
-						__nextHasNoMarginBottom
-					/>
-				) : null }
+			{ filtersEnabled ? (
+				<SelectControl
+					className={ 'mapbox-map-filter filter-by-partnership' }
+					value={ filter }
+					options={ [
+						{
+							value: '',
+							label: 'Select a filter',
+							disabled: true,
+						},
+						...topbarBuildSelectFromArray( mapboxOptions.filters ),
+					] }
+					onChange={ ( selected ) => setFilter( selected ) }
+					__nextHasNoMarginBottom
+				/>
+			) : null }
 
-				{ tagsEnabled ? (
-					<SelectControl
-						className={ 'mapbox-map-filter filter-by-tag' }
-						value={ tag }
-						options={ [
-							{
-								value: '',
-								label: 'Select a tag',
-								disabled: true,
-							},
-							...topbarBuildSelectFromArray( mapboxOptions.tags ),
-						] }
-						onChange={ ( selected ) => setTag( selected ) }
-						__nextHasNoMarginBottom
-					/>
-				) : null }
-			</div>
-		);
-	}
-
-	return null;
+			{ tagsEnabled ? (
+				<SelectControl
+					className={ 'mapbox-map-filter filter-by-tag' }
+					value={ tag }
+					options={ [
+						{
+							value: '',
+							label: 'Select a tag',
+							disabled: true,
+						},
+						...topbarBuildSelectFromArray( mapboxOptions.tags ),
+					] }
+					onChange={ ( selected ) => setTag( selected ) }
+					__nextHasNoMarginBottom
+				/>
+			) : null }
+		</div>
+	);
 };

@@ -444,6 +444,7 @@ export function MapEdit( {
 					</PanelBody>
 				</Panel>
 			</InspectorControls>
+
 			<MapBox
 				attributes={ attributes }
 				mapDefaults={ getMapDefaults() }

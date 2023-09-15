@@ -48,11 +48,11 @@ export function addMarker(
 			'marker marker-' + safeSlug( marker.properties.name );
 		const root = createRoot( ref.current );
 
-		console.log(marker.properties.icon)
+		console.log( marker.properties.icon );
 
 		let markerIcon = null;
 		switch ( marker.properties.icon ) {
-			case Number( marker.properties.icon ):
+			case marker.properties.icon?.startsWith( 'custom-' ):
 				markerIcon = (
 					<DefaultMarker
 						color={ marker.properties.iconColor }

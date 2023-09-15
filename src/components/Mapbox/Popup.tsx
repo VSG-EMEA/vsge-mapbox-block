@@ -21,7 +21,7 @@ import { defaultMarkerSize } from './defaults';
  */
 export function addPopup(
 	map: mapboxgl.Map,
-	marker: MarkerItem,
+	marker: MapBoxListing,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup {
 	const popupRef: RefObject< HTMLDivElement > = createRef();
