@@ -281,7 +281,7 @@ export function MapBox( {
 			className={ 'map-wrapper' }
 			style={ { minHeight: attributes.mapHeight } }
 		>
-			{ attributes.sidebarEnabled ? (
+			{ attributes.sidebarEnabled && map ? (
 				<Sidebar attributes={ attributes } />
 			) : null }
 			<div className={ 'map-container' }>
