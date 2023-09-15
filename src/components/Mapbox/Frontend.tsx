@@ -60,22 +60,22 @@ document.addEventListener( 'DOMContentLoaded', () => {
 						'{ "listings": [], "tags": [], "filters": [] }'
 				),
 				bearing: Number( rawAttributes.bearing ),
-				elevation: Boolean( rawAttributes.elevation ),
-				filtersEnabled: Boolean( rawAttributes.filtersEnabled ),
-				fitView: Boolean( rawAttributes.fitView ),
-				freeViewCamera: Boolean( rawAttributes.freeViewCamera ),
-				geocoderEnabled: Boolean( rawAttributes.geocoderEnabled ),
+				elevation: rawAttributes.elevation === 'true',
+				freeViewCamera: rawAttributes.freeViewCamera === 'true',
 				latitude: Number( rawAttributes.latitude ),
 				longitude: Number( rawAttributes.longitude ),
 				pitch: Number( rawAttributes.pitch ),
-				sidebarEnabled: Boolean( rawAttributes.sidebarEnabled ),
-				tagsEnabled: Boolean( rawAttributes.tagsEnabled ),
+				sidebarEnabled: rawAttributes.sidebarEnabled === 'true',
+				fitView: rawAttributes.fitView === 'true',
+				geocoderEnabled: rawAttributes.geocoderEnabled === 'true',
+				tagsEnabled: rawAttributes.tagsEnabled === 'true',
+				filtersEnabled: rawAttributes.filtersEnabled === 'true',
 				mapHeight: rawAttributes.mapHeight || '100vh',
 				mapStyle:
 					rawAttributes.mapStyle ||
 					'mapbox://styles/mapbox/streets-v11',
 				mapZoom: Number( rawAttributes.mapZoom ),
-				mouseWheelZoom: Boolean( rawAttributes.mouseWheelZoom ),
+				mouseWheelZoom: rawAttributes.mouseWheelZoom === 'true',
 			};
 			createMapRoot( mapElement, attributes );
 		} );
