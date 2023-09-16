@@ -1,9 +1,8 @@
 // Filter the type of reseller with the select in the top bar
-import { Feature } from '@turf/turf';
 import { flyToStore } from './view';
-import { addPopup } from '../components/Mapbox/Popup';
+import { addPopup, removePopup } from '../components/Mapbox/Popup';
 import mapboxgl from 'mapbox-gl';
-import { MapBoxListing, MarkerItem } from '../types';
+import { MapBoxListing } from '../types';
 import { highlightListing } from '../components/Mapbox/utils';
 
 /**
@@ -13,7 +12,7 @@ import { highlightListing } from '../components/Mapbox/utils';
  *                 new object with a `type` property set to `'geojson'` and a `stores` property that is an array of the
  *                 same `Feature` objects with an added `id` property
  */
-export const prepareStores = ( listings ) => ( {
+export const prepareStores = ( listings: any ) => ( {
 	type: 'geojson',
 	stores: listings,
 } );
@@ -36,13 +35,18 @@ export function filterStores( stores, terms ) {
 	return filteredStores;
 }
 
-export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
+export function enableListing(
+	map: mapboxgl.Map,
+	marker: MapBoxListing,
+	mapRef: any
+) {
 	console.log( 'Listing enabled', marker );
 
 	// 1. Fly to the point
 	flyToStore( map, marker );
 
 	// 2. Close all other popups and display popup for clicked store
+	removePopup( mapRef );
 	addPopup( map, marker );
 
 	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
