@@ -41,5 +41,22 @@
 				}
 			}
 		}
+
+    ::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+      -webkit-border-radius: 4px;
+      background: #ddd;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #aaa;
+      -webkit-border-radius: 4px;
+      -webkit-box-shadow: 0 2px 4px rgba(255, 255, 255, 0.25) inset;
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: #ddd;
+    }
 	}
 }

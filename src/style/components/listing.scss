@@ -1,12 +1,13 @@
 .wp-block-vsge-mapbox .map-wrapper {
 	.mapbox-sidebar-feature {
+    cursor: pointer;
     display: flex;
     gap: .5rem;
 		position: relative;
 		border-bottom: 1px solid #eee;
 		padding: 1.3rem 1rem;
-		margin: 0 1px .5rem 0;
-		border-radius: 2px;
+		margin: 0 4px 4px 0;
+		border-radius: 4px;
 		background: #f3f3f3;
 		text-decoration: none;
 
@@ -63,5 +64,5 @@
 		&.active-store {
 			background-color: #f3f3f3;
 		}
-	}
+  }
 }
