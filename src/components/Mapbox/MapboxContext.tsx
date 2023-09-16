@@ -33,6 +33,7 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ geoCoder, setGeoCoder ] = useState( null );
 	const [ lngLat, setLngLat ] = useState( [ 0, 0 ] as LngLatLike );
 	const [ listings, setListings ] = useState( [] as MapBoxListing[] );
+	const [ filteredListings, setFilteredListings ] = useState( null );
 	const [ markers, setMarkers ] = useState( [] as MapBoxListing[] );
 	const mapDefaults = getMapDefaults();
 
@@ -51,6 +52,8 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 				setLngLat,
 				listings,
 				setListings,
+				filteredListings,
+				setFilteredListings,
 				markers,
 				setMarkers,
 				mapDefaults,

@@ -66,6 +66,8 @@ export type MountedMapsContextValue = {
 	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
 	listings?: MapBoxListing[];
 	setListings: Dispatch< SetStateAction< mapboxgl.Map | null > >;
+	filteredListings: number[] | null;
+	setFilteredListings: Dispatch< number[] | null >;
 	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
 	setMarkers: Dispatch< SetStateAction< MapBoxListing[] > >;
 	setGeoCoder?: SetStateAction< any >;
