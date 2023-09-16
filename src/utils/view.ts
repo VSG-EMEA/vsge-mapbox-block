@@ -1,6 +1,6 @@
-import mapboxgl, { Coordinate, MapboxGeoJSONFeature, Marker } from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import { Feature } from '@turf/turf';
-import { CoordinatesDef, MapBoxListing, MapItem, MarkerItem } from '../types';
+import { MapBoxListing } from '../types';
 
 /**
  * The function recenterView takes a map and default values and flies the map to the default center and
@@ -46,6 +46,26 @@ export function flyToStore(
 			center: store.geometry.coordinates,
 			zoom,
 		} );
+}
+
+/**
+ * Filter the listings based on the provided filteredIds.
+ *
+ * @param {MapBoxListing[]} listings    - The array of listings to filter.
+ * @param {number[] | null} filteredIds - The array of filtered ids or null.
+ * @return {MapBoxListing[]} - The filtered array of listings.
+ */
+export function filterListings(
+	listings: MapBoxListing[],
+	filteredIds: number[] | null
+): MapBoxListing[] {
+	const tempListings = filteredIds
+		? listings.filter( ( listing ) => {
+				return ( filteredIds as number[] )?.includes( listing.id );
+		  } )
+		: listings;
+
+	return tempListings;
 }
 
 /**
