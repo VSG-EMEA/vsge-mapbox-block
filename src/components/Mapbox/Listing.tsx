@@ -1,9 +1,11 @@
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
-import { MapBoxListing, MarkerProps } from '../../types';
+import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import mapboxgl from 'mapbox-gl';
 import { TagList } from './TagItem';
 import { enableListing } from '../../utils/dataset';
+import { useContext } from '@wordpress/element';
+import { MapboxContext } from './MapboxContext';
 
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
@@ -35,10 +37,14 @@ export const Listing = ( {
 			website,
 		},
 	} = jsonFeature;
+	const { mapRef }: MountedMapsContextValue = useContext( MapboxContext );
 	return (
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
-			<button onClick={ () => enableListing( map, jsonFeature ) }>
+			<div
+				role="presentation"
+				onClick={ () => enableListing( map, jsonFeature, mapRef ) }
+			>
 				<TagList
 					tags={ itemFilters }
 					className={ 'sidebar-filter-list' }
@@ -87,7 +93,7 @@ export const Listing = ( {
 						/>
 					</>
 				) : null }
-			</button>
+			</div>
 		</div>
 	);
 };

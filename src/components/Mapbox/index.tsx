@@ -48,6 +48,8 @@ export function MapBox( {
 		setLngLat,
 		setMarkers,
 		markers,
+		filteredListings,
+		setFilteredListings,
 	}: MountedMapsContextValue = useContext( MapboxContext );
 
 	/**
@@ -56,6 +58,7 @@ export function MapBox( {
 	 */
 	function restoreInitialMarkers() {
 		setMarkers( attributes.mapboxOptions.listings );
+		setFilteredListings( null );
 	}
 
 	/**
@@ -98,6 +101,7 @@ export function MapBox( {
 			// remove previous marker and popup
 			removeMarker( id );
 			removePopup( mapRef );
+
 			// then add the new marker and store the new marker in the markers array
 			addMarker( mapBoxListing, map );
 			setMarkers( [ ...markers, mapBoxListing ] );
@@ -281,7 +285,7 @@ export function MapBox( {
 			className={ 'map-wrapper' }
 			style={ { minHeight: attributes.mapHeight } }
 		>
-			{ attributes.sidebarEnabled && map ? (
+			{ attributes.sidebarEnabled ? (
 				<Sidebar attributes={ attributes } />
 			) : null }
 			<div className={ 'map-container' }>
