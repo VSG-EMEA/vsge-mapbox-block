@@ -36,7 +36,7 @@ const centerViewIcon = () => (
 );
 
 export const TopBar = ( attributes ) => {
-	const { map, listings }: MountedMapsContextValue =
+	const { map, listings, filteredListings, setFilteredListings }: MountedMapsContextValue =
 		useContext( MapboxContext );
 	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
 	const [ filter, setFilter ] = useState( '' );
@@ -44,7 +44,7 @@ export const TopBar = ( attributes ) => {
 
 	// if no special stuff is required, return null
 	return (
-		<div className={ 'map-topbar' }>
+		<div className={ fitView && filtersEnabled && tagsEnabled ? 'map-topbar' : 'map-topbar-hidden' }>
 			{ fitView ? (
 				<Button
 					icon={ centerViewIcon }
