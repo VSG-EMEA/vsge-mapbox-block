@@ -91,7 +91,8 @@
       "default": {
         "listings": [],
         "tags": [],
-        "filters": []
+        "filters": [],
+        "icons": []
       }
     }
   },

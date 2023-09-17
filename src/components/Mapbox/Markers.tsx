@@ -3,9 +3,10 @@ import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { Marker } from './Marker';
 import { DefaultMarker, PinPoint } from './Pin';
-import { MapBoxListing, MarkerItem } from '../../types';
+import { MapBoxListing, MarkerIcon, MarkerItem } from '../../types';
 import { areValidCoordinates } from '../Sortable/utils';
 import { safeSlug } from '../../utils';
+import { getMarkerSvg, modifySVG } from '../../utils/svg';
 
 /**
  * This function adds markers to a map based on a GeoJSON object.
@@ -14,30 +15,33 @@ import { safeSlug } from '../../utils';
  *                                                  representing the markers to be added to the map.
  * @param                                   map     - The `map` parameter is a `mapboxgl.Map` object representing the Mapbox map instance on
  *                                                  which the markers will be added.
+ * @param                                   icons
  * @return an array of `mapboxgl.Marker` objects.
  */
 export function addMarkers(
-	markers: mapboxgl.MapboxGeoJSONFeature[],
-	map: mapboxgl.Map
+	markers: MapBoxListing[],
+	map: mapboxgl.Map,
+	icons: []
 ): mapboxgl.Marker[] {
 	return markers?.map( ( marker ) => {
 		/* For each feature in the GeoJSON object above add a marker */
-		return addMarker( marker, map );
+		return addMarker( marker, map, icons );
 	} );
 }
 
 /**
  * This function adds a marker to a Mapbox map using a Marker Component rendered on a new DOM node.
  *
- * @param {MarkerItem} marker - A MarkerItem object that contains information about the marker,
- *                            including its geometry and properties.
- * @param              map    - The `map` parameter is an instance of the `mapboxgl.Map` class, which represents a
- *                            Mapbox map. It is used to add the marker to the map and set its position.
- * @param              type
+ * @param {MapBoxListing.properties} marker - A MarkerItem object that contains information about the marker,
+ *                                          including its geometry and properties.
+ * @param                            map    - The `map` parameter is an instance of the `mapboxgl.Map` class, which represents a
+ *                                          Mapbox map. It is used to add the marker to the map and set its position.
+ * @param                            icons  - An array of MarkerIcon objects representing the icon set.
  */
 export function addMarker(
 	marker: MapBoxListing,
-	map: mapboxgl.Map
+	map: mapboxgl.Map,
+	icons: []
 ): mapboxgl.Marker | undefined {
 	if ( marker?.geometry ) {
 		const ref: RefObject< HTMLElement > = createRef< HTMLElement >();
@@ -48,41 +52,42 @@ export function addMarker(
 			'marker marker-' + safeSlug( marker.properties.name );
 		const root = createRoot( ref.current );
 
-		console.log( marker.properties.icon );
+		let markerIcon = (
+			<DefaultMarker
+				color={ marker.properties.iconColor }
+				size={ marker.properties.iconSize }
+			/>
+		);
 
-		let markerIcon = null;
-		switch ( marker.properties.icon ) {
-			case marker.properties.icon?.startsWith( 'custom-' ):
-				markerIcon = (
-					<DefaultMarker
-						color={ marker.properties.iconColor }
-						size={ marker.properties.iconSize }
-					/>
-				);
-				break;
-			case 'geocoder':
-			case 'pin':
-				markerIcon = (
-					<PinPoint
-						color={ marker.properties.iconColor }
-						size={ marker.properties.iconSize }
-					/>
-				);
-				break;
-			case 'default':
-			default:
-				markerIcon = (
-					<DefaultMarker
-						color={ marker.properties.iconColor }
-						size={ marker.properties.iconSize }
-					/>
-				);
-				break;
+		if ( marker.properties.icon?.startsWith( 'custom-' ) ) {
+			let svgMarker = getMarkerSvg( marker.properties.icon, icons );
+			svgMarker = modifySVG(
+				svgMarker,
+				marker.properties.iconColor,
+				marker.properties.iconSize
+			);
+
+			markerIcon = (
+				<DefaultMarker
+					children={
+						<div
+							dangerouslySetInnerHTML={ { __html: svgMarker } }
+						/>
+					}
+				/>
+			);
+		} else if ( [ 'geocoder', 'pin' ].includes( marker.properties.icon ) ) {
+			markerIcon = (
+				<PinPoint
+					color={ marker.properties.iconColor }
+					size={ marker.properties.iconSize }
+				/>
+			);
 		}
 
 		// Render a Marker Component on our new DOM node
 		root.render(
-			<Marker feature={ marker } map={ map } children={ markerIcon } />
+			<Marker feature={ marker } children={ markerIcon } map={ map } />
 		);
 
 		// Add markers to the map at all points
