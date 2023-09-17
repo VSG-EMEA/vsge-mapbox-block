@@ -1,5 +1,4 @@
 import { MapboxOptions } from 'mapbox-gl';
-import { __ } from '@wordpress/i18n';
 import { MapboxBlockDefaults, selectOptions } from './types';
 
 declare global {
@@ -10,6 +9,8 @@ export const mapboxDefaults: MapboxOptions = {
 	container: '',
 	scrollZoom: true,
 };
+
+export const DEFAULT_COLOR = '#004a83';
 
 /**
  * The mapbox map layout styles

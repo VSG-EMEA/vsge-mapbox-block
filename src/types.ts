@@ -17,7 +17,7 @@ export type TagCollection = { id: number; value: string };
 export interface MarkerIcon {
 	id: number;
 	name: string;
-	content: SVGElement;
+	content: string;
 }
 
 export type MapboxOptions = {
@@ -62,14 +62,12 @@ export interface MapItem extends Feature {
 export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;
 	lngLat?: LngLat;
-	markers?: MapBoxListing[];
 	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
 	listings?: MapBoxListing[];
-	setListings: Dispatch< SetStateAction< mapboxgl.Map | null > >;
+	setListings: Dispatch< SetStateAction< MapBoxListing[] | null > >;
 	filteredListings: number[] | null;
 	setFilteredListings: Dispatch< number[] | null >;
 	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
-	setMarkers: Dispatch< SetStateAction< MapBoxListing[] > >;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
 	geocoderRef?: RefObject< HTMLDivElement >;
@@ -119,7 +117,7 @@ export interface MarkerProps {
 	state?: string;
 	emailAddress?: string;
 	website?: string;
-	icon?: string;
+	icon: string;
 	iconSize?: number;
 	iconColor?: string;
 	itemTags?: TagArray[];
