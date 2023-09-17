@@ -5,7 +5,7 @@ import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { getMarkerData, initMap } from './utils';
 import mapboxgl, { LngLatLike, MapMouseEvent, Point } from 'mapbox-gl';
-import { initGeocoder } from './Geocoder';
+import { GeoCoder, initGeocoder } from './Geocoder';
 import {
 	MapAttributes,
 	MapboxBlockDefaults,
@@ -46,9 +46,8 @@ export function MapBox( {
 		mapRef,
 		geocoderRef,
 		setLngLat,
-		setMarkers,
-		markers,
-		filteredListings,
+		listings,
+		setListings,
 		setFilteredListings,
 	}: MountedMapsContextValue = useContext( MapboxContext );
 
@@ -57,7 +56,7 @@ export function MapBox( {
 	 * attribute.
 	 */
 	function restoreInitialMarkers() {
-		setMarkers( attributes.mapboxOptions.listings );
+		setListings( attributes.mapboxOptions.listings );
 		setFilteredListings( null );
 	}
 
@@ -103,11 +102,16 @@ export function MapBox( {
 			removePopup( mapRef );
 
 			// then add the new marker and store the new marker in the markers array
-			addMarker( mapBoxListing, map );
-			setMarkers( [ ...markers, mapBoxListing ] );
+			addMarker( mapBoxListing, map, attributes.mapboxOptions.icons );
+			setListings( [ ...listings, mapBoxListing ] );
 		}
 	}
 
+	/**
+	 * Listens for a click event on the map and performs various actions based on the click position and element clicked.
+	 *
+	 * @param {mapboxgl.Map} currentMap - The current map object.
+	 */
 	function listenForClick( currentMap: mapboxgl.Map ) {
 		if ( currentMap ) {
 			currentMap.on( 'click', ( e: MapMouseEvent ) => {
@@ -129,11 +133,11 @@ export function MapBox( {
 					e.originalEvent?.target as HTMLElement
 				 )?.closest( 'button' ) as MarkerHTMLElement | null;
 
-				if ( markers?.length && clickedEl?.nodeName === 'BUTTON' ) {
+				if ( listings?.length && clickedEl?.nodeName === 'BUTTON' ) {
 					// get the marker data
 					const markerData: MapBoxListing | undefined = getMarkerData(
 						Number( clickedEl.dataset?.id || 0 ),
-						markers
+						listings
 					);
 
 					if ( clickedEl.dataset?.markerName === 'temp' ) {
@@ -152,7 +156,7 @@ export function MapBox( {
 								<Button
 									onClick={ () =>
 										addNewListing(
-											getNextId( markers ),
+											getNextId( listings ),
 											clickedPoint
 										)
 									}
@@ -185,15 +189,15 @@ export function MapBox( {
 
 				// Generate the metadata for the pin marker if nothing was clicked
 				const newTempMarker = generateTempMarkerData(
-					getNextId( markers ),
+					getNextId( listings ),
 					clickedPoint
 				);
 
 				// add the new marker to the map
-				addMarker( newTempMarker, currentMap );
+				addMarker( newTempMarker, currentMap, attributes.mapboxOptions.icons );
 
 				// store the new marker in the markers array
-				setMarkers( [ ...markers, newTempMarker ] );
+				setListings( [ ...listings, newTempMarker ] );
 			} );
 		}
 	}
@@ -204,7 +208,8 @@ export function MapBox( {
 			mapboxgl.accessToken = mapDefaults.accessToken;
 
 			// Initialize map and store the map instance
-			setMap( initMap( mapRef.current, attributes, mapDefaults ) );
+			const mapObj = initMap( mapRef.current, attributes, mapDefaults );
+			setMap( mapObj );
 
 			// Add the stored listings to the markers list
 			restoreInitialMarkers();
@@ -224,15 +229,15 @@ export function MapBox( {
 							map,
 							attributes,
 							mapDefaults,
-							markers
+							listings
 						)
 					);
 				}
 			} );
 
-			if ( markers?.length ) {
+			if ( listings?.length ) {
 				// add markers to the map
-				addMarkers( markers, map );
+				addMarkers( listings, map, attributes.mapboxOptions.icons );
 			}
 
 			// Listen for clicks on the map
@@ -250,7 +255,7 @@ export function MapBox( {
 					map,
 					attributes,
 					mapDefaults,
-					markers
+					listings
 				)
 			);
 		}
@@ -285,9 +290,12 @@ export function MapBox( {
 			className={ 'map-wrapper' }
 			style={ { minHeight: attributes.mapHeight } }
 		>
-			{ attributes.sidebarEnabled ? (
-				<Sidebar attributes={ attributes } />
-			) : null }
+			<div className={ 'map-sidebar' }>
+				{ attributes.geocoderEnabled ? (
+					<GeoCoder geocoderRef={ geocoderRef } />
+				) : null }
+				{ attributes.sidebarEnabled ? <Sidebar /> : null }
+			</div>
 			<div className={ 'map-container' }>
 				<TopBar { ...attributes } />
 				<Map mapRef={ mapRef as RefObject< HTMLDivElement > | null } />
