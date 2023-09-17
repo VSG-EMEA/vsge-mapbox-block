@@ -69,6 +69,33 @@ export function filterListings(
 }
 
 /**
+ * Filters the given list of MapBox listings based on a specified criteria.
+ *
+ * @param {MapBoxListing[]} listings - The list of MapBox listings to filter.
+ * @param {string}          by       - The criteria to filter the listings by.
+ * @param {string}          term     - The value to compare against the listings.
+ * @return {MapBoxListing[]} The filtered list of MapBox listings.
+ */
+export function filterListingsBy(
+	listings: MapBoxListing[],
+	by: string,
+	term: string
+): MapBoxListing[] {
+	let filteredListings: MapBoxListing[] = [];
+
+	filteredListings = listings.filter( ( listing: MapBoxListing ) => {
+		if ( typeof listing.properties?.[ by ] === 'object' ) {
+			return listing.properties?.[ by ].includes( term );
+		}
+		return listing.properties?.[ by ] === term;
+	} );
+
+	console.log( filteredListings );
+
+	return filteredListings;
+}
+
+/**
  * The function fits the map view to the bounds of filtered stores with a padding of 10% of the map
  * container's width.
  *
