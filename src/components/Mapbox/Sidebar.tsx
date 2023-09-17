@@ -1,8 +1,7 @@
 import { Listing } from './Listing';
-import { GeoCoder } from './Geocoder';
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
-import { useContext, useState } from '@wordpress/element';
+import { useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { filterListings } from '../../utils/view';
 
@@ -24,7 +23,6 @@ function Listings( props: {
 	map: mapboxgl.Map;
 	filteredListings: number[] | null;
 } ) {
-	console.log( 'filtered items', props.filteredListings );
 	const tempListings = filterListings(
 		props.listings,
 		props.filteredListings
@@ -51,23 +49,22 @@ function Listings( props: {
  * GeoCoder component is conditionally rendered based on the value of the "geocoderEnabled" property in
  * the "mapboxOptions" object. The "feature-listing" div contains a map
  */
-export const Sidebar = ( { attributes } ): JSX.Element => {
-	const { geocoderEnabled, mapboxOptions } = attributes;
-	const { geocoderRef, map, filteredListings }: MountedMapsContextValue =
-		useContext( MapboxContext );
+export const Sidebar = (): JSX.Element => {
+	const {
+		map,
+		listings,
+		filteredListings,
+	}: MountedMapsContextValue = useContext( MapboxContext );
 
 	return (
-		<div className={ 'map-sidebar' }>
-			{ geocoderEnabled ? (
-				<GeoCoder geocoderRef={ geocoderRef } />
-			) : null }
-			{ map ? (
+		<>
+			{ map && listings ? (
 				<Listings
-					listings={ mapboxOptions.listings }
+					listings={ listings }
 					map={ map }
 					filteredListings={ filteredListings }
 				/>
 			) : null }
-		</div>
+		</>
 	);
 };
