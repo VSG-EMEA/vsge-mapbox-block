@@ -44,7 +44,7 @@ export const getUserLanguage = () => {
 export function safeSlug( string: string ) {
 	return encodeURIComponent( string )
 		.toLowerCase()
-		.replace( /\.|%[0-9a-zA-Z]{2}/gi, '' );
+		.replace( /\.|_|%[0-9a-zA-Z]{2}/gi, '-' );
 }
 
 /**

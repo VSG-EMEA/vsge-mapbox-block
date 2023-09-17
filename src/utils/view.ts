@@ -59,6 +59,7 @@ export function filterListings(
 	listings: MapBoxListing[],
 	filteredIds: number[] | null
 ): MapBoxListing[] {
+	// Filter the listings based on the provided filteredIds
 	const tempListings = filteredIds
 		? listings.filter( ( listing ) => {
 				return ( filteredIds as number[] )?.includes( listing.id );

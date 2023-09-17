@@ -1,7 +1,6 @@
 import { Button, Icon, SelectControl } from '@wordpress/components';
-import { useContext, useState } from '@wordpress/element';
-import { safeSlug } from '../../utils';
-import { fitInView } from '../../utils/view';
+import { useContext, useEffect, useState } from '@wordpress/element';
+import { filterListingsBy, fitInView } from '../../utils/view';
 import { TagArray, MountedMapsContextValue } from '../../types';
 import { MapboxContext } from './MapboxContext';
 
@@ -15,7 +14,7 @@ import { MapboxContext } from './MapboxContext';
  */
 function topbarBuildSelectFromArray( selectValues: TagArray[] ) {
 	return selectValues.map( ( item ) => {
-		return { label: item.value, value: safeSlug( item.value ) };
+		return { label: item.value, value: item.value };
 	} );
 }
 
@@ -36,15 +35,33 @@ const centerViewIcon = () => (
 );
 
 export const TopBar = ( attributes ) => {
-	const { map, listings, filteredListings, setFilteredListings }: MountedMapsContextValue =
-		useContext( MapboxContext );
+	const {
+		map,
+		listings,
+		filteredListings,
+		setFilteredListings,
+	}: MountedMapsContextValue = useContext( MapboxContext );
 	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
 	const [ filter, setFilter ] = useState( '' );
 	const [ tag, setTag ] = useState( '' );
 
+	useEffect( () => {
+		if ( listings && listings.length > 0 ) {
+			setFilteredListings(
+				filterListingsBy( listings, 'itemFilters', filter )
+			);
+		}
+	}, [ filter ] );
+
 	// if no special stuff is required, return null
 	return (
-		<div className={ fitView && filtersEnabled && tagsEnabled ? 'map-topbar' : 'map-topbar-hidden' }>
+		<div
+			className={
+				fitView || filtersEnabled || tagsEnabled
+					? 'map-topbar'
+					: 'map-topbar-hidden'
+			}
+		>
 			{ fitView ? (
 				<Button
 					icon={ centerViewIcon }
