@@ -1,6 +1,6 @@
 import { createRef, createRoot } from '@wordpress/element';
-import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
-import { MapBoxListing, MarkerItem } from '../../types';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
+import { MapBoxListing } from '../../types';
 import { RefObject } from 'react';
 import { PopupContent, PopupCustom } from './PopupContent';
 import { defaultMarkerSize } from './defaults';

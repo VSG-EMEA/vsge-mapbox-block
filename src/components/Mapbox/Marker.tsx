@@ -2,6 +2,10 @@ import { Button } from '@wordpress/components';
 import { enableListing } from '../../utils/dataset';
 import { safeSlug } from '../../utils';
 import { DefaultMarker } from './Pin';
+import { MountedMapsContextValue } from '../../types';
+import { useContext } from '@wordpress/element';
+import { MapboxContext } from './MapboxContext';
+import { DEFAULT_COLOR } from '../../constants';
 
 /**
  * This is a TypeScript React function that renders a marker with a button and optional children
@@ -24,10 +28,11 @@ export function Marker( {
 	map: any;
 	children?: JSX.Element;
 } ): JSX.Element {
+	const { mapRef }: MountedMapsContextValue = useContext( MapboxContext );
 	return (
 		<Button
 			onClick={ () => {
-				enableListing( map, feature );
+				enableListing( map, feature, mapRef );
 			} }
 			className={ 'marker marker-' + safeSlug( feature.properties.name ) } // this is important to prevent duplicates
 			id={ 'marker-' + feature.id || 'temp' }
@@ -37,7 +42,7 @@ export function Marker( {
 		>
 			{ children || (
 				<DefaultMarker
-					color={ feature.properties.iconColor?.hex || '#004a83' }
+					color={ feature.properties.iconColor?.hex || DEFAULT_COLOR }
 					size={ feature.properties.iconSize as number }
 				/>
 			) }

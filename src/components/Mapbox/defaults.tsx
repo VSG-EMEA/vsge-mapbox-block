@@ -3,10 +3,11 @@ import { DefaultMarker } from './Pin';
 import { __ } from '@wordpress/i18n';
 import { MapBoxListing } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
+import { DEFAULT_COLOR } from '../../constants';
 
 export const defaultMarkerSize: number = 48;
 
-export const defaultColors: string[] = [ '#004a83', '#ce0e2d', '#44f' ];
+export const defaultColors: string[] = [ DEFAULT_COLOR, '#ce0e2d', '#44f' ];
 
 export const defaultMarkerStyle: JSX.Element = DefaultMarker( {
 	color: defaultColors[ 0 ],
