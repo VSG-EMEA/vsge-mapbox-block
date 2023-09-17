@@ -6,19 +6,12 @@ import mapboxgl from 'mapbox-gl';
 import { Marker } from './Marker';
 import { MapboxContext } from './MapboxContext';
 import { getNextId } from '../../utils/dataset';
-import {
-	MapAttributes,
-	MapboxBlockDefaults,
-	MapItem,
-	MarkerItem,
-} from '../../types';
+import { MapAttributes, MapboxBlockDefaults, MapBoxListing } from '../../types';
 import {
 	defaultMarkerProps,
-	defaultMarkerSize, generateGeocoderMarkerData,
-	generateTempMarkerData,
+	defaultMarkerSize,
 	geoMarkerStyle,
 } from './defaults';
-import { addMarker } from './Markers';
 
 /* This is a TypeScript React function that returns a JSX element representing a marker for the
 geocoder search result. It receives `props` as an argument, which contains `coordinates` and `map`
@@ -77,7 +70,7 @@ export function initGeocoder(
 	map: mapboxgl.Map,
 	attributes: MapAttributes,
 	defaults: MapboxBlockDefaults,
-	markers: MapItem[]
+	listings: MapBoxListing[]
 ): MapboxGeocoder | undefined {
 	if ( defaults.accessToken ) {
 		const geocoder = new MapboxGeocoder( {
