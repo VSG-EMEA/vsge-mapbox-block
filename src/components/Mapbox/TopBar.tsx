@@ -37,6 +37,7 @@ const centerViewIcon = () => (
 export const TopBar = ( attributes ) => {
 	const {
 		map,
+		mapRef,
 		listings,
 		filteredListings,
 		setFilteredListings,
@@ -69,7 +70,7 @@ export const TopBar = ( attributes ) => {
 					icon={ centerViewIcon }
 					isSmall={ true }
 					className={ 'fit-view' }
-					onClick={ () => fitInView( map, listings ) }
+					onClick={ () => fitInView( mapRef, map, listings ) }
 				>
 					fit-view
 				</Button>

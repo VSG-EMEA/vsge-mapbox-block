@@ -297,6 +297,7 @@ export function MapBox( {
 
 	useEffect( () => {
 		if ( filteredListings?.length ) {
+			// if there are filtered listings hide the "unselected"
 			listings.forEach( ( listing ) => {
 				if (
 					filteredListings.find( ( item ) => item.id === listing.id )
@@ -307,7 +308,10 @@ export function MapBox( {
 				}
 			} );
 		} else {
-			restoreInitialMarkers();
+			// if no filtered listings show all
+			listings.forEach( ( listing ) => {
+				updateListing( listing );
+			} );
 		}
 	}, [ filteredListings ] );
 

@@ -100,38 +100,42 @@ export function filterListingsBy(
  * The function fits the map view to the bounds of filtered stores with a padding of 10% of the map
  * container's width.
  *
- * @param {mapboxgl.Map} map      The map object is an instance of the Mapbox GL JS map that is being used to display the
- *                                map.
- * @param {Feature[]}    listings filteredStores is an array of features representing the stores that need to
- *                                be displayed on the map.
+ * @param {mapboxgl.Map}    map      The map object is an instance of the Mapbox GL JS map that is being used to display the
+ *                                   map.
+ * @param {MapBoxListing[]} listings filteredStores is an array of features representing the stores that need to
+ *                                   be displayed on the map.
+ * @param                   mapRef
  */
-export function fitInView( map, listings ) {
+export function fitInView(
+	map: mapboxgl.Map,
+	listings: MapBoxListing[],
+	mapRef: React.RefObject< HTMLDivElement > | undefined
+) {
 	const bounds = new mapboxgl.LngLatBounds();
-	const mapContainer = document.getElementById( 'map-container' );
-	if ( mapContainer ) {
-		const padding = mapContainer.offsetWidth * 0.1;
+	let padding = 0;
+	if ( mapRef ) {
+		padding = mapRef.current.offsetWidth * 0.1;
+	}
 
-		console.log( bounds );
+	if ( listings.length !== 0 ) {
+		listings.forEach( ( point ) => {
+			bounds.extend( point.geometry.coordinates );
+		} );
 
-		if ( listings.length !== 0 ) {
-			listings.forEach( ( point: Feature ) => {
-				bounds.extend( point.geometry.coordinates );
-			} );
-
-			if (
-				bounds.sw.lat === bounds.ne.lat &&
-				bounds.sw.lng === bounds.ne.lng
-			) {
-				const lat = parseFloat( bounds.sw.lat );
-				const lng = parseFloat( bounds.sw.lng );
-				bounds.sw.lat = lat + 0.5;
-				bounds.ne.lat = lat - 0.5;
-				bounds.sw.lng = lng + 0.5;
-				bounds.ne.lng = lng - 0.5;
-			}
-			map.fitBounds( bounds, { padding } );
+		if (
+			bounds._sw.lat === bounds._ne.lat &&
+			bounds._sw.lng === bounds._ne.lng
+		) {
+			const lat = parseFloat( bounds._sw.lat );
+			const lng = parseFloat( bounds._sw.lng );
+			bounds._sw.lat = lat + 0.5;
+			bounds._ne.lat = lat - 0.5;
+			bounds._sw.lng = lng + 0.5;
+			bounds._ne.lng = lng - 0.5;
 		}
 
-		map.resize();
+		map.fitBounds( bounds, { padding } );
 	}
+
+	map.resize();
 }
