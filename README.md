@@ -22,7 +22,8 @@ The Mapbox Gutenberg Block is a powerful WordPress block that allows you to easi
 
 1. Clone or download this repository.
 2. Upload the plugin folder to the `wp-content/plugins/` directory of your WordPress site.
-3. Activate the plugin from the WordPress admin panel.
+3. `npm install` and `npm build` the plugin
+4. Activate the plugin from the WordPress admin panel.
 
 ## Usage
 
@@ -39,7 +40,7 @@ For detailed instructions and examples, please refer to the [documentation](link
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
