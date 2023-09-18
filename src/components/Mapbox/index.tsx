@@ -108,6 +108,20 @@ export function MapBox( {
 	}
 
 	/**
+	 * Updates the listing on the map.
+	 *
+	 * @param {MapBoxListing} mapListing - The map listing to be updated.
+	 */
+	function updateListing( mapListing: MapBoxListing ) {
+		// remove previous marker and popup
+		removeMarker( mapListing.id );
+		removePopup( mapRef );
+
+		// then add the new marker and store the new marker in the markers array
+		addMarker( mapListing, map, attributes.mapboxOptions.icons );
+	}
+
+	/**
 	 * Listens for a click event on the map and performs various actions based on the click position and element clicked.
 	 *
 	 * @param {mapboxgl.Map} currentMap - The current map object.
