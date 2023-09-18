@@ -20,6 +20,12 @@ import { RefObject } from 'react';
 import { Button } from '@wordpress/components';
 import { defaultMarkerProps, generateTempMarkerData } from './defaults';
 
+/**
+ * Removes temporary markers from the specified element.
+ *
+ * @param {React.RefObject<HTMLDivElement>} maboxRef - The reference to the HTMLDivElement
+ * @return {void} This function does not return anything
+ */
 export function removeTempMarkers(
 	maboxRef: React.RefObject< HTMLDivElement > | undefined
 ) {
@@ -30,6 +36,15 @@ export function removeTempMarkers(
 	}
 }
 
+/**
+ * Renders a MapBox component.
+ *
+ * @param {Object}              props             - The props object containing attributes, mapDefaults, and isEditor.
+ * @param {MapAttributes}       props.attributes  - The attributes of the MapBox component.
+ * @param {MapboxBlockDefaults} props.mapDefaults - The default settings for the MapBox component.
+ * @param {boolean}             [props.isEditor]  - A boolean indicating whether the component is being used in an editor.
+ * @return {JSX.Element} The rendered MapBox component.
+ */
 export function MapBox( {
 	attributes,
 	mapDefaults,
@@ -48,6 +63,7 @@ export function MapBox( {
 		setLngLat,
 		listings,
 		setListings,
+		filteredListings,
 		setFilteredListings,
 	}: MountedMapsContextValue = useContext( MapboxContext );
 
@@ -81,7 +97,7 @@ export function MapBox( {
 	 *                                  the map, and it is used to set the coordinates of a new marker that will be added to the map.
 	 */
 	function addNewListing( id: number, clickedPoint: LngLatLike ) {
-		if ( map ) {
+		if ( map && listings ) {
 			const mapBoxListing: MapBoxListing = {
 				id,
 				type: 'Feature',
@@ -208,7 +224,11 @@ export function MapBox( {
 				);
 
 				// add the new marker to the map
-				addMarker( newTempMarker, currentMap, attributes.mapboxOptions.icons );
+				addMarker(
+					newTempMarker,
+					currentMap,
+					attributes.mapboxOptions.icons
+				);
 
 				// store the new marker in the markers array
 				setListings( [ ...listings, newTempMarker ] );
@@ -306,6 +326,8 @@ export function MapBox( {
 						>
 							Get a Mapbox Access Token
 						</a>
+						then add the token to your config.php file as a constant
+						<code>MAPBOX_TOKEN</code>
 					</p>
 				</div>
 			</>
