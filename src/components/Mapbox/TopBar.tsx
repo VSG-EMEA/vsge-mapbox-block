@@ -50,6 +50,8 @@ export const TopBar = ( attributes ) => {
 			setFilteredListings(
 				filterListingsBy( listings, 'itemFilters', filter )
 			);
+		} else {
+			setFilteredListings( null );
 		}
 	}, [ filter ] );
 
@@ -81,7 +83,6 @@ export const TopBar = ( attributes ) => {
 						{
 							value: '',
 							label: 'Select a filter',
-							disabled: true,
 						},
 						...topbarBuildSelectFromArray( mapboxOptions.filters ),
 					] }

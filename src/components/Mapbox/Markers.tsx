@@ -41,7 +41,7 @@ export function addMarkers(
 export function addMarker(
 	marker: MapBoxListing,
 	map: mapboxgl.Map,
-	icons: []
+	icons: MarkerIcon[]
 ): mapboxgl.Marker | undefined {
 	if ( marker?.geometry ) {
 		const ref: RefObject< HTMLElement > = createRef< HTMLElement >();

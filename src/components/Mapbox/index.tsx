@@ -261,6 +261,22 @@ export function MapBox( {
 		}
 	}, [ attributes.geocoderEnabled ] );
 
+	useEffect( () => {
+		if ( filteredListings?.length ) {
+			listings.forEach( ( listing ) => {
+				if (
+					filteredListings.find( ( item ) => item.id === listing.id )
+				) {
+					updateListing( listing );
+				} else {
+					removeMarker( listing.id );
+				}
+			} );
+		} else {
+			restoreInitialMarkers();
+		}
+	}, [ filteredListings ] );
+
 	/**
 	 * if the access key isn't provided
 	 */
