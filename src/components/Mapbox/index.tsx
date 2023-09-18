@@ -19,6 +19,7 @@ import { getNextId } from '../../utils/dataset';
 import { RefObject } from 'react';
 import { Button } from '@wordpress/components';
 import { defaultMarkerProps, generateTempMarkerData } from './defaults';
+import { fitInView } from '../../utils/view';
 
 /**
  * Removes temporary markers from the specified element.
@@ -307,10 +308,12 @@ export function MapBox( {
 					removeMarker( listing.id );
 				}
 			} );
+			fitInView( map, filteredListings, mapRef );
 		} else {
 			// if no filtered listings show all
 			listings.forEach( ( listing ) => {
 				updateListing( listing );
+				fitInView( map, listings, mapRef );
 			} );
 		}
 	}, [ filteredListings ] );

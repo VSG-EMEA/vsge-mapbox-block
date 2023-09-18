@@ -91,8 +91,6 @@ export function filterListingsBy(
 		return listing.properties?.[ by ] === term;
 	} );
 
-	console.log( filteredListings );
-
 	return filteredListings;
 }
 
@@ -104,7 +102,7 @@ export function filterListingsBy(
  *                                   map.
  * @param {MapBoxListing[]} listings filteredStores is an array of features representing the stores that need to
  *                                   be displayed on the map.
- * @param                   mapRef
+ * @param                   mapRef   The map reference is an instance of the Mapbox GL JS map that is being used to display the map.
  */
 export function fitInView(
 	map: mapboxgl.Map,

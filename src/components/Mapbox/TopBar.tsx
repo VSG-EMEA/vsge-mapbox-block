@@ -47,12 +47,12 @@ export const TopBar = ( attributes ) => {
 	const [ tag, setTag ] = useState( '' );
 
 	useEffect( () => {
-		if ( listings && listings.length > 0 ) {
+		if ( filter === '' ) {
+			setFilteredListings( null );
+		} else if ( listings && listings.length > 0 ) {
 			setFilteredListings(
 				filterListingsBy( listings, 'itemFilters', filter )
 			);
-		} else {
-			setFilteredListings( null );
 		}
 	}, [ filter ] );
 
@@ -70,7 +70,7 @@ export const TopBar = ( attributes ) => {
 					icon={ centerViewIcon }
 					isSmall={ true }
 					className={ 'fit-view' }
-					onClick={ () => fitInView( mapRef, map, listings ) }
+					onClick={ () => fitInView( map, listings, mapRef ) }
 				>
 					fit-view
 				</Button>
