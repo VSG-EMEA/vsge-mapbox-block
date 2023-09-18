@@ -18,19 +18,10 @@ import { filterListings } from '../../utils/view';
  * @return JSX.Element 	 A React component that renders a list of `Listing` components based on the `listings` prop
  *                       passed to it, along with a `map` and `onClick` function.
  */
-function Listings( props: {
-	listings: MapBoxListing[];
-	map: mapboxgl.Map;
-	filteredListings: number[] | null;
-} ) {
-	const tempListings = filterListings(
-		props.listings,
-		props.filteredListings
-	);
-
+function Listings( props: { listings: MapBoxListing[]; map: mapboxgl.Map } ) {
 	return (
 		<div className={ 'feature-listing' }>
-			{ tempListings.map( ( data, index: number ) => (
+			{ props.listings.map( ( data, index: number ) => (
 				<Listing key={ index } jsonFeature={ data } map={ props.map } />
 			) ) }
 		</div>
@@ -50,19 +41,15 @@ function Listings( props: {
  * the "mapboxOptions" object. The "feature-listing" div contains a map
  */
 export const Sidebar = (): JSX.Element => {
-	const {
-		map,
-		listings,
-		filteredListings,
-	}: MountedMapsContextValue = useContext( MapboxContext );
+	const { map, listings, filteredListings }: MountedMapsContextValue =
+		useContext( MapboxContext );
 
 	return (
 		<>
-			{ map && listings ? (
+			{ map ? (
 				<Listings
-					listings={ listings }
+					listings={ filteredListings ?? listings }
 					map={ map }
-					filteredListings={ filteredListings }
 				/>
 			) : null }
 		</>
