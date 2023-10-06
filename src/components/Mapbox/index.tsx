@@ -260,11 +260,13 @@ export function MapBox( {
 				if ( attributes.sidebarEnabled && attributes.geocoderEnabled ) {
 					setGeoCoder(
 						initGeocoder(
-							geocoderRef,
 							map,
-							attributes,
-							mapDefaults,
-							listings
+							mapRef,
+							geocoderRef,
+							listings,
+							filteredListings,
+							setFilteredListings,
+							mapDefaults
 						)
 					);
 				}
@@ -286,11 +288,13 @@ export function MapBox( {
 		if ( map && attributes.geocoderEnabled ) {
 			setGeoCoder(
 				initGeocoder(
-					geocoderRef,
 					map,
-					attributes,
-					mapDefaults,
-					listings
+					mapRef,
+					geocoderRef,
+					listings,
+					filteredListings,
+					setFilteredListings,
+					mapDefaults
 				)
 			);
 		}

@@ -1,17 +1,21 @@
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
-import { RefObject } from 'react';
-import { createRef, createRoot, useContext } from '@wordpress/element';
-import mapboxgl from 'mapbox-gl';
+import type { RefObject } from 'react';
+import { createRef, createRoot } from '@wordpress/element';
+import mapboxgl, { LngLatBoundsLike } from 'mapbox-gl';
 import { Marker } from './Marker';
-import { MapboxContext } from './MapboxContext';
-import { getNextId } from '../../utils/dataset';
-import { MapAttributes, MapboxBlockDefaults, MapBoxListing } from '../../types';
+import {
+	MapboxBlockDefaults,
+	MapBoxListing,
+} from '../../types';
 import {
 	defaultMarkerProps,
 	defaultMarkerSize,
 	geoMarkerStyle,
 } from './defaults';
+import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
+import { addPopup, removePopup } from './Popup';
+import { fitInView } from '../../utils/view';
 
 /* This is a TypeScript React function that returns a JSX element representing a marker for the
 geocoder search result. It receives `props` as an argument, which contains `coordinates` and `map`
@@ -53,32 +57,46 @@ export const GeoMarker = ( props ): JSX.Element => {
  *            will be placed.
  * @return A mapboxgl.Marker object is being returned.
  */
-const initGeomarker = ( id: number, map: mapboxgl.Map ): mapboxgl.Marker => {
+const initGeomarker = (
+	id: number,
+	map: mapboxgl.Map
+): RefObject< HTMLDivElement > => {
 	const markerRef: RefObject< HTMLDivElement > = createRef();
 	// Create a new DOM root and save it to the React ref
 	markerRef.current = document.createElement( 'div' );
+	markerRef.current.className = 'marker marker-geocoder';
 	const root = createRoot( markerRef.current );
 	// Render a Marker Component on our new DOM node
 	root.render( <GeoMarker id={ id } map={ map } /> );
 
 	// Add markers to the map.
-	return new mapboxgl.Marker( markerRef.current );
+	return markerRef;
 };
 
-export function initGeocoder(
-	geocoderRef: React.RefObject< HTMLDivElement > | undefined,
+export const initGeocoder = (
 	map: mapboxgl.Map,
-	attributes: MapAttributes,
-	defaults: MapboxBlockDefaults,
-	listings: MapBoxListing[]
-): MapboxGeocoder | undefined {
+	mapRef: React.RefObject< HTMLDivElement > | undefined,
+	geocoderRef: React.RefObject< HTMLDivElement > | undefined,
+	listings: MapBoxListing[] | undefined,
+	filteredListings: MapBoxListing[] | null,
+	setFilteredListings: ( listings: MapBoxListing[] ) => void,
+	defaults: MapboxBlockDefaults
+): MapboxGeocoder | undefined => {
+	let searchResult;
+
+	const geoMarkerRef = initGeomarker( 0, map );
+
 	if ( defaults.accessToken ) {
 		const geocoder = new MapboxGeocoder( {
 			accessToken: defaults.accessToken,
-			mapboxgl: map,
-			lang: defaults.language || 'en',
+			mapboxgl,
+			language: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
-			element: null,
+			marker: {
+				element: geoMarkerRef.current,
+				color: 'grey',
+				offset: [ 0, -23 ],
+			},
 			flyTo: {
 				bearing: 0,
 				// These options control the flight curve, making it move
