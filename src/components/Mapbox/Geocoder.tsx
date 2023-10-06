@@ -121,13 +121,14 @@ export const initGeocoder = (
 		}
 
 		geocoder.on( 'clear', function () {
-			// document
-			// 	.getElementById( 'feature-listing' )
-			// 	?.classList.remove( 'filtered' );
-			// renderListings( attributes.mapboxOptions.listings );
-			// searchResult = undefined;
-			// removePopup();
-			// fitView( map, attributes.mapboxOptions.listings );
+			document
+				.getElementById( 'feature-listing' )
+				?.classList.remove( 'filtered' );
+
+			setFilteredListings( listings );
+			searchResult = undefined;
+			removePopup( mapRef as RefObject< HTMLDivElement > );
+			fitInView( map, listings, mapRef );
 		} );
 
 		geocoder.on( 'result', ( ev ) => {
