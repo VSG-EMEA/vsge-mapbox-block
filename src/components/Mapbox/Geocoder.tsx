@@ -112,10 +112,13 @@ export const initGeocoder = (
 			},
 		} );
 
-		if ( geocoderRef )
+		if ( geocoderRef ) {
+			geoMarkerRef.current?.classList.add( 'mapboxgl-ctrl-geocoder' );
+
 			( geocoderRef.current as HTMLElement ).appendChild(
 				geocoder.onAdd( map )
 			);
+		}
 
 		geocoder.on( 'clear', function () {
 			// document
