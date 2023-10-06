@@ -134,57 +134,57 @@ export const initGeocoder = (
 		geocoder.on( 'result', ( ev ) => {
 			console.log( ev );
 			// save the search results
-			/*searchResult = ev.result.geometry;
+			searchResult = ev.result.geometry;
 
-        if ( searchResult ) {
-          filteredStores = locateNearestStore(
-            searchResult,
-            filteredStores
-          );
+			if ( searchResult && filteredListings ) {
+				const nearestStore = locateNearestStore(
+					searchResult,
+					filteredListings
+				);
 
-          const listingContainer: HTMLElement | null =
-            document.getElementById( 'feature-listing' );
-          while ( listingContainer?.firstChild ) {
-            listingContainer.removeChild( listingContainer.firstChild );
-          }
+				const listingContainer: HTMLElement | null =
+					document.getElementById( 'feature-listing' );
+				while ( listingContainer?.firstChild ) {
+					listingContainer.removeChild( listingContainer.firstChild );
+				}
 
-          renderListings( filteredStores );
-          /!* Open a popup for the closest store. *!/
-          if ( defaults?.siteurl )
-            createPopUp( filteredStores[ 0 ], {
-              siteurl: defaults.siteurl,
-            } );
+				setFilteredListings( filteredListings );
+				/* Open a popup for the closest store. */
+				if ( defaults?.siteurl )
+					addPopup( map, filteredListings[ 0 ], {
+						siteurl: defaults.siteurl,
+					} );
 
-          /!** Highlight the listing for the closest store. *!/
-          const activeListing = filteredStores.length
-            ? document.getElementById(
-              'listing-' + filteredStores[ 0 ].properties?.id
-            )
-            : null;
-          activeListing?.classList.add( 'active-store' );
+				/** Highlight the listing for the closest store. */
+				const activeListing = filteredListings?.length
+					? document.getElementById(
+							'listing-' + filteredListings[ 0 ].id
+					  )
+					: null;
+				activeListing?.classList.add( 'active-store' );
 
-          /!**
-          * Adjust the map camera:
-            * Get a bbox that contains both the geocoder result and
-          * the closest store. Fit the bounds to that bbox.
-          *!/
-          const bbox = getBbox(
-            filteredStores,
-            0,
-            searchResult
-          ) as LngLatBoundsLike;
+				/**
+				 * Adjust the map camera:
+				 * Get a bbox that contains both the geocoder result and
+				 * the closest store. Fit the bounds to that bbox.
+				 */
+				const bbox = getBbox(
+					filteredListings,
+					0,
+					searchResult
+				) as LngLatBoundsLike;
 
-          map.fitBounds( bbox, {
-            padding: 100,
-          } );
-        }*/
+				map.fitBounds( bbox, {
+					padding: 100,
+				} );
+			}
 		} );
 
 		return geocoder;
 	}
 
 	console.log( 'No access token given to geocoder' );
-}
+};
 
 /**
  * This is a TypeScript React function that returns a JSX element representing a geocoder marker.
