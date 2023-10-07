@@ -10,7 +10,8 @@ import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
 import { addPopup, removePopup } from './Popup';
 import { fitInView } from '../../utils/view';
 import { PinPoint } from './Pin';
-import { Coord } from '@turf/turf';
+import { getNextId } from '../../utils/dataset';
+import { SearchPopup } from './PopupContent';
 
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
@@ -35,7 +36,7 @@ const initGeomarker = (
 	root.render(
 		<Marker
 			feature={ {
-				type: 'Feature',
+				type: 'GeocoderMarker',
 				id,
 				properties: {
 					name: 'geocoder',
@@ -114,6 +115,7 @@ export const initGeocoder = (
 		} );
 
 		geocoder.on( 'result', ( ev ) => {
+			// if there are no filtered listings, copy the listings to the filtered listings
 			if ( ! filteredListings?.length ) {
 				filteredListings = listings as MapBoxListing[];
 			}
@@ -133,8 +135,11 @@ export const initGeocoder = (
 					filteredListings
 				);
 
-				console.log( 'nearest stores', sortedNearestStores );
-				console.log( 'geocoder', geocoder );
+				console.log( 'Search result', searchResult );
+				console.log(
+					'nearest stores',
+					sortedNearestStores[ 0 ].properties.distance
+				);
 
 				// Display the nearest store
 				setFilteredListings( [
@@ -154,8 +159,20 @@ export const initGeocoder = (
 				] );
 
 				/* Open a popup for the closest store. */
-				if ( defaults?.siteurl )
-					addPopup( map, sortedNearestStores[ 0 ] );
+				addPopup(
+					map,
+					filteredListings[ 1 ],
+					<SearchPopup
+						name={ searchResult.text }
+						placeName={ searchResult.place_name }
+						address={ searchResult.properties?.address }
+						type={ searchResult.place_type }
+						category={ searchResult.properties?.category }
+						maki={ searchResult.properties?.maki }
+						resultData={ searchResult.context }
+						distance={ filteredListings[ 0 ].properties?.distance }
+					/>
+				);
 
 				/** Highlight the listing for the closest store. */
 				mapRef?.current
