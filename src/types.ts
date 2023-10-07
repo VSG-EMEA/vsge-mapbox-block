@@ -122,6 +122,12 @@ export interface MarkerProps {
 	iconColor?: string;
 	itemTags?: TagArray[];
 	itemFilters?: TagArray[];
+	distance?: {
+		value: number;
+		writable: boolean;
+		enumerable: boolean;
+		configurable: boolean;
+	};
 }
 
 export interface MarkerPropsCustom {
