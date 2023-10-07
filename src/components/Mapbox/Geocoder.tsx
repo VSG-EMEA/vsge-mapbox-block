@@ -147,17 +147,6 @@ export const initGeocoder = (
 				mapRef?.current
 					?.querySelector( '#marker-' + sortedNearestStores[ 0 ].id )
 					?.classList.add( 'active-store' );
-
-				/**
-				 * Adjust the map camera:
-				 * Get a bbox that contains both the geocoder result and
-				 * the closest store. Fit the bounds to that bbox.
-				 */
-				const bbox = getBbox( sortedNearestStores, 0, searchResult );
-
-				map.cameraForBounds( bbox, {
-					padding: 50,
-				} );
 			}
 		} );
 

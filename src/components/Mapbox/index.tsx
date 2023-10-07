@@ -5,6 +5,7 @@ import { useEffect, useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { getMarkerData, initMap } from './utils';
 import mapboxgl, { LngLatLike, MapMouseEvent, Point } from 'mapbox-gl';
+import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import { GeoCoder, initGeocoder } from './Geocoder';
 import {
 	MapAttributes,
@@ -20,6 +21,7 @@ import { RefObject } from 'react';
 import { Button } from '@wordpress/components';
 import { defaultMarkerProps, generateTempMarkerData } from './defaults';
 import { fitInView } from '../../utils/view';
+import { getBbox } from '../../utils/spatialCalcs';
 
 /**
  * Removes temporary markers from the specified element.
@@ -171,7 +173,18 @@ export function MapBox( {
 						listings
 					);
 
-					if ( clickedEl.dataset?.markerName === 'temp' ) {
+					if ( clickedEl.dataset?.markerName === 'geocoder' ) {
+						// get the info of the geocoder place?
+						return addPopup(
+							currentMap,
+							{
+								geometry: {
+									coordinates: clickedPoint,
+								},
+							},
+							<p>Find A location?</p>
+						);
+					} else if ( clickedEl.dataset?.markerName === 'temp' ) {
 						// add the popup
 						if ( isEditor ) {
 							// prints the popup that allow the editor to add a new marker
@@ -301,9 +314,11 @@ export function MapBox( {
 	}, [ attributes.geocoderEnabled ] );
 
 	useEffect( () => {
+		if ( ! map ) return;
+
 		if ( filteredListings?.length ) {
 			// if there are filtered listings hide the "unselected"
-			listings.forEach( ( listing ) => {
+			listings?.forEach( ( listing ) => {
 				if (
 					filteredListings.find( ( item ) => item.id === listing.id )
 				) {
@@ -312,14 +327,30 @@ export function MapBox( {
 					removeMarker( listing.id );
 				}
 			} );
-			fitInView( map, filteredListings, mapRef );
-		} else {
-			// if no filtered listings show all
-			listings.forEach( ( listing ) => {
-				updateListing( listing );
-				fitInView( map, listings, mapRef );
-			} );
+			if ( listings?.length === 2 ) {
+				/**
+				 * Adjust the map camera:
+				 * Get a bbox that contains both the geocoder result and
+				 * the closest store. Fit the bounds to that bbox.
+				 */
+				const bbox = getBbox(
+					listings[ 0 ].geometry,
+					listings[ 1 ].geometry
+				);
+
+				map?.cameraForBounds( bbox, {
+					padding: 50,
+				} );
+			} else {
+				fitInView( map, filteredListings, mapRef );
+			}
+			return;
 		}
+		// if no filtered listings show all
+		listings?.forEach( ( listing ) => {
+			updateListing( listing );
+			fitInView( map, listings, mapRef );
+		} );
 	}, [ filteredListings ] );
 
 	/**
