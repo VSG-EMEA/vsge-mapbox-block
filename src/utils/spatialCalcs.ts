@@ -47,27 +47,17 @@ export function locateNearestStore(
 /**
  * The function calculates the bounding box of a store and a given location.
  *
- * @param {Feature[]} sortedStores - An array of features representing sorted stores.
- * @param {any}       id           - storeIdentifier is a variable that represents the index of a specific
- *                                 store in an array of stores (sortedStores). It is used to access the geometry coordinates of that
- *                                 store in order to calculate the bounding box.
- * @param {Coord}     results      - The `results` parameter is an object that contains the coordinates of a
- *                                 location.
+ * @param {Coord} listing1 - The first listing
+ * @param {Coord} listing2 - The second listing
  * @return an array of two arrays, each containing two numbers representing the longitude and latitude
  * coordinates of a bounding box. The first array contains the coordinates of the lower left corner of
  * the bounding box, and the second array contains the coordinates of the upper right corner of the
  * bounding box.
  */
-export function getBbox( sortedStores, id: number, results ): LngLatBoundsLike {
-	const lats = [
-		sortedStores[ id ].geometry.coordinates[ 1 ],
-		results.geometry.coordinates[ 1 ],
-	];
+export function getBbox( listing1, listing2 ): LngLatBoundsLike {
+	const lats = [ listing1.coordinates[ 1 ], listing2.coordinates[ 1 ] ];
 
-	const lng = [
-		sortedStores[ id ].geometry.coordinates[ 0 ],
-		results.geometry.coordinates[ 0 ],
-	];
+	const lng = [ listing1.coordinates[ 0 ], listing2.coordinates[ 0 ] ];
 
 	const sortedLong = lng.sort( function ( a, b ) {
 		if ( a > b ) {
