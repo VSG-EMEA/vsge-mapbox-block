@@ -259,6 +259,9 @@ export function MapBox( {
 			const mapObj = initMap( mapRef.current, attributes, mapDefaults );
 			setMap( mapObj );
 
+			const language = new MapboxLanguage();
+			mapObj.addControl( language );
+
 			// Add the stored listings to the markers list
 			restoreInitialMarkers();
 		} else {
