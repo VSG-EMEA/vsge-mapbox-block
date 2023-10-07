@@ -133,6 +133,7 @@ export interface MarkerProps {
 export interface SearchMarkerProps extends MarkerProps {
 	placeName: string;
 	category: string;
+	type: string;
 	maki: string;
 	resultData: string;
 }

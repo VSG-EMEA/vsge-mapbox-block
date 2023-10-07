@@ -2,7 +2,7 @@ import { Button } from '@wordpress/components';
 import { enableListing } from '../../utils/dataset';
 import { safeSlug } from '../../utils';
 import { DefaultMarker } from './Pin';
-import { MountedMapsContextValue } from '../../types';
+import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import { useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { DEFAULT_COLOR } from '../../constants';
@@ -15,7 +15,7 @@ import { DEFAULT_COLOR } from '../../constants';
  * @param prop.feature  `Feature`: the feature being rendered
  * @param prop.map      `Map`: the map being rendered
  * @param prop.children `JSX.Element`: the children of the marker
- * @return A JSX element is being returned, which is a button with an onClick event and various data
+ * @return JSX element is being returned, which is a button with an onClick event and various data
  * attributes. The content of the button is either the children passed as a prop or a DefaultMarker
  * component with color and size props based on the feature properties.
  */
@@ -24,8 +24,8 @@ export function Marker( {
 	map,
 	children = undefined,
 }: {
-	feature: any;
-	map: any;
+	feature: MapBoxListing;
+	map: mapboxgl.Map;
 	children?: JSX.Element;
 } ): JSX.Element {
 	const { mapRef }: MountedMapsContextValue = useContext( MapboxContext );
@@ -40,9 +40,11 @@ export function Marker( {
 			data-marker-type={ feature.type }
 			data-marker-name={ safeSlug( feature.properties.name ) }
 		>
-			{ children || (
+			{ children ? (
+				children
+			) : (
 				<DefaultMarker
-					color={ feature.properties.iconColor?.hex || DEFAULT_COLOR }
+					color={ feature.properties.iconColor || DEFAULT_COLOR }
 					size={ feature.properties.iconSize as number }
 				/>
 			) }

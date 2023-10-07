@@ -1,7 +1,8 @@
-import { MarkerProps, MarkerPropsCustom } from '../../types';
+import { MarkerProps, MarkerPropsCustom, SearchMarkerProps } from '../../types';
 import { Icon } from '@wordpress/components';
 import { TagList } from './TagItem';
 import { mapMarker } from '@wordpress/icons';
+import { __ } from '@wordpress/i18n';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
 The component destructures the `props` object to extract the properties `itemTags`, `itemFilters`,
@@ -52,6 +53,44 @@ export function PopupContent( props ) {
 					</a>
 				) }
 				<TagList tags={ itemTags } className={ 'popup-tag-list' } />
+			</div>
+		</div>
+	);
+}
+
+function DataList( props: { className: string; dataset: string } ) {
+	return (
+		<div className={ props.className }>
+			{ JSON.stringify( props.dataset ) }
+		</div>
+	);
+}
+
+export function SearchPopup( props ) {
+	const {
+		name = '',
+		placeName = '',
+		address = '',
+		type = '',
+		category = '',
+		maki = '',
+		resultData = '',
+		distance = '',
+	}: SearchMarkerProps = props;
+	return (
+		<div className={ 'mapbox-popup-inner' } style={ { display: 'flex' } }>
+			<div>
+				<Icon icon={ mapMarker } size={ 36 } />
+			</div>
+			<div>
+				<span title={ category }>
+					{ category } - { maki } - { type }
+				</span>
+				<h3>{ name }</h3>
+				{ address && <p>{ address }</p> }
+				<p>{ `${ placeName }` }</p>
+				<p>{ __( 'distance' ) + ': ' + `${ distance }` }</p>
+				<DataList dataset={ resultData } className={ 'data-list' } />
 			</div>
 		</div>
 	);
