@@ -1,8 +1,5 @@
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { MapAttributes, MapboxBlockDefaults, MapBoxListing } from '../../types';
-import { __ } from '@wordpress/i18n';
-import { Feature } from '@turf/turf';
-import { tempMarkerStyle } from './defaults';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if

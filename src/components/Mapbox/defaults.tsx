@@ -9,20 +9,25 @@ export const defaultMarkerSize: number = 48;
 
 export const defaultColors: string[] = [ DEFAULT_COLOR, '#ce0e2d', '#44f' ];
 
-export const defaultMarkerStyle: JSX.Element = DefaultMarker( {
+interface MarkerBasicStyle {
+	color: string;
+	size: number;
+}
+
+export const defaultMarkerStyle: MarkerBasicStyle = {
 	color: defaultColors[ 0 ],
 	size: defaultMarkerSize,
-} );
+};
 
-export const tempMarkerStyle: JSX.Element = DefaultMarker( {
+export const tempMarkerStyle: MarkerBasicStyle = {
 	color: defaultColors[ 1 ],
 	size: defaultMarkerSize,
-} );
+};
 
-export const geoMarkerStyle: JSX.Element = DefaultMarker( {
+export const geoMarkerStyle: MarkerBasicStyle = {
 	color: defaultColors[ 2 ],
 	size: defaultMarkerSize,
-} );
+};
 
 export const customMarkerStyle = (
 	children: JSX.Element,
