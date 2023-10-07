@@ -72,7 +72,7 @@ export function generateTempMarkerData(
 	coordinates: LngLatLike | [ number, number ]
 ): MapBoxListing {
 	return {
-		type: 'Feature',
+		type: 'ClickMarker',
 		id,
 		properties: {
 			name: 'temp',

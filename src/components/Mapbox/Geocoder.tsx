@@ -137,7 +137,21 @@ export const initGeocoder = (
 				console.log( 'geocoder', geocoder );
 
 				// Display the nearest store
-				setFilteredListings( [ sortedNearestStores[ 0 ] ] );
+				setFilteredListings( [
+					sortedNearestStores[ 0 ],
+					{
+						id: getNextId( filteredListings ),
+						type: 'GeocoderMarker',
+						properties: {
+							name: 'geocoder',
+							icon: 'geocoder',
+						},
+						geometry: {
+							type: 'Point',
+							coordinates: ev.result.geometry.coordinates,
+						},
+					},
+				] );
 
 				/* Open a popup for the closest store. */
 				if ( defaults?.siteurl )

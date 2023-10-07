@@ -130,6 +130,13 @@ export interface MarkerProps {
 	};
 }
 
+export interface SearchMarkerProps extends MarkerProps {
+	placeName: string;
+	category: string;
+	maki: string;
+	resultData: string;
+}
+
 export interface MarkerPropsCustom {
 	children: JSX.Element;
 }

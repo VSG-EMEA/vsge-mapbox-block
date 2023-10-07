@@ -21,9 +21,15 @@ import { filterListings } from '../../utils/view';
 function Listings( props: { listings: MapBoxListing[]; map: mapboxgl.Map } ) {
 	return (
 		<div className={ 'feature-listing' }>
-			{ props.listings.map( ( data, index: number ) => (
-				<Listing key={ index } jsonFeature={ data } map={ props.map } />
-			) ) }
+			{ props.listings
+				.filter( ( listing ) => listing.type === 'Feature' )
+				.map( ( data, index: number ) => (
+					<Listing
+						key={ index }
+						jsonFeature={ data }
+						map={ props.map }
+					/>
+				) ) }
 		</div>
 	);
 }
