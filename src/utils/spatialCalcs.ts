@@ -1,5 +1,6 @@
 import { Coord, distance, Feature, Units } from '@turf/turf';
-import { MapItem } from '../types';
+import { MapBoxListing, MapItem } from '../types';
+import { LngLatBoundsLike } from 'mapbox-gl';
 
 /**
  * This function takes a user's location and an array of stores, calculates the distance between the
@@ -14,23 +15,27 @@ import { MapItem } from '../types';
  * @return {MapItem[]} the sorted `storesArray` with each store's distance from the `result` location added as a
  * `distance` property to the store object.
  */
-export function locateNearestStore( result: Coord, storesArray: MapItem[] ) {
+export function locateNearestStore(
+	result: Coord,
+	storesArray: MapBoxListing[]
+) {
 	const options: { units: Units | undefined } = { units: 'kilometers' };
 
 	storesArray.forEach( function ( store ) {
-		store.distance = {
-			value: distance( result, store.geometry as Coord, options ),
+		delete store.properties.distance;
+		Object.defineProperty( store.properties, 'distance', {
+			value: distance( result, store.geometry, options ),
 			writable: true,
 			enumerable: true,
 			configurable: true,
-		};
+		} );
 	} );
 
 	storesArray.sort( ( a, b ) => {
-		if ( a.distance > b.distance ) {
+		if ( a.properties.distance > b.properties.distance ) {
 			return 1;
 		}
-		if ( a.distance < b.distance ) {
+		if ( a.properties.distance < b.properties.distance ) {
 			return -1;
 		}
 		return 0; // a must be equal to b
@@ -53,20 +58,18 @@ export function locateNearestStore( result: Coord, storesArray: MapItem[] ) {
  * the bounding box, and the second array contains the coordinates of the upper right corner of the
  * bounding box.
  */
-export function getBbox( sortedStores, id: number, results ) {
-	console.log( "Store geometry", sortedStores[ id ].geometry );
-
+export function getBbox( sortedStores, id: number, results ): LngLatBoundsLike {
 	const lats = [
 		sortedStores[ id ].geometry.coordinates[ 1 ],
-		results.coordinates[ 1 ],
+		results.geometry.coordinates[ 1 ],
 	];
 
-	const lons = [
+	const lng = [
 		sortedStores[ id ].geometry.coordinates[ 0 ],
-		results.coordinates[ 0 ],
+		results.geometry.coordinates[ 0 ],
 	];
 
-	const sortedLons = lons.sort( function ( a, b ) {
+	const sortedLong = lng.sort( function ( a, b ) {
 		if ( a > b ) {
 			return 1;
 		}
@@ -85,7 +88,7 @@ export function getBbox( sortedStores, id: number, results ) {
 		return 0;
 	} );
 	return [
-		[ sortedLons[ 0 ], sortedLats[ 0 ] ],
-		[ sortedLons[ 1 ], sortedLats[ 1 ] ],
+		[ sortedLong[ 0 ], sortedLats[ 0 ] ],
+		[ sortedLong[ 1 ], sortedLats[ 1 ] ],
 	];
 }
