@@ -4,50 +4,13 @@ import type { RefObject } from 'react';
 import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl, { LngLatBoundsLike } from 'mapbox-gl';
 import { Marker } from './Marker';
-import {
-	MapboxBlockDefaults,
-	MapBoxListing,
-} from '../../types';
-import {
-	defaultMarkerProps,
-	defaultMarkerSize,
-	geoMarkerStyle,
-} from './defaults';
+import { MapboxBlockDefaults, MapBoxListing } from '../../types';
+import { defaultMarkerProps, geoMarkerStyle } from './defaults';
 import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
 import { addPopup, removePopup } from './Popup';
 import { fitInView } from '../../utils/view';
-
-/* This is a TypeScript React function that returns a JSX element representing a marker for the
-geocoder search result. It receives `props` as an argument, which contains `coordinates` and `map`
-properties. It also uses the `useContext` hook to access the `markers` state from the
-`MapboxContext`. It then returns a `Marker` component with the necessary properties to display the
-geocoder marker on the map. The `feature` property contains the marker's `id`, `properties`, and
-`geometry`. The `map` property is the map object where the marker will be added. The `children`
-property is the style for the marker. */
-export const GeoMarker = ( props ): JSX.Element => {
-	const { id, coordinates, map } = props;
-	return (
-		<Marker
-			feature={ {
-				type: 'Feature',
-				id,
-				properties: {
-					...defaultMarkerProps,
-					name: 'geocoder',
-					icon: 'geocoder',
-					iconSize: defaultMarkerSize,
-					iconColor: '#44f',
-				},
-				geometry: {
-					type: 'Point',
-					coordinates,
-				},
-			} }
-			map={ map }
-			children={ geoMarkerStyle }
-		/>
-	);
-};
+import { PinPoint } from './Pin';
+import { Coord } from '@turf/turf';
 
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
@@ -61,13 +24,39 @@ const initGeomarker = (
 	id: number,
 	map: mapboxgl.Map
 ): RefObject< HTMLDivElement > => {
-	const markerRef: RefObject< HTMLDivElement > = createRef();
+	const markerRef = createRef< HTMLDivElement >();
 	// Create a new DOM root and save it to the React ref
-	markerRef.current = document.createElement( 'div' );
-	markerRef.current.className = 'marker marker-geocoder';
+	markerRef.current = document.createElement( 'div' ) as HTMLDivElement;
+	markerRef.current.className = 'marker marker-geocoder disabled';
 	const root = createRoot( markerRef.current );
+	const defaultStyle = geoMarkerStyle;
+
 	// Render a Marker Component on our new DOM node
-	root.render( <GeoMarker id={ id } map={ map } /> );
+	root.render(
+		<Marker
+			feature={ {
+				type: 'Feature',
+				id,
+				properties: {
+					name: 'geocoder',
+					icon: 'geocoder',
+					iconSize: defaultStyle.size,
+					iconColor: defaultStyle.color,
+				},
+				geometry: {
+					type: 'Point',
+					coordinates: [ 0, 0 ],
+				},
+			} }
+			map={ map }
+			children={
+				<PinPoint
+					color={ defaultStyle.color }
+					size={ defaultStyle.size }
+				/>
+			}
+		/>
+	);
 
 	// Add markers to the map.
 	return markerRef;
@@ -82,7 +71,7 @@ export const initGeocoder = (
 	setFilteredListings: ( listings: MapBoxListing[] ) => void,
 	defaults: MapboxBlockDefaults
 ): MapboxGeocoder | undefined => {
-	let searchResult;
+	let searchResult: MapboxGeocoder.Result | undefined;
 
 	const geoMarkerRef = initGeomarker( 0, map );
 
@@ -93,28 +82,13 @@ export const initGeocoder = (
 			language: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
 			marker: {
-				element: geoMarkerRef.current,
+				element: geoMarkerRef.current as HTMLElement,
 				color: 'grey',
-				offset: [ 0, -23 ],
-			},
-			flyTo: {
-				bearing: 0,
-				// These options control the flight curve, making it move
-				// slowly and zoom out almost completely before starting
-				// to pan.
-				speed: 0.5, // make the flying slow
-				curve: 1, // change the speed at which it zooms out
-				// This can be any easing function: it takes a number between
-				// 0 and 1 and returns another number between 0 and 1.
-				easing( t: any ) {
-					return t;
-				},
+				offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
 			},
 		} );
 
 		if ( geocoderRef ) {
-			geoMarkerRef.current?.classList.add( 'mapboxgl-ctrl-geocoder' );
-
 			( geocoderRef.current as HTMLElement ).appendChild(
 				geocoder.onAdd( map )
 			);
@@ -124,58 +98,65 @@ export const initGeocoder = (
 			document
 				.getElementById( 'feature-listing' )
 				?.classList.remove( 'filtered' );
+			// Remove the active class from the geocoder
+			geocoderRef?.current?.classList.remove( 'active' );
+			// add the hide class to the geocoder
+			geoMarkerRef?.current?.classList.add( 'disabled' );
 
+			// Reset the displayed listings
 			setFilteredListings( listings );
+			// Remove the search result
 			searchResult = undefined;
+			// Remove the popup, if any
 			removePopup( mapRef as RefObject< HTMLDivElement > );
+			// Center the map
 			fitInView( map, listings, mapRef );
 		} );
 
 		geocoder.on( 'result', ( ev ) => {
-			console.log( ev );
+			if ( ! filteredListings?.length ) {
+				filteredListings = listings as MapBoxListing[];
+			}
+
 			// save the search results
-			searchResult = ev.result.geometry;
+			searchResult = ev.result;
+
+			// Add the active class to the geocoder
+			geocoderRef?.current?.classList.add( 'active' );
 
 			if ( searchResult && filteredListings ) {
-				const nearestStore = locateNearestStore(
-					searchResult,
+				// Remove the active class from the geocoder
+				geoMarkerRef?.current?.classList.remove( 'disabled' );
+
+				const sortedNearestStores = locateNearestStore(
+					searchResult.geometry,
 					filteredListings
 				);
 
-				const listingContainer: HTMLElement | null =
-					document.getElementById( 'feature-listing' );
-				while ( listingContainer?.firstChild ) {
-					listingContainer.removeChild( listingContainer.firstChild );
-				}
+				console.log( 'nearest stores', sortedNearestStores );
+				console.log( 'geocoder', geocoder );
 
-				setFilteredListings( filteredListings );
+				// Display the nearest store
+				setFilteredListings( [ sortedNearestStores[ 0 ] ] );
+
 				/* Open a popup for the closest store. */
 				if ( defaults?.siteurl )
-					addPopup( map, filteredListings[ 0 ], {
-						siteurl: defaults.siteurl,
-					} );
+					addPopup( map, sortedNearestStores[ 0 ] );
 
 				/** Highlight the listing for the closest store. */
-				const activeListing = filteredListings?.length
-					? document.getElementById(
-							'listing-' + filteredListings[ 0 ].id
-					  )
-					: null;
-				activeListing?.classList.add( 'active-store' );
+				mapRef?.current
+					?.querySelector( '#marker-' + sortedNearestStores[ 0 ].id )
+					?.classList.add( 'active-store' );
 
 				/**
 				 * Adjust the map camera:
 				 * Get a bbox that contains both the geocoder result and
 				 * the closest store. Fit the bounds to that bbox.
 				 */
-				const bbox = getBbox(
-					filteredListings,
-					0,
-					searchResult
-				) as LngLatBoundsLike;
+				const bbox = getBbox( sortedNearestStores, 0, searchResult );
 
-				map.fitBounds( bbox, {
-					padding: 100,
+				map.cameraForBounds( bbox, {
+					padding: 50,
 				} );
 			}
 		} );
