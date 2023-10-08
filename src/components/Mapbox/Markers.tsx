@@ -44,41 +44,42 @@ export function addMarker(
 	icons: MarkerIcon[]
 ): mapboxgl.Marker | undefined {
 	if ( marker?.geometry ) {
-		const ref: RefObject< HTMLElement > = createRef< HTMLElement >();
+		// Check if the coordinates are valid
+		if (
+			! areValidCoordinates(
+				marker?.geometry?.coordinates as [ number, number ]
+			)
+		)
+			return undefined;
 
 		// Create a new DOM root and save it to the React ref
+		const ref: RefObject< HTMLElement > = createRef< HTMLElement >();
+
+		// Render a Marker Component on our new DOM node
 		ref.current = document.createElement( 'div' );
 		ref.current.className =
 			'marker marker-' + safeSlug( marker.properties.name );
 		const root = createRoot( ref.current );
 
-		let markerIcon = (
-			<DefaultMarker
-				color={ marker.properties.iconColor }
-				size={ marker.properties.iconSize }
-			/>
-		);
+		let markerIcon: JSX.Element | undefined;
 
 		if ( marker.properties.icon?.startsWith( 'custom-' ) ) {
-			let svgMarker = getMarkerSvg( marker.properties.icon, icons );
-			svgMarker = modifySVG(
+			const svgMarker = getMarkerSvg( marker.properties.icon, icons );
+			markerIcon = modifySVG(
 				svgMarker,
 				marker.properties.iconColor,
 				marker.properties.iconSize
 			);
-
-			markerIcon = (
-				<DefaultMarker
-					children={
-						<div
-							dangerouslySetInnerHTML={ { __html: svgMarker } }
-						/>
-					}
-				/>
-			);
 		} else if ( [ 'geocoder', 'pin' ].includes( marker.properties.icon ) ) {
 			markerIcon = (
 				<PinPoint
+					color={ marker.properties.iconColor }
+					size={ marker.properties.iconSize }
+				/>
+			);
+		} else {
+			markerIcon = (
+				<DefaultMarker
 					color={ marker.properties.iconColor }
 					size={ marker.properties.iconSize }
 				/>
@@ -91,21 +92,13 @@ export function addMarker(
 		);
 
 		// Add markers to the map at all points
-		return areValidCoordinates(
-			marker?.geometry?.coordinates as [ number, number ]
-		)
-			? new mapboxgl.Marker( ref.current, {
-					offset: [ 0, ( marker?.properties?.iconSize || 0 ) * -0.5 ],
-			  } )
-					.setLngLat(
-						( marker?.geometry?.coordinates as LngLatLike ) || [
-							0, 0,
-						]
-					)
-					.addTo( map )
-			: console.log(
-					'Invalid coordinates for marker ',
-					marker.properties.country
-			  );
+		return new mapboxgl.Marker( ref.current, {
+			offset: [ 0, ( marker?.properties?.iconSize || 0 ) * -0.5 ],
+			draggable: !! marker.properties.icon, // if the icon is the clickable marker, it should be draggable
+		} )
+			.setLngLat(
+				( marker?.geometry?.coordinates as LngLatLike ) || [ 0, 0 ]
+			)
+			.addTo( map );
 	}
 }

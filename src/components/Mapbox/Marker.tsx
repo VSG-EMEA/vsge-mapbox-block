@@ -6,6 +6,7 @@ import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import { useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { DEFAULT_COLOR } from '../../constants';
+import { removePopups } from './Popup';
 
 /**
  * This is a TypeScript React function that renders a marker with a button and optional children
@@ -32,7 +33,8 @@ export function Marker( {
 	return (
 		<Button
 			onClick={ () => {
-				enableListing( map, feature, mapRef );
+				removePopups( mapRef );
+				enableListing( map, feature );
 			} }
 			className={ 'marker marker-' + safeSlug( feature.properties.name ) } // this is important to prevent duplicates
 			id={ 'marker-' + feature.id || 'temp' }

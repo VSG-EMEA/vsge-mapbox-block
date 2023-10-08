@@ -26,7 +26,7 @@ export function modifySVG(
 	color?: string,
 	width?: number,
 	height?: number
-): string {
+): JSX.Element {
 	// Initialize the style attribute
 	let styleAttribute = '';
 
@@ -47,10 +47,13 @@ export function modifySVG(
 		if ( svgString.includes( 'style="' ) ) {
 			return svgString.replace( /style="([^"]*)"/, ( match, styles ) => {
 				return `style="${ styleAttribute }${ styles }"`;
-			} );
+			} ) as unknown as JSX.Element;
 		}
-		return svgString.replace( '<svg', `<svg style="${ styleAttribute }"` );
+		return svgString.replace(
+			'<svg',
+			`<svg style="${ styleAttribute }"`
+		) as unknown as JSX.Element;
 	}
 
-	return svgString;
+	return svgString as unknown as JSX.Element;
 }
