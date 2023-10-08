@@ -122,24 +122,19 @@ export interface MarkerProps {
 	iconColor?: string;
 	itemTags?: TagArray[];
 	itemFilters?: TagArray[];
-	distance?: {
-		value: number;
-		writable: boolean;
-		enumerable: boolean;
-		configurable: boolean;
-	};
+	distance?: number;
+}
+
+export interface MarkerPropsStyle {
+	color?: string;
+	size?: number;
+	children?: JSX.Element;
 }
 
 export interface SearchMarkerProps extends MarkerProps {
 	placeName: string;
 	category: string;
-	type: string;
 	maki: string;
-	resultData: string;
-}
-
-export interface MarkerPropsCustom {
-	children: JSX.Element;
 }
 
 export interface MarkerItem {

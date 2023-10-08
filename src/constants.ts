@@ -11,6 +11,9 @@ export const mapboxDefaults: MapboxOptions = {
 };
 
 export const DEFAULT_COLOR = '#004a83';
+export const DEFAULT_COLOR_ALT = '#004a83';
+export const DEFAULT_SIZE = 48;
+export const ICON_SIZE = 36;
 
 /**
  * The mapbox map layout styles
