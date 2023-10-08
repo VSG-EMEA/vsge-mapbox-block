@@ -1,6 +1,6 @@
 // Filter the type of reseller with the select in the top bar
 import { flyToStore } from './view';
-import { addPopup, removePopup } from '../components/Mapbox/Popup';
+import { addPopup } from '../components/Mapbox/Popup';
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing } from '../types';
 import { highlightListing } from '../components/Mapbox/utils';
@@ -35,18 +35,13 @@ export function filterStores( stores, terms ) {
 	return filteredStores;
 }
 
-export function enableListing(
-	map: mapboxgl.Map,
-	marker: MapBoxListing,
-	mapRef: any
-) {
+export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
 	console.log( 'Listing enabled', marker );
 
 	// 1. Fly to the point
 	flyToStore( map, marker );
 
 	// 2. Close all other popups and display popup for clicked store
-	removePopup( mapRef );
 	addPopup( map, marker );
 
 	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
