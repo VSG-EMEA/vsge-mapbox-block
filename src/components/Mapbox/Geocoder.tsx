@@ -2,12 +2,12 @@ import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
 import type { RefObject } from 'react';
 import { createRef, createRoot } from '@wordpress/element';
-import mapboxgl, { LngLatBoundsLike } from 'mapbox-gl';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { Marker } from './Marker';
 import { MapboxBlockDefaults, MapBoxListing } from '../../types';
-import { defaultMarkerProps, geoMarkerStyle } from './defaults';
-import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
-import { addPopup, removePopup } from './Popup';
+import { geoMarkerStyle } from './defaults';
+import { locateNearestStore } from '../../utils/spatialCalcs';
+import { addPopup, removePopups } from './Popup';
 import { fitInView } from '../../utils/view';
 import { PinPoint } from './Pin';
 import { getNextId } from '../../utils/dataset';
@@ -19,6 +19,7 @@ import { SearchPopup } from './PopupContent';
  * @param id
  * @param map - mapboxgl.Map - This is an instance of the Mapbox GL JS map object on which the marker
  *            will be placed.
+ * @param mapRef - RefObject< HTMLDivElement > - This is a reference to the DOM node that will be used
  * @return A mapboxgl.Marker object is being returned.
  */
 const initGeomarker = (
@@ -75,18 +76,19 @@ export const initGeocoder = (
 	let searchResult: MapboxGeocoder.Result | undefined;
 
 	const geoMarkerRef = initGeomarker( 0, map );
+	const marker = {
+		element: geoMarkerRef.current as HTMLElement,
+		color: 'grey',
+		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
+	};
 
 	if ( defaults.accessToken ) {
-		const geocoder = new MapboxGeocoder( {
+		const geocoder: MapboxGeocoder = new MapboxGeocoder( {
 			accessToken: defaults.accessToken,
 			mapboxgl,
+			marker,
 			language: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
-			marker: {
-				element: geoMarkerRef.current as HTMLElement,
-				color: 'grey',
-				offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
-			},
 		} );
 
 		if ( geocoderRef ) {
@@ -109,7 +111,7 @@ export const initGeocoder = (
 			// Remove the search result
 			searchResult = undefined;
 			// Remove the popup, if any
-			removePopup( mapRef as RefObject< HTMLDivElement > );
+			removePopups( mapRef as RefObject< HTMLDivElement > );
 			// Center the map
 			fitInView( map, listings, mapRef );
 		} );
@@ -135,14 +137,16 @@ export const initGeocoder = (
 					filteredListings
 				);
 
+				// The map marker element
+				// const markerEl = geocoder.mapMarker.getElement() as HTMLElement;
+
 				console.log( 'Search result', searchResult );
 				console.log(
-					'nearest stores',
+					'nearest store to search result coordinates in km: ',
 					sortedNearestStores[ 0 ].properties.distance
 				);
 
-				// Display the nearest store
-				setFilteredListings( [
+				const newFilteredListings: MapBoxListing[] = [
 					sortedNearestStores[ 0 ],
 					{
 						id: getNextId( filteredListings ),
@@ -153,26 +157,36 @@ export const initGeocoder = (
 						},
 						geometry: {
 							type: 'Point',
-							coordinates: ev.result.geometry.coordinates,
+							coordinates: searchResult.geometry
+								.coordinates as LngLatLike,
 						},
 					},
-				] );
+				];
 
+				// Display the nearest store
+				setFilteredListings( newFilteredListings );
+
+				console.log( newFilteredListings );
+
+				removePopups( mapRef as RefObject< HTMLDivElement > );
 				/* Open a popup for the closest store. */
 				addPopup(
 					map,
-					filteredListings[ 1 ],
+					newFilteredListings[ 1 ],
 					<SearchPopup
+						icon={ 'geocoder' }
 						name={ searchResult.text }
 						placeName={ searchResult.place_name }
-						address={ searchResult.properties?.address }
-						type={ searchResult.place_type }
 						category={ searchResult.properties?.category }
 						maki={ searchResult.properties?.maki }
-						resultData={ searchResult.context }
-						distance={ filteredListings[ 0 ].properties?.distance }
+						distance={
+							sortedNearestStores[ 0 ].properties.distance
+						}
 					/>
 				);
+
+				/* Open a popup for the closest store. */
+				addPopup( map, newFilteredListings[ 0 ] );
 
 				/** Highlight the listing for the closest store. */
 				mapRef?.current
