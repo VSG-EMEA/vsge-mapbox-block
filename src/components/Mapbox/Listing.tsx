@@ -6,6 +6,7 @@ import { TagList } from './TagItem';
 import { enableListing } from '../../utils/dataset';
 import { useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
+import { removePopups } from './Popup';
 
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
@@ -43,7 +44,10 @@ export const Listing = ( {
 			<Icon icon={ mapMarker } />
 			<div
 				role="presentation"
-				onClick={ () => enableListing( map, jsonFeature, mapRef ) }
+				onClick={ () => {
+					removePopups( mapRef );
+					enableListing( map, jsonFeature );
+				} }
 			>
 				<TagList
 					tags={ itemFilters }
