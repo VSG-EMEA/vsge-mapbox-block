@@ -41,7 +41,7 @@ function Listings( props: { listings: MapBoxListing[]; map: mapboxgl.Map } ) {
  * GeoCoder component is conditionally rendered based on the value of the "geocoderEnabled" property in
  * the "mapboxOptions" object. The "feature-listing" div contains a map
  */
-export const Sidebar = (): Element | null => {
+export const Sidebar = (): JSX.Element | null => {
 	const { map, listings, filteredListings }: MountedMapsContextValue =
 		useContext( MapboxContext );
 

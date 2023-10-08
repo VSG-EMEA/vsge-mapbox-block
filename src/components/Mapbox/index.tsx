@@ -1,7 +1,7 @@
 import { Map } from './Map';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
-import { useEffect, useContext } from '@wordpress/element';
+import { useContext, useEffect } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { getMarkerData, initMap } from './utils';
 import mapboxgl, { LngLatLike, MapMouseEvent, Point } from 'mapbox-gl';
@@ -14,10 +14,10 @@ import {
 	MarkerHTMLElement,
 	MountedMapsContextValue,
 } from '../../types';
-import { addMarker, addMarkers } from './Markers';
+import { addMarker, addMarkers, removeTempMarkers } from './Markers';
 import { addPopup, removePopups } from './Popup';
 import { getNextId } from '../../utils/dataset';
-import { RefObject } from 'react';
+import type { RefObject } from 'react';
 import { Button } from '@wordpress/components';
 import { defaultMarkerProps, generateTempMarkerData } from './defaults';
 import { fitInView } from '../../utils/view';
@@ -43,9 +43,9 @@ export function MapBox( {
 } ): JSX.Element {
 	const {
 		map,
+		mapRef,
 		setMap,
 		setGeoCoder,
-		mapRef,
 		geocoderRef,
 		setLngLat,
 		listings,
@@ -130,8 +130,12 @@ export function MapBox( {
 	 * Listens for a click event on the map and performs various actions based on the click position and element clicked.
 	 *
 	 * @param {mapboxgl.Map} currentMap - The current map object.
+	 * @param                ref
 	 */
-	function listenForClick( currentMap: mapboxgl.Map ) {
+	function listenForClick(
+		currentMap: mapboxgl.Map,
+		ref: RefObject< HTMLDivElement > | undefined
+	) {
 		if ( currentMap ) {
 			currentMap.on( 'click', ( e: MapMouseEvent ) => {
 				// store the last clicked position
@@ -140,8 +144,6 @@ export function MapBox( {
 					e.lngLat.lng,
 					e.lngLat.lat,
 				] as LngLatLike;
-
-				console.log( e );
 
 				const clickedFeatures = currentMap.queryRenderedFeatures(
 					e.point
@@ -204,7 +206,29 @@ export function MapBox( {
 									coordinates: clickedPoint,
 								},
 							},
-							<p>Find A location?</p>
+							<>
+								<p>Find A location?</p>
+								<Button
+									onClick={ () => {
+										const sortedNearestStores =
+											locateNearestStore(
+												clickedPoint,
+												filteredListings ?? listings
+											);
+
+										console.log( sortedNearestStores );
+									} }
+								>
+									Get the nearest store?
+								</Button>
+								<Button
+									onClick={ () => {
+										setFilteredListings( listings );
+									} }
+								>
+									Reset
+								</Button>
+							</>
 						);
 					} else if ( markerData ) {
 						// popup the marker data on the currentMap
@@ -215,7 +239,7 @@ export function MapBox( {
 				/**
 				 * Otherwise the user doesn't click on a marker
 				 */
-				removeTempMarkers( mapRef );
+				removeTempMarkers( ref );
 
 				// Generate the metadata for the pin marker if nothing was clicked
 				const newTempMarker = generateTempMarkerData(
@@ -280,7 +304,7 @@ export function MapBox( {
 			}
 
 			// Listen for clicks on the map
-			listenForClick( map );
+			listenForClick( map, mapRef );
 		}
 	}, [ map ] );
 

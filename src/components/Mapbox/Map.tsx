@@ -8,7 +8,7 @@ import { RefObject } from 'react';
 export function Map( {
 	mapRef,
 }: {
-	mapRef: RefObject< HTMLDivElement | undefined >;
+	mapRef: RefObject< HTMLDivElement >;
 } ): JSX.Element {
 	return <div className={ 'map' } ref={ mapRef }></div>;
 }
