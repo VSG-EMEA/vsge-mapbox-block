@@ -1,6 +1,6 @@
 import { Coord, distance, Feature, Units } from '@turf/turf';
 import { MapBoxListing, MapItem } from '../types';
-import { LngLatBoundsLike } from 'mapbox-gl';
+import { LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
 
 /**
  * This function takes a user's location and an array of stores, calculates the distance between the
@@ -16,7 +16,7 @@ import { LngLatBoundsLike } from 'mapbox-gl';
  * `distance` property to the store object.
  */
 export function locateNearestStore(
-	result: Coord,
+	result: LngLatLike,
 	storesArray: MapBoxListing[]
 ) {
 	const options: { units: Units | undefined } = { units: 'kilometers' };
@@ -24,7 +24,11 @@ export function locateNearestStore(
 	storesArray.forEach( function ( store ) {
 		delete store.properties.distance;
 		Object.defineProperty( store.properties, 'distance', {
-			value: distance( result, store.geometry, options ),
+			value: distance(
+				result as Coord,
+				store.geometry as Coord,
+				options
+			),
 			writable: true,
 			enumerable: true,
 			configurable: true,
@@ -32,6 +36,9 @@ export function locateNearestStore(
 	} );
 
 	storesArray.sort( ( a, b ) => {
+		if ( ! a.properties.distance || ! b.properties.distance ) {
+			return -1;
+		}
 		if ( a.properties.distance > b.properties.distance ) {
 			return 1;
 		}

@@ -2,23 +2,22 @@ import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
 import type { RefObject } from 'react';
 import { createRef, createRoot } from '@wordpress/element';
-import mapboxgl, { LngLatLike } from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import { Marker } from './Marker';
 import { MapboxBlockDefaults, MapBoxListing } from '../../types';
 import { geoMarkerStyle } from './defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
-import { addPopup, removePopups } from './Popup';
+import { removePopups } from './Popup';
 import { fitInView } from '../../utils/view';
 import { PinPoint } from './Pin';
-import { getNextId } from '../../utils/dataset';
-import { SearchPopup } from './PopupContent';
+import { showNearestStore } from '../../utils/dataset';
 
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
  *
  * @param id
- * @param map - mapboxgl.Map - This is an instance of the Mapbox GL JS map object on which the marker
- *            will be placed.
+ * @param map    - mapboxgl.Map - This is an instance of the Mapbox GL JS map object on which the marker
+ *               will be placed.
  * @param mapRef - RefObject< HTMLDivElement > - This is a reference to the DOM node that will be used
  * @return A mapboxgl.Marker object is being returned.
  */
@@ -64,10 +63,22 @@ const initGeomarker = (
 	return markerRef;
 };
 
+/**
+ * Initializes the geocoder for the map.
+ *
+ * @param {mapboxgl.Map}                          map                 - The Mapbox map object.
+ * @param {RefObject<HTMLDivElement> | undefined} mapRef              - The ref object for the map container.
+ * @param {RefObject<HTMLDivElement> | undefined} geocoderRef         - The ref object for the geocoder container.
+ * @param {MapBoxListing[] | undefined}           listings            - The array of mapbox listings.
+ * @param {MapBoxListing[] | null}                filteredListings    - The array of filtered mapbox listings.
+ * @param {(listings: MapBoxListing[]) => void}   setFilteredListings - The function to set the filtered listings.
+ * @param {MapboxBlockDefaults}                   defaults            - The default settings for the mapbox block.
+ * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
+ */
 export const initGeocoder = (
 	map: mapboxgl.Map,
-	mapRef: React.RefObject< HTMLDivElement > | undefined,
-	geocoderRef: React.RefObject< HTMLDivElement > | undefined,
+	mapRef: RefObject< HTMLDivElement > | undefined,
+	geocoderRef: RefObject< HTMLDivElement > | undefined,
 	listings: MapBoxListing[] | undefined,
 	filteredListings: MapBoxListing[] | null,
 	setFilteredListings: ( listings: MapBoxListing[] ) => void,
@@ -140,58 +151,26 @@ export const initGeocoder = (
 				// The map marker element
 				// const markerEl = geocoder.mapMarker.getElement() as HTMLElement;
 
+				geocoder.mapMarker.geometry = searchResult.geometry;
+				geocoder.mapMarker.onclick = () => {
+					// Remove the active class from the geocoder
+					geocoder.clear();
+				};
+
 				console.log( 'Search result', searchResult );
 				console.log(
 					'nearest store to search result coordinates in km: ',
 					sortedNearestStores[ 0 ].properties.distance
 				);
 
-				const newFilteredListings: MapBoxListing[] = [
-					sortedNearestStores[ 0 ],
-					{
-						id: getNextId( filteredListings ),
-						type: 'GeocoderMarker',
-						properties: {
-							name: 'geocoder',
-							icon: 'geocoder',
-						},
-						geometry: {
-							type: 'Point',
-							coordinates: searchResult.geometry
-								.coordinates as LngLatLike,
-						},
-					},
-				];
-
-				// Display the nearest store
-				setFilteredListings( newFilteredListings );
-
-				console.log( newFilteredListings );
-
-				removePopups( mapRef as RefObject< HTMLDivElement > );
-				/* Open a popup for the closest store. */
-				addPopup(
-					map,
-					newFilteredListings[ 1 ],
-					<SearchPopup
-						icon={ 'geocoder' }
-						name={ searchResult.text }
-						placeName={ searchResult.place_name }
-						category={ searchResult.properties?.category }
-						maki={ searchResult.properties?.maki }
-						distance={
-							sortedNearestStores[ 0 ].properties.distance
-						}
-					/>
+				showNearestStore(
+					searchResult,
+					sortedNearestStores,
+					filteredListings,
+					setFilteredListings,
+					mapRef as RefObject< HTMLDivElement >,
+					map
 				);
-
-				/* Open a popup for the closest store. */
-				addPopup( map, newFilteredListings[ 0 ] );
-
-				/** Highlight the listing for the closest store. */
-				mapRef?.current
-					?.querySelector( '#marker-' + sortedNearestStores[ 0 ].id )
-					?.classList.add( 'active-store' );
 			}
 		} );
 
