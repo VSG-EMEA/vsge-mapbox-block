@@ -21,23 +21,7 @@ import { RefObject } from 'react';
 import { Button } from '@wordpress/components';
 import { defaultMarkerProps, generateTempMarkerData } from './defaults';
 import { fitInView } from '../../utils/view';
-import { getBbox } from '../../utils/spatialCalcs';
-
-/**
- * Removes temporary markers from the specified element.
- *
- * @param {React.RefObject<HTMLDivElement>} maboxRef - The reference to the HTMLDivElement
- * @return {void} This function does not return anything
- */
-export function removeTempMarkers(
-	maboxRef: React.RefObject< HTMLDivElement > | undefined
-) {
-	if ( maboxRef?.current ) {
-		maboxRef?.current
-			.querySelectorAll( '.marker-temp' )
-			.forEach( ( marker ) => marker.remove() );
-	}
-}
+import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
 
 /**
  * Renders a MapBox component.

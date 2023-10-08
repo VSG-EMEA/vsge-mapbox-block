@@ -102,3 +102,19 @@ export function addMarker(
 			.addTo( map );
 	}
 }
+
+/**
+ * Removes temporary markers from the specified element.
+ *
+ * @param {React.RefObject<HTMLDivElement>} maboxRef - The reference to the HTMLDivElement
+ * @return {void} This function does not return anything
+ */
+export function removeTempMarkers(
+	maboxRef: React.RefObject< HTMLDivElement > | undefined
+) {
+	if ( maboxRef?.current ) {
+		maboxRef?.current
+			.querySelectorAll( '.marker-temp' )
+			.forEach( ( marker ) => marker.remove() );
+	}
+}
