@@ -15,7 +15,7 @@ import {
 	MountedMapsContextValue,
 } from '../../types';
 import { addMarker, addMarkers } from './Markers';
-import { addPopup, removePopup } from './Popup';
+import { addPopup, removePopups } from './Popup';
 import { getNextId } from '../../utils/dataset';
 import { RefObject } from 'react';
 import { Button } from '@wordpress/components';
@@ -100,6 +100,12 @@ export function MapBox( {
 	 *                                  the map, and it is used to set the coordinates of a new marker that will be added to the map.
 	 */
 	function addNewListing( id: number, clickedPoint: LngLatLike ) {
+		if ( mapRef?.current ) {
+			// remove previous marker and popup
+			removeMarker( id );
+			removePopups( mapRef );
+		}
+		// then add the new marker and store the new marker in the markers array
 		if ( map && listings ) {
 			const mapBoxListing: MapBoxListing = {
 				id,
@@ -116,9 +122,6 @@ export function MapBox( {
 					coordinates: clickedPoint,
 				},
 			};
-			// remove previous marker and popup
-			removeMarker( id );
-			removePopup( mapRef );
 
 			// then add the new marker and store the new marker in the markers array
 			addMarker( mapBoxListing, map, attributes.mapboxOptions.icons );
@@ -134,7 +137,6 @@ export function MapBox( {
 	function updateListing( mapListing: MapBoxListing ) {
 		// remove previous marker and popup
 		removeMarker( mapListing.id );
-		removePopup( mapRef );
 
 		// then add the new marker and store the new marker in the markers array
 		addMarker( mapListing, map, attributes.mapboxOptions.icons );
@@ -395,7 +397,7 @@ export function MapBox( {
 			</div>
 			<div className={ 'map-container' }>
 				<TopBar { ...attributes } />
-				<Map mapRef={ mapRef as RefObject< HTMLDivElement > | null } />
+				<Map mapRef={ mapRef as RefObject< HTMLDivElement > } />
 			</div>
 		</div>
 	);
