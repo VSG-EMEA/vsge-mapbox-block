@@ -68,13 +68,7 @@ function getIcon( icon: string ) {
 }
 
 export function SearchPopup( props: SearchMarkerProps ) {
-	const {
-		name = '',
-		placeName = '',
-		category = '',
-		maki = '',
-		distance = 0,
-	} = props;
+	const { name = '', category = '', maki = '', distance = 0 } = props;
 
 	const icon = getIcon( maki );
 
@@ -102,9 +96,6 @@ export function SearchPopup( props: SearchMarkerProps ) {
 			<div>
 				<span title={ category }>{ category }</span>
 				<h3>{ name }</h3>
-				{
-					//<p>{placeName}</p>
-				 }
 				<p>
 					{ __( 'distance' ) + ': ' + `${ distance.toFixed( 2 ) }Km` }
 				</p>

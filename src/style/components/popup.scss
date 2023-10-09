@@ -16,8 +16,8 @@
 
 		&-content {
 			font-weight: 400;
-			padding: 1rem 1.3rem;
-			min-width: 280px;
+      padding: 1rem 1.5rem 1rem 1rem;
+      width: 100%;
 			line-height: var(--text__line-height-headline);
 
 			img.gray-marker {
@@ -27,7 +27,24 @@
 		}
 
     .mapbox-popup-inner {
-      gap: 1rem
+      gap: 1rem;
+      max-width: 280px;
+      padding-right: 2rem;
+      width: 100%;
+
+      &.mapbox-popup-search {
+        flex-direction: column;
+        text-align: center;
+        margin: auto;
+        min-width: inherit;
+        svg {
+          margin: auto;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+
     }
 
 		&-anchor-bottom .mapboxgl-popup-tip {
