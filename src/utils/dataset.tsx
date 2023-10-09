@@ -152,7 +152,6 @@ export function showNearestStore(
 		<SearchPopup
 			icon={ 'geocoder' }
 			name={ location.text }
-			placeName={ location.place_name }
 			category={ location.properties?.category }
 			maki={ location.properties?.maki }
 			distance={ sortedNearestStores[ 0 ].properties.distance }

@@ -2,7 +2,7 @@ import { Map } from './Map';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { useContext, useEffect } from '@wordpress/element';
-import { MapboxContext } from './MapboxContext';
+import { MapboxContext, useMapRef } from './MapboxContext';
 import { getMarkerData, initMap } from './utils';
 import mapboxgl, { LngLatLike, MapMouseEvent, Point } from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
@@ -16,12 +16,14 @@ import {
 } from '../../types';
 import { addMarker, addMarkers, removeTempMarkers } from './Markers';
 import { addPopup, removePopups } from './Popup';
-import { getNextId } from '../../utils/dataset';
+import { getNextId, showNearestStore } from '../../utils/dataset';
 import type { RefObject } from 'react';
 import { Button } from '@wordpress/components';
 import { defaultMarkerProps, generateTempMarkerData } from './defaults';
 import { fitInView } from '../../utils/view';
 import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
+import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Renders a MapBox component.
@@ -215,7 +217,24 @@ export function MapBox( {
 												clickedPoint,
 												filteredListings ?? listings
 											);
-
+										console.log( sortedNearestStores );
+										showNearestStore(
+											{
+												text: __( 'Me' ),
+												place_name: __( 'Clicked Pin' ),
+												geometry: {
+													coordinates: clickedPoint,
+												},
+												properties: {
+													distance: 0,
+												},
+											} as unknown as MapboxGeocoder.Result,
+											sortedNearestStores,
+											filteredListings,
+											setFilteredListings,
+											mapRef as RefObject< HTMLDivElement >,
+											map
+										);
 										console.log( sortedNearestStores );
 									} }
 								>
