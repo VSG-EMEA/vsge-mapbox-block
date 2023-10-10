@@ -7,6 +7,7 @@ import { highlightListing } from '../components/Mapbox/utils';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
 import { SearchPopup } from '../components/Mapbox/PopupContent';
+import { SEARCH_RESULTS_SHOWN } from '../constants';
 
 /**
  * The function prepares stores by assigning IDs to them and returning them as a geojson object.
@@ -100,13 +101,13 @@ export const reorder = (
 export function geocoderMarkerProps(
 	stores: MapBoxListing[],
 	coordinates: LngLatLike
-) {
+): MapBoxListing {
 	return {
-		id: getNextId( stores ),
-		type: 'GeocoderMarker',
+		type: 'temp',
 		properties: {
 			name: 'geocoder',
 			icon: 'geocoder',
+			draggable: true,
 		},
 		geometry: {
 			type: 'Point',
@@ -128,41 +129,44 @@ export function geocoderMarkerProps(
 export function showNearestStore(
 	location: MapboxGeocoder.Result,
 	sortedNearestStores: MapBoxListing[],
-	filteredListings: MapBoxListing[],
+	filteredListings: MapBoxListing[] | undefined,
 	setFilteredListings: ( listings: MapBoxListing[] ) => void,
 	mapRef: RefObject< HTMLDivElement >,
 	map: mapboxgl.Map
 ) {
+	const resultToShow = SEARCH_RESULTS_SHOWN;
 	const newFilteredListings: MapBoxListing[] = [
-		sortedNearestStores[ 0 ],
 		geocoderMarkerProps(
 			filteredListings,
 			location.geometry.coordinates as LngLatLike
 		),
+		...sortedNearestStores.slice( 0, resultToShow ),
 	];
 
 	// Display the nearest store
 	setFilteredListings( newFilteredListings );
 
 	removePopups( mapRef as RefObject< HTMLDivElement > );
+
 	/* Open a popup for the closest store. */
 	addPopup(
 		map,
-		newFilteredListings[ 1 ],
+		newFilteredListings[ 0 ],
 		<SearchPopup
 			icon={ 'geocoder' }
 			name={ location.text }
 			category={ location.properties?.category }
 			maki={ location.properties?.maki }
 			distance={ sortedNearestStores[ 0 ].properties.distance }
+			draggable={ true }
 		/>
 	);
 
 	/* Open a popup for the closest store. */
-	addPopup( map, newFilteredListings[ 0 ] );
+	addPopup( map, newFilteredListings[ 1 ] );
 
 	/** Highlight the listing for the closest store. */
 	mapRef?.current
-		?.querySelector( '#marker-' + sortedNearestStores[ 0 ].id )
+		?.querySelector( '#marker-' + sortedNearestStores[ 1 ].id )
 		?.classList.add( 'active' );
 }
