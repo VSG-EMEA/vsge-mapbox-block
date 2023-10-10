@@ -43,6 +43,7 @@ const initGeomarker = (
 					icon: 'geocoder',
 					iconSize: defaultStyle.size,
 					iconColor: defaultStyle.color,
+					draggable: true,
 				},
 				geometry: {
 					type: 'Point',
@@ -91,6 +92,7 @@ export const initGeocoder = (
 		element: geoMarkerRef.current as HTMLElement,
 		color: 'grey',
 		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
+		draggable: true,
 	};
 
 	if ( defaults.accessToken ) {
@@ -156,6 +158,12 @@ export const initGeocoder = (
 					// Remove the active class from the geocoder
 					geocoder.clear();
 				};
+				geocoder.mapMarker.on('dragend', () => {
+					// Update the marker's position
+					const lngLat = geocoder.mapMarker.getLngLat();
+					// Update the marker's position
+					geocoder.mapMarker.setLngLat( lngLat );
+				})
 
 				console.log( 'Search result', searchResult );
 				console.log(
