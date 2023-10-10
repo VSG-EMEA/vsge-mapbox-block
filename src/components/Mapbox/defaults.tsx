@@ -25,7 +25,7 @@ export const tempMarkerStyle: MarkerBasicStyle = {
 };
 
 export const geoMarkerStyle: MarkerBasicStyle = {
-	color: defaultColors[ 2 ],
+	color: defaultColors[ 0 ],
 	size: defaultMarkerSize,
 };
 
@@ -78,7 +78,8 @@ export function generateTempMarkerData(
 			name: 'temp',
 			icon: 'pin',
 			iconSize: defaultMarkerSize,
-			iconColor: defaultColors[ 1 ],
+			iconColor: defaultColors[ 0 ],
+			draggable: true,
 		},
 		geometry: {
 			type: 'Point',
