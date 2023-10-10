@@ -1,13 +1,14 @@
 import { Map } from './Map';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
-import { useContext, useEffect } from '@wordpress/element';
-import { MapboxContext, useMapRef } from './MapboxContext';
+import { useContext, useEffect, useState } from '@wordpress/element';
+import { MapboxContext } from './MapboxContext';
 import { getMarkerData, initMap } from './utils';
-import mapboxgl, { LngLatLike, MapMouseEvent, Point } from 'mapbox-gl';
+import mapboxgl, { LngLatLike, MapMouseEvent, Point, Popup } from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import { GeoCoder, initGeocoder } from './Geocoder';
 import {
+	CoordinatesDef,
 	MapAttributes,
 	MapboxBlockDefaults,
 	MapBoxListing,
@@ -16,14 +17,12 @@ import {
 } from '../../types';
 import { addMarker, addMarkers, removeTempMarkers } from './Markers';
 import { addPopup, removePopups } from './Popup';
-import { getNextId, showNearestStore } from '../../utils/dataset';
+import { getNextId } from '../../utils/dataset';
 import type { RefObject } from 'react';
-import { Button } from '@wordpress/components';
 import { defaultMarkerProps, generateTempMarkerData } from './defaults';
 import { fitInView } from '../../utils/view';
-import { getBbox, locateNearestStore } from '../../utils/spatialCalcs';
-import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { __ } from '@wordpress/i18n';
+import { getBbox } from '../../utils/spatialCalcs';
+import { PinPointPopup } from './PopupContent';
 
 /**
  * Renders a MapBox component.
@@ -55,6 +54,7 @@ export function MapBox( {
 		filteredListings,
 		setFilteredListings,
 	}: MountedMapsContextValue = useContext( MapboxContext );
+	const [ currentPopup, setCurrentPopup ] = useState< Popup | undefined >();
 
 	/**
 	 * The function restores the initial markers on a map using a setMarkers function and a listings
@@ -145,7 +145,7 @@ export function MapBox( {
 				const clickedPoint = [
 					e.lngLat.lng,
 					e.lngLat.lat,
-				] as LngLatLike;
+				] as CoordinatesDef;
 
 				const clickedFeatures = currentMap.queryRenderedFeatures(
 					e.point
@@ -162,96 +162,47 @@ export function MapBox( {
 						Number( clickedEl.dataset?.id || 0 ),
 						listings
 					);
+					const markerCoordinates = markerData?.geometry?.coordinates;
 
-					if ( clickedEl.dataset?.markerName === 'geocoder' ) {
-						// get the info of the geocoder place?
-						return addPopup(
-							currentMap,
-							{
-								geometry: {
-									coordinates: clickedPoint,
-								},
-							},
-							<p>Find A location?</p>
-						);
-					} else if ( clickedEl.dataset?.markerName === 'temp' ) {
-						// add the popup
-						if ( isEditor ) {
-							// prints the popup that allow the editor to add a new marker
-							return addPopup(
-								currentMap,
-								{
-									geometry: {
-										coordinates:
-											markerData?.geometry.coordinates ||
-											clickedPoint,
-									},
-								},
-								<Button
-									onClick={ () =>
-										addNewListing(
-											getNextId( listings ),
-											clickedPoint
-										)
-									}
-								>
-									Add a new Marker?
-								</Button>
-							);
-						}
+					// adds the new Marker popup
+					if ( isEditor ) {
+						return;
+					}
 
+					if ( clickedEl.dataset?.markerType === 'GeocoderMarker' ) {
+						return;
+					}
+
+					if ( clickedEl.dataset?.markerType === 'ClickMarker' ) {
 						// prints the popup that allow the user to find a location
-						addPopup(
+						const newPopup = addPopup(
 							currentMap,
 							{
 								geometry: {
-									coordinates: clickedPoint,
+									coordinates:
+										markerCoordinates ?? clickedPoint,
 								},
 							},
-							<>
-								<p>Find A location?</p>
-								<Button
-									onClick={ () => {
-										const sortedNearestStores =
-											locateNearestStore(
-												clickedPoint,
-												filteredListings ?? listings
-											);
-										console.log( sortedNearestStores );
-										showNearestStore(
-											{
-												text: __( 'Me' ),
-												place_name: __( 'Clicked Pin' ),
-												geometry: {
-													coordinates: clickedPoint,
-												},
-												properties: {
-													distance: 0,
-												},
-											} as unknown as MapboxGeocoder.Result,
-											sortedNearestStores,
-											filteredListings,
-											setFilteredListings,
-											mapRef as RefObject< HTMLDivElement >,
-											map
-										);
-										console.log( sortedNearestStores );
-									} }
-								>
-									Get the nearest store?
-								</Button>
-								<Button
-									onClick={ () => {
-										setFilteredListings( listings );
-									} }
-								>
-									Reset
-								</Button>
-							</>
+							<PinPointPopup
+								location={
+									markerCoordinates ?? clickedPoint
+								}
+								listings={ listings }
+								setFilteredListings={ setFilteredListings }
+								mapRef={ mapRef }
+								map={ map }
+								filteredListings={ filteredListings }
+							/>
 						);
-					} else if ( markerData ) {
+						setCurrentPopup( newPopup );
+						return;
+					}
+
+					if ( markerData ) {
 						// popup the marker data on the currentMap
-						return addPopup( currentMap, markerData );
+						const newPopup = addPopup( currentMap, markerData );
+						setCurrentPopup( newPopup );
+						return;
 					}
 				}
 

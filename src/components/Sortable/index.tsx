@@ -10,7 +10,7 @@ import { getNextId, reorder } from '../../utils/dataset';
 import { MapBoxListing, MapboxOptions, TagArray, MapItem } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
 import { defaultMarkerProps } from '../Mapbox/defaults';
-import { removePopup } from '../Mapbox/Popup';
+import { removePopups } from '../Mapbox/Popup';
 
 interface SortableProps {
 	items: TagArray[];
@@ -132,7 +132,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 				coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
 			},
 		};
-		removePopup( mapRef );
+		removePopups( mapRef );
 		setOptions( 'listings', [ ...items, newListing ] );
 	}
 
