@@ -7,6 +7,9 @@ import { useContext } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { DEFAULT_COLOR } from '../../constants';
 import { removePopups } from './Popup';
+import { getMarkerData } from './utils';
+
+function updateFeature( feature: MapBoxListing, listings ) {}
 
 /**
  * This is a TypeScript React function that renders a marker with a button and optional children
@@ -29,12 +32,15 @@ export function Marker( {
 	map: mapboxgl.Map;
 	children?: JSX.Element;
 } ): JSX.Element {
-	const { mapRef }: MountedMapsContextValue = useContext( MapboxContext );
+	const { mapRef, listings }: MountedMapsContextValue = useContext( MapboxContext );
 	return (
 		<Button
 			onClick={ () => {
 				removePopups( mapRef );
 				enableListing( map, feature );
+			} }
+			onDragEnd={ () => {
+				updateFeature( feature, listings );
 			} }
 			className={ 'marker marker-' + safeSlug( feature.properties.name ) } // this is important to prevent duplicates
 			id={ 'marker-' + feature.id || 'temp' }

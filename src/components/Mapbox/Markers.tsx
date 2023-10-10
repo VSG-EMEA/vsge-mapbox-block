@@ -1,9 +1,9 @@
 import { RefObject } from 'react';
 import { createRef, createRoot } from '@wordpress/element';
-import mapboxgl, { LngLatLike } from 'mapbox-gl';
+import mapboxgl, { LngLatLike, MapEventType, MapMouseEvent } from 'mapbox-gl';
 import { Marker } from './Marker';
 import { DefaultMarker, PinPoint } from './Pin';
-import { MapBoxListing, MarkerIcon, MarkerItem } from '../../types';
+import { MapBoxListing, MarkerIcon } from '../../types';
 import { areValidCoordinates } from '../Sortable/utils';
 import { safeSlug } from '../../utils';
 import { getMarkerSvg, modifySVG } from '../../utils/svg';
@@ -92,14 +92,22 @@ export function addMarker(
 		);
 
 		// Add markers to the map at all points
-		return new mapboxgl.Marker( ref.current, {
+		const thisMarker = new mapboxgl.Marker( ref.current, {
 			offset: [ 0, ( marker?.properties?.iconSize || 0 ) * -0.5 ],
-			draggable: !! marker.properties.icon, // if the icon is the clickable marker, it should be draggable
+			draggable: marker.properties.draggable, // if the icon is the clickable marker, it should be draggable
 		} )
 			.setLngLat(
 				( marker?.geometry?.coordinates as LngLatLike ) || [ 0, 0 ]
 			)
 			.addTo( map );
+
+		thisMarker.on( 'dragend', ( event: MapEventType ) => {
+			const lngLat = thisMarker.getLngLat();
+			// Update the marker's position
+			thisMarker.setLngLat( lngLat );
+		} );
+
+		return thisMarker;
 	}
 }
 
@@ -112,6 +120,7 @@ export function addMarker(
 export function removeTempMarkers(
 	maboxRef: React.RefObject< HTMLDivElement > | undefined
 ) {
+	console.log( 'removeTempMarkers' );
 	if ( maboxRef?.current ) {
 		maboxRef?.current
 			.querySelectorAll( '.marker-temp' )
