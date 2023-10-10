@@ -124,6 +124,6 @@ export function removeTempMarkers(
 	if ( maboxRef?.current ) {
 		maboxRef?.current
 			.querySelectorAll( '.marker-temp' )
-			.forEach( ( marker ) => marker.remove() );
+			.forEach( ( marker ) => marker.parentElement?.remove() );
 	}
 }

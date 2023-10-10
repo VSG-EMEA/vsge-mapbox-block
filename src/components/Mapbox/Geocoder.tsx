@@ -36,10 +36,10 @@ const initGeomarker = (
 	root.render(
 		<Marker
 			feature={ {
-				type: 'GeocoderMarker',
+				type: 'temp',
 				id,
 				properties: {
-					name: 'geocoder',
+					name: 'geocoder-marker',
 					icon: 'geocoder',
 					iconSize: defaultStyle.size,
 					iconColor: defaultStyle.color,

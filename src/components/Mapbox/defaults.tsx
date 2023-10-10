@@ -1,7 +1,7 @@
 // Default marker style
 import { DefaultMarker } from './Pin';
 import { __ } from '@wordpress/i18n';
-import { MapBoxListing } from '../../types';
+import { CoordinatesDef, MapBoxListing } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
 import { DEFAULT_COLOR } from '../../constants';
 
@@ -69,13 +69,13 @@ export const defaultMarkerProps = {
  */
 export function generateTempMarkerData(
 	id: number,
-	coordinates: LngLatLike | [ number, number ]
+	coordinates: CoordinatesDef | [ number, number ]
 ): MapBoxListing {
 	return {
-		type: 'ClickMarker',
+		type: 'temp',
 		id,
 		properties: {
-			name: 'temp',
+			name: 'click-marker',
 			icon: 'pin',
 			iconSize: defaultMarkerSize,
 			iconColor: defaultColors[ 0 ],
@@ -90,16 +90,17 @@ export function generateTempMarkerData(
 
 export function generateGeocoderMarkerData(
 	id: number,
-	coordinates: LngLatLike | [ number, number ]
+	coordinates: CoordinatesDef | [ number, number ]
 ): MapBoxListing {
 	return {
-		type: 'Feature',
+		type: 'temp',
 		id,
 		properties: {
-			name: 'geocoder',
+			name: 'geocoder-marker',
 			icon: 'geocoder',
 			iconSize: defaultMarkerSize,
 			iconColor: defaultColors[ 2 ],
+			draggable: true,
 		},
 		geometry: {
 			type: 'Point',

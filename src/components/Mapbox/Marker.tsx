@@ -9,7 +9,10 @@ import { DEFAULT_COLOR } from '../../constants';
 import { removePopups } from './Popup';
 import { getMarkerData } from './utils';
 
-function updateFeature( feature: MapBoxListing, listings ) {}
+function updateFeature( feature: MapBoxListing, listings ) {
+	feature.getGeometry().setCoordinates( [ 0, 0 ] );
+	const markerData = getMarkerData( feature.id, listings );
+}
 
 /**
  * This is a TypeScript React function that renders a marker with a button and optional children
@@ -42,7 +45,7 @@ export function Marker( {
 			onDragEnd={ () => {
 				updateFeature( feature, listings );
 			} }
-			className={ 'marker marker-' + safeSlug( feature.properties.name ) } // this is important to prevent duplicates
+			className={ 'marker marker-' + safeSlug( feature.type ) } // this is important to prevent duplicates
 			id={ 'marker-' + feature.id || 'temp' }
 			data-id={ feature.id ?? 'temp' }
 			data-marker-type={ feature.type }

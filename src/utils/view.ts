@@ -1,5 +1,4 @@
 import mapboxgl from 'mapbox-gl';
-import { Feature } from '@turf/turf';
 import { MapBoxListing } from '../types';
 
 /**

@@ -86,11 +86,6 @@ export function MapBox( {
 	 *                                  the map, and it is used to set the coordinates of a new marker that will be added to the map.
 	 */
 	function addNewListing( id: number, clickedPoint: LngLatLike ) {
-		if ( mapRef?.current ) {
-			// remove previous marker and popup
-			removeMarker( id );
-			removePopups( mapRef );
-		}
 		// then add the new marker and store the new marker in the markers array
 		if ( map && listings ) {
 			const mapBoxListing: MapBoxListing = {
@@ -129,6 +124,41 @@ export function MapBox( {
 	}
 
 	/**
+	 * Updates the listings on the map.
+	 * @param filteredStores
+	 * @param stores
+	 */
+	function updateCamera(
+		filteredStores: MapBoxListing[],
+		stores: MapBoxListing[]
+	) {
+		if ( ! map ) return;
+
+		// if filtered listings are present
+		if ( filteredStores?.length ) {
+			if ( stores?.length === 2 ) {
+				/**
+				 * Adjust the map camera:
+				 * Get a bbox that contains both the geocoder result and
+				 * the closest store. Fit the bounds to that bbox.
+				 */
+				const bbox = getBbox(
+					stores[ 0 ].geometry,
+					stores[ 1 ].geometry
+				);
+
+				map?.cameraForBounds( bbox, {
+					padding: 50,
+				} );
+			} else {
+				fitInView( map, filteredStores, mapRef );
+			}
+			return;
+		}
+		fitInView( map, stores, mapRef );
+	}
+
+	/**
 	 * Listens for a click event on the map and performs various actions based on the click position and element clicked.
 	 *
 	 * @param {mapboxgl.Map} currentMap - The current map object.
@@ -140,6 +170,11 @@ export function MapBox( {
 	) {
 		if ( currentMap ) {
 			currentMap.on( 'click', ( e: MapMouseEvent ) => {
+				/**
+				 * Otherwise the user doesn't click on a marker
+				 */
+				removeTempMarkers( ref );
+
 				// store the last clicked position
 				setLngLat( e.lngLat );
 				const clickedPoint = [
@@ -150,6 +185,10 @@ export function MapBox( {
 				const clickedFeatures = currentMap.queryRenderedFeatures(
 					e.point
 				);
+
+				if ( clickedFeatures?.length ) {
+					console.log( clickedFeatures );
+				}
 
 				// Find features intersecting the bounding box.
 				const clickedEl = (
@@ -169,11 +208,11 @@ export function MapBox( {
 						return;
 					}
 
-					if ( clickedEl.dataset?.markerType === 'GeocoderMarker' ) {
+					if ( clickedEl.dataset?.markerName === 'geocoder-marker' ) {
 						return;
 					}
 
-					if ( clickedEl.dataset?.markerType === 'ClickMarker' ) {
+					if ( clickedEl.dataset?.markerName === 'click-marker' ) {
 						// prints the popup that allow the user to find a location
 						const newPopup = addPopup(
 							currentMap,
@@ -184,9 +223,7 @@ export function MapBox( {
 								},
 							},
 							<PinPointPopup
-								location={
-									markerCoordinates ?? clickedPoint
-								}
+								location={ markerCoordinates ?? clickedPoint }
 								listings={ listings }
 								setFilteredListings={ setFilteredListings }
 								mapRef={ mapRef }
@@ -205,11 +242,6 @@ export function MapBox( {
 						return;
 					}
 				}
-
-				/**
-				 * Otherwise the user doesn't click on a marker
-				 */
-				removeTempMarkers( ref );
 
 				// Generate the metadata for the pin marker if nothing was clicked
 				const newTempMarker = generateTempMarkerData(
@@ -307,32 +339,16 @@ export function MapBox( {
 				) {
 					updateListing( listing );
 				} else {
-					removeMarker( listing.id );
+					if ( listing.type === 'Feature' ) {
+						removeMarker( listing.id );
+					}
 				}
 			} );
-			if ( listings?.length === 2 ) {
-				/**
-				 * Adjust the map camera:
-				 * Get a bbox that contains both the geocoder result and
-				 * the closest store. Fit the bounds to that bbox.
-				 */
-				const bbox = getBbox(
-					listings[ 0 ].geometry,
-					listings[ 1 ].geometry
-				);
-
-				map?.cameraForBounds( bbox, {
-					padding: 50,
-				} );
-			} else {
-				fitInView( map, filteredListings, mapRef );
-			}
-			return;
 		}
-		// if no filtered listings show all
+
+		// if no filtered stores are present show all stores
 		listings?.forEach( ( listing ) => {
 			updateListing( listing );
-			fitInView( map, listings, mapRef );
 		} );
 	}, [ filteredListings ] );
 
