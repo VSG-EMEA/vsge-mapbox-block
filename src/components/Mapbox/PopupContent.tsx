@@ -1,10 +1,23 @@
-import { MarkerProps, SearchMarkerProps } from '../../types';
-import { Icon } from '@wordpress/components';
+import {
+	MapBoxListing,
+	MarkerProps,
+	MountedMapsContextValue,
+	SearchMarkerProps,
+} from '../../types';
+import { Button, Icon } from '@wordpress/components';
 import { TagList } from './TagItem';
 import { mapMarker } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { ICON_SIZE } from '../../constants';
 import { layouts, svgArray } from '@mapbox/maki';
+import { locateNearestStore } from '../../utils/spatialCalcs';
+import { getNextId, showNearestStore } from '../../utils/dataset';
+import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { RefObject } from 'react';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
+import { useContext, useEffect } from '@wordpress/element';
+import { MapboxContext } from './MapboxContext';
+import { addMarker } from './Markers';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
 The component destructures the `props` object to extract the properties `itemTags`, `itemFilters`,
@@ -97,9 +110,85 @@ export function SearchPopup( props: SearchMarkerProps ) {
 				<span title={ category }>{ category }</span>
 				<h3>{ name }</h3>
 				<p>
-					{ __( 'distance' ) + ': ' + `${ distance.toFixed( 2 ) }Km` }
+					{ __( 'The closest store distance: ' ) +
+						`${ distance.toFixed( 2 ) }Km` }
 				</p>
 			</div>
+		</div>
+	);
+}
+
+export function PinPointPopup( props: {
+	location: LngLatLike;
+	filteredListings: MapBoxListing[] | null;
+	listings: MapBoxListing[];
+	setFilteredListings: ( listings: MapBoxListing[] ) => void;
+	mapRef: RefObject< HTMLDivElement > | undefined;
+	map: mapboxgl.Map | null;
+} ) {
+	const {
+		location,
+		filteredListings,
+		listings,
+		setFilteredListings,
+		mapRef,
+		map,
+	} = props;
+
+	return (
+		<div className={ 'mapbox-popup-inner mapbox-popup-newpin' }>
+			<p>Find A location?</p>
+			<Button
+				onClick={ () => {
+					const sortedNearestStores = locateNearestStore(
+						location,
+						filteredListings ?? listings
+					);
+					showNearestStore(
+						{
+							text: __( 'Me' ),
+							place_name: __( 'Clicked Pin' ),
+							geometry: {
+								coordinates: location,
+							},
+							properties: {
+								distance: 0,
+							},
+						} as unknown as MapboxGeocoder.Result,
+						sortedNearestStores,
+						filteredListings,
+						setFilteredListings,
+						mapRef as RefObject< HTMLDivElement >,
+						map
+					);
+
+					// add the new marker to the map
+					addMarker(
+						{
+							text: __( 'Me' ),
+							geometry: {
+								coordinates: location,
+							},
+							properties: {
+								name: __( 'Clicked Pin' ),
+								icon: 'pin',
+								draggable: true,
+							},
+						},
+						map,
+						'pinpoint'
+					);
+				} }
+			>
+				Get the nearest store?
+			</Button>
+			<Button
+				onClick={ () => {
+					setFilteredListings( listings );
+				} }
+			>
+				Reset
+			</Button>
 		</div>
 	);
 }

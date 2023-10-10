@@ -1,6 +1,6 @@
 import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
-import { MapBoxListing } from '../../types';
+import { CoordinatesDef, MapBoxListing } from '../../types';
 import { RefObject } from 'react';
 import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from './defaults';
@@ -36,7 +36,7 @@ export function addPopup(
 	return new mapboxgl.Popup( {
 		offset: ( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,
 	} )
-		.setLngLat( marker?.geometry?.coordinates as LngLatLike )
+		.setLngLat( marker?.geometry?.coordinates as CoordinatesDef )
 		.setDOMContent( popupRef.current )
 		.addTo( map );
 }
