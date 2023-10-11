@@ -114,16 +114,36 @@ export function addMarker(
 /**
  * Removes temporary markers from the specified element.
  *
- * @param {React.RefObject<HTMLDivElement>} maboxRef - The reference to the HTMLDivElement
+ * @param {React.RefObject<HTMLDivElement>} maboxRef        - The reference to the HTMLDivElement
+ * @param                                   excludedMarkers
  * @return {void} This function does not return anything
  */
 export function removeTempMarkers(
-	maboxRef: React.RefObject< HTMLDivElement > | undefined
+	maboxRef: React.RefObject< HTMLDivElement > | undefined,
+	excludedMarkers: string[] = []
 ) {
-	console.log( 'removeTempMarkers' );
 	if ( maboxRef?.current ) {
-		maboxRef?.current
-			.querySelectorAll( '.marker-temp' )
-			.forEach( ( marker ) => marker.parentElement?.remove() );
+		const markerTemp = maboxRef?.current.querySelectorAll(
+			'.marker-temp'
+		) as NodeListOf< HTMLElement >;
+		markerTemp.forEach( ( marker ) => {
+			// Check if the marker is excluded
+			if ( excludedMarkers.length && excludedMarkers.includes( marker?.dataset?.markerName ) )
+				return;
+			// Remove the marker
+			marker.parentElement?.remove();
+		} );
 	}
+}
+
+/**
+ * Removes temporary listings from the given list of MapBoxListings.
+ *
+ * @param {MapBoxListing[]} listings - The list of MapBoxListings to remove temporary listings from.
+ * @return {MapBoxListing[]} The updated list of MapBoxListings without temporary listings.
+ */
+export function removeTempListings( listings: MapBoxListing[] ) {
+	return listings.filter( ( listing ) => {
+		return listing.type !== 'temp';
+	} );
 }
