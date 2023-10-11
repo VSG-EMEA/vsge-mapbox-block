@@ -1,5 +1,6 @@
 import { Coord, distance, Feature, Units } from '@turf/turf';
-import { MapItem } from '../types';
+import { MapBoxListing, MapItem } from '../types';
+import { LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
 
 /**
  * This function takes a user's location and an array of stores, calculates the distance between the
@@ -14,23 +15,34 @@ import { MapItem } from '../types';
  * @return {MapItem[]} the sorted `storesArray` with each store's distance from the `result` location added as a
  * `distance` property to the store object.
  */
-export function locateNearestStore( result: Coord, storesArray: MapItem[] ) {
+export function locateNearestStore(
+	result: LngLatLike,
+	storesArray: MapBoxListing[]
+) {
 	const options: { units: Units | undefined } = { units: 'kilometers' };
 
 	storesArray.forEach( function ( store ) {
-		store.distance = {
-			value: distance( result, store.geometry as Coord, options ),
+		delete store.properties.distance;
+		Object.defineProperty( store.properties, 'distance', {
+			value: distance(
+				result as Coord,
+				store.geometry as Coord,
+				options
+			),
 			writable: true,
 			enumerable: true,
 			configurable: true,
-		};
+		} );
 	} );
 
 	storesArray.sort( ( a, b ) => {
-		if ( a.distance > b.distance ) {
+		if ( ! a.properties.distance || ! b.properties.distance ) {
+			return -1;
+		}
+		if ( a.properties.distance > b.properties.distance ) {
 			return 1;
 		}
-		if ( a.distance < b.distance ) {
+		if ( a.properties.distance < b.properties.distance ) {
 			return -1;
 		}
 		return 0; // a must be equal to b
@@ -42,31 +54,19 @@ export function locateNearestStore( result: Coord, storesArray: MapItem[] ) {
 /**
  * The function calculates the bounding box of a store and a given location.
  *
- * @param {Feature[]} sortedStores - An array of features representing sorted stores.
- * @param {any}       id           - storeIdentifier is a variable that represents the index of a specific
- *                                 store in an array of stores (sortedStores). It is used to access the geometry coordinates of that
- *                                 store in order to calculate the bounding box.
- * @param {Coord}     results      - The `results` parameter is an object that contains the coordinates of a
- *                                 location.
+ * @param {Coord} listing1 - The first listing
+ * @param {Coord} listing2 - The second listing
  * @return an array of two arrays, each containing two numbers representing the longitude and latitude
  * coordinates of a bounding box. The first array contains the coordinates of the lower left corner of
  * the bounding box, and the second array contains the coordinates of the upper right corner of the
  * bounding box.
  */
-export function getBbox( sortedStores, id: number, results ) {
-	console.log( "Store geometry", sortedStores[ id ].geometry );
+export function getBbox( listing1, listing2 ): LngLatBoundsLike {
+	const lats = [ listing1.coordinates[ 1 ], listing2.coordinates[ 1 ] ];
 
-	const lats = [
-		sortedStores[ id ].geometry.coordinates[ 1 ],
-		results.coordinates[ 1 ],
-	];
+	const lng = [ listing1.coordinates[ 0 ], listing2.coordinates[ 0 ] ];
 
-	const lons = [
-		sortedStores[ id ].geometry.coordinates[ 0 ],
-		results.coordinates[ 0 ],
-	];
-
-	const sortedLons = lons.sort( function ( a, b ) {
+	const sortedLong = lng.sort( function ( a, b ) {
 		if ( a > b ) {
 			return 1;
 		}
@@ -85,7 +85,7 @@ export function getBbox( sortedStores, id: number, results ) {
 		return 0;
 	} );
 	return [
-		[ sortedLons[ 0 ], sortedLats[ 0 ] ],
-		[ sortedLons[ 1 ], sortedLats[ 1 ] ],
+		[ sortedLong[ 0 ], sortedLats[ 0 ] ],
+		[ sortedLong[ 1 ], sortedLats[ 1 ] ],
 	];
 }

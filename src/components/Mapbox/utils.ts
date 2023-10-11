@@ -1,8 +1,10 @@
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
-import { MapAttributes, MapboxBlockDefaults, MapBoxListing } from '../../types';
-import { __ } from '@wordpress/i18n';
+import type {
+	MapAttributes,
+	MapboxBlockDefaults,
+	MapBoxListing,
+} from '../../types';
 import { Feature } from '@turf/turf';
-import { tempMarkerStyle } from './defaults';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -64,7 +66,8 @@ export function initMap(
 			type: 'geojson',
 			data: {
 				type: 'FeatureCollection',
-				features: mapboxOptions.listings,
+				features:
+					mapboxOptions.listings as Feature< GeoJSON.Geometry >[],
 			},
 		} );
 
@@ -154,13 +157,12 @@ export function setMapThreeDimensionality(
  * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
  * class from any previously active feature.
  *
- * @param {Feature} item - The `item` parameter is of type `Feature`, which is likely an object
- *                       representing a geographic feature on a map. It may contain properties such as the feature's ID,
- *                       coordinates, and other attributes. The function `highlightListing` is using this parameter to
- *                       identify a specific feature and highlight its corresponding
+ * @param {MapBoxListing} item - The `item` parameter is of type `Feature`, which is likely an object
+ *                             representing a geographic feature on a map. It may contain properties such as the feature's ID,
+ *                             coordinates, and other attributes. The function `highlightListing` is using this parameter to
+ *                             identify a specific feature and highlight its corresponding
  */
 export function highlightListing( item: MapBoxListing ) {
-	console.log( item );
 
 	document.getElementById( 'feature-listing' )?.classList.add( 'filtered' );
 

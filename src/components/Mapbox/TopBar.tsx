@@ -39,7 +39,6 @@ export const TopBar = ( attributes ) => {
 		map,
 		mapRef,
 		listings,
-		filteredListings,
 		setFilteredListings,
 	}: MountedMapsContextValue = useContext( MapboxContext );
 	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;

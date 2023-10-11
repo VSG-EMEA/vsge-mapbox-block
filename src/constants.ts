@@ -10,7 +10,12 @@ export const mapboxDefaults: MapboxOptions = {
 	scrollZoom: true,
 };
 
+export const SEARCH_RESULTS_SHOWN: number = 5;
+
 export const DEFAULT_COLOR = '#004a83';
+export const DEFAULT_COLOR_ALT = '#004a83';
+export const DEFAULT_SIZE: number = 48;
+export const ICON_SIZE: number = 36;
 
 /**
  * The mapbox map layout styles

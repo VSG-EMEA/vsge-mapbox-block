@@ -6,25 +6,14 @@ import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	__experimentalUnitControl as UnitControl,
 	Button,
-	Icon,
 	Panel,
 	PanelBody,
-	PanelRow,
 	RangeControl,
 	SelectControl,
 	TextareaControl,
-	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
-import {
-	cog,
-	list,
-	mapMarker,
-	plusCircle,
-	tag,
-	tool,
-	update,
-} from '@wordpress/icons';
+import { cog, list, tag, tool, update } from '@wordpress/icons';
 import { mapProjections, mapStyles } from '../../constants';
 import { __ } from '@wordpress/i18n';
 import { Sortable } from '../Sortable';
@@ -34,10 +23,8 @@ import {
 	setMapThreeDimensionality,
 	setMapWheelZoom,
 } from './utils';
-import IconType = Icon.IconType;
 import classNames from 'classnames';
 import { getMapDefaults } from '../../utils';
-import { getNextId } from '../../utils/dataset';
 import { PanelIcons } from './PanelIcons';
 
 export function MapEdit( {

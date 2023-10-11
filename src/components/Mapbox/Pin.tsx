@@ -1,11 +1,13 @@
 import { Path, SVG } from '@wordpress/components';
+import { MarkerPropsStyle } from '../../types';
+import { DEFAULT_COLOR, DEFAULT_SIZE } from '../../constants';
 
 /* This code exports a React component called `DefaultMarker` that renders an SVG image of a marker
 with a default color of red and size of 48. The component takes in an optional `props` object with a
 `color` and `size` property that can be used to customize the color and size of the marker. The SVG
 image is defined using the `Path` and `SVG` components from the `@wordpress/components` library. */
-export const DefaultMarker = ( props ) => {
-	const { color, size } = props;
+export const DefaultMarker = ( props: MarkerPropsStyle ) => {
+	const { color = DEFAULT_COLOR, size = DEFAULT_SIZE } = props;
 	return (
 		<>
 			{ props.children ?? (
@@ -26,11 +28,8 @@ export const DefaultMarker = ( props ) => {
 	);
 };
 
-export const PinPoint = ( props: {
-	color?: string | undefined;
-	size?: number | undefined;
-} ) => {
-	const { color = '#ff0044', size = 48 } = props;
+export const PinPoint = ( props: MarkerPropsStyle ) => {
+	const { color = DEFAULT_COLOR, size = DEFAULT_SIZE } = props;
 	return (
 		<SVG
 			enableBackground="new 0 0 32 32"

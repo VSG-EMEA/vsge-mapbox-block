@@ -7,7 +7,8 @@
 	max-height: 80vh;
 
 	@media #{$mq__phablet} {
-		// flex-direction: column-reverse;
-		// height: auto;
+    gap: 0;
+    width: 200%;
+    transform: translateX(-50%);
 	}
 }

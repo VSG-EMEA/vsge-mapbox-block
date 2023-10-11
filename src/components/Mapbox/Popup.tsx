@@ -1,9 +1,10 @@
 import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
-import { MapBoxListing } from '../../types';
+import { CoordinatesDef, MapBoxListing } from '../../types';
 import { RefObject } from 'react';
-import { PopupContent, PopupCustom } from './PopupContent';
+import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from './defaults';
+import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 /**
  * This function adds a popup to a Mapbox map with custom content or default content based on a
@@ -21,7 +22,7 @@ import { defaultMarkerSize } from './defaults';
  */
 export function addPopup(
 	map: mapboxgl.Map,
-	marker: MapBoxListing,
+	marker: MapBoxListing | MapboxGeocoder.Result,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup {
 	const popupRef: RefObject< HTMLDivElement > = createRef();
@@ -31,18 +32,12 @@ export function addPopup(
 	const root = createRoot( popupRef.current );
 
 	// Render a Marker Component on our new DOM node
-	root.render(
-		children ? (
-			<PopupCustom children={ children } />
-		) : (
-			<PopupContent { ...marker.properties } />
-		)
-	);
+	root.render( children ?? <PopupContent { ...marker.properties } /> );
 
 	return new mapboxgl.Popup( {
 		offset: ( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,
 	} )
-		.setLngLat( marker?.geometry?.coordinates as LngLatLike )
+		.setLngLat( marker?.geometry?.coordinates as CoordinatesDef )
 		.setDOMContent( popupRef.current )
 		.addTo( map );
 }
@@ -52,8 +47,13 @@ export function addPopup(
  *
  * @param mapRef
  */
-export function removePopup( mapRef ) {
+export function removePopups( mapRef: RefObject< HTMLDivElement > ) {
+	if ( ! mapRef ) {
+		return;
+	}
 	// removes the active popup
-	const popUps = mapRef.current.querySelectorAll( '.mapboxgl-popup' );
-	if ( popUps[ 0 ] ) popUps[ 0 ].remove();
+	const popUps = mapRef.current?.querySelectorAll( '.mapboxgl-popup' );
+	if ( popUps?.length ) {
+		popUps.forEach( ( popUp ) => popUp.remove() );
+	}
 }

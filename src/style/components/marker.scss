@@ -4,9 +4,12 @@
     cursor: pointer;
     padding: 0;
     background: transparent;
+    transition: 0;
 
-    &#marker-geocoder {
-      filter: grayscale(1);
+    &.active {
+      transition: 125ms;
+      transform: scale(1.2);
+      transform-origin: bottom center;
     }
   }
 }

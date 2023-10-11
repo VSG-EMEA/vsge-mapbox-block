@@ -1,7 +1,7 @@
 // Default marker style
 import { DefaultMarker } from './Pin';
 import { __ } from '@wordpress/i18n';
-import { MapBoxListing } from '../../types';
+import { CoordinatesDef, MapBoxListing } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
 import { DEFAULT_COLOR } from '../../constants';
 
@@ -9,20 +9,25 @@ export const defaultMarkerSize: number = 48;
 
 export const defaultColors: string[] = [ DEFAULT_COLOR, '#ce0e2d', '#44f' ];
 
-export const defaultMarkerStyle: JSX.Element = DefaultMarker( {
+interface MarkerBasicStyle {
+	color: string;
+	size: number;
+}
+
+export const defaultMarkerStyle: MarkerBasicStyle = {
 	color: defaultColors[ 0 ],
 	size: defaultMarkerSize,
-} );
+};
 
-export const tempMarkerStyle: JSX.Element = DefaultMarker( {
+export const tempMarkerStyle: MarkerBasicStyle = {
 	color: defaultColors[ 1 ],
 	size: defaultMarkerSize,
-} );
+};
 
-export const geoMarkerStyle: JSX.Element = DefaultMarker( {
-	color: defaultColors[ 2 ],
+export const geoMarkerStyle: MarkerBasicStyle = {
+	color: defaultColors[ 0 ],
 	size: defaultMarkerSize,
-} );
+};
 
 export const customMarkerStyle = (
 	children: JSX.Element,
@@ -64,16 +69,17 @@ export const defaultMarkerProps = {
  */
 export function generateTempMarkerData(
 	id: number,
-	coordinates: LngLatLike | [ number, number ]
+	coordinates: CoordinatesDef | [ number, number ]
 ): MapBoxListing {
 	return {
-		type: 'Feature',
+		type: 'temp',
 		id,
 		properties: {
-			name: 'temp',
+			name: 'click-marker',
 			icon: 'pin',
 			iconSize: defaultMarkerSize,
-			iconColor: defaultColors[ 1 ],
+			iconColor: defaultColors[ 0 ],
+			draggable: true,
 		},
 		geometry: {
 			type: 'Point',
@@ -84,16 +90,17 @@ export function generateTempMarkerData(
 
 export function generateGeocoderMarkerData(
 	id: number,
-	coordinates: LngLatLike | [ number, number ]
+	coordinates: CoordinatesDef | [ number, number ]
 ): MapBoxListing {
 	return {
-		type: 'Feature',
+		type: 'temp',
 		id,
 		properties: {
-			name: 'geocoder',
+			name: 'geocoder-marker',
 			icon: 'geocoder',
 			iconSize: defaultMarkerSize,
 			iconColor: defaultColors[ 2 ],
+			draggable: true,
 		},
 		geometry: {
 			type: 'Point',

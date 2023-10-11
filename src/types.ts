@@ -1,6 +1,7 @@
 import { Feature, Geometry } from '@turf/turf';
 import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
 import { Dispatch, RefObject, SetStateAction } from 'react';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 export type CoordinatesDef = [ number, number ];
 
@@ -63,11 +64,12 @@ export type MountedMapsContextValue = {
 	map: mapboxgl.Map | null;
 	lngLat?: LngLat;
 	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
-	listings?: MapBoxListing[];
+	listings: MapBoxListing[];
 	filteredListings: MapBoxListing[] | null;
 	setListings: Dispatch< SetStateAction< MapBoxListing[] | null > >;
 	setFilteredListings: Dispatch< MapBoxListing[] | null >;
 	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
+	geoCoder?: MapboxGeocoder;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
 	geocoderRef?: RefObject< HTMLDivElement >;
@@ -85,7 +87,7 @@ export interface MapBoxListing {
 	properties: MarkerProps;
 	geometry: {
 		type: string;
-		coordinates: LngLatLike | [ number, number ];
+		coordinates: CoordinatesDef;
 	};
 }
 
@@ -118,14 +120,23 @@ export interface MarkerProps {
 	emailAddress?: string;
 	website?: string;
 	icon: string;
+	draggable: boolean;
 	iconSize?: number;
 	iconColor?: string;
 	itemTags?: TagArray[];
 	itemFilters?: TagArray[];
+	distance?: number;
 }
 
-export interface MarkerPropsCustom {
-	children: JSX.Element;
+export interface MarkerPropsStyle {
+	color?: string;
+	size?: number;
+	children?: JSX.Element;
+}
+
+export interface SearchMarkerProps extends MarkerProps {
+	category: string;
+	maki: string;
 }
 
 export interface MarkerItem {
@@ -137,6 +148,8 @@ export interface MarkerItem {
 export interface MarkerHTMLElement extends HTMLElement {
 	dataset: {
 		id: string;
+		dataId: string;
 		markerName: string;
+		markerType: string;
 	};
 }

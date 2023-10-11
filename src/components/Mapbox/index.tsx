@@ -1,41 +1,33 @@
 import { Map } from './Map';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
-import { useEffect, useContext } from '@wordpress/element';
+import { useContext, useEffect } from '@wordpress/element';
 import { MapboxContext } from './MapboxContext';
 import { getMarkerData, initMap } from './utils';
-import mapboxgl, { LngLatLike, MapMouseEvent, Point } from 'mapbox-gl';
+import mapboxgl, { MapMouseEvent } from 'mapbox-gl';
+import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import { GeoCoder, initGeocoder } from './Geocoder';
 import {
+	CoordinatesDef,
 	MapAttributes,
 	MapboxBlockDefaults,
 	MapBoxListing,
 	MarkerHTMLElement,
 	MountedMapsContextValue,
 } from '../../types';
-import { addMarker, addMarkers } from './Markers';
-import { addPopup, removePopup } from './Popup';
+import {
+	addMarker,
+	addMarkers,
+	removeTempListings,
+	removeTempMarkers,
+} from './Markers';
+import { addPopup } from './Popup';
 import { getNextId } from '../../utils/dataset';
-import { RefObject } from 'react';
-import { Button } from '@wordpress/components';
-import { defaultMarkerProps, generateTempMarkerData } from './defaults';
+import type { RefObject } from 'react';
+import { generateTempMarkerData } from './defaults';
 import { fitInView } from '../../utils/view';
-
-/**
- * Removes temporary markers from the specified element.
- *
- * @param {React.RefObject<HTMLDivElement>} maboxRef - The reference to the HTMLDivElement
- * @return {void} This function does not return anything
- */
-export function removeTempMarkers(
-	maboxRef: React.RefObject< HTMLDivElement > | undefined
-) {
-	if ( maboxRef?.current ) {
-		maboxRef?.current
-			.querySelectorAll( '.marker-temp' )
-			.forEach( ( marker ) => marker.remove() );
-	}
-}
+import { getBbox } from '../../utils/spatialCalcs';
+import { PinPointPopup } from './PopupContent';
 
 /**
  * Renders a MapBox component.
@@ -57,9 +49,9 @@ export function MapBox( {
 } ): JSX.Element {
 	const {
 		map,
+		mapRef,
 		setMap,
 		setGeoCoder,
-		mapRef,
 		geocoderRef,
 		setLngLat,
 		listings,
@@ -85,42 +77,9 @@ export function MapBox( {
 	 */
 	function removeMarker( id: number ) {
 		if ( mapRef?.current ) {
-			mapRef?.current.querySelector( '#marker-' + id )?.remove();
-		}
-	}
-
-	/**
-	 * This function adds a new marker to a map with a given ID and coordinates.
-	 *
-	 * @param {number}     id           - A number representing the unique identifier for the new listing being added.
-	 * @param {LngLatLike} clickedPoint - LngLatLike is a type that represents a longitude and latitude
-	 *                                  coordinate pair on a map. In this function, clickedPoint is the location where the user clicked on
-	 *                                  the map, and it is used to set the coordinates of a new marker that will be added to the map.
-	 */
-	function addNewListing( id: number, clickedPoint: LngLatLike ) {
-		if ( map && listings ) {
-			const mapBoxListing: MapBoxListing = {
-				id,
-				type: 'Feature',
-				properties: {
-					...defaultMarkerProps,
-					name: 'New Listing',
-					iconSize: 48,
-					iconColor: '#0FF',
-					icon: 'pin',
-				},
-				geometry: {
-					type: 'Point',
-					coordinates: clickedPoint,
-				},
-			};
-			// remove previous marker and popup
-			removeMarker( id );
-			removePopup( mapRef );
-
-			// then add the new marker and store the new marker in the markers array
-			addMarker( mapBoxListing, map, attributes.mapboxOptions.icons );
-			setListings( [ ...listings, mapBoxListing ] );
+			mapRef?.current
+				.querySelector( '#marker-' + id )
+				?.parentElement?.remove();
 		}
 	}
 
@@ -132,18 +91,52 @@ export function MapBox( {
 	function updateListing( mapListing: MapBoxListing ) {
 		// remove previous marker and popup
 		removeMarker( mapListing.id );
-		removePopup( mapRef );
 
 		// then add the new marker and store the new marker in the markers array
 		addMarker( mapListing, map, attributes.mapboxOptions.icons );
 	}
 
 	/**
+	 * Updates the listings on the map.
+	 * @param filteredStores - The filtered listings.
+	 */
+	function updateCamera( filteredStores: MapBoxListing[] ) {
+		if ( ! map ) return;
+
+		// if filtered listings are present
+		if ( filteredStores?.length ) {
+			if ( filteredStores?.length === 2 ) {
+				/**
+				 * Adjust the map camera:
+				 * Get a bbox that contains both the geocoder result and
+				 * the closest store. Fit the bounds to that bbox.
+				 */
+				const bbox = getBbox(
+					filteredStores[ 0 ].geometry,
+					filteredStores[ 1 ].geometry
+				);
+
+				map?.cameraForBounds( bbox, {
+					padding: 50,
+				} );
+			} else {
+				fitInView( map, filteredStores, mapRef );
+			}
+			return;
+		}
+		fitInView( map, filteredStores, mapRef );
+	}
+
+	/**
 	 * Listens for a click event on the map and performs various actions based on the click position and element clicked.
 	 *
 	 * @param {mapboxgl.Map} currentMap - The current map object.
+	 * @param                ref
 	 */
-	function listenForClick( currentMap: mapboxgl.Map ) {
+	function listenForClick(
+		currentMap: mapboxgl.Map,
+		ref: RefObject< HTMLDivElement > | undefined
+	) {
 		if ( currentMap ) {
 			currentMap.on( 'click', ( e: MapMouseEvent ) => {
 				// store the last clicked position
@@ -151,13 +144,15 @@ export function MapBox( {
 				const clickedPoint = [
 					e.lngLat.lng,
 					e.lngLat.lat,
-				] as LngLatLike;
-
-				console.log( e );
+				] as CoordinatesDef;
 
 				const clickedFeatures = currentMap.queryRenderedFeatures(
 					e.point
 				);
+
+				if ( clickedFeatures?.length ) {
+					console.log( clickedFeatures );
+				}
 
 				// Find features intersecting the bounding box.
 				const clickedEl = (
@@ -167,62 +162,62 @@ export function MapBox( {
 				if ( listings?.length && clickedEl?.nodeName === 'BUTTON' ) {
 					// get the marker data
 					const markerData: MapBoxListing | undefined = getMarkerData(
-						Number( clickedEl.dataset?.id || 0 ),
+						Number( clickedEl.dataset?.id ) || 0,
 						listings
 					);
+					const markerCoordinates =
+						clickedFeatures?.geometry?.coordinates;
 
-					if ( clickedEl.dataset?.markerName === 'temp' ) {
-						// add the popup
-						if ( isEditor ) {
-							// prints the popup that allow the editor to add a new marker
-							return addPopup(
-								currentMap,
-								{
-									geometry: {
-										coordinates:
-											markerData?.geometry.coordinates ||
-											clickedPoint,
-									},
-								},
-								<Button
-									onClick={ () =>
-										addNewListing(
-											getNextId( listings ),
-											clickedPoint
-										)
-									}
-								>
-									Add a new Marker?
-								</Button>
-							);
-						}
+					// adds the new Marker popup
+					if ( isEditor ) {
+						return;
+					}
 
+					if ( clickedEl.dataset?.markerName === 'geocoder-marker' ) {
+						return;
+					}
+
+					if ( clickedEl.dataset?.markerName === 'click-marker' ) {
 						// prints the popup that allow the user to find a location
 						addPopup(
 							currentMap,
 							{
 								geometry: {
-									coordinates: clickedPoint,
+									coordinates:
+										markerCoordinates ?? clickedPoint,
 								},
 							},
-							<p>Find A location?</p>
+							<PinPointPopup
+								location={ markerCoordinates ?? clickedPoint }
+								listings={ listings }
+								setFilteredListings={ setFilteredListings }
+								mapRef={ mapRef }
+								map={ map }
+								filteredListings={ filteredListings }
+							/>
 						);
-					} else if ( markerData ) {
+						return;
+					}
+
+					if ( markerData ) {
 						// popup the marker data on the currentMap
-						return addPopup( currentMap, markerData );
+						addPopup( currentMap, markerData );
+						return;
 					}
 				}
-
-				/**
-				 * Otherwise the user doesn't click on a marker
-				 */
-				removeTempMarkers( mapRef );
 
 				// Generate the metadata for the pin marker if nothing was clicked
 				const newTempMarker = generateTempMarkerData(
 					getNextId( listings ),
 					clickedPoint
 				);
+
+				// clear the temp marker from the list
+				removeTempMarkers( mapRef );
+				const newListings = [
+					...removeTempListings( listings ),
+					newTempMarker,
+				];
 
 				// add the new marker to the map
 				addMarker(
@@ -232,7 +227,7 @@ export function MapBox( {
 				);
 
 				// store the new marker in the markers array
-				setListings( [ ...listings, newTempMarker ] );
+				setListings( newListings );
 			} );
 		}
 	}
@@ -245,6 +240,9 @@ export function MapBox( {
 			// Initialize map and store the map instance
 			const mapObj = initMap( mapRef.current, attributes, mapDefaults );
 			setMap( mapObj );
+
+			const language = new MapboxLanguage();
+			mapObj.addControl( language );
 
 			// Add the stored listings to the markers list
 			restoreInitialMarkers();
@@ -260,11 +258,13 @@ export function MapBox( {
 				if ( attributes.sidebarEnabled && attributes.geocoderEnabled ) {
 					setGeoCoder(
 						initGeocoder(
-							geocoderRef,
 							map,
-							attributes,
-							mapDefaults,
-							listings
+							mapRef,
+							geocoderRef,
+							listings,
+							filteredListings,
+							setFilteredListings,
+							mapDefaults
 						)
 					);
 				}
@@ -276,7 +276,7 @@ export function MapBox( {
 			}
 
 			// Listen for clicks on the map
-			listenForClick( map );
+			listenForClick( map, mapRef );
 		}
 	}, [ map ] );
 
@@ -286,34 +286,38 @@ export function MapBox( {
 		if ( map && attributes.geocoderEnabled ) {
 			setGeoCoder(
 				initGeocoder(
-					geocoderRef,
 					map,
-					attributes,
-					mapDefaults,
-					listings
+					mapRef,
+					geocoderRef,
+					listings,
+					filteredListings,
+					setFilteredListings,
+					mapDefaults
 				)
 			);
 		}
 	}, [ attributes.geocoderEnabled ] );
 
 	useEffect( () => {
+		if ( ! map ) return;
+
 		if ( filteredListings?.length ) {
 			// if there are filtered listings hide the "unselected"
-			listings.forEach( ( listing ) => {
+			listings?.forEach( ( listing ) => {
 				if (
 					filteredListings.find( ( item ) => item.id === listing.id )
 				) {
 					updateListing( listing );
-				} else {
+				} else if ( listing.type === 'Feature' ) {
 					removeMarker( listing.id );
 				}
 			} );
-			fitInView( map, filteredListings, mapRef );
+
+			updateCamera( filteredListings );
 		} else {
-			// if no filtered listings show all
-			listings.forEach( ( listing ) => {
+			// if no filtered stores are present show all stores
+			listings?.forEach( ( listing ) => {
 				updateListing( listing );
-				fitInView( map, listings, mapRef );
 			} );
 		}
 	}, [ filteredListings ] );
@@ -357,7 +361,7 @@ export function MapBox( {
 			</div>
 			<div className={ 'map-container' }>
 				<TopBar { ...attributes } />
-				<Map mapRef={ mapRef as RefObject< HTMLDivElement > | null } />
+				<Map mapRef={ mapRef as RefObject< HTMLDivElement > } />
 			</div>
 		</div>
 	);
