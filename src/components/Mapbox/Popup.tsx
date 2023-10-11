@@ -4,6 +4,7 @@ import { CoordinatesDef, MapBoxListing } from '../../types';
 import { RefObject } from 'react';
 import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from './defaults';
+import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 /**
  * This function adds a popup to a Mapbox map with custom content or default content based on a
@@ -21,7 +22,7 @@ import { defaultMarkerSize } from './defaults';
  */
 export function addPopup(
 	map: mapboxgl.Map,
-	marker: MapBoxListing,
+	marker: MapBoxListing | MapboxGeocoder.Result,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup {
 	const popupRef: RefObject< HTMLDivElement > = createRef();
