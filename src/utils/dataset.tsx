@@ -119,54 +119,45 @@ export function geocoderMarkerProps(
 /**
  * Displays the nearest store and updates the filtered listings.
  *
- * @param {MapboxGeocoder.Result}               location            - The location object.
- * @param {MapBoxListing[]}                     sortedNearestStores - The sorted list of nearest stores.
- * @param {MapBoxListing[]}                     filteredListings    - The filtered list of listings.
- * @param {(listings: MapBoxListing[]) => void} setFilteredListings - The function to set the filtered listings.
- * @param {RefObject<HTMLDivElement>}           mapRef              - The reference to the map container.
- * @param {mapboxgl.Map}                        map                 - The map object.
+ * @param {MapboxGeocoder.Result}     location            - The location object.
+ * @param {MapBoxListing[]}           sortedNearestStores - The sorted list of nearest stores.
+ * @param {MapBoxListing[]}           filteredListings    - The filtered list of listings.
+ * @param {RefObject<HTMLDivElement>} mapRef              - The reference to the map container.
+ * @param {mapboxgl.Map}              map                 - The map object.
  */
 export function showNearestStore(
 	location: MapboxGeocoder.Result,
 	sortedNearestStores: MapBoxListing[],
 	filteredListings: MapBoxListing[] | undefined,
-	setFilteredListings: ( listings: MapBoxListing[] ) => void,
 	mapRef: RefObject< HTMLDivElement >,
 	map: mapboxgl.Map
-) {
-	const resultToShow = SEARCH_RESULTS_SHOWN;
+): MapBoxListing[] {
 	const newFilteredListings: MapBoxListing[] = [
-		geocoderMarkerProps(
-			filteredListings,
-			location.geometry.coordinates as LngLatLike
-		),
-		...sortedNearestStores.slice( 0, resultToShow ),
+		...sortedNearestStores.slice( 0, SEARCH_RESULTS_SHOWN ),
 	];
-
-	// Display the nearest store
-	setFilteredListings( newFilteredListings );
 
 	removePopups( mapRef as RefObject< HTMLDivElement > );
 
 	/* Open a popup for the closest store. */
 	addPopup(
 		map,
-		newFilteredListings[ 0 ],
+		location,
 		<SearchPopup
 			icon={ 'geocoder' }
 			name={ location.text }
 			category={ location.properties?.category }
 			maki={ location.properties?.maki }
-			distance={ sortedNearestStores[ 0 ].properties.distance }
 			draggable={ true }
 		/>
 	);
 
 	/* Open a popup for the closest store. */
-	addPopup( map, newFilteredListings[ 1 ] );
+	addPopup( map, newFilteredListings[ 0 ] );
 
 	/** Highlight the listing for the closest store. */
 	mapRef?.current
 		?.querySelector( '#marker-' + sortedNearestStores[ 1 ].id )
 		?.classList.add( 'active' );
+
+	return newFilteredListings;
 }
