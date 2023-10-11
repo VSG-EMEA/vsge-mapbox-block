@@ -4,13 +4,37 @@ import type { RefObject } from 'react';
 import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { Marker } from './Marker';
-import { MapboxBlockDefaults, MapBoxListing } from '../../types';
+import {
+	CoordinatesDef,
+	MapboxBlockDefaults,
+	MapBoxListing,
+	MarkerPropsStyle,
+} from '../../types';
 import { geoMarkerStyle } from './defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import { removePopups } from './Popup';
-import { fitInView } from '../../utils/view';
+import { fitInView, flyToStore } from '../../utils/view';
 import { PinPoint } from './Pin';
-import { showNearestStore } from '../../utils/dataset';
+import { getNextId, showNearestStore } from '../../utils/dataset';
+import { removeTempMarkers } from './Markers';
+
+function geocoderMarkerDefaults( id: number, defaultStyle: MarkerPropsStyle ) {
+	return {
+		type: 'temp',
+		id,
+		properties: {
+			name: 'geocoder-marker',
+			icon: 'geocoder',
+			iconSize: defaultStyle.size,
+			iconColor: defaultStyle.color,
+			draggable: true,
+		},
+		geometry: {
+			type: 'Point',
+			coordinates: [ 0, 0 ] as CoordinatesDef,
+		},
+	};
+}
 
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
@@ -35,21 +59,7 @@ const initGeomarker = (
 	// Render a Marker Component on our new DOM node
 	root.render(
 		<Marker
-			feature={ {
-				type: 'temp',
-				id,
-				properties: {
-					name: 'geocoder-marker',
-					icon: 'geocoder',
-					iconSize: defaultStyle.size,
-					iconColor: defaultStyle.color,
-					draggable: true,
-				},
-				geometry: {
-					type: 'Point',
-					coordinates: [ 0, 0 ],
-				},
-			} }
+			feature={ geocoderMarkerDefaults( id, defaultStyle ) }
 			map={ map }
 			children={
 				<PinPoint
@@ -87,10 +97,9 @@ export const initGeocoder = (
 ): MapboxGeocoder | undefined => {
 	let searchResult: MapboxGeocoder.Result | undefined;
 
-	const geoMarkerRef = initGeomarker( 0, map );
+	const geoMarkerRef = initGeomarker( getNextId( listings ), map );
 	const marker = {
 		element: geoMarkerRef.current as HTMLElement,
-		color: 'grey',
 		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
 		draggable: true,
 	};
@@ -130,6 +139,12 @@ export const initGeocoder = (
 		} );
 
 		geocoder.on( 'result', ( ev ) => {
+			// remove any popup or temp marker (clicked point, another geocoder marker) from the map
+			removeTempMarkers( mapRef as RefObject< HTMLDivElement >, [
+				'geocoder-marker',
+			] );
+			removePopups( mapRef as RefObject< HTMLDivElement > );
+
 			// if there are no filtered listings, copy the listings to the filtered listings
 			if ( ! filteredListings?.length ) {
 				filteredListings = listings as MapBoxListing[];
@@ -152,18 +167,20 @@ export const initGeocoder = (
 
 				// The map marker element
 				// const markerEl = geocoder.mapMarker.getElement() as HTMLElement;
-
 				geocoder.mapMarker.geometry = searchResult.geometry;
+
 				geocoder.mapMarker.onclick = () => {
 					// Remove the active class from the geocoder
 					geocoder.clear();
 				};
-				geocoder.mapMarker.on('dragend', () => {
+				geocoder.mapMarker.on( 'dragend', () => {
 					// Update the marker's position
 					const lngLat = geocoder.mapMarker.getLngLat();
 					// Update the marker's position
 					geocoder.mapMarker.setLngLat( lngLat );
-				})
+
+					flyToStore( map, geocoder.mapMarker);
+				} );
 
 				console.log( 'Search result', searchResult );
 				console.log(
@@ -171,14 +188,16 @@ export const initGeocoder = (
 					sortedNearestStores[ 0 ].properties.distance
 				);
 
-				showNearestStore(
+				const newFilteredListings = showNearestStore(
 					searchResult,
 					sortedNearestStores,
 					filteredListings,
-					setFilteredListings,
 					mapRef as RefObject< HTMLDivElement >,
 					map
 				);
+
+				// Display the nearest store
+				setFilteredListings( newFilteredListings );
 			}
 		} );
 
