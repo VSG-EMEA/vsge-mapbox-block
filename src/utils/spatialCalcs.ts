@@ -1,4 +1,4 @@
-import { Coord, distance, Feature, Units } from '@turf/turf';
+import { Coord, distance, Units } from '@turf/turf';
 import { MapBoxListing, MapItem } from '../types';
 import { LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
 
@@ -88,4 +88,19 @@ export function getBbox( listing1, listing2 ): LngLatBoundsLike {
 		[ sortedLong[ 0 ], sortedLats[ 0 ] ],
 		[ sortedLong[ 1 ], sortedLats[ 1 ] ],
 	];
+}
+
+/**
+ * Removes the "distance" property from each listing in the provided array.
+ *
+ * @param {MapBoxListing[] | null} filteredListings - The array of listings to remove the "distance" property from.
+ * @return {MapBoxListing[] | undefined} The updated array of listings without the "distance" property.
+ */
+export function clearListingsDistances(
+	filteredListings: MapBoxListing[] | null
+) {
+	return filteredListings?.map( ( listing ) => {
+		delete listing.properties.distance;
+		return listing;
+	} );
 }

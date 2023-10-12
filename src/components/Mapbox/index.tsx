@@ -7,26 +7,14 @@ import { getMarkerData, initMap } from './utils';
 import mapboxgl, { MapMouseEvent } from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import { GeoCoder, initGeocoder } from './Geocoder';
-import {
-	CoordinatesDef,
-	MapAttributes,
-	MapboxBlockDefaults,
-	MapBoxListing,
-	MarkerHTMLElement,
-	MountedMapsContextValue,
-} from '../../types';
-import {
-	addMarker,
-	addMarkers,
-	removeTempListings,
-	removeTempMarkers,
-} from './Markers';
+import { CoordinatesDef, MapAttributes, MapboxBlockDefaults, MapBoxListing, MarkerHTMLElement, MountedMapsContextValue } from '../../types';
+import { addMarker, addMarkers, removeTempListings, removeTempMarkers } from './Markers';
 import { addPopup } from './Popup';
 import { getNextId } from '../../utils/dataset';
 import type { RefObject } from 'react';
 import { generateTempMarkerData } from './defaults';
 import { fitInView } from '../../utils/view';
-import { getBbox } from '../../utils/spatialCalcs';
+import { getBbox, clearListingsDistances } from '../../utils/spatialCalcs';
 import { PinPointPopup } from './PopupContent';
 
 /**
@@ -205,6 +193,8 @@ export function MapBox( {
 						return;
 					}
 				}
+
+				clearListingsDistances( filteredListings );
 
 				// Generate the metadata for the pin marker if nothing was clicked
 				const newTempMarker = generateTempMarkerData(
