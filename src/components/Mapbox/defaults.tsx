@@ -3,7 +3,7 @@ import { DefaultMarker } from './Pin';
 import { __ } from '@wordpress/i18n';
 import { CoordinatesDef, MapBoxListing } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
-import { DEFAULT_COLOR } from '../../constants';
+import { DEFAULT_COLOR, DEFAULT_COLOR_ALT } from '../../constants';
 
 export const defaultMarkerSize: number = 48;
 
@@ -25,7 +25,7 @@ export const tempMarkerStyle: MarkerBasicStyle = {
 };
 
 export const geoMarkerStyle: MarkerBasicStyle = {
-	color: defaultColors[ 0 ],
+	color: DEFAULT_COLOR_ALT,
 	size: defaultMarkerSize,
 };
 

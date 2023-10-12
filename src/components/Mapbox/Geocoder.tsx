@@ -181,7 +181,7 @@ export const initGeocoder = (
 					// Update the marker's position
 					geocoder.mapMarker.setLngLat( lngLat );
 
-					flyToStore( map, geocoder.mapMarker);
+					flyToStore( map, geocoder.mapMarker );
 				} );
 
 				console.log( 'Search result', searchResult );
