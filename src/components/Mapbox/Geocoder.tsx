@@ -17,6 +17,7 @@ import { fitInView, flyToStore } from '../../utils/view';
 import { PinPoint } from './Pin';
 import { getNextId, showNearestStore } from '../../utils/dataset';
 import { removeTempMarkers } from './Markers';
+import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 
 function geocoderMarkerDefaults( id: number, defaultStyle: MarkerPropsStyle ) {
 	return {
@@ -111,6 +112,7 @@ export const initGeocoder = (
 			marker,
 			language: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
+			types: DEFAULT_GEOCODER_TYPE_SEARCH,
 		} );
 
 		if ( geocoderRef ) {
