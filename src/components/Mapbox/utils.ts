@@ -163,7 +163,6 @@ export function setMapThreeDimensionality(
  *                             identify a specific feature and highlight its corresponding
  */
 export function highlightListing( item: MapBoxListing ) {
-
 	document.getElementById( 'feature-listing' )?.classList.add( 'filtered' );
 
 	const activeItem = document.getElementsByClassName( 'active-store' );

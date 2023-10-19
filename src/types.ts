@@ -1,5 +1,5 @@
 import { Feature, Geometry } from '@turf/turf';
-import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
+import mapboxgl, { LngLat } from 'mapbox-gl';
 import { Dispatch, RefObject, SetStateAction } from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
@@ -89,6 +89,7 @@ export interface MapBoxListing {
 		type: string;
 		coordinates: CoordinatesDef;
 	};
+	ref?: RefObject< HTMLElement >;
 }
 
 /**

@@ -2,12 +2,14 @@
 import { flyToStore } from './view';
 import { addPopup, removePopups } from '../components/Mapbox/Popup';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
-import { MapBoxListing } from '../types';
+import { MapBoxListing, MountedMapsContextValue } from '../types';
 import { highlightListing } from '../components/Mapbox/utils';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
 import { SearchPopup } from '../components/Mapbox/PopupContent';
 import { SEARCH_RESULTS_SHOWN } from '../constants';
+import { useContext } from '@wordpress/element';
+import { MapboxContext } from '../components/Mapbox/MapboxContext';
 
 /**
  * The function prepares stores by assigning IDs to them and returning them as a geojson object.
@@ -42,10 +44,14 @@ export function filterStores( stores, terms ) {
 /**
  * Enables the listing feature on the map.
  *
- * @param {mapboxgl.Map}  map    - The map object.
- * @param {MapBoxListing} marker - The listing marker object.
+ * @param {mapboxgl.Map}  map      - The map object.
+ * @param {MapBoxListing} marker   - The listing marker object.
+ * @param                 listings
  */
-export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
+export function enableListing(
+	map: mapboxgl.Map,
+	marker: MapBoxListing
+) {
 	console.log( 'Listing enabled', marker );
 
 	// 1. Fly to the point
