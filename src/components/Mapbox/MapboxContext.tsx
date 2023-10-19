@@ -10,9 +10,9 @@ import { RefObject } from 'react';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
 
-export const MapboxContext = createContext< MountedMapsContextValue >(
-	{} as MountedMapsContextValue
-);
+export const MapboxContext = createContext<
+	MountedMapsContextValue | undefined
+>( undefined );
 
 /**
  * This is a MapProvider component that provides a Mapbox context to its children.
@@ -41,6 +41,9 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	);
 	const geocoderRef: RefObject< HTMLDivElement > =
 		useRef< HTMLDivElement | null >( null );
+	const markersRef: RefObject< HTMLDivElement > = useRef<
+		HTMLButtonElement[] | []
+	>( [] );
 
 	return (
 		<MapboxContext.Provider
@@ -58,6 +61,7 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 				geoCoder,
 				setGeoCoder,
 				geocoderRef,
+				markersRef,
 			} }
 		>
 			{ children }
@@ -66,11 +70,24 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 }
 
 export const useMap = () => {
-	const { map } = useContext( MapboxContext );
+	const context: MountedMapsContextValue | undefined =
+		useContext( MapboxContext );
 
-	if ( ! map ) {
-		throw new Error( 'useMap has to be used within <MapProvider>' );
+	if ( context === undefined ) {
+		throw new Error(
+			'useMapboxContext must be used within a MapboxProvider'
+		);
 	}
 
-	return map;
+	return context.map;
 };
+
+export function useMapboxContext() {
+	const context = useContext( MapboxContext );
+	if ( context === undefined ) {
+		throw new Error(
+			'useMapboxContext must be used within a MapboxProvider'
+		);
+	}
+	return context;
+}
