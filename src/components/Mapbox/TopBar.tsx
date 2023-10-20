@@ -47,8 +47,10 @@ export const TopBar = ( attributes ) => {
 
 	useEffect( () => {
 		if ( filter === '' ) {
-			setFilteredListings( null );
+			// if no filter is present, reset the filter list
+			setFilteredListings( [] );
 		} else if ( listings && listings.length > 0 ) {
+			// if a filter is present, filter the listings
 			setFilteredListings(
 				filterListingsBy( listings, 'itemFilters', filter )
 			);
