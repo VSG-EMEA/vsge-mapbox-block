@@ -14,15 +14,18 @@ import { removePopups } from './Popup';
  * @param                p
  * @param {Object}       p.jsonFeature
  * @param {mapboxgl.Map} p.map
+ * @param                p.listings
  * @return A React component that renders a listing of properties if the type is 'Feature', and
  * returns null otherwise. The listing includes the name, phone, and address of the property.
  */
 export const Listing = ( {
 	jsonFeature,
 	map,
+	mapRef,
 }: {
 	jsonFeature: MapBoxListing;
 	map: mapboxgl.Map;
+	mapRef: mapboxgl.Map;
 } ) => {
 	const {
 		properties: {
@@ -38,7 +41,6 @@ export const Listing = ( {
 			website,
 		},
 	} = jsonFeature;
-	const { mapRef }: MountedMapsContextValue = useContext( MapboxContext );
 	return (
 		<div className={ 'mapbox-sidebar-feature listing' }>
 			<Icon icon={ mapMarker } />
