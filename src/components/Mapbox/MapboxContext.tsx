@@ -5,13 +5,13 @@ import {
 	useState,
 } from '@wordpress/element';
 import { getMapDefaults } from '../../utils';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { RefObject } from 'react';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import type { Context, RefObject } from 'react';
 
-export const MapboxContext = createContext<
-	MountedMapsContextValue | undefined
+export const MapboxContext: Context< MountedMapsContextValue > = createContext<
+	Context< MountedMapsContextValue > | undefined
 >( undefined );
 
 /**
@@ -29,11 +29,15 @@ export const MapboxContext = createContext<
  * `setListings`, `markers`, `setMarkers`, `map
  */
 export function MapProvider( { children }: { children: JSX.Element } ) {
-	const [ map, setMap ] = useState< mapboxgl.Map | null >( null );
-	const [ geoCoder, setGeoCoder ] = useState( null );
+	const [ map, setMap ] = useState< mapboxgl.Map >( {} as mapboxgl.Map );
+	const [ geoCoder, setGeoCoder ] = useState< MapboxGeocoder | undefined >(
+		undefined
+	);
 	const [ lngLat, setLngLat ] = useState( [ 0, 0 ] as LngLatLike );
 	const [ listings, setListings ] = useState( [] as MapBoxListing[] );
-	const [ filteredListings, setFilteredListings ] = useState( null );
+	const [ filteredListings, setFilteredListings ] = useState(
+		[] as MapBoxListing[]
+	);
 	const mapDefaults = getMapDefaults();
 
 	const mapRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement | null >(
@@ -41,8 +45,8 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	);
 	const geocoderRef: RefObject< HTMLDivElement > =
 		useRef< HTMLDivElement | null >( null );
-	const markersRef: RefObject< HTMLDivElement > = useRef<
-		HTMLButtonElement[] | []
+	const markersRef: RefObject< HTMLButtonElement[] > = useRef<
+		HTMLButtonElement[]
 	>( [] );
 
 	return (
@@ -69,19 +73,11 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	);
 }
 
-export const useMap = () => {
-	const context: MountedMapsContextValue | undefined =
-		useContext( MapboxContext );
-
-	if ( context === undefined ) {
-		throw new Error(
-			'useMapboxContext must be used within a MapboxProvider'
-		);
-	}
-
-	return context.map;
-};
-
+/**
+ * A hook to access the Mapbox context.
+ *
+ * @return {MapboxContext} The Mapbox context object.
+ */
 export function useMapboxContext() {
 	const context = useContext( MapboxContext );
 	if ( context === undefined ) {
