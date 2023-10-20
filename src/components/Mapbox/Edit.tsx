@@ -96,6 +96,10 @@ export function MapEdit( {
 			} );
 	}
 
+	function isLoaded( map: mapboxgl.Map ) {
+		return !! map._mapId;
+	}
+
 	/**
 	 * This function refreshes a map by resizing it after a specified timeout.
 	 *
@@ -111,33 +115,33 @@ export function MapEdit( {
 	}
 
 	useEffect( () => {
-		if ( map ) {
+		if ( isLoaded( map ) ) {
 			refreshMap();
 		}
 	}, [ align ] );
 
 	useEffect( () => {
-		if ( map ) {
+		if ( isLoaded( map ) ) {
 			map.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
 			refreshMap();
 		}
 	}, [ mapStyle ] );
 
 	useEffect( () => {
-		if ( map ) {
+		if ( isLoaded( map ) ) {
 			setMapThreeDimensionality( map, freeViewCamera );
 		}
 	}, [ freeViewCamera ] );
 
 	useEffect( () => {
-		if ( map ) {
+		if ( isLoaded( map ) ) {
 			setMapElevation( map, elevation );
 			refreshMap();
 		}
 	}, [ elevation ] );
 
 	useEffect( () => {
-		if ( map ) {
+		if ( isLoaded( map ) ) {
 			setMapWheelZoom( map, mouseWheelZoom );
 		}
 	}, [ mouseWheelZoom ] );
