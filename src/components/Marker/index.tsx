@@ -1,10 +1,10 @@
 import { Button } from '@wordpress/components';
 import { enableListing } from '../../utils/dataset';
 import { safeSlug } from '../../utils';
-import { DefaultMarker } from './Pin';
+import { DefaultMarker } from './marker-icons';
 import { MapBoxListing } from '../../types';
 import { DEFAULT_COLOR } from '../../constants';
-import { removePopups } from './Popup';
+import { removePopups } from '../Popup/Popup';
 import type { RefObject } from 'react';
 
 /**
@@ -20,7 +20,7 @@ import type { RefObject } from 'react';
  * attributes. The content of the button is either the children passed as a prop or a DefaultMarker
  * component with color and size props based on the feature properties.
  */
-export function Marker( {
+export function Marker({
 	feature,
 	map,
 	children = null,

@@ -2,7 +2,7 @@ import { Listing } from './Listing';
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import { useContext } from '@wordpress/element';
-import { MapboxContext } from './MapboxContext';
+import { MapboxContext } from '../Mapbox/MapboxContext';
 import type { RefObject } from 'react';
 
 /**

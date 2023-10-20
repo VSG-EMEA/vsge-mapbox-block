@@ -13,7 +13,8 @@ export type MapboxBlockDefaults = {
 
 export type TagArray = string[];
 
-export type TagCollection = { id: number; value: string };
+export type FilterCollection = { id: number; value: string };
+export type TagCollection = { id: number; tag: string };
 
 export interface MarkerIcon {
 	id: number;
@@ -23,8 +24,8 @@ export interface MarkerIcon {
 
 export type MapboxOptions = {
 	icons: MarkerIcon[];
-	tags: TagCollection[];
-	filters: TagCollection[];
+	tags: FilterCollection[];
+	filters: FilterCollection[];
 	listings: MapBoxListing[];
 };
 
@@ -49,6 +50,29 @@ export type MapAttributes = {
 	mapboxOptions: MapboxOptions;
 };
 
+export type MountedMapsContextValue = {
+	map: mapboxgl.Map;
+	lngLat?: LngLat;
+	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
+	listings: MapBoxListing[];
+	filteredListings: MapBoxListing[];
+	setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
+	setFilteredListings: Dispatch< MapBoxListing[] >;
+	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
+	geoCoder?: MapboxGeocoder;
+	setGeoCoder?: SetStateAction< any >;
+	mapRef?: RefObject< HTMLDivElement >;
+	markersRef: RefObject< HTMLButtonElement[] >;
+	geocoderRef?: RefObject< HTMLDivElement >;
+	mapDefaults?: MapboxBlockDefaults;
+	Provider: React.ComponentType;
+};
+
+export type selectOptions = {
+	label: string;
+	value: string;
+};
+
 export interface MapItem extends Feature {
 	geometry: Geometry;
 	properties: MarkerProps;
@@ -59,27 +83,6 @@ export interface MapItem extends Feature {
 		configurable: boolean;
 	} | null;
 }
-
-export type MountedMapsContextValue = {
-	map: mapboxgl.Map | null;
-	lngLat?: LngLat;
-	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
-	listings: MapBoxListing[];
-	filteredListings: MapBoxListing[] | null;
-	setListings: Dispatch< SetStateAction< MapBoxListing[] | null > >;
-	setFilteredListings: Dispatch< MapBoxListing[] | null >;
-	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
-	geoCoder?: MapboxGeocoder;
-	setGeoCoder?: SetStateAction< any >;
-	mapRef?: RefObject< HTMLDivElement >;
-	geocoderRef?: RefObject< HTMLDivElement >;
-	mapDefaults?: MapboxBlockDefaults;
-};
-
-export type selectOptions = {
-	label: string;
-	value: string;
-};
 
 export interface MapBoxListing {
 	id: number;

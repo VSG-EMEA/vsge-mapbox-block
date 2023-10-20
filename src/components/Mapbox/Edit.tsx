@@ -25,7 +25,7 @@ import {
 } from './utils';
 import classNames from 'classnames';
 import { getMapDefaults } from '../../utils';
-import { PanelIcons } from './PanelIcons';
+import { EditPanelIcons } from './EditPanelIcons';
 
 export function MapEdit( {
 	attributes,
@@ -413,7 +413,7 @@ export function MapEdit( {
 					</PanelBody>
 				</Panel>
 
-				<PanelIcons icons={ icons } setOptions={ setOptions } />
+				<EditPanelIcons icons={ icons } setOptions={ setOptions } />
 
 				<Panel>
 					<PanelBody

@@ -6,7 +6,7 @@ import {
 } from '@wordpress/element';
 import { getMapDefaults } from '../../utils';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
-import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import type { Context, RefObject } from 'react';
 

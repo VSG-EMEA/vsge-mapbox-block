@@ -1,9 +1,9 @@
 import { createRef, createRoot } from '@wordpress/element';
-import mapboxgl, { LngLatLike } from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing } from '../../types';
-import { RefObject } from 'react';
+import type { RefObject } from 'react';
 import { PopupContent } from './PopupContent';
-import { defaultMarkerSize } from './defaults';
+import { defaultMarkerSize } from '../Mapbox/defaults';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 /**

@@ -4,7 +4,7 @@ optional elements based on the values of `fitView`, `tagsEnabled`, and `filtersE
 of the `attributes` object. It also contains a `div` with class `map` and a `ref` to the
 `mapContainer` prop. The component is exported for use in other parts of the codebase. */
 import { RefObject } from 'react';
-import { MapMarker } from './Markers';
+import { MapMarker } from '../Marker/MapMarker';
 import { MapBoxListing, MarkerIcon } from '../../types';
 
 export function Map( {

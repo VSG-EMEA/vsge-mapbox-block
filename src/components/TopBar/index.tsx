@@ -1,8 +1,12 @@
 import { Button, Icon, SelectControl } from '@wordpress/components';
 import { useContext, useEffect, useState } from '@wordpress/element';
 import { filterListingsBy, fitInView } from '../../utils/view';
-import { TagArray, MountedMapsContextValue } from '../../types';
-import { MapboxContext } from './MapboxContext';
+import {
+	FilterCollection,
+	MapboxOptions,
+	MountedMapsContextValue,
+} from '../../types';
+import { MapboxContext } from '../Mapbox/MapboxContext';
 
 /**
  * trasform an array of strings into a select values that could be used with select control
@@ -12,7 +16,7 @@ import { MapboxContext } from './MapboxContext';
  * @param            selectValues.value
  * @return {SelectControl.Option[]} the select values
  */
-function topbarBuildSelectFromArray( selectValues: TagArray[] ) {
+function topbarBuildSelectFromArray( selectValues: FilterCollection[] ) {
 	return selectValues.map( ( item ) => {
 		return { label: item.value, value: item.value };
 	} );
@@ -34,7 +38,12 @@ const centerViewIcon = () => (
 	/>
 );
 
-export const TopBar = ( attributes ) => {
+export const TopBar = ( attributes: {
+	fitView: boolean;
+	tagsEnabled: boolean;
+	filtersEnabled: boolean;
+	mapboxOptions: MapboxOptions;
+} ) => {
 	const {
 		map,
 		mapRef,

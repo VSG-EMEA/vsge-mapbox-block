@@ -4,24 +4,23 @@ import {
 	CheckboxControl,
 	ColorPicker,
 	Flex,
-	Popover,
 	FlexItem,
+	PanelRow,
+	Popover,
 	RangeControl,
 	SelectControl,
 	TextareaControl,
 	TextControl,
-	PanelRow,
 } from '@wordpress/components';
-import { upload, download, reset } from '@wordpress/icons';
+import { download, reset, upload } from '@wordpress/icons';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
 import {
+	FilterCollection,
 	MapBoxListing,
-	TagArray,
 	MarkerIcon,
-	TagCollection,
+	TagArray,
 } from '../../types';
-import { getNextId } from '../../utils/dataset';
 import { Position } from 'geojson';
 import { MapboxContext } from '../Mapbox/MapboxContext';
 
@@ -30,8 +29,8 @@ export const PinCard = ( props: {
 	index: number;
 	updateItem: Function;
 	deleteItem: Function;
-	tags: TagCollection[];
-	filters: TagCollection[];
+	tags: FilterCollection[];
+	filters: FilterCollection[];
 	icons: MarkerIcon[];
 } ) => {
 	const { item, index, updateItem, deleteItem, tags, filters, icons } = props;
@@ -271,16 +270,15 @@ export const PinCard = ( props: {
 								value={
 									itemData.geometry.coordinates[ 0 ] || 0
 								}
-								disabled={ true }
 								onChange={ ( newValue ) =>
 									setItemData( {
 										geometry: {
 											...itemData.geometry,
 											coordinates: [
 												itemData.geometry
-													.coordinates[ 0 ] || 0,
+													?.coordinates[ 0 ] || 0,
 												newValue,
-											] as Position[],
+											] as Position,
 										},
 									} )
 								}
@@ -290,7 +288,6 @@ export const PinCard = ( props: {
 								value={
 									itemData.geometry.coordinates[ 1 ] || 0
 								}
-								disabled={ true }
 								onChange={ ( newValue ) =>
 									setItemData( {
 										geometry: {
@@ -298,8 +295,8 @@ export const PinCard = ( props: {
 											coordinates: [
 												newValue,
 												itemData.geometry
-													.coordinates[ 1 ],
-											] as Position[],
+													?.coordinates[ 1 ] || 0,
+											] as Position,
 										},
 									} )
 								}

@@ -39,6 +39,7 @@ export function initMap(
 		antialias: true,
 		center: [ longitude, latitude ],
 		zoom: mapZoom,
+		accessToken: defaults.accessToken,
 		bearing,
 		pitch,
 		scrollZoom: mouseWheelZoom,

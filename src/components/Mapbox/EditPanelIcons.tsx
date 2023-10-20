@@ -60,7 +60,7 @@ export const IconItem = ( props ) => {
 	);
 };
 
-export const PanelIcons = ( {
+export const EditPanelIcons = ({
 	icons = [],
 	setOptions,
 }: {

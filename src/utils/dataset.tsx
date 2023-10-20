@@ -1,12 +1,12 @@
 // Filter the type of reseller with the select in the top bar
 import { flyToStore } from './view';
-import { addPopup, removePopups } from '../components/Mapbox/Popup';
+import { addPopup, removePopups } from '../components/Popup/Popup';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { MapBoxListing, MountedMapsContextValue } from '../types';
 import { highlightListing } from '../components/Mapbox/utils';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
-import { SearchPopup } from '../components/Mapbox/PopupContent';
+import { SearchPopup } from '../components/Popup/PopupContent';
 import { SEARCH_RESULTS_SHOWN } from '../constants';
 import { useContext } from '@wordpress/element';
 import { MapboxContext } from '../components/Mapbox/MapboxContext';

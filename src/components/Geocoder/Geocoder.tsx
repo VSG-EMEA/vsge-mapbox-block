@@ -1,25 +1,28 @@
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
 import type { RefObject } from 'react';
-import { createRef, createRoot } from '@wordpress/element';
+import { createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
-import { Marker } from './Marker';
+import { Marker } from '../Marker/';
 import {
 	CoordinatesDef,
 	MapboxBlockDefaults,
 	MapBoxListing,
 	MarkerPropsStyle,
 } from '../../types';
-import { geoMarkerStyle } from './defaults';
+import { geoMarkerStyle } from '../Mapbox/defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
-import { removePopups } from './Popup';
+import { removePopups } from '../Popup/Popup';
 import { fitInView, flyToStore } from '../../utils/view';
-import { PinPoint } from './Pin';
-import { getNextId, showNearestStore } from '../../utils/dataset';
-import { removeTempMarkers } from './Markers';
+import { PinPoint } from '../Marker/marker-icons';
+import { showNearestStore } from '../../utils/dataset';
+import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 
-function geocoderMarkerDefaults( id: number, defaultStyle: MarkerPropsStyle ) {
+function geocoderMarkerDefaults(
+	id: number,
+	defaultStyle: MarkerPropsStyle
+): MapBoxListing {
 	return {
 		type: 'temp',
 		id,
@@ -41,27 +44,34 @@ function geocoderMarkerDefaults( id: number, defaultStyle: MarkerPropsStyle ) {
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
  *
  * @param id
+ * @param ref
  * @param map    - mapboxgl.Map - This is an instance of the Mapbox GL JS map object on which the marker
  *               will be placed.
- * @param mapRef - RefObject< HTMLDivElement > - This is a reference to the DOM node that will be used
+ * @param mapRef
  * @return A mapboxgl.Marker object is being returned.
  */
-const initGeomarker = (
+export const initGeomarker = (
 	id: number,
-	map: mapboxgl.Map
-): RefObject< HTMLDivElement > => {
-	const markerRef = createRef< HTMLDivElement >();
+	ref: HTMLButtonElement,
+	map: mapboxgl.Map,
+	mapRef: RefObject< HTMLDivElement >
+): MapBoxListing => {
 	// Create a new DOM root and save it to the React ref
-	markerRef.current = document.createElement( 'div' ) as HTMLDivElement;
-	markerRef.current.className = 'marker marker-geocoder disabled';
-	const root = createRoot( markerRef.current );
+	ref = document.createElement( 'div' ) as HTMLDivElement;
+	ref.className = 'marker marker-geocoder disabled';
+
+	const root = createRoot( ref );
+
 	const defaultStyle = geoMarkerStyle;
+	const markerData = geocoderMarkerDefaults( id, defaultStyle );
 
 	// Render a Marker Component on our new DOM node
 	root.render(
 		<Marker
-			feature={ geocoderMarkerDefaults( id, defaultStyle ) }
+			className={ 'marker marker-geocoder disabled' }
+			feature={ markerData }
 			map={ map }
+			mapRef={ mapRef }
 			children={
 				<PinPoint
 					color={ defaultStyle.color }
@@ -71,8 +81,7 @@ const initGeomarker = (
 		/>
 	);
 
-	// Add markers to the map.
-	return markerRef;
+	return ref;
 };
 
 /**
@@ -80,7 +89,9 @@ const initGeomarker = (
  *
  * @param {mapboxgl.Map}                          map                 - The Mapbox map object.
  * @param {RefObject<HTMLDivElement> | undefined} mapRef              - The ref object for the map container.
+ * @param                                         markersRef
  * @param {RefObject<HTMLDivElement> | undefined} geocoderRef         - The ref object for the geocoder container.
+ * @param geomarkerListing
  * @param {MapBoxListing[] | undefined}           listings            - The array of mapbox listings.
  * @param {MapBoxListing[] | null}                filteredListings    - The array of filtered mapbox listings.
  * @param {(listings: MapBoxListing[]) => void}   setFilteredListings - The function to set the filtered listings.
@@ -91,16 +102,16 @@ export const initGeocoder = (
 	map: mapboxgl.Map,
 	mapRef: RefObject< HTMLDivElement > | undefined,
 	geocoderRef: RefObject< HTMLDivElement > | undefined,
-	listings: MapBoxListing[] | undefined,
-	filteredListings: MapBoxListing[] | null,
+	geomarkerListing: MapBoxListing,
+	listings: MapBoxListing[],
+	filteredListings: MapBoxListing[],
 	setFilteredListings: ( listings: MapBoxListing[] ) => void,
 	defaults: MapboxBlockDefaults
 ): MapboxGeocoder | undefined => {
 	let searchResult: MapboxGeocoder.Result | undefined;
 
-	const geoMarkerRef = initGeomarker( getNextId( listings ), map );
 	const marker = {
-		element: geoMarkerRef.current as HTMLElement,
+		element: geomarkerListing,
 		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
 		draggable: true,
 	};
@@ -128,7 +139,7 @@ export const initGeocoder = (
 			// Remove the active class from the geocoder
 			geocoderRef?.current?.classList.remove( 'active' );
 			// add the hide class to the geocoder
-			geoMarkerRef?.current?.classList.add( 'disabled' );
+			geomarkerListing.ref?.current?.classList.add( 'disabled' );
 
 			// Reset the displayed listings
 			setFilteredListings( listings );
@@ -160,28 +171,30 @@ export const initGeocoder = (
 
 			if ( searchResult && filteredListings ) {
 				// Remove the active class from the geocoder
-				geoMarkerRef?.current?.classList.remove( 'disabled' );
+				geomarkerListing.ref?.current?.classList.remove( 'disabled' );
 
 				const sortedNearestStores = locateNearestStore(
 					searchResult.geometry,
 					filteredListings
 				);
 
+				const geoMarker = geocoder.mapMarker as Mapboxgl.Marker;
+
 				// The map marker element
 				// const markerEl = geocoder.mapMarker.getElement() as HTMLElement;
-				geocoder.mapMarker.geometry = searchResult.geometry;
+				geoMarker.geometry = searchResult.geometry;
 
-				geocoder.mapMarker.onclick = () => {
+				geoMarker.onclick = () => {
 					// Remove the active class from the geocoder
 					geocoder.clear();
 				};
-				geocoder.mapMarker.on( 'dragend', () => {
+				geoMarker.on( 'dragend', () => {
 					// Update the marker's position
-					const lngLat = geocoder.mapMarker.getLngLat();
+					const lngLat = geoMarker.getLngLat();
 					// Update the marker's position
-					geocoder.mapMarker.setLngLat( lngLat );
+					geoMarker.setLngLat( lngLat );
 
-					flyToStore( map, geocoder.mapMarker );
+					flyToStore( map, geoMarker );
 				} );
 
 				console.log( 'Search result', searchResult );

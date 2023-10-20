@@ -1,12 +1,11 @@
 import { Map } from './Map';
-import { Sidebar } from './Sidebar';
-import { TopBar } from './TopBar';
+import { TopBar } from '../TopBar';
 import { useEffect, useState } from '@wordpress/element';
 import { useMapboxContext } from './MapboxContext';
 import { getMarkerData, initMap } from './utils';
 import mapboxgl, { MapMouseEvent } from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
-import { GeoCoder, initGeocoder, initGeomarker } from './Geocoder';
+import { GeoCoder, initGeocoder, initGeomarker } from '../Geocoder/Geocoder';
 import {
 	CoordinatesDef,
 	MapAttributes,
@@ -15,14 +14,14 @@ import {
 	MarkerHTMLElement,
 	MountedMapsContextValue,
 } from '../../types';
-import { MapMarker, removeTempListings, removeTempMarkers } from './Markers';
-import { addPopup } from './Popup';
+import { removeTempListings, removeTempMarkers } from '../Marker/utils';
+import { addPopup } from '../Popup/Popup';
 import { getNextId } from '../../utils/dataset';
 import type { RefObject } from 'react';
 import { generateTempMarkerData } from './defaults';
 import { fitInView } from '../../utils/view';
 import { clearListingsDistances, getBbox } from '../../utils/spatialCalcs';
-import { PinPointPopup } from './PopupContent';
+import { PinPointPopup } from '../Popup/PopupContent';
 
 /**
  * Renders a MapBox component.
@@ -300,7 +299,7 @@ export function MapBox( {
 					{ !! attributes.geocoderEnabled && (
 						<GeoCoder geocoderRef={ geocoderRef } />
 					) }
-					<Sidebar />
+					<TopBar />
 				</div>
 			) : null }
 			<div className={ 'map-container' }>

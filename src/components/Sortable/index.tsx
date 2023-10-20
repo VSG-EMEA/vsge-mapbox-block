@@ -10,7 +10,7 @@ import { getNextId, reorder } from '../../utils/dataset';
 import { MapBoxListing, MapboxOptions, TagArray, MapItem } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
 import { defaultMarkerProps } from '../Mapbox/defaults';
-import { removePopups } from '../Mapbox/Popup';
+import { removePopups } from '../Popup/Popup';
 
 interface SortableProps {
 	items: TagArray[];
@@ -65,8 +65,8 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 	 *                                 items (props.items) by finding the item with a matching id and replacing its properties with the
 	 *                                 updated values from newValue. The updated array
 	 */
-	function updateItem( newValue: MapBoxListing ) {
-		const newItems = props.items.map( ( item ) =>
+	function updateItem( newValue: TagArray[] ) {
+		const newItems: TagArray[] = props.items.map( ( item ) =>
 			item.id === newValue.id
 				? {
 						...item,

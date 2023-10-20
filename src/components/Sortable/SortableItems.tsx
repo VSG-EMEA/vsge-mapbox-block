@@ -1,6 +1,6 @@
 import { Button, TextControl } from '@wordpress/components';
 import { Draggable } from 'react-beautiful-dnd';
-import { MapBoxListing, TagArray, MapItem } from '../../types';
+import { TagArray } from '../../types';
 
 /**
  * A sortable item that allow to add a string to the given array and sort it

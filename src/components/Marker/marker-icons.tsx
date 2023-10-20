@@ -6,6 +6,25 @@ import {
 	DEFAULT_SIZE,
 } from '../../constants';
 
+/**
+ * Generates a custom marker style with the given children, color, and size.
+ *
+ * @param {JSX.Element} children - The children JSX elements to be rendered inside the marker.
+ * @param {string}      color    - The color of the marker.
+ * @param {number}      size     - The size of the marker.
+ * @return {JSX.Element} The custom marker style.
+ */
+export const customMarkerStyle = (
+	children: JSX.Element,
+	color: string,
+	size: number
+): JSX.Element =>
+	DefaultMarker( {
+		color,
+		size,
+		children,
+	} );
+
 /* This code exports a React component called `DefaultMarker` that renders an SVG image of a marker
 with a default color of red and size of 48. The component takes in an optional `props` object with a
 `color` and `size` property that can be used to customize the color and size of the marker. The SVG

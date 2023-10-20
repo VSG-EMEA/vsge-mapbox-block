@@ -1,6 +1,11 @@
-import { CoordinatesDef, MapBoxListing, MarkerProps, SearchMarkerProps } from '../../types';
+import {
+	CoordinatesDef,
+	MapBoxListing,
+	MarkerProps,
+	SearchMarkerProps,
+} from '../../types';
 import { Button, Icon } from '@wordpress/components';
-import { TagList } from './TagItem';
+import { TagList } from '../TagItem';
 import { mapMarker } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { ICON_SIZE } from '../../constants';
@@ -47,7 +52,9 @@ export function PopupContent( props: MarkerProps ) {
 					<a href={ website }>
 						<h3>{ name }</h3>
 					</a>
-				) : <h3>{ name }</h3>}
+				) : (
+					<h3>{ name }</h3>
+				) }
 				{ address && <p>{ address }</p> }
 				<p>{ `${ city } - ${ country } ${ postalCode }` }</p>
 				{ emailAddress || (

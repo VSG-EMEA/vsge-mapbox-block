@@ -1,12 +1,10 @@
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
-import { MapBoxListing, MountedMapsContextValue } from '../../types';
+import { MapBoxListing } from '../../types';
 import mapboxgl from 'mapbox-gl';
-import { TagList } from './TagItem';
+import { TagList } from '../TagItem';
 import { enableListing } from '../../utils/dataset';
-import { useContext } from '@wordpress/element';
-import { MapboxContext } from './MapboxContext';
-import { removePopups } from './Popup';
+import { removePopups } from '../Popup/Popup';
 
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.

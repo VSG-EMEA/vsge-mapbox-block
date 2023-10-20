@@ -1,8 +1,6 @@
 // Default marker style
-import { DefaultMarker } from './Pin';
 import { __ } from '@wordpress/i18n';
 import { CoordinatesDef, MapBoxListing } from '../../types';
-import { LngLatLike } from 'mapbox-gl';
 import { DEFAULT_COLOR, DEFAULT_COLOR_ALT } from '../../constants';
 
 export const defaultMarkerSize: number = 48;
@@ -29,17 +27,6 @@ export const geoMarkerStyle: MarkerBasicStyle = {
 	size: defaultMarkerSize,
 };
 
-export const customMarkerStyle = (
-	children: JSX.Element,
-	color: string,
-	size: number
-) =>
-	DefaultMarker( {
-		color,
-		size,
-		children,
-	} );
-
 export const defaultMarkerProps = {
 	name: __( 'New Marker' ),
 	description: '',
@@ -62,6 +49,7 @@ export const defaultMarkerProps = {
  * @param {LngLatLike | undefined} coordinates - The `coordinates` parameter is an array of two numbers
  *                                             representing the longitude and latitude of a point on a map. It is used to specify the location of
  *                                             the marker.
+ *
  * @return A function that returns a GeoJSON feature object representing a temporary marker with
  * specified properties and coordinates. The function takes two optional parameters: `id` (a number
  * representing the marker's unique identifier) and `coordinates` (an array of two numbers representing
