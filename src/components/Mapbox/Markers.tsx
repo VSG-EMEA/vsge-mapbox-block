@@ -1,113 +1,110 @@
-import { RefObject } from 'react';
-import { createRef, createRoot } from '@wordpress/element';
-import mapboxgl, { LngLatLike, MapEventType, MapMouseEvent } from 'mapbox-gl';
+import { createRoot } from '@wordpress/element';
+import mapboxgl, { LngLatLike, MapEventType } from 'mapbox-gl';
 import { Marker } from './Marker';
 import { DefaultMarker, PinPoint } from './Pin';
-import { MapBoxListing, MarkerIcon } from '../../types';
+import { MapBoxListing } from '../../types';
 import { areValidCoordinates } from '../Sortable/utils';
 import { safeSlug } from '../../utils';
 import { getMarkerSvg, modifySVG } from '../../utils/svg';
+import type { RefObject } from 'react';
 
-/**
- * This function adds markers to a map based on a GeoJSON object.
- *
- * @param {mapboxgl.MapboxGeoJSONFeature[]} markers - An array of MapboxGeoJSONFeature objects
- *                                                  representing the markers to be added to the map.
- * @param                                   map     - The `map` parameter is a `mapboxgl.Map` object representing the Mapbox map instance on
- *                                                  which the markers will be added.
- * @param                                   icons
- * @return an array of `mapboxgl.Marker` objects.
- */
-export function addMarkers(
-	markers: MapBoxListing[],
-	map: mapboxgl.Map,
-	icons: []
-): mapboxgl.Marker[] {
-	return markers?.map( ( marker ) => {
-		/* For each feature in the GeoJSON object above add a marker */
-		return addMarker( marker, map, icons );
+function createMarkerEl( markerEl, listing: MapBoxListing, map: mapboxgl.Map ) {
+	// Render a Marker Component on our new DOM node
+	const markerElement = new mapboxgl.Marker( markerEl, {
+		offset: [ 0, ( listing?.properties?.iconSize || 0 ) * -0.5 ],
+		draggable: listing.properties.draggable, // if the icon is the clickable marker, it should be draggable
+	} )
+		.setLngLat(
+			( listing?.geometry?.coordinates as LngLatLike ) || [ 0, 0 ]
+		)
+		.addTo( map );
+
+	markerElement.on( 'dragend', ( event: MapEventType ) => {
+		const lngLat = markerElement.getLngLat();
+		// Update the marker's position
+		markerElement.setLngLat( lngLat );
 	} );
+
+	return markerElement;
 }
 
 /**
  * This function adds a marker to a Mapbox map using a Marker Component rendered on a new DOM node.
  *
- * @param {MapBoxListing.properties} marker - A MarkerItem object that contains information about the marker,
  *                                          including its geometry and properties.
- * @param                            map    - The `map` parameter is an instance of the `mapboxgl.Map` class, which represents a
  *                                          Mapbox map. It is used to add the marker to the map and set its position.
- * @param                            icons  - An array of MarkerIcon objects representing the icon set.
+ * @param listing.listing
+ * @param listing
+ * @param map
+ * @param mapRef
+ * @param listings
+ * @param markersRef
+ * @param icons              - An array of MarkerIcon objects representing the icon set.
+ * @param listing.listings
+ * @param listing.map
+ * @param listing.mapRef
+ * @param listing.markersRef
+ * @param listing.icons
  */
-export function addMarker(
-	marker: MapBoxListing,
-	map: mapboxgl.Map,
-	icons: MarkerIcon[]
-): mapboxgl.Marker | undefined {
-	if ( marker?.geometry ) {
-		// Check if the coordinates are valid
-		if (
-			! areValidCoordinates(
-				marker?.geometry?.coordinates as [ number, number ]
-			)
+export function MapMarker( {
+	listing,
+	map,
+	mapRef,
+	markersRef,
+	icons,
+} ): JSX.Element {
+	// Check if the coordinates are valid
+	if (
+		listing?.geometry &&
+		areValidCoordinates(
+			listing?.geometry?.coordinates as [ number, number ]
 		)
-			return undefined;
-
-		// Create a new DOM root and save it to the React ref
-		const ref: RefObject< HTMLElement > = createRef< HTMLElement >();
-
+	) {
 		// Render a Marker Component on our new DOM node
-		ref.current = document.createElement( 'div' );
-		ref.current.className =
-			'marker marker-' + safeSlug( marker.properties.name );
-		const root = createRoot( ref.current );
+		markersRef.current[ listing.id ] = null;
+		markersRef.current[ listing.id ] = document.createElement( 'div' );
+		markersRef.current[ listing.id ].className =
+			'marker marker-' + safeSlug( listing.properties.name );
+		const root = createRoot( markersRef.current[ listing.id ] );
 
-		let markerIcon: JSX.Element | undefined;
+		let markerIcon: JSX.Element | null;
 
-		if ( marker.properties.icon?.startsWith( 'custom-' ) ) {
-			const svgMarker = getMarkerSvg( marker.properties.icon, icons );
+		if ( listing.properties.icon?.startsWith( 'custom-' ) ) {
+			const svgMarker = getMarkerSvg( listing.properties.icon, icons );
 			markerIcon = modifySVG(
 				svgMarker,
-				marker.properties.iconColor,
-				marker.properties.iconSize
+				listing.properties.iconColor,
+				listing.properties.iconSize
 			);
-		} else if ( [ 'geocoder', 'pin' ].includes( marker.properties.icon ) ) {
+		} else if (
+			[ 'geocoder', 'pin' ].includes( listing.properties.icon )
+		) {
 			markerIcon = (
 				<PinPoint
-					color={ marker.properties.iconColor }
-					size={ marker.properties.iconSize }
+					color={ listing.properties.iconColor }
+					size={ listing.properties.iconSize }
 				/>
 			);
 		} else {
 			markerIcon = (
 				<DefaultMarker
-					color={ marker.properties.iconColor }
-					size={ marker.properties.iconSize }
+					color={ listing.properties.iconColor }
+					size={ listing.properties.iconSize }
 				/>
 			);
 		}
 
-		// Render a Marker Component on our new DOM node
-		root.render(
-			<Marker feature={ marker } children={ markerIcon } map={ map } />
+		const element = (
+			<Marker feature={ listing } map={ map } mapRef={ mapRef }>
+				{ markerIcon }
+			</Marker>
 		);
 
-		// Add markers to the map at all points
-		const thisMarker = new mapboxgl.Marker( ref.current, {
-			offset: [ 0, ( marker?.properties?.iconSize || 0 ) * -0.5 ],
-			draggable: marker.properties.draggable, // if the icon is the clickable marker, it should be draggable
-		} )
-			.setLngLat(
-				( marker?.geometry?.coordinates as LngLatLike ) || [ 0, 0 ]
-			)
-			.addTo( map );
+		createMarkerEl( markersRef.current[ listing.id ], listing, map );
 
-		thisMarker.on( 'dragend', ( event: MapEventType ) => {
-			const lngLat = thisMarker.getLngLat();
-			// Update the marker's position
-			thisMarker.setLngLat( lngLat );
-		} );
+		root.render( element );
 
-		return thisMarker;
+		return element;
 	}
 }
 
@@ -128,7 +125,10 @@ export function removeTempMarkers(
 		) as NodeListOf< HTMLElement >;
 		markerTemp.forEach( ( marker ) => {
 			// Check if the marker is excluded
-			if ( excludedMarkers.length && excludedMarkers.includes( marker?.dataset?.markerName ) )
+			if (
+				excludedMarkers.length &&
+				excludedMarkers.includes( marker?.dataset?.markerName )
+			)
 				return;
 			// Remove the marker
 			marker.parentElement?.remove();
