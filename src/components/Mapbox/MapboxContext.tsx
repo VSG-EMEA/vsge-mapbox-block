@@ -38,6 +38,7 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 	const [ filteredListings, setFilteredListings ] = useState(
 		[] as MapBoxListing[]
 	);
+	const [ loaded, setLoaded ] = useState( false );
 	const mapDefaults = getMapDefaults();
 
 	const mapRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement | null >(
@@ -60,6 +61,8 @@ export function MapProvider( { children }: { children: JSX.Element } ) {
 				setListings,
 				filteredListings,
 				setFilteredListings,
+				loaded,
+				setLoaded,
 				mapDefaults,
 				mapRef,
 				geoCoder,

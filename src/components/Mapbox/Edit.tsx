@@ -56,7 +56,7 @@ export function MapEdit( {
 		mapboxOptions: { tags, icons, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef } = useContext( MapboxContext );
+	const { map, mapRef, loaded, setLoaded } = useContext( MapboxContext );
 
 	/**
 	 * This function sets options for a Mapbox map and updates the markers accordingly.
@@ -96,10 +96,6 @@ export function MapEdit( {
 			} );
 	}
 
-	function isLoaded( map: mapboxgl.Map ) {
-		return !! map._mapId;
-	}
-
 	/**
 	 * This function refreshes a map by resizing it after a specified timeout.
 	 *
@@ -115,33 +111,33 @@ export function MapEdit( {
 	}
 
 	useEffect( () => {
-		if ( isLoaded( map ) ) {
+		if ( loaded ) {
 			refreshMap();
 		}
 	}, [ align ] );
 
 	useEffect( () => {
-		if ( isLoaded( map ) ) {
+		if ( loaded ) {
 			map.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
 			refreshMap();
 		}
 	}, [ mapStyle ] );
 
 	useEffect( () => {
-		if ( isLoaded( map ) ) {
+		if ( loaded ) {
 			setMapThreeDimensionality( map, freeViewCamera );
 		}
 	}, [ freeViewCamera ] );
 
 	useEffect( () => {
-		if ( isLoaded( map ) ) {
+		if ( loaded ) {
 			setMapElevation( map, elevation );
 			refreshMap();
 		}
 	}, [ elevation ] );
 
 	useEffect( () => {
-		if ( isLoaded( map ) ) {
+		if ( loaded ) {
 			setMapWheelZoom( map, mouseWheelZoom );
 		}
 	}, [ mouseWheelZoom ] );
