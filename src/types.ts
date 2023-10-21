@@ -64,6 +64,8 @@ export type MountedMapsContextValue = {
 	mapRef?: RefObject< HTMLDivElement >;
 	markersRef: RefObject< HTMLButtonElement[] >;
 	geocoderRef?: RefObject< HTMLDivElement >;
+	loaded: boolean;
+	setLoaded: Dispatch< SetStateAction< boolean > >;
 	mapDefaults?: MapboxBlockDefaults;
 	Provider: React.ComponentType;
 };
