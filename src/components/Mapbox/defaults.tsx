@@ -34,8 +34,10 @@ export const defaultMarkerProps = {
 	location: '',
 	city: '',
 	cap: '',
+	icon: 'default',
 	iconSize: defaultMarkerSize,
 	iconColor: defaultColors[ 0 ],
+	draggable: false,
 	itemTags: [],
 	itemFilters: [],
 };

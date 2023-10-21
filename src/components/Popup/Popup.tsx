@@ -1,6 +1,6 @@
 import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
-import { CoordinatesDef, MapBoxListing } from '../../types';
+import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
 import type { RefObject } from 'react';
 import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from '../Mapbox/defaults';
@@ -32,7 +32,9 @@ export function addPopup(
 	const root = createRoot( popupRef.current );
 
 	// Render a Marker Component on our new DOM node
-	root.render( children ?? <PopupContent { ...marker.properties } /> );
+	root.render(
+		children ?? <PopupContent { ...( marker.properties as MarkerProps ) } />
+	);
 
 	return new mapboxgl.Popup( {
 		offset: ( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,

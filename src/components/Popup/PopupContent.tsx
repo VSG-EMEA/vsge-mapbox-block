@@ -136,6 +136,10 @@ export function PinPointPopup( props: {
 		map,
 	} = props;
 
+	if ( ! map ) {
+		return null;
+	}
+
 	return (
 		<div className={ 'mapbox-popup-inner mapbox-popup-newpin' }>
 			<p>Find A location?</p>
@@ -158,7 +162,6 @@ export function PinPointPopup( props: {
 							},
 						} as unknown as MapboxGeocoder.Result,
 						sortedNearestStores,
-						listings,
 						mapRef as RefObject< HTMLDivElement >,
 						map
 					);

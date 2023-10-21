@@ -13,8 +13,15 @@ export type MapboxBlockDefaults = {
 
 export type TagArray = string[];
 
-export type FilterCollection = { id: number; value: string };
+export type FilterCollection = { id: number; value?: string };
 export type TagCollection = { id: number; tag: string };
+
+export interface SortableProps {
+	items: MapBoxListing[] | FilterCollection[];
+	tax: string;
+	setOptions: Function;
+	mapboxOptions?: MapboxOptions;
+}
 
 export interface MarkerIcon {
 	id: number;
@@ -129,8 +136,8 @@ export interface MarkerProps {
 	draggable: boolean;
 	iconSize?: number;
 	iconColor?: string;
-	itemTags?: TagArray[];
-	itemFilters?: TagArray[];
+	itemTags?: TagCollection[];
+	itemFilters?: TagCollection[];
 	distance?: number;
 }
 

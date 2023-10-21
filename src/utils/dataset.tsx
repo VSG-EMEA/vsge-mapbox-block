@@ -134,7 +134,6 @@ export function geocoderMarkerProps(
 export function showNearestStore(
 	location: MapboxGeocoder.Result,
 	sortedNearestStores: MapBoxListing[],
-	filteredListings: MapBoxListing[] | undefined,
 	mapRef: RefObject< HTMLDivElement >,
 	map: mapboxgl.Map
 ): MapBoxListing[] {

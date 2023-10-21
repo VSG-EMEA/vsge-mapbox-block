@@ -109,10 +109,6 @@ export function MapBox( {
 				return;
 			}
 
-			if ( clickedEl.dataset?.markerName === 'geocoder-marker' ) {
-				return;
-			}
-
 			if ( clickedEl.dataset?.markerName === 'click-marker' ) {
 				// prints the popup that allow the user to find a location
 				addPopup(
@@ -137,7 +133,12 @@ export function MapBox( {
 			}
 		}
 
+		// remove the distance data from each listing
 		clearListingsDistances( filteredStores );
+
+		if ( clickedEl.dataset?.markerName === 'geocoder-marker' ) {
+			return;
+		}
 
 		// Generate the metadata for the pin marker if nothing was clicked
 		const newTempMarker = generateTempMarkerData(
@@ -148,11 +149,8 @@ export function MapBox( {
 		// clear the temp marker from the list
 		removeTempMarkers( mapRef );
 
-		// add the temp marker to the list
-		const newListings = [ ...removeTempListings( stores ), newTempMarker ];
-
 		// store the new marker in the markers array
-		setListings( newListings );
+		setListings( [ ...removeTempListings( stores ), newTempMarker ] );
 	}
 
 	useEffect( () => {
@@ -168,6 +166,7 @@ export function MapBox( {
 			const language = new MapboxLanguage();
 			_map.addControl( language );
 
+			// Add the geocoder to the map
 			if ( attributes.geocoderEnabled ) {
 				setGeoCoder(
 					initGeoCoder(
@@ -183,7 +182,7 @@ export function MapBox( {
 				);
 			}
 
-			// Set the state of the map
+			// Set the ready state of the map
 			setLoaded( true );
 
 			// Listen for clicks on the map

@@ -1,4 +1,4 @@
-import { TagCollection } from '../../types';
+import { FilterCollection, TagCollection } from '../../types';
 
 /**
  * This is a TypeScript React component that renders a tag item with a specific ID and value.

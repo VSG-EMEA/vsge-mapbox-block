@@ -16,9 +16,11 @@ import { MapboxContext } from '../Mapbox/MapboxContext';
  * @param            selectValues.value
  * @return {SelectControl.Option[]} the select values
  */
-function topbarBuildSelectFromArray( selectValues: FilterCollection[] ) {
+function topbarBuildSelectFromArray(
+	selectValues: FilterCollection[]
+): { label: string; value: string }[] {
 	return selectValues.map( ( item ) => {
-		return { label: item.value, value: item.value };
+		return { label: item.value ?? '', value: item.value ?? '' };
 	} );
 }
 

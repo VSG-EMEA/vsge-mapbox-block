@@ -208,7 +208,6 @@ export const initGeocoder = (
 				const newFilteredListings = showNearestStore(
 					searchResult,
 					sortedNearestStores,
-					filteredListings,
 					mapRef as RefObject< HTMLDivElement >,
 					map
 				);

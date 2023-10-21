@@ -401,7 +401,7 @@ export function MapEdit( {
 				<Panel>
 					<PanelBody title="Map Pins" icon={ list }>
 						<Sortable
-							items={ listings || [] }
+							items={ listings }
 							tax={ 'listings' }
 							setOptions={ setOptions }
 							mapboxOptions={ attributes.mapboxOptions }
