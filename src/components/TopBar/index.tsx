@@ -48,6 +48,7 @@ export const TopBar = ( attributes: {
 		map,
 		mapRef,
 		listings,
+		filteredListings,
 		setFilteredListings,
 	}: MountedMapsContextValue = useContext( MapboxContext );
 	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
@@ -57,7 +58,9 @@ export const TopBar = ( attributes: {
 	useEffect( () => {
 		if ( filter === '' ) {
 			// if no filter is present, reset the filter list
-			setFilteredListings( [] );
+			if ( filteredListings.length > 0 ) {
+				setFilteredListings( [] );
+			}
 		} else if ( listings && listings.length > 0 ) {
 			// if a filter is present, filter the listings
 			setFilteredListings(
