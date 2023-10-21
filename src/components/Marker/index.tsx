@@ -20,7 +20,7 @@ import type { RefObject } from 'react';
  * attributes. The content of the button is either the children passed as a prop or a DefaultMarker
  * component with color and size props based on the feature properties.
  */
-export function Marker({
+export function Marker( {
 	feature,
 	map,
 	children = null,

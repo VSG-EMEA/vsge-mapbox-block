@@ -1,7 +1,14 @@
 import mapboxgl, { LngLatLike, MapEventType } from 'mapbox-gl';
 import { MapBoxListing } from '../../types';
+import type { RefObject } from 'react';
+import { getBbox } from '../../utils/spatialCalcs';
+import { fitInView } from '../../utils/view';
 
-export function createMarkerEl( markerEl, listing: MapBoxListing, map: mapboxgl.Map ) {
+export function createMarkerEl(
+	markerEl: HTMLElement,
+	listing: MapBoxListing,
+	map: mapboxgl.Map
+) {
 	// Render a Marker Component on our new DOM node
 	const markerElement = new mapboxgl.Marker( markerEl, {
 		offset: [ 0, ( listing?.properties?.iconSize || 0 ) * -0.5 ],
@@ -59,4 +66,51 @@ export function removeTempListings( listings: MapBoxListing[] ) {
 	return listings.filter( ( listing ) => {
 		return listing.type !== 'temp';
 	} );
+}
+
+/**
+ * This function removes a marker from a map using its ID.
+ *
+ * @param {number}         id         - The `id` parameter is a number that represents the unique identifier of a
+ *                                    marker that needs to be removed from a map.
+ * @param {HTMLDivElement} mapElement - The map element to remove the marker from.
+ */
+export function removeMarker( id: number, mapElement: HTMLDivElement ) {
+	mapElement.querySelector( '#marker-' + id )?.parentElement?.remove();
+}
+/**
+ * Updates the listings on the map.
+ * @param filteredStores - The filtered listings.
+ * @param map
+ * @param mapRef
+ */
+export function updateCamera(
+	filteredStores: MapBoxListing[],
+	map: mapboxgl.Map,
+	mapRef: RefObject< HTMLDivElement > | undefined
+): void {
+	if ( ! map ) return;
+
+	// if filtered listings are present
+	if ( filteredStores?.length ) {
+		if ( filteredStores?.length === 2 ) {
+			/**
+			 * Adjust the map camera:
+			 * Get a bbox that contains both the geocoder result and
+			 * the closest store. Fit the bounds to that bbox.
+			 */
+			const bbox = getBbox(
+				filteredStores[ 0 ].geometry,
+				filteredStores[ 1 ].geometry
+			);
+
+			map?.cameraForBounds( bbox, {
+				padding: 50,
+			} );
+		} else {
+			fitInView( map, filteredStores, mapRef );
+		}
+		return;
+	}
+	fitInView( map, filteredStores, mapRef );
 }

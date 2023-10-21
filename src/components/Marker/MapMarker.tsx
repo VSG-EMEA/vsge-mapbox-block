@@ -11,26 +11,20 @@ import { createMarkerEl } from './utils';
  *
  *                                          including its geometry and properties.
  *                                          Mapbox map. It is used to add the marker to the map and set its position.
- * @param listing.listing
  * @param listing
  * @param map
  * @param mapRef
  * @param listings
  * @param markersRef
  * @param icons              - An array of MarkerIcon objects representing the icon set.
- * @param listing.listings
- * @param listing.map
- * @param listing.mapRef
- * @param listing.markersRef
- * @param listing.icons
  */
-export function MapMarker( {
+export function mapMarker(
 	listing,
 	map,
 	mapRef,
 	markersRef,
 	icons,
-} ): JSX.Element {
+): JSX.Element {
 	// Check if the coordinates are valid
 	if (
 		listing?.geometry &&
@@ -78,10 +72,6 @@ export function MapMarker( {
 			</Marker>
 		);
 
-		createMarkerEl( markersRef.current[ listing.id ], listing, map );
-
 		root.render( element );
-
-		return element;
 	}
 }
