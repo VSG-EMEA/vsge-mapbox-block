@@ -5,7 +5,7 @@ import type {
 	MapBoxListing,
 } from '../../types';
 import { Feature } from '@turf/turf';
-import { removeMarker } from '../Marker/utils';
+import { removeMarkerEl } from '../Marker/utils';
 import { getNextId } from '../../utils/dataset';
 import { initGeocoder, initGeomarker } from '../Geocoder/Geocoder';
 import { RefObject } from 'react';
@@ -286,7 +286,7 @@ function updateListing(
 	currentMap: HTMLDivElement
 ) {
 	// remove previous marker and popup
-	removeMarker( mapListing.id, currentMap );
+	removeMarkerEl( mapListing.id, currentMap );
 }
 
 export function getListing(

@@ -75,7 +75,7 @@ export function removeTempListings( listings: MapBoxListing[] ) {
  *                                    marker that needs to be removed from a map.
  * @param {HTMLDivElement} mapElement - The map element to remove the marker from.
  */
-export function removeMarker( id: number, mapElement: HTMLDivElement ) {
+export function removeMarkerEl(id: number, mapElement: HTMLDivElement ) {
 	mapElement.querySelector( '#marker-' + id )?.parentElement?.remove();
 }
 /**

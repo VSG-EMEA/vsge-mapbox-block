@@ -16,6 +16,7 @@ import {
 } from '../../types';
 import {
 	createMarkerEl,
+	removeMarkerEl,
 	removeTempListings,
 	removeTempMarkers,
 } from '../Marker/utils';
@@ -63,6 +64,7 @@ export function MapBox( {
 
 	function updateMarkers( stores: MapBoxListing[] ) {
 		stores?.forEach( ( store ) => {
+			removeMarkerEl( store.id, mapRef.current );
 			mapMarker(
 				store,
 				map,
@@ -154,26 +156,17 @@ export function MapBox( {
 	}
 
 	useEffect( () => {
-		updateMarkers( getListing( listings, filteredListings ) );
-	}, [ listings, filteredListings ] );
-
-	useEffect( () => {
 		if ( loaded ) return;
 
 		if ( mapDefaults?.accessToken && mapRef?.current ) {
 			// Initialize map and store the map instance
 			const _map = initMap( mapRef.current, attributes, mapDefaults );
 
+			setMap( _map );
+
 			// Add the language control to the map
 			const language = new MapboxLanguage();
 			_map.addControl( language );
-
-			setMap( _map );
-
-			const newListings = attributes.mapboxOptions.listings;
-
-			// Adds the default listings  to the map
-			setListings( newListings );
 
 			if ( attributes.geocoderEnabled ) {
 				setGeoCoder(
@@ -182,7 +175,7 @@ export function MapBox( {
 						mapRef,
 						markersRef,
 						geocoderRef,
-						newListings,
+						listings,
 						filteredListings,
 						setFilteredListings,
 						mapDefaults
@@ -197,12 +190,21 @@ export function MapBox( {
 			_map.on( 'click', ( event: MapMouseEvent ) => {
 				handleMapClick(
 					event as MapMouseEvent,
-					newListings,
+					listings,
 					filteredListings
 				);
 			} );
 		}
 	}, [] );
+
+	useEffect( () => {
+		if ( loaded ) updateMarkers( getListing( listings, filteredListings ) );
+	}, [ loaded ] );
+
+	useEffect( () => {
+		if ( ! loaded ) return;
+		updateMarkers( getListing( listings, filteredListings ) );
+	}, [ listings, filteredListings ] );
 
 	/**
 	 * if the access key isn't provided

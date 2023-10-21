@@ -20,7 +20,7 @@ export default function Edit( {
 }: BlockEditProps< BlockAttributes > ): JSX.Element {
 	return (
 		<div { ...useBlockProps() }>
-			<MapProvider>
+			<MapProvider attributes={ attributes as MapAttributes }>
 				<MapEdit
 					attributes={ attributes as MapAttributes }
 					setAttributes={ setAttributes }

@@ -18,12 +18,12 @@ import { MapAttributes } from '../../types';
  *                                 for the MapBox component, such as the map's center coordinates, zoom level, and map style. These
  *                                 options are passed down to the MapBox component as props.
  */
-export function createMapRoot( el: HTMLElement, attributes ) {
+export function createMapRoot( el: HTMLElement, attributes: MapAttributes ) {
 	// initialize the map with React
 	const componentRoot = createRoot( el );
 	componentRoot.render(
 		<Suspense fallback={ <div className="wp-block-placeholder" /> }>
-			<MapProvider>
+			<MapProvider attributes={ attributes }>
 				<MapBox
 					attributes={ attributes }
 					mapDefaults={ getMapDefaults() }
