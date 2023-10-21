@@ -5,6 +5,10 @@ import type {
 	MapBoxListing,
 } from '../../types';
 import { Feature } from '@turf/turf';
+import { removeMarker } from '../Marker/utils';
+import { getNextId } from '../../utils/dataset';
+import { initGeocoder, initGeomarker } from '../Geocoder/Geocoder';
+import { RefObject } from 'react';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -84,6 +88,35 @@ export function initMap(
 	} );
 
 	return map;
+}
+
+export function initGeoCoder(
+	map: mapboxgl.Map,
+	mapRef: RefObject< HTMLDivElement >,
+	markersRef: RefObject< HTMLButtonElement[] >,
+	geocoderRef: RefObject< HTMLDivElement > | undefined,
+	listings: MapBoxListing[],
+	filteredListings: MapBoxListing[],
+	setFilteredListings: ( listings: MapBoxListing[] ) => void,
+	mapDefaults: MapboxBlockDefaults
+) {
+	const geomarkerListing = initGeomarker(
+		getNextId( listings ),
+		markersRef,
+		map,
+		mapRef
+	);
+
+	return initGeocoder(
+		map,
+		mapRef,
+		geocoderRef,
+		geomarkerListing,
+		listings,
+		filteredListings,
+		setFilteredListings,
+		mapDefaults
+	);
 }
 
 /**
@@ -233,4 +266,18 @@ export function getMarkerData(
 	markersList: MapBoxListing[]
 ): MapBoxListing | undefined {
 	return markersList.find( ( marker ) => marker.id === id );
+}
+
+/**
+ * Updates the listing on the map.
+ *
+ * @param {MapBoxListing} mapListing - The map listing to be updated.
+ * @param                 currentMap
+ */
+function updateListing(
+	mapListing: MapBoxListing,
+	currentMap: HTMLDivElement
+) {
+	// remove previous marker and popup
+	removeMarker( mapListing.id, currentMap );
 }
