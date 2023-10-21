@@ -4,6 +4,7 @@ import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import { useContext } from '@wordpress/element';
 import { MapboxContext } from '../Mapbox/MapboxContext';
 import type { RefObject } from 'react';
+import { getListing } from '../Mapbox/utils';
 
 /**
  * This is a TypeScript React component that renders a list of MapBox listings with a click event
@@ -49,14 +50,30 @@ function Listings( props: {
  * the "mapboxOptions" object. The "feature-listing" div contains a map
  */
 export const Sidebar = (): JSX.Element | null => {
-	const { map, mapRef, listings, filteredListings }: MountedMapsContextValue =
-		useContext( MapboxContext );
+	const {
+		map,
+		mapRef,
+		listings,
+		filteredListings,
+		loaded,
+	}: MountedMapsContextValue = useContext( MapboxContext );
 
-	if ( ! map._mapId || ! listings || ! mapRef ) return null;
+	// return null if the map is not loaded
+	if ( ! loaded || ! mapRef ) return null;
 
-	const listingToShow = filteredListings.length ? filteredListings : listings;
+	// return a message if there are no listings
+	if ( ! listings )
+		return (
+			<div className={ 'result' }>
+				<p> no listings found</p>
+			</div>
+		);
 
 	return (
-		<Listings listings={ listingToShow } map={ map } mapRef={ mapRef } />
+		<Listings
+			listings={ getListing( listings, filteredListings ) }
+			map={ map }
+			mapRef={ mapRef }
+		/>
 	);
 };

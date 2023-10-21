@@ -5,6 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import { TagList } from '../TagItem';
 import { enableListing } from '../../utils/dataset';
 import { removePopups } from '../Popup/Popup';
+import { RefObject } from 'react';
 
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.
@@ -23,7 +24,7 @@ export const Listing = ( {
 }: {
 	jsonFeature: MapBoxListing;
 	map: mapboxgl.Map;
-	mapRef: mapboxgl.Map;
+	mapRef: RefObject< HTMLDivElement >;
 } ) => {
 	const {
 		properties: {
