@@ -46,7 +46,6 @@ function geocoderMarkerDefaults(
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
  *
  * @param id
- * @param ref
  * @param markersRef
  * @param map        - mapboxgl.Map - This is an instance of the Mapbox GL JS map object on which the marker
  *                   will be placed.
@@ -105,7 +104,7 @@ export const initGeomarker = (
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
  */
 export const initGeocoder = (
-	map: mapboxgl.Map,
+	map,
 	mapRef: RefObject< HTMLDivElement > | undefined,
 	geocoderRef: RefObject< HTMLDivElement > | undefined,
 	marker: mapboxgl.Marker,
@@ -119,20 +118,20 @@ export const initGeocoder = (
 	if ( defaults.accessToken ) {
 		const geocoder: MapboxGeocoder = new MapboxGeocoder( {
 			accessToken: defaults.accessToken,
-			map,
+			mapboxgl,
 			marker,
 			language: defaults.language || 'en',
 			placeholder: __( 'Find the nearest store' ),
 			types: DEFAULT_GEOCODER_TYPE_SEARCH,
 		} );
 
-		if ( geocoderRef ) {
+		if ( geocoder && geocoderRef ) {
 			( geocoderRef.current as HTMLElement ).appendChild(
 				geocoder.onAdd( map )
 			);
 		}
 
-		geocoder.on( 'clear', function () {
+		function onGeocoderClear() {
 			document
 				.getElementById( 'feature-listing' )
 				?.classList.remove( 'filtered' );
@@ -151,9 +150,9 @@ export const initGeocoder = (
 			removePopups( mapRef as RefObject< HTMLDivElement > );
 			// Center the map
 			fitInView( map, listings, mapRef );
-		} );
+		}
 
-		geocoder.on( 'result', ( ev ) => {
+		function onGeocoderResult( ev ) {
 			// remove any popup or temp marker (clicked point, another geocoder marker) from the map
 			removeTempMarkers( mapRef as RefObject< HTMLDivElement >, [
 				'geocoder-marker',
@@ -188,6 +187,7 @@ export const initGeocoder = (
 
 				geoMarker.onclick = () => {
 					// Remove the active class from the geocoder
+					console.log( 'geocoder.clear' );
 					geocoder.clear();
 				};
 				geoMarker.on( 'dragend', () => {
@@ -216,7 +216,11 @@ export const initGeocoder = (
 				// Display the nearest store
 				setFilteredListings( newFilteredListings );
 			}
-		} );
+		}
+
+		geocoder.on( 'clear', onGeocoderClear );
+
+		geocoder.on( 'result', onGeocoderResult );
 
 		return geocoder;
 	}

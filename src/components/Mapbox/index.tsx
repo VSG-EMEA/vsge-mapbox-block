@@ -74,7 +74,11 @@ export function MapBox( {
 		} );
 	}
 
-	function handleMapClick( event: MapMouseEvent ) {
+	function handleMapClick(
+		event: MapMouseEvent,
+		stores: MapBoxListing[],
+		filteredStores: MapBoxListing[]
+	) {
 		// store the last clicked position
 		setLngLat( event.lngLat );
 		const clickedPoint = [
@@ -89,11 +93,11 @@ export function MapBox( {
 			event.originalEvent?.target as HTMLElement
 		 )?.closest( 'button' ) as MarkerHTMLElement | null;
 
-		if ( listings?.length && clickedEl?.nodeName === 'BUTTON' ) {
+		if ( stores?.length && clickedEl?.nodeName === 'BUTTON' ) {
 			// get the marker data
 			const markerData: MapBoxListing | undefined = getMarkerData(
 				Number( clickedEl.dataset?.id ) || 0,
-				listings
+				stores
 			);
 			const markerCoordinates =
 				markerData?.geometry?.coordinates || clickedPoint;
@@ -114,11 +118,11 @@ export function MapBox( {
 					markerData,
 					<PinPointPopup
 						location={ markerCoordinates ?? clickedPoint }
-						listings={ listings }
+						listings={ stores }
 						setFilteredListings={ setFilteredListings }
 						mapRef={ mapRef }
 						map={ map }
-						filteredListings={ filteredListings }
+						filteredListings={ filteredStores }
 					/>
 				);
 				return;
@@ -131,21 +135,19 @@ export function MapBox( {
 			}
 		}
 
-		clearListingsDistances( filteredListings );
+		clearListingsDistances( filteredStores );
 
 		// Generate the metadata for the pin marker if nothing was clicked
 		const newTempMarker = generateTempMarkerData(
-			getNextId( listings ),
+			getNextId( stores ),
 			clickedPoint
 		);
 
 		// clear the temp marker from the list
 		removeTempMarkers( mapRef );
 
-		const newListings = [
-			...removeTempListings( listings ),
-			newTempMarker,
-		];
+		// add the temp marker to the list
+		const newListings = [ ...removeTempListings( stores ), newTempMarker ];
 
 		// store the new marker in the markers array
 		setListings( newListings );
@@ -180,7 +182,7 @@ export function MapBox( {
 						mapRef,
 						markersRef,
 						geocoderRef,
-						listings,
+						newListings,
 						filteredListings,
 						setFilteredListings,
 						mapDefaults
@@ -193,7 +195,11 @@ export function MapBox( {
 
 			// Listen for clicks on the map
 			_map.on( 'click', ( event: MapMouseEvent ) => {
-				handleMapClick( event as MapMouseEvent );
+				handleMapClick(
+					event as MapMouseEvent,
+					newListings,
+					filteredListings
+				);
 			} );
 		}
 	}, [] );
