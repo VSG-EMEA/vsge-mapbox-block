@@ -3,35 +3,11 @@
 optional elements based on the values of `fitView`, `tagsEnabled`, and `filtersEnabled` properties
 of the `attributes` object. It also contains a `div` with class `map` and a `ref` to the
 `mapContainer` prop. The component is exported for use in other parts of the codebase. */
-import { RefObject } from 'react';
-import { MapMarker } from '../Marker/MapMarker';
-import { MapBoxListing, MarkerIcon } from '../../types';
+import { MountedMapsContextValue } from '../../types';
+import { useContext } from '@wordpress/element';
+import { MapboxContext } from './MapboxContext';
 
-export function Map( {
-	map,
-	mapRef,
-	listings,
-	markersRef,
-	icons,
-}: {
-	map: mapboxgl.Map;
-	mapRef: RefObject< HTMLDivElement >;
-	listings: MapBoxListing[];
-	markersRef: RefObject< HTMLDivElement >;
-	icons: MarkerIcon[];
-} ): JSX.Element {
-	return (
-		<div className={ 'map' } ref={ mapRef }>
-			{ listings?.map( ( listing ) => (
-				<MapMarker
-					key={ listing.id }
-					listing={ listing }
-					map={ map }
-					mapRef={ mapRef }
-					markersRef={ markersRef }
-					icons={ icons }
-				/>
-			) ) }
-		</div>
-	);
+export function Map(): JSX.Element {
+	const { mapRef }: MountedMapsContextValue = useContext( MapboxContext );
+	return <div className={ 'map' } ref={ mapRef } />;
 }

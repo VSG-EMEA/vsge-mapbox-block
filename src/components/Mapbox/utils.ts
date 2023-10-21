@@ -9,6 +9,7 @@ import { removeMarker } from '../Marker/utils';
 import { getNextId } from '../../utils/dataset';
 import { initGeocoder, initGeomarker } from '../Geocoder/Geocoder';
 import { RefObject } from 'react';
+import { geoMarkerStyle } from './defaults';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -107,11 +108,17 @@ export function initGeoCoder(
 		mapRef
 	);
 
+	const marker: mapboxgl.Marker = {
+		element: geomarkerListing as mapboxgl.Marker,
+		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
+		draggable: true,
+	};
+
 	return initGeocoder(
 		map,
 		mapRef,
 		geocoderRef,
-		geomarkerListing,
+		marker,
 		listings,
 		filteredListings,
 		setFilteredListings,
@@ -280,4 +287,11 @@ function updateListing(
 ) {
 	// remove previous marker and popup
 	removeMarker( mapListing.id, currentMap );
+}
+
+export function getListing(
+	listings: MapBoxListing[],
+	filteredListings: MapBoxListing[]
+): MapBoxListing[] {
+	return filteredListings.length > 0 ? filteredListings : listings;
 }
