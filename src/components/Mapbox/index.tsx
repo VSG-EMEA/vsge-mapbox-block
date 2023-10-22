@@ -80,10 +80,17 @@ export function MapBox( {
 	/**
 	 * Updates the markers on the map based on the given list of stores.
 	 *
-	 * @param {MapBoxListing[]} stores - The list of stores to update the markers for.
+	 * @param {MapBoxListing[]} stores       - The list of stores to update the markers for.
+	 * @param {undefined | number[]} updateOnlyID  - The list of store IDs to update, if undefined, all stores will be updated.
 	 */
-	function updateMarkers( stores: MapBoxListing[] ) {
+	function updateMarkers(
+		stores: MapBoxListing[],
+		updateOnlyID: undefined | number[] = undefined
+	) {
 		stores?.forEach( ( store ) => {
+			if ( updateOnlyID && ! updateOnlyID.includes( store.id ) ) {
+				return;
+			}
 			// Remove the marker
 			removeMarkerEl( store.id, mapRef?.current as HTMLDivElement );
 			// Add the marker to the array
@@ -176,7 +183,7 @@ export function MapBox( {
 					];
 
 					setListings( newListings );
-					updateMarkers( newListings );
+					updateMarkers( newListings, newTempMarker.id );
 					return;
 				}
 
