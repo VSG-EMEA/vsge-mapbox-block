@@ -1,5 +1,6 @@
 import {
 	CoordinatesDef,
+	MapBoxListing,
 	MarkerProps,
 	MountedMapsContextValue,
 	SearchMarkerProps,
@@ -120,15 +121,13 @@ export function SearchPopup( props: SearchMarkerProps ): JSX.Element {
 }
 
 export function PinPointPopup( props: {
+	map: mapboxgl.Map;
 	location: CoordinatesDef;
+	mapRef: RefObject< HTMLDivElement >;
+	listings: MapBoxListing[];
+	setFilteredListings: ( listings: MapBoxListing[] ) => void;
 } ): JSX.Element {
-	const { location } = props;
-	const {
-		map,
-		mapRef,
-		listings,
-		setFilteredListings,
-	}: MountedMapsContextValue = useMapboxContext();
+	const { location, map, mapRef, listings, setFilteredListings } = props;
 
 	if ( ! map ) {
 		return null;

@@ -17,7 +17,13 @@ import { __ } from '@wordpress/i18n';
 import { getNextId } from '../../utils/dataset';
 import { MarkerIcon } from '../../types';
 
-export const IconItem = ( props ) => {
+export const IconItem = ( props: {
+	id: number;
+	name: string;
+	content: string;
+	setIcon: ( props: any ) => void;
+	removeIcon: ( id: number ) => void;
+} ) => {
 	const { id, name, content, setIcon, removeIcon } = props;
 
 	return (
@@ -60,7 +66,7 @@ export const IconItem = ( props ) => {
 	);
 };
 
-export const EditPanelIcons = ({
+export const EditPanelIcons = ( {
 	icons = [],
 	setOptions,
 }: {

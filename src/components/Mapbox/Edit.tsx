@@ -1,6 +1,6 @@
-import { MapboxContext } from './MapboxContext';
+import { useMapboxContext } from './MapboxContext';
 import mapboxgl from 'mapbox-gl';
-import { useContext, useEffect } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { MapBox } from './index';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
@@ -56,7 +56,7 @@ export function MapEdit( {
 		mapboxOptions: { tags, icons, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef, loaded, setLoaded } = useContext( MapboxContext );
+	const { map, mapRef, loaded, setLoaded } = useMapboxContext();
 
 	/**
 	 * This function sets options for a Mapbox map and updates the markers accordingly.
@@ -361,7 +361,7 @@ export function MapEdit( {
 						<UnitControl
 							value={ mapHeight }
 							label={ __( 'Map Height' ) }
-							onChange={ ( newValue: string ) => {
+							onChange={ ( newValue ) => {
 								setAttributes( {
 									...attributes,
 									mapHeight: newValue || '',

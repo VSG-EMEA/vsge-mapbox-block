@@ -56,7 +56,7 @@ export const initGeomarker = (
 	markersRef: RefObject< HTMLButtonElement[] >,
 	map: mapboxgl.Map,
 	mapRef: RefObject< HTMLDivElement >
-): MapBoxListing => {
+): HTMLButtonElement | null => {
 	markersRef.current[ id ] = null;
 
 	// Create a new DOM root and save it to the React ref

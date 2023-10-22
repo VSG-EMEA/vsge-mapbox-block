@@ -46,11 +46,11 @@ export const defaultMarkerProps = {
  * This is a TypeScript function that creates a temporary marker with specified properties and
  * coordinates.
  *
- * @param {number | undefined}     id          - The id parameter is an optional number that represents the unique
- *                                             identifier for the temporary marker feature. If no id is provided, it defaults to undefined.
- * @param {LngLatLike | undefined} coordinates - The `coordinates` parameter is an array of two numbers
- *                                             representing the longitude and latitude of a point on a map. It is used to specify the location of
- *                                             the marker.
+ * @param {number | undefined} id          - The id parameter is an optional number that represents the unique
+ *                                         identifier for the temporary marker feature. If no id is provided, it defaults to undefined.
+ * @param {CoordinatesDef}     coordinates - The `coordinates` parameter is an array of two numbers
+ *                                         representing the longitude and latitude of a point on a map. It is used to specify the location of
+ *                                         the marker.
  *
  * @return A function that returns a GeoJSON feature object representing a temporary marker with
  * specified properties and coordinates. The function takes two optional parameters: `id` (a number

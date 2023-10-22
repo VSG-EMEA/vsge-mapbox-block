@@ -59,9 +59,11 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					rawAttributes.mapboxOptions ||
 						'{ "listings": [], "tags": [], "filters": [] }'
 				),
+				align: rawAttributes.align || 'center',
 				bearing: Number( rawAttributes.bearing ),
 				elevation: rawAttributes.elevation === 'true',
 				freeViewCamera: rawAttributes.freeViewCamera === 'true',
+				mapProjection: rawAttributes.mapProjection || 'mercator',
 				latitude: Number( rawAttributes.latitude ),
 				longitude: Number( rawAttributes.longitude ),
 				pitch: Number( rawAttributes.pitch ),
