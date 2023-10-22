@@ -1,130 +1,14 @@
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
-import type {
-	MapAttributes,
-	MapboxBlockDefaults,
-	MapBoxListing,
-} from '../../types';
-import { Feature } from '@turf/turf';
+import type { MapBoxListing } from '../../types';
+import { SearchMarkerProps } from '../../types';
 import { removeMarkerEl } from '../Marker/utils';
-import { getNextId } from '../../utils/dataset';
-import { initGeocoder, initGeomarker } from '../Geocoder/Geocoder';
-import { RefObject } from 'react';
-import { geoMarkerStyle } from './defaults';
-
-/**
- * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
- * specified.
- *
- * @param {HTMLElement} mapRef     The HTML element that will contain the map.
- * @param {Object}      attributes An object containing various attributes for initializing the map, including
- *                                 latitude, longitude, pitch, bearing, mapZoom, mapStyle, and freeViewCamera.
- * @param {Object}      defaults   An object containing default values for the map.
- * @return {mapboxgl.Map} a mapboxgl.Map object.
- */
-export function initMap(
-	mapRef: string | HTMLDivElement,
-	attributes: MapAttributes,
-	defaults: MapboxBlockDefaults
-): mapboxgl.Map {
-	const {
-		latitude,
-		longitude,
-		pitch,
-		bearing,
-		mapZoom,
-		mapStyle,
-		mouseWheelZoom,
-		freeViewCamera,
-		mapboxOptions,
-	} = attributes;
-
-	const map = new mapboxgl.Map( {
-		container: mapRef,
-		style: 'mapbox://styles/mapbox/' + mapStyle,
-		antialias: true,
-		center: [ longitude, latitude ],
-		zoom: mapZoom,
-		accessToken: defaults.accessToken,
-		bearing,
-		pitch,
-		scrollZoom: mouseWheelZoom,
-		dragRotate: freeViewCamera,
-	} );
-
-	map.on( 'load', function () {
-		// Set the map's terrain layer.
-		setMapElevation( map, attributes.elevation );
-
-		// Add navigation control (the +/- zoom buttons)
-		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );
-
-		setMapThreeDimensionality( map, attributes.freeViewCamera );
-
-		// Set up the language.
-		if ( map.getLayer( 'country-label' ) )
-			map.setLayoutProperty( 'country-label', 'text-field', [
-				'get',
-				'name_' + defaults?.language?.substring( 0, 2 ) || 'en',
-			] );
-
-		// Add a GeoJSON source for the stores
-		map.addSource( 'geojson-stores', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features:
-					mapboxOptions.listings as Feature< GeoJSON.Geometry >[],
-			},
-		} );
-
-		// Add a layer showing the places.
-		map.addLayer( {
-			id: 'geojson-stores',
-			type: 'symbol',
-			source: 'geojson-stores',
-			layout: {
-				'icon-allow-overlap': true,
-			},
-		} );
-	} );
-
-	return map;
-}
-
-export function initGeoCoder(
-	map: mapboxgl.Map,
-	mapRef: RefObject< HTMLDivElement >,
-	markersRef: RefObject< HTMLButtonElement[] >,
-	geocoderRef: RefObject< HTMLDivElement > | undefined,
-	listings: MapBoxListing[],
-	filteredListings: MapBoxListing[],
-	setFilteredListings: ( listings: MapBoxListing[] ) => void,
-	mapDefaults: MapboxBlockDefaults
-) {
-	const geomarkerListing = initGeomarker(
-		getNextId( listings ),
-		markersRef,
-		map,
-		mapRef
-	);
-
-	const marker: mapboxgl.Marker = {
-		element: geomarkerListing as mapboxgl.Marker,
-		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
-		draggable: true,
-	};
-
-	return initGeocoder(
-		map,
-		mapRef,
-		geocoderRef,
-		marker,
-		listings,
-		filteredListings,
-		setFilteredListings,
-		mapDefaults
-	);
-}
+import { flyToStore } from '../../utils/view';
+import {
+	PinPointPopup,
+	PopupContent,
+	SearchPopup,
+} from '../Popup/PopupContent';
+import { addPopup } from '../Popup/Popup';
 
 /**
  * The function sets the elevation of a Mapbox map to either a globe or a mercator projection and adds
@@ -239,6 +123,41 @@ export function setMapWheelZoom( map: mapboxgl.Map, mouseWheelZoom: boolean ) {
 }
 
 /**
+ * Enables the listing feature on the map.
+ *
+ * @param {mapboxgl.Map}  map    - The map object.
+ * @param {MapBoxListing} marker - The listing marker object.
+ */
+export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
+	console.log( 'Listing enabled', marker );
+
+	// 1. Fly to the point
+	flyToStore( map, marker );
+	const getPopupTemplate = (
+		marker: MapBoxListing
+	): JSX.Element | undefined => {
+		if ( marker.type === 'Feature' ) {
+			return <PopupContent { ...marker.properties } />;
+		} else if ( marker.properties.name === 'geocoder' ) {
+			return (
+				<SearchPopup
+					{ ...( marker.properties as SearchMarkerProps ) }
+				/>
+			);
+		} else if ( marker.properties.name === 'click-marker' ) {
+			return <PinPointPopup location={ marker.geometry.coordinates } />;
+		}
+		return undefined;
+	};
+
+	// 2. Close all other popups and display popup for clicked store
+	addPopup( map, marker, getPopupTemplate( marker ) );
+
+	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
+	highlightListing( marker );
+}
+
+/**
  * The function removes a marker from a list of markers based on its ID.
  *
  * @param {number}                 id          - a number representing the ID of the marker to be removed.
@@ -248,7 +167,7 @@ export function setMapWheelZoom( map: mapboxgl.Map, mouseWheelZoom: boolean ) {
  *                                             array with the marker that matches the given ID removed.
  * @return a new array of MapboxGeoJSONFeature objects that do not have the specified id.
  */
-function removeMarkerById(
+export function removeMarkerById(
 	id: number,
 	markersList: MapboxGeoJSONFeature[]
 ): MapboxGeoJSONFeature[] {
@@ -275,23 +194,23 @@ export function getMarkerData(
 	return markersList.find( ( marker ) => marker.id === id );
 }
 
+export function getListing(
+	listings: MapBoxListing[],
+	filteredListings: MapBoxListing[]
+): MapBoxListing[] {
+	return filteredListings.length > 0 ? filteredListings : listings;
+}
+
 /**
  * Updates the listing on the map.
  *
  * @param {MapBoxListing} mapListing - The map listing to be updated.
  * @param                 currentMap
  */
-function updateListing(
+export function updateListing(
 	mapListing: MapBoxListing,
 	currentMap: HTMLDivElement
 ) {
 	// remove previous marker and popup
 	removeMarkerEl( mapListing.id, currentMap );
-}
-
-export function getListing(
-	listings: MapBoxListing[],
-	filteredListings: MapBoxListing[]
-): MapBoxListing[] {
-	return filteredListings.length > 0 ? filteredListings : listings;
 }
