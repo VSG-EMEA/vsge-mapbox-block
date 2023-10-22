@@ -4,7 +4,9 @@ import { createRoot } from '@wordpress/element';
 import { getMarkerSvg, modifySVG } from '../../utils/svg';
 import { Marker } from './index';
 import { DefaultMarker, PinPoint } from './marker-icons';
-import { createMarkerEl } from './utils';
+import type { RefObject } from 'react';
+import { MapBoxListing, MarkerIcon } from '../../types';
+import { key } from '@wordpress/icons';
 
 /**
  * This function adds a marker to a Mapbox map using a Marker Component rendered on a new DOM node.
@@ -14,16 +16,15 @@ import { createMarkerEl } from './utils';
  * @param listing
  * @param map
  * @param mapRef
- * @param listings
  * @param markersRef
- * @param icons              - An array of MarkerIcon objects representing the icon set.
+ * @param icons      - An array of MarkerIcon objects representing the icon set.
  */
 export function mapMarker(
-	listing,
-	map,
-	mapRef,
-	markersRef,
-	icons,
+	listing: MapBoxListing,
+	map: mapboxgl.Map,
+	mapRef: RefObject< HTMLDivElement >,
+	markersRef: RefObject< HTMLButtonElement[] >,
+	icons: MarkerIcon[]
 ): JSX.Element {
 	// Check if the coordinates are valid
 	if (

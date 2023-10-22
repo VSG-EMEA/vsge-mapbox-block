@@ -1,10 +1,7 @@
-import { Button } from '@wordpress/components';
-import { enableListing } from '../../utils/dataset';
 import { safeSlug } from '../../utils';
 import { DefaultMarker } from './marker-icons';
 import { MapBoxListing } from '../../types';
 import { DEFAULT_COLOR } from '../../constants';
-import { removePopups } from '../Popup/Popup';
 import type { RefObject } from 'react';
 
 /**
@@ -32,17 +29,9 @@ export function Marker( {
 	mapRef: RefObject< HTMLDivElement >;
 } ): JSX.Element {
 	const slug = safeSlug( feature.properties.name );
-	function clicked() {
-		removePopups( mapRef );
-		enableListing( map, feature );
-	}
-	function dragged() {
-		feature.getGeometry().setCoordinates( [ 0, 0 ] );
-	}
+
 	return (
-		<Button
-			onClick={ clicked }
-			onDragEnd={ dragged }
+		<button
 			className={ 'marker marker-' + slug } // this is important to prevent duplicates
 			id={ 'marker-' + feature.id || 'temp' }
 			data-id={ feature.id ?? 'temp' }
@@ -55,6 +44,6 @@ export function Marker( {
 					size={ feature.properties.iconSize as number }
 				/>
 			) }
-		</Button>
+		</button>
 	);
 }

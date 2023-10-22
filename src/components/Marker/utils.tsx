@@ -19,7 +19,7 @@ export function createMarkerEl(
 		)
 		.addTo( map );
 
-	markerElement.on( 'dragend', ( event: MapEventType ) => {
+	markerElement.on( 'dragend', ( event ) => {
 		const lngLat = markerElement.getLngLat();
 		// Update the marker's position
 		markerElement.setLngLat( lngLat );
@@ -31,12 +31,12 @@ export function createMarkerEl(
 /**
  * Removes temporary markers from the specified element.
  *
- * @param {React.RefObject<HTMLDivElement>} maboxRef        - The reference to the HTMLDivElement
- * @param                                   excludedMarkers
+ * @param {RefObject<HTMLDivElement>} maboxRef        - The reference to the HTMLDivElement
+ * @param                             excludedMarkers
  * @return {void} This function does not return anything
  */
 export function removeTempMarkers(
-	maboxRef: React.RefObject< HTMLDivElement > | undefined,
+	maboxRef: RefObject< HTMLDivElement > | undefined,
 	excludedMarkers: string[] = []
 ) {
 	if ( maboxRef?.current ) {
@@ -47,6 +47,7 @@ export function removeTempMarkers(
 			// Check if the marker is excluded
 			if (
 				excludedMarkers.length &&
+				marker?.dataset?.markerName &&
 				excludedMarkers.includes( marker?.dataset?.markerName )
 			)
 				return;
@@ -75,7 +76,7 @@ export function removeTempListings( listings: MapBoxListing[] ) {
  *                                    marker that needs to be removed from a map.
  * @param {HTMLDivElement} mapElement - The map element to remove the marker from.
  */
-export function removeMarkerEl(id: number, mapElement: HTMLDivElement ) {
+export function removeMarkerEl( id: number, mapElement: HTMLDivElement ) {
 	mapElement.querySelector( '#marker-' + id )?.parentElement?.remove();
 }
 /**
