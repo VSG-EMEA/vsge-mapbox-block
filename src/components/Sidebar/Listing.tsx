@@ -3,9 +3,9 @@ import { mapMarker } from '@wordpress/icons';
 import { MapBoxListing } from '../../types';
 import mapboxgl from 'mapbox-gl';
 import { TagList } from '../TagItem';
-import { enableListing } from '../../utils/dataset';
 import { removePopups } from '../Popup/Popup';
 import { RefObject } from 'react';
+import { enableListing } from '../Mapbox/utils';
 
 /**
  * This is a TypeScript React component that renders a listing based on the type of property passed in.

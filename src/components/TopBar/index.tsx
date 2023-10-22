@@ -1,12 +1,8 @@
 import { Button, Icon, SelectControl } from '@wordpress/components';
-import { useContext, useEffect, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { filterListingsBy, fitInView } from '../../utils/view';
-import {
-	FilterCollection,
-	MapboxOptions,
-	MountedMapsContextValue,
-} from '../../types';
-import { MapboxContext } from '../Mapbox/MapboxContext';
+import { FilterCollection, MapboxOptions, MountedMapsContextValue } from '../../types';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
 
 /**
  * trasform an array of strings into a select values that could be used with select control
@@ -52,7 +48,7 @@ export const TopBar = ( attributes: {
 		listings,
 		filteredListings,
 		setFilteredListings,
-	}: MountedMapsContextValue = useContext( MapboxContext );
+	}: MountedMapsContextValue = useMapboxContext();
 	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
 	const [ filter, setFilter ] = useState( '' );
 	const [ tag, setTag ] = useState( '' );

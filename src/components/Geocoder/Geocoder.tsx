@@ -1,7 +1,7 @@
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
 import type { RefObject } from 'react';
-import { createRoot, useContext } from '@wordpress/element';
+import { createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { Marker } from '../Marker/';
 import {
@@ -13,13 +13,12 @@ import {
 } from '../../types';
 import { geoMarkerStyle } from '../Mapbox/defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
-import { removePopups } from '../Popup/Popup';
+import { removePopups, showNearestStore } from '../Popup/Popup';
 import { fitInView, flyToStore } from '../../utils/view';
 import { PinPoint } from '../Marker/marker-icons';
-import { showNearestStore } from '../../utils/dataset';
 import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
-import { MapboxContext } from '../Mapbox/MapboxContext';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
 
 function geocoderMarkerDefaults(
 	id: number,
@@ -104,7 +103,7 @@ export const initGeomarker = (
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
  */
 export const initGeocoder = (
-	map,
+	map: mapboxgl.Map,
 	mapRef: RefObject< HTMLDivElement > | undefined,
 	geocoderRef: RefObject< HTMLDivElement > | undefined,
 	marker: mapboxgl.Marker,
@@ -229,7 +228,6 @@ export const initGeocoder = (
  * This is a TypeScript React function that returns a JSX element representing a geocoder marker.
  */
 export const GeoCoder = () => {
-	const { geocoderRef }: MountedMapsContextValue =
-		useContext( MapboxContext );
+	const { geocoderRef }: MountedMapsContextValue = useMapboxContext();
 	return <div className="geocoder" ref={ geocoderRef }></div>;
 };

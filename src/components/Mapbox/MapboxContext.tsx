@@ -1,9 +1,4 @@
-import {
-	createContext,
-	useContext,
-	useRef,
-	useState,
-} from '@wordpress/element';
+import { createContext, useContext, useRef, useState } from '@wordpress/element';
 import { getMapDefaults } from '../../utils';
 import {
 	MapAttributes,
@@ -38,7 +33,7 @@ export function MapProvider( {
 	attributes: MapAttributes;
 	children: JSX.Element;
 } ) {
-	const [ map, setMap ] = useState< mapboxgl.Map >( {} as mapboxgl.Map );
+	const [ map, setMap ] = useState< mapboxgl.Map >();
 	const [ geoCoder, setGeoCoder ] = useState< MapboxGeocoder | undefined >(
 		undefined
 	);
@@ -51,6 +46,7 @@ export function MapProvider( {
 	);
 	const [ loaded, setLoaded ] = useState( false );
 	const mapDefaults = getMapDefaults();
+	const mapIcons = attributes.mapboxOptions.icons;
 
 	const mapRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement | null >(
 		null
@@ -80,6 +76,7 @@ export function MapProvider( {
 				setGeoCoder,
 				geocoderRef,
 				markersRef,
+				mapIcons,
 			} }
 		>
 			{ children }

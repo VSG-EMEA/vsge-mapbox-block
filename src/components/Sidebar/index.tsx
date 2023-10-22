@@ -1,10 +1,9 @@
 import { Listing } from './Listing';
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
-import { useContext } from '@wordpress/element';
-import { MapboxContext } from '../Mapbox/MapboxContext';
 import type { RefObject } from 'react';
 import { getListing } from '../Mapbox/utils';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
 
 /**
  * This is a TypeScript React component that renders a list of MapBox listings with a click event
@@ -56,7 +55,7 @@ export const Sidebar = (): JSX.Element | null => {
 		listings,
 		filteredListings,
 		loaded,
-	}: MountedMapsContextValue = useContext( MapboxContext );
+	}: MountedMapsContextValue = useMapboxContext();
 
 	// return null if the map is not loaded
 	if ( ! loaded || ! mapRef ) return null;
