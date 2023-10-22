@@ -36,8 +36,9 @@ export function mapMarker(
 		// Render a Marker Component on our new DOM node
 		markersRef.current[ listing.id ] = null;
 		markersRef.current[ listing.id ] = document.createElement( 'div' );
-		markersRef.current[ listing.id ].className =
-			'marker marker-' + safeSlug( listing.properties.name );
+		markersRef.current[ listing.id ].className = `marker marker-${ safeSlug(
+			listing.properties.name
+		) } marker-${ safeSlug( listing.type ) }`;
 		const root = createRoot( markersRef.current[ listing.id ] );
 
 		let markerIcon: JSX.Element | null;

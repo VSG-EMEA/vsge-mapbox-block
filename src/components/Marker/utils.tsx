@@ -52,7 +52,7 @@ export function removeTempMarkers(
 			)
 				return;
 			// Remove the marker
-			marker.parentElement?.remove();
+			marker?.remove();
 		} );
 	}
 }

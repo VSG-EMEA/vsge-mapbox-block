@@ -32,9 +32,11 @@ export function Marker( {
 
 	return (
 		<button
-			className={ 'marker marker-' + slug } // this is important to prevent duplicates
-			id={ 'marker-' + feature.id || 'temp' }
-			data-id={ feature.id ?? 'temp' }
+			className={ 'marker' } // this is important to prevent duplicates
+			id={
+				feature.type !== 'temp' ? 'marker-' + feature.id : 'marker-temp'
+			}
+			data-id={ feature.id }
 			data-marker-type={ feature.type }
 			data-marker-name={ slug }
 		>
