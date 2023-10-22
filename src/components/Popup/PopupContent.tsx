@@ -1,7 +1,7 @@
 import {
 	CoordinatesDef,
-	MapBoxListing,
 	MarkerProps,
+	MountedMapsContextValue,
 	SearchMarkerProps,
 } from '../../types';
 import { Button, Icon } from '@wordpress/components';
@@ -11,10 +11,10 @@ import { __ } from '@wordpress/i18n';
 import { ICON_SIZE } from '../../constants';
 import { layouts, svgArray } from '@mapbox/maki';
 import { locateNearestStore } from '../../utils/spatialCalcs';
-import { showNearestStore } from '../../utils/dataset';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
-import mapboxgl from 'mapbox-gl';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
+import { showNearestStore } from './Popup';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
 The component destructures the `props` object to extract the properties `itemTags`, `itemFilters`,
@@ -22,7 +22,7 @@ The component destructures the `props` object to extract the properties `itemTag
 `MarkerProps` type. It then returns a JSX element that displays the extracted properties in a
 specific format. The `PopupContent` component is used to render the content of a popup that appears
 when a marker is clicked on a map. */
-export function PopupContent( props: MarkerProps ) {
+export function PopupContent( props: MarkerProps ): JSX.Element {
 	const {
 		itemTags,
 		itemFilters,
@@ -85,7 +85,7 @@ function getIcon( icon: string ) {
 	return iconIndex !== -1 ? svgArray[ iconIndex ] : undefined;
 }
 
-export function SearchPopup( props: SearchMarkerProps ) {
+export function SearchPopup( props: SearchMarkerProps ): JSX.Element {
 	const { name = '', category = '', maki = '', distance = 0 } = props;
 
 	const icon = getIcon( maki );
@@ -121,20 +121,14 @@ export function SearchPopup( props: SearchMarkerProps ) {
 
 export function PinPointPopup( props: {
 	location: CoordinatesDef;
-	filteredListings?: MapBoxListing[];
-	listings: MapBoxListing[];
-	setFilteredListings: ( listings: MapBoxListing[] ) => void;
-	mapRef: RefObject< HTMLDivElement > | undefined;
-	map: mapboxgl.Map | null;
-} ) {
+} ): JSX.Element {
+	const { location } = props;
 	const {
-		location,
-		filteredListings,
+		map,
+		mapRef,
 		listings,
 		setFilteredListings,
-		mapRef,
-		map,
-	} = props;
+	}: MountedMapsContextValue = useMapboxContext();
 
 	if ( ! map ) {
 		return null;
@@ -147,7 +141,7 @@ export function PinPointPopup( props: {
 				onClick={ () => {
 					const sortedNearestStores = locateNearestStore(
 						location,
-						filteredListings ?? listings
+						listings
 					);
 					const sortedListings = showNearestStore(
 						{

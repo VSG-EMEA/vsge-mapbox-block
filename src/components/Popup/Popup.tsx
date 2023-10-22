@@ -2,9 +2,10 @@ import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
 import type { RefObject } from 'react';
-import { PopupContent } from './PopupContent';
+import { PopupContent, SearchPopup } from './PopupContent';
 import { defaultMarkerSize } from '../Mapbox/defaults';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { SEARCH_RESULTS_SHOWN } from '../../constants';
 
 /**
  * This function adds a popup to a Mapbox map with custom content or default content based on a
@@ -25,6 +26,11 @@ export function addPopup(
 	marker: MapBoxListing | MapboxGeocoder.Result,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup {
+	if ( ! marker ) {
+		console.warn( 'Marker not found' );
+		return;
+	}
+
 	const popupRef: RefObject< HTMLDivElement > = createRef();
 
 	// Create a new DOM root and save it to the React ref
@@ -58,4 +64,48 @@ export function removePopups( mapRef: RefObject< HTMLDivElement > ) {
 	if ( popUps?.length ) {
 		popUps.forEach( ( popUp ) => popUp.remove() );
 	}
+}
+
+/**
+ * Displays the nearest store and updates the filtered listings.
+ *
+ * @param {MapboxGeocoder.Result}     location            - The location object.
+ * @param {MapBoxListing[]}           sortedNearestStores - The sorted list of nearest stores.
+ * @param {RefObject<HTMLDivElement>} mapRef              - The reference to the map container.
+ * @param {mapboxgl.Map}              map                 - The map object.
+ */
+export function showNearestStore(
+	location: MapboxGeocoder.Result,
+	sortedNearestStores: MapBoxListing[],
+	mapRef: RefObject< HTMLDivElement >,
+	map: mapboxgl.Map
+): MapBoxListing[] {
+	const newFilteredListings: MapBoxListing[] = [
+		...sortedNearestStores.slice( 0, SEARCH_RESULTS_SHOWN ),
+	];
+
+	removePopups( mapRef as RefObject< HTMLDivElement > );
+
+	/* Open a popup for the closest store. */
+	addPopup(
+		map,
+		location,
+		<SearchPopup
+			icon={ 'geocoder' }
+			name={ location.text }
+			category={ location.properties?.category }
+			maki={ location.properties?.maki }
+			draggable={ true }
+		/>
+	);
+
+	/* Open a popup for the closest store. */
+	addPopup( map, newFilteredListings[ 0 ] );
+
+	/** Highlight the listing for the closest store. */
+	mapRef?.current
+		?.querySelector( '#marker-' + sortedNearestStores[ 1 ].id )
+		?.classList.add( 'active' );
+
+	return newFilteredListings;
 }
