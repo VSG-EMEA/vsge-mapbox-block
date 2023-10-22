@@ -1,8 +1,12 @@
-import type { MapAttributes, MapboxBlockDefaults, MapBoxListing } from '../../types';
-import { Feature } from '@turf/turf';
+import type {
+	MapAttributes,
+	MapboxBlockDefaults,
+	MapBoxListing,
+} from '../../types';
+import type { Feature } from '@turf/turf';
 import { getNextId } from '../../utils/dataset';
 import { initGeocoder, initGeomarker } from '../Geocoder/Geocoder';
-import { RefObject } from 'react';
+import type { RefObject } from 'react';
 import { geoMarkerStyle } from './defaults';
 import { setMapElevation, setMapThreeDimensionality } from './utils';
 import mapboxgl from 'mapbox-gl';
@@ -11,11 +15,10 @@ import mapboxgl from 'mapbox-gl';
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
  * specified.
  *
- * @param {HTMLElement} mapRef         The HTML element that will contain the map.
- * @param {Object}      attributes     An object containing various attributes for initializing the map, including
- *                                     latitude, longitude, pitch, bearing, mapZoom, mapStyle, and freeViewCamera.
- * @param {Object}      defaults       An object containing default values for the map.
- * @param               handleMapClick
+ * @param {HTMLElement} mapRef     The HTML element that will contain the map.
+ * @param {Object}      attributes An object containing various attributes for initializing the map, including
+ *                                 latitude, longitude, pitch, bearing, mapZoom, mapStyle, and freeViewCamera.
+ * @param {Object}      defaults   An object containing default values for the map.
  * @return {mapboxgl.Map} a mapboxgl.Map object.
  */
 export function initMap(
@@ -106,7 +109,7 @@ export function initGeoCoder(
 	);
 
 	const marker: mapboxgl.Marker = {
-		element: geomarkerListing as mapboxgl.Marker,
+		element: geomarkerListing,
 		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
 		draggable: true,
 	};
