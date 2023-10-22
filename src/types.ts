@@ -74,6 +74,7 @@ export type MountedMapsContextValue = {
 	loaded: boolean;
 	setLoaded: Dispatch< SetStateAction< boolean > >;
 	mapDefaults?: MapboxBlockDefaults;
+	mapIcons?: MarkerIcon[];
 	Provider: React.ComponentType;
 };
 

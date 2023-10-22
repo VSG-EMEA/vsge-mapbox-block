@@ -34,7 +34,7 @@ export const PinCard = ( props: {
 	icons: MarkerIcon[];
 } ) => {
 	const { item, index, updateItem, deleteItem, tags, filters, icons } = props;
-	const { lngLat } = useContext( MapboxContext );
+	const { lngLat } = useMapboxContext();
 	const [ isOpen, setIsOpen ] = useState( false );
 	const [ showColorPicker, setShowColorPicker ] = useState( false );
 	const [ itemData, setItemData ] = useState( item as MapBoxListing );

@@ -15,7 +15,7 @@ import { removePopups } from '../Popup/Popup';
 export const Sortable = ( props: SortableProps ): JSX.Element => {
 	const { items, tax, setOptions, mapboxOptions } = props;
 
-	const { lngLat, mapRef } = useContext( MapboxContext );
+	const { lngLat, mapRef } = useMapboxContext();
 
 	/**
 	 * Fired when the drag ends on a droppable item
