@@ -1,6 +1,6 @@
 import { Map } from './Map';
 import { TopBar } from '../TopBar';
-import { useEffect } from '@wordpress/element';
+import { useCallback, useEffect } from '@wordpress/element';
 import { useMapboxContext } from './MapboxContext';
 import { getListing, getMarkerData } from './utils';
 import { MapMouseEvent } from 'mapbox-gl';
@@ -28,19 +28,7 @@ import { mapMarker } from '../Marker/MapMarker';
 import { Sidebar } from '../Sidebar';
 import { addPopup } from '../Popup/Popup';
 import { PinPointPopup } from '../Popup/PopupContent';
-import { RefObject } from 'react';
-import { initGeoCoder, initMap } from './mapInit';
-
-/**
- * Handles the map click event.
- *
- * @param {MapMouseEvent}                       event       - The click event on the map.
- * @param {mapboxgl.Map}                        map         - The map instance.
- * @param {RefObject<HTMLDivElement>}           mapRef      - The reference to the map container element.
- * @param {MapBoxListing[]}                     listings    - The array of map listings.
- * @param {(listings: MapBoxListing[]) => void} setListings - The function to update the listings.
- * @param {boolean}                             isEditor    - Whether the click event is coming from an editor.
- */
+import { initGeoCoder, initMap } from './init';
 
 /**
  * Renders a MapBox component.
@@ -80,31 +68,141 @@ export function MapBox( {
 	/**
 	 * Updates the markers on the map based on the given list of stores.
 	 *
-	 * @param {MapBoxListing[]} stores       - The list of stores to update the markers for.
-	 * @param {undefined | number[]} updateOnlyID  - The list of store IDs to update, if undefined, all stores will be updated.
+	 * @param {MapBoxListing[]}      stores       - The list of stores to update the markers for.
+	 * @param {undefined | number[]} updateOnlyID - The list of store IDs to update, if undefined, all stores will be updated.
 	 */
-	function updateMarkers(
-		stores: MapBoxListing[],
-		updateOnlyID: undefined | number[] = undefined
-	) {
-		stores?.forEach( ( store ) => {
-			if ( updateOnlyID && ! updateOnlyID.includes( store.id ) ) {
+	const updateMarkers = useCallback(
+		(
+			stores: MapBoxListing[],
+			updateOnlyIDs: undefined | number[] = undefined
+		) => {
+			stores?.forEach( ( store ) => {
+				if ( updateOnlyIDs && ! updateOnlyIDs.includes( store.id ) ) {
+					return;
+				}
+				// Remove the marker
+				removeMarkerEl( store.id, mapRef?.current as HTMLDivElement );
+				// Add the marker to the array
+				mapMarker( store, markersRef, mapIcons as MarkerIcon[] );
+				// Add the marker to the DOM
+				createMarkerEl( markersRef?.current[ store.id ], store, map );
+			} );
+			return stores;
+		},
+		[ map, mapRef, markersRef, mapIcons ]
+	);
+
+	const listenMapClick = useCallback(
+		// useCallback ensures the functions stays identical
+		( event: mapboxgl.MapMouseEvent & mapboxgl.EventData ) => {
+
+			if (
+				event.originalEvent.target?.classList.contains(
+					'mapboxgl-marker'
+				)
+			)
+				return console.log( 'clicked on a marker' );
+
+			// store the last clicked position
+			setLngLat( event.lngLat );
+			const clickedPoint = [
+				event.lngLat.lng,
+				event.lngLat.lat,
+			] as CoordinatesDef;
+
+			//const clickedFeatures = _map.queryRenderedFeatures( event.point );
+
+			// Find features intersecting the bounding box.
+			const clickedEl = (
+				event.originalEvent?.target as HTMLElement
+			 )?.closest( 'button' ) as MarkerHTMLElement | null;
+
+			/**
+			 * The map was clicked
+			 */
+			if ( clickedEl?.nodeName !== 'BUTTON' ) {
+				// remove the distance data from each listing
+				clearListingsDistances( listings );
+
+				// clear the temp marker from the list
+				removeTempMarkers( mapRef );
+
+				/**
+				 * Add a pin marker case
+				 */
+				const newTempMarker = generateTempMarkerData(
+					getNextId( listings ),
+					clickedPoint
+				);
+
+				// store the new marker in the markers array
+				const newListings = [
+					...removeTempListings( listings ),
+					newTempMarker,
+				];
+
+				setListings( newListings );
+				return updateMarkers( newListings, [ newTempMarker.id ] );
+			}
+
+			/**
+			 * A marker was clicked, get the marker data
+			 */
+			const markerData: MapBoxListing | undefined = getMarkerData(
+				Number( clickedEl.dataset?.id ) || 0,
+				listings
+			);
+
+			/**
+			 * Editor case
+			 */
+			if ( isEditor ) {
+				console.log(
+					'todo: handle editor click',
+					clickedEl,
+					markerData
+				);
 				return;
 			}
-			// Remove the marker
-			removeMarkerEl( store.id, mapRef?.current as HTMLDivElement );
-			// Add the marker to the array
-			mapMarker(
-				store,
-				map,
-				mapRef as RefObject< HTMLDivElement >,
-				markersRef,
-				mapIcons as MarkerIcon[]
-			);
-			// Add the marker to the DOM
-			createMarkerEl( markersRef?.current[ store.id ], store, map );
-		} );
-	}
+
+			const markerCoordinates = markerData?.geometry?.coordinates;
+
+			/**
+			 * GeoCoder Marker case
+			 */
+			if ( clickedEl?.dataset?.markerName === 'geocoder-marker' ) {
+				return;
+			}
+
+			/**
+			 * Click Marker case
+			 */
+			if ( clickedEl.dataset?.markerName === 'click-marker' ) {
+				// prints the popup that allow the user to find a location
+				addPopup(
+					map,
+					markerData,
+					<PinPointPopup
+						location={ markerCoordinates ?? clickedPoint }
+						listings={ listings }
+						setFilteredListings={ setFilteredListings }
+						mapRef={ mapRef }
+						map={ map }
+					/>
+				);
+				return;
+			}
+
+			/**
+			 * default Marker case
+			 */
+			if ( markerData ) {
+				// popup the marker data on the currentMap
+				addPopup( map, markerData );
+			}
+		},
+		[ map, setMap, listings, setFilteredListings ]
+	);
 
 	useEffect( () => {
 		if ( loaded ) return;
@@ -140,134 +238,42 @@ export function MapBox( {
 		}
 	}, [] );
 
+	const removeListeners = () => {
+		map.off( 'click', listenMapClick );
+		map.on( 'click', listenMapClick );
+	};
+
 	useEffect( () => {
 		if ( loaded ) {
-			// Listen for clicks on the map
-			map.on( 'click', ( event: MapMouseEvent ) => {
-				// store the last clicked position
-				setLngLat( event.lngLat );
-				const clickedPoint = [
-					event.lngLat.lng,
-					event.lngLat.lat,
-				] as CoordinatesDef;
-
-				//const clickedFeatures = map.queryRenderedFeatures( event.point );
-
-				// Find features intersecting the bounding box.
-				const clickedEl = (
-					event.originalEvent?.target as HTMLElement
-				 )?.closest( 'button' ) as MarkerHTMLElement | null;
-
-				/**
-				 * The map was clicked
-				 */
-				if ( clickedEl?.nodeName !== 'BUTTON' ) {
-					// remove the distance data from each listing
-					clearListingsDistances( listings );
-
-					// clear the temp marker from the list
-					removeTempMarkers( mapRef );
-
-					/**
-					 * Add a pin marker case
-					 */
-					const newTempMarker = generateTempMarkerData(
-						getNextId( listings ),
-						clickedPoint
-					);
-
-					// store the new marker in the markers array
-					const newListings = [
-						...removeTempListings( listings ),
-						newTempMarker,
-					];
-
-					setListings( newListings );
-					updateMarkers( newListings, newTempMarker.id );
-					return;
-				}
-
-				/**
-				 * A marker was clicked, get the marker data
-				 */
-				const markerData: MapBoxListing | undefined = getMarkerData(
-					Number( clickedEl.dataset?.id ) || 0,
-					listings
-				);
-
-				/**
-				 * Editor case
-				 */
-				if ( isEditor ) {
-					console.log(
-						'todo: handle editor click',
-						clickedEl,
-						markerData
-					);
-					return;
-				}
-
-				const markerCoordinates = markerData?.geometry?.coordinates;
-
-				/**
-				 * GeoCoder Marker case
-				 */
-				if ( clickedEl?.dataset?.markerName === 'geocoder-marker' ) {
-					return;
-				}
-
-				/**
-				 * Click Marker case
-				 */
-				if ( clickedEl.dataset?.markerName === 'click-marker' ) {
-					// prints the popup that allow the user to find a location
-					addPopup(
-						map,
-						markerData,
-						<PinPointPopup
-							location={ markerCoordinates ?? clickedPoint }
-							listings={ listings }
-							setFilteredListings={ setFilteredListings }
-							mapRef={ mapRef }
-							map={ map }
-						/>
-					);
-					return;
-				}
-
-				/**
-				 * default Marker case
-				 */
-				if ( markerData ) {
-					// popup the marker data on the currentMap
-					addPopup( map, markerData );
-				}
-			} );
-
+			removeListeners();
 			updateMarkers( getListing( listings, filteredListings ) );
 		}
 	}, [ loaded, listings, filteredListings ] );
+
+	useEffect( () => {
+		if ( loaded ) {
+			map.on( 'click', listenMapClick );
+		}
+	}, [ loaded ] );
 
 	/**
 	 * if the access key isn't provided
 	 */
 	if ( typeof mapDefaults?.accessToken !== 'string' ) {
 		return (
-			<>
-				<div>
-					<p>
-						<a
-							href="//account.mapbox.com/auth/signup/"
-							target="_blank"
-							rel="noreferrer"
-						>
-							Get a Mapbox Access Token
-						</a>
-						then add the token to your config.php file as a constant
-						<code>MAPBOX_TOKEN</code>
-					</p>
-				</div>
-			</>
+			<div>
+				<p>
+					<a
+						href="//account.mapbox.com/auth/signup/"
+						target="_blank"
+						rel="noreferrer"
+					>
+						Get a Mapbox Access Token
+					</a>
+					then add the token to your config.php file as a constant
+					<code>MAPBOX_TOKEN</code>
+				</p>
+			</div>
 		);
 	}
 

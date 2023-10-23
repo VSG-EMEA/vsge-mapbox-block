@@ -79,29 +79,6 @@ export function setMapThreeDimensionality(
 }
 
 /**
- * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
- * class from any previously active feature.
- *
- * @param {MapBoxListing} item - The `item` parameter is of type `Feature`, which is likely an object
- *                             representing a geographic feature on a map. It may contain properties such as the feature's ID,
- *                             coordinates, and other attributes. The function `highlightListing` is using this parameter to
- *                             identify a specific feature and highlight its corresponding
- */
-export function highlightListing( item: MapBoxListing ) {
-	document.getElementById( 'feature-listing' )?.classList.add( 'filtered' );
-
-	const activeItem = document.getElementsByClassName( 'active-store' );
-	if ( activeItem[ 0 ] ) {
-		activeItem[ 0 ].classList.remove( 'active-store' );
-	}
-
-	if ( item.properties ) {
-		const listing = document.getElementById( 'marker-' + item.id );
-		listing?.classList.add( 'active-store' );
-	}
-}
-
-/**
  * This function enables or disables mouse wheel zoom and touch zoom/rotate on a map depending on the
  * boolean value passed as an argument.
  *
@@ -120,41 +97,6 @@ export function setMapWheelZoom( map: mapboxgl.Map, mouseWheelZoom: boolean ) {
 			map.touchZoomRotate.disable();
 		}
 	}
-}
-
-/**
- * Enables the listing feature on the map.
- *
- * @param {mapboxgl.Map}  map    - The map object.
- * @param {MapBoxListing} marker - The listing marker object.
- */
-export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
-	console.log( 'Listing enabled', marker );
-
-	// 1. Fly to the point
-	flyToStore( map, marker );
-	const getPopupTemplate = (
-		marker: MapBoxListing
-	): JSX.Element | undefined => {
-		if ( marker.type === 'Feature' ) {
-			return <PopupContent { ...marker.properties } />;
-		} else if ( marker.properties.name === 'geocoder' ) {
-			return (
-				<SearchPopup
-					{ ...( marker.properties as SearchMarkerProps ) }
-				/>
-			);
-		} else if ( marker.properties.name === 'click-marker' ) {
-			return <PinPointPopup location={ marker.geometry.coordinates } />;
-		}
-		return undefined;
-	};
-
-	// 2. Close all other popups and display popup for clicked store
-	addPopup( map, marker, getPopupTemplate( marker ) );
-
-	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
-	highlightListing( marker );
 }
 
 /**
