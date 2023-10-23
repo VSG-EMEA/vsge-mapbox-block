@@ -95,14 +95,6 @@ export function MapBox( {
 	const listenMapClick = useCallback(
 		// useCallback ensures the functions stays identical
 		( event: mapboxgl.MapMouseEvent & mapboxgl.EventData ) => {
-
-			if (
-				event.originalEvent.target?.classList.contains(
-					'mapboxgl-marker'
-				)
-			)
-				return console.log( 'clicked on a marker' );
-
 			// store the last clicked position
 			setLngLat( event.lngLat );
 			const clickedPoint = [
@@ -142,63 +134,61 @@ export function MapBox( {
 				];
 
 				setListings( newListings );
-				return updateMarkers( newListings, [ newTempMarker.id ] );
-			}
-
-			/**
-			 * A marker was clicked, get the marker data
-			 */
-			const markerData: MapBoxListing | undefined = getMarkerData(
-				Number( clickedEl.dataset?.id ) || 0,
-				listings
-			);
-
-			/**
-			 * Editor case
-			 */
-			if ( isEditor ) {
-				console.log(
-					'todo: handle editor click',
-					clickedEl,
-					markerData
+				updateMarkers( newListings, [ newTempMarker.id ] );
+			} else {
+				/**
+				 * A marker was clicked, get the marker data
+				 */
+				const markerData: MapBoxListing | undefined = getMarkerData(
+					Number( clickedEl.dataset?.id ) || 0,
+					listings
 				);
-				return;
-			}
 
-			const markerCoordinates = markerData?.geometry?.coordinates;
+				/**
+				 * Editor case
+				 */
+				if ( isEditor ) {
+					console.log(
+						'todo: handle editor click',
+						clickedEl,
+						markerData
+					);
+				}
 
-			/**
-			 * GeoCoder Marker case
-			 */
-			if ( clickedEl?.dataset?.markerName === 'geocoder-marker' ) {
-				return;
-			}
+				const markerCoordinates = markerData?.geometry?.coordinates;
 
-			/**
-			 * Click Marker case
-			 */
-			if ( clickedEl.dataset?.markerName === 'click-marker' ) {
-				// prints the popup that allow the user to find a location
-				addPopup(
-					map,
-					markerData,
-					<PinPointPopup
-						location={ markerCoordinates ?? clickedPoint }
-						listings={ listings }
-						setFilteredListings={ setFilteredListings }
-						mapRef={ mapRef }
-						map={ map }
-					/>
-				);
-				return;
-			}
+				/**
+				 * GeoCoder Marker case
+				 */
+				if ( clickedEl?.dataset?.markerName === 'geocoder-marker' ) {
+					return;
+				}
 
-			/**
-			 * default Marker case
-			 */
-			if ( markerData ) {
-				// popup the marker data on the currentMap
-				addPopup( map, markerData );
+				/**
+				 * Click Marker case
+				 */
+				if ( clickedEl.dataset?.markerName === 'click-marker' ) {
+					// prints the popup that allow the user to find a location
+					addPopup(
+						map,
+						markerData,
+						<PinPointPopup
+							location={ markerCoordinates ?? clickedPoint }
+							listings={ listings }
+							setFilteredListings={ setFilteredListings }
+							mapRef={ mapRef }
+							map={ map }
+						/>
+					);
+				}
+
+				/**
+				 * default Marker case
+				 */
+				if ( markerData ) {
+					// popup the marker data on the currentMap
+					addPopup( map, markerData );
+				}
 			}
 		},
 		[ map, setMap, listings, setFilteredListings ]
@@ -238,21 +228,18 @@ export function MapBox( {
 		}
 	}, [] );
 
-	const removeListeners = () => {
-		map.off( 'click', listenMapClick );
-		map.on( 'click', listenMapClick );
-	};
-
 	useEffect( () => {
 		if ( loaded ) {
-			removeListeners();
+			map.off( 'click', listenMapClick );
 			updateMarkers( getListing( listings, filteredListings ) );
+			map.on( 'click', listenMapClick );
 		}
-	}, [ loaded, listings, filteredListings ] );
+	}, [ listings, filteredListings ] );
 
 	useEffect( () => {
 		if ( loaded ) {
-			map.on( 'click', listenMapClick );
+			updateMarkers( getListing( listings, filteredListings ) );
+			map.once( 'click', listenMapClick );
 		}
 	}, [ loaded ] );
 
