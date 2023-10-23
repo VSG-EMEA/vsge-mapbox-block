@@ -22,19 +22,19 @@ import { SEARCH_RESULTS_SHOWN } from '../../constants';
  * @return A `mapboxgl.Popup` object is being returned.
  */
 export function addPopup(
-	map: mapboxgl.Map,
+	map: { current: mapboxgl.Map },
 	marker: MapBoxListing | MapboxGeocoder.Result,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup {
 	if ( ! marker ) {
-		console.warn( 'Marker not found' );
+		console.error( 'Marker not found', marker );
 		return;
 	}
 
 	const popupRef: RefObject< HTMLDivElement > = createRef();
 
 	// Create a new DOM root and save it to the React ref
-	popupRef.current = document.createElement( 'div' );
+	popupRef.current = document.createElement( 'div' ) as HTMLDivElement;
 	const root = createRoot( popupRef.current );
 
 	// Render a Marker Component on our new DOM node
@@ -47,7 +47,7 @@ export function addPopup(
 	} )
 		.setLngLat( marker?.geometry?.coordinates as CoordinatesDef )
 		.setDOMContent( popupRef.current )
-		.addTo( map );
+		.addTo( map.current );
 }
 
 /**
@@ -72,13 +72,13 @@ export function removePopups( mapRef: RefObject< HTMLDivElement > ) {
  * @param {MapboxGeocoder.Result}     location            - The location object.
  * @param {MapBoxListing[]}           sortedNearestStores - The sorted list of nearest stores.
  * @param {RefObject<HTMLDivElement>} mapRef              - The reference to the map container.
- * @param {mapboxgl.Map}              map                 - The map object.
+ * @param map      The map object.
  */
 export function showNearestStore(
 	location: MapboxGeocoder.Result,
 	sortedNearestStores: MapBoxListing[],
 	mapRef: RefObject< HTMLDivElement >,
-	map: mapboxgl.Map
+	map: { current: mapboxgl.Map }
 ): MapBoxListing[] {
 	const newFilteredListings: MapBoxListing[] = [
 		...sortedNearestStores.slice( 0, SEARCH_RESULTS_SHOWN ),

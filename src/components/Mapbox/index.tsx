@@ -3,7 +3,6 @@ import { TopBar } from '../TopBar';
 import { useCallback, useEffect } from '@wordpress/element';
 import { useMapboxContext } from './MapboxContext';
 import { getListing, getMarkerData } from './utils';
-import { MapMouseEvent } from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import { GeoCoder } from '../Geocoder/Geocoder';
 import {
@@ -51,10 +50,10 @@ export function MapBox( {
 	const {
 		map,
 		mapRef,
-		setMap,
 		setGeoCoder,
 		geocoderRef,
 		markersRef,
+		lngLat,
 		setLngLat,
 		listings,
 		setListings,
@@ -76,6 +75,9 @@ export function MapBox( {
 			stores: MapBoxListing[],
 			updateOnlyIDs: undefined | number[] = undefined
 		) => {
+			// clear the temp marker from the list
+			removeTempMarkers( mapRef );
+
 			stores?.forEach( ( store ) => {
 				if ( updateOnlyIDs && ! updateOnlyIDs.includes( store.id ) ) {
 					return;
@@ -87,6 +89,7 @@ export function MapBox( {
 				// Add the marker to the DOM
 				createMarkerEl( markersRef?.current[ store.id ], store, map );
 			} );
+
 			return stores;
 		},
 		[ map, mapRef, markersRef, mapIcons ]
@@ -95,6 +98,8 @@ export function MapBox( {
 	const listenMapClick = useCallback(
 		// useCallback ensures the functions stays identical
 		( event: mapboxgl.MapMouseEvent & mapboxgl.EventData ) => {
+			console.log( event );
+
 			// store the last clicked position
 			setLngLat( event.lngLat );
 			const clickedPoint = [
@@ -148,7 +153,7 @@ export function MapBox( {
 				 * Editor case
 				 */
 				if ( isEditor ) {
-					console.log(
+					return console.log(
 						'todo: handle editor click',
 						clickedEl,
 						markerData
@@ -180,6 +185,7 @@ export function MapBox( {
 							map={ map }
 						/>
 					);
+					return;
 				}
 
 				/**
@@ -191,7 +197,7 @@ export function MapBox( {
 				}
 			}
 		},
-		[ map, setMap, listings, setFilteredListings ]
+		[ map, listings, setFilteredListings ]
 	);
 
 	useEffect( () => {
@@ -199,19 +205,19 @@ export function MapBox( {
 
 		if ( mapDefaults?.accessToken && mapRef?.current ) {
 			// Initialize map and store the map instance
-			const _map = initMap( mapRef.current, attributes, mapDefaults );
-
-			setMap( _map );
+			map.current = initMap( mapRef.current, attributes, mapDefaults );
 
 			// Add the language control to the map
 			const language = new MapboxLanguage();
-			_map.addControl( language );
+			map.current.addControl( language );
+
+			map.current.once( 'click', listenMapClick );
 
 			// Add the geocoder to the map
 			if ( attributes.geocoderEnabled ) {
 				setGeoCoder(
 					initGeoCoder(
-						_map,
+						map.current,
 						mapRef,
 						markersRef,
 						geocoderRef,
@@ -229,19 +235,16 @@ export function MapBox( {
 	}, [] );
 
 	useEffect( () => {
-		if ( loaded ) {
-			map.off( 'click', listenMapClick );
-			updateMarkers( getListing( listings, filteredListings ) );
-			map.on( 'click', listenMapClick );
+		if ( loaded && map.current ) {
+			map.current.once( 'click', listenMapClick );
 		}
-	}, [ listings, filteredListings ] );
+	}, [ lngLat ] );
 
 	useEffect( () => {
-		if ( loaded ) {
+		if ( loaded && map.current ) {
 			updateMarkers( getListing( listings, filteredListings ) );
-			map.once( 'click', listenMapClick );
 		}
-	}, [ loaded ] );
+	}, [ listings, filteredListings, loaded ] );
 
 	/**
 	 * if the access key isn't provided

@@ -36,12 +36,12 @@ export function recenterView( map, defaults ) {
  * to a new location and zoom level.
  */
 export function flyToStore(
-	map: mapboxgl.Map,
+	map: { current: mapboxgl.Map },
 	store: MapBoxListing,
 	zoom: number = 8
 ) {
 	if ( store?.geometry?.coordinates )
-		return map.flyTo( {
+		return map.current.flyTo( {
 			center: store.geometry.coordinates,
 			zoom,
 		} );
@@ -104,7 +104,7 @@ export function filterListingsBy(
  * @param                   mapRef   The map reference is an instance of the Mapbox GL JS map that is being used to display the map.
  */
 export function fitInView(
-	map: mapboxgl.Map,
+	map: { current: mapboxgl.Map },
 	listings: MapBoxListing[],
 	mapRef: React.RefObject< HTMLDivElement > | undefined
 ) {
@@ -131,8 +131,8 @@ export function fitInView(
 			bounds._ne.lng = lng - 0.5;
 		}
 
-		map.fitBounds( bounds, { padding } );
+		map.current.fitBounds( bounds, { padding } );
 	}
 
-	map.resize();
+	map.current.resize();
 }

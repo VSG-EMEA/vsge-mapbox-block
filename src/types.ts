@@ -58,9 +58,8 @@ export type MapAttributes = {
 };
 
 export type MountedMapsContextValue = {
-	map: mapboxgl.Map;
+	map: RefObject< mapboxgl.Map | null >;
 	lngLat?: LngLat;
-	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
 	listings: MapBoxListing[];
 	filteredListings: MapBoxListing[];
 	setListings: Dispatch< SetStateAction< MapBoxListing[] > >;

@@ -2,10 +2,9 @@ import {
 	CoordinatesDef,
 	MapBoxListing,
 	MarkerProps,
-	MountedMapsContextValue,
 	SearchMarkerProps,
 } from '../../types';
-import { Button, Icon } from '@wordpress/components';
+import { Icon } from '@wordpress/components';
 import { TagList } from '../TagItem';
 import { mapMarker } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
@@ -14,7 +13,6 @@ import { layouts, svgArray } from '@mapbox/maki';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
-import { useMapboxContext } from '../Mapbox/MapboxContext';
 import { showNearestStore } from './Popup';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
@@ -121,7 +119,7 @@ export function SearchPopup( props: SearchMarkerProps ): JSX.Element {
 }
 
 export function PinPointPopup( props: {
-	map: mapboxgl.Map;
+	map: { current: mapboxgl.Map };
 	location: CoordinatesDef;
 	mapRef: RefObject< HTMLDivElement >;
 	listings: MapBoxListing[];

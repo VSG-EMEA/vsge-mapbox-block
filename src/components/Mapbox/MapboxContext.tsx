@@ -1,4 +1,9 @@
-import { createContext, useContext, useRef, useState } from '@wordpress/element';
+import {
+	createContext,
+	useContext,
+	useRef,
+	useState,
+} from '@wordpress/element';
 import { getMapDefaults } from '../../utils';
 import {
 	MapAttributes,
@@ -7,7 +12,7 @@ import {
 } from '../../types';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import type { Context, RefObject } from 'react';
+import type { Context, MutableRefObject, RefObject } from 'react';
 
 export const MapboxContext: Context< MountedMapsContextValue > = createContext<
 	Context< MountedMapsContextValue > | undefined
@@ -33,7 +38,7 @@ export function MapProvider( {
 	attributes: MapAttributes;
 	children: JSX.Element;
 } ) {
-	const [ map, setMap ] = useState< mapboxgl.Map >();
+	const map: MutableRefObject< mapboxgl.Map | null > = useRef( null );
 	const [ geoCoder, setGeoCoder ] = useState< MapboxGeocoder | undefined >(
 		undefined
 	);
@@ -61,7 +66,6 @@ export function MapProvider( {
 		<MapboxContext.Provider
 			value={ {
 				map,
-				setMap,
 				lngLat,
 				setLngLat,
 				listings,

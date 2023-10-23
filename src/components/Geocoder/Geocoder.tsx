@@ -96,7 +96,7 @@ export const initGeomarker = (
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
  */
 export const initGeocoder = (
-	map: mapboxgl.Map,
+	map: { current: mapboxgl.Map },
 	mapRef: RefObject< HTMLDivElement > | undefined,
 	geocoderRef: RefObject< HTMLDivElement > | undefined,
 	marker: mapboxgl.Marker,

@@ -7,7 +7,7 @@ import { fitInView } from '../../utils/view';
 export function createMarkerEl(
 	markerEl: HTMLElement,
 	listing: MapBoxListing,
-	map: mapboxgl.Map
+	map: { current: mapboxgl.Map }
 ) {
 	// Render a Marker Component on our new DOM node
 	const markerElement = new mapboxgl.Marker( markerEl, {
@@ -17,7 +17,7 @@ export function createMarkerEl(
 		.setLngLat(
 			( listing?.geometry?.coordinates as LngLatLike ) || [ 0, 0 ]
 		)
-		.addTo( map );
+		.addTo( map.current );
 
 	markerElement.on( 'dragend', ( event ) => {
 		const lngLat = markerElement.getLngLat();
