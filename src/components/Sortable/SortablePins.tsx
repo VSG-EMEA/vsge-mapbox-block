@@ -1,4 +1,4 @@
-import { useContext, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
@@ -22,7 +22,7 @@ import {
 	TagArray,
 } from '../../types';
 import { Position } from 'geojson';
-import { MapboxContext } from '../Mapbox/MapboxContext';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
 
 export const PinCard = ( props: {
 	item: MapBoxListing;

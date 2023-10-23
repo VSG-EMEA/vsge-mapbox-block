@@ -136,7 +136,7 @@ export function PinPointPopup( props: {
 	return (
 		<div className={ 'mapbox-popup-inner mapbox-popup-newpin' }>
 			<p>Find A location?</p>
-			<Button
+			<button
 				onClick={ () => {
 					const sortedNearestStores = locateNearestStore(
 						location,
@@ -163,14 +163,14 @@ export function PinPointPopup( props: {
 				} }
 			>
 				{ __( 'Find the nearest store?' ) }
-			</Button>
-			<Button
+			</button>
+			<button
 				onClick={ () => {
 					setFilteredListings( listings );
 				} }
 			>
 				Reset
-			</Button>
+			</button>
 		</div>
 	);
 }

@@ -44,18 +44,13 @@ function geocoderMarkerDefaults(
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
  *
- * @param id
- * @param markersRef
- * @param map        - mapboxgl.Map - This is an instance of the Mapbox GL JS map object on which the marker
- *                   will be placed.
- * @param mapRef
+ * @param id - The id of the marker.
+ * @param markersRef - The ref object for the map container.
  * @return A mapboxgl.Marker object is being returned.
  */
 export const initGeomarker = (
 	id: number,
-	markersRef: RefObject< HTMLButtonElement[] >,
-	map: mapboxgl.Map,
-	mapRef: RefObject< HTMLDivElement >
+	markersRef: RefObject< HTMLButtonElement[] >
 ): HTMLButtonElement | null => {
 	markersRef.current[ id ] = null;
 
@@ -75,8 +70,6 @@ export const initGeomarker = (
 		<Marker
 			className={ 'marker marker-geocoder disabled' }
 			feature={ markerData }
-			map={ map }
-			mapRef={ mapRef }
 			children={
 				<PinPoint
 					color={ defaultStyle.color }

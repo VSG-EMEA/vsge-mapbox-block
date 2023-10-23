@@ -10,29 +10,23 @@ import type { RefObject } from 'react';
  *
  * @param prop          `Marker`: the name of the function being exported
  * @param prop.feature  `Feature`: the feature being rendered
- * @param prop.map      `Map`: the map being rendered
  * @param prop.children `JSX.Element`: the children of the marker
- * @param prop.mapRef
  * @return JSX element is being returned, which is a button with an onClick event and various data
  * attributes. The content of the button is either the children passed as a prop or a DefaultMarker
  * component with color and size props based on the feature properties.
  */
 export function Marker( {
 	feature,
-	map,
 	children = null,
-	mapRef,
 }: {
 	feature: MapBoxListing;
-	map: mapboxgl.Map;
 	children?: JSX.Element | null;
-	mapRef: RefObject< HTMLDivElement >;
 } ): JSX.Element {
 	const slug = safeSlug( feature.properties.name );
 
 	return (
 		<button
-			className={ 'marker' } // this is important to prevent duplicates
+			className={ 'marker marker-' + feature.id } // this is important to prevent duplicates
 			id={
 				feature.type !== 'temp' ? 'marker-' + feature.id : 'marker-temp'
 			}
