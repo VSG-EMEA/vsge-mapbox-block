@@ -1,8 +1,13 @@
-import { Feature, Geometry } from '@turf/turf';
+import type { Feature, Geometry } from '@turf/turf';
 import mapboxgl, { LngLat } from 'mapbox-gl';
-import type { Dispatch, RefObject, SetStateAction } from 'react';
+import type {
+	MutableRefObject,
+	ComponentType,
+	Dispatch,
+	RefObject,
+	SetStateAction,
+} from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { MutableRefObject } from 'react';
 
 export type CoordinatesDef = [ number, number ];
 
@@ -58,25 +63,27 @@ export type MapAttributes = {
 	mapboxOptions: MapboxOptions;
 };
 
-export type MountedMapsContextValue = {
-	map: MutableRefObject< mapboxgl.Map | null >;
-	lngLat?: LngLat;
-	listings: MapBoxListing[];
-	filteredListings: MapBoxListing[];
-	setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
-	setFilteredListings: Dispatch< MapBoxListing[] >;
-	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
-	geoCoder?: MapboxGeocoder;
-	setGeoCoder?: SetStateAction< any >;
-	mapRef?: RefObject< HTMLDivElement >;
-	markersRef: RefObject< HTMLButtonElement[] >;
-	geocoderRef?: RefObject< HTMLDivElement >;
-	loaded: boolean;
-	setLoaded: Dispatch< SetStateAction< boolean > >;
-	mapDefaults?: MapboxBlockDefaults;
-	mapIcons?: MarkerIcon[];
-	Provider: React.ComponentType;
-};
+export type MountedMapsContextValue =
+	| {
+			map: MutableRefObject< mapboxgl.Map | null >;
+			lngLat?: LngLat;
+			listings: MapBoxListing[];
+			filteredListings: MapBoxListing[];
+			setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
+			setFilteredListings: Dispatch< MapBoxListing[] >;
+			setLngLat: Dispatch< SetStateAction< LngLat | null > >;
+			geoCoder?: MapboxGeocoder;
+			setGeoCoder?: SetStateAction< any >;
+			mapRef?: RefObject< HTMLDivElement >;
+			markersRef: RefObject< HTMLButtonElement[] >;
+			geocoderRef?: RefObject< HTMLDivElement >;
+			loaded: boolean;
+			setLoaded: Dispatch< SetStateAction< boolean > >;
+			mapDefaults?: MapboxBlockDefaults;
+			mapIcons?: MarkerIcon[];
+			Provider: ComponentType;
+	  }
+	| undefined;
 
 export type selectOptions = {
 	label: string;
@@ -151,12 +158,6 @@ export interface MarkerPropsStyle {
 export interface SearchMarkerProps extends MarkerProps {
 	category: string;
 	maki: string;
-}
-
-export interface MarkerItem {
-	geometry: Geometry;
-	properties?: MarkerProps;
-	element?: HTMLElement;
 }
 
 export interface MarkerHTMLElement extends HTMLElement {

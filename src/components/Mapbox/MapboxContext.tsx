@@ -14,9 +14,8 @@ import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import type { Context, MutableRefObject, RefObject } from 'react';
 
-export const MapboxContext = createContext<
-	Context< MountedMapsContextValue > | undefined
->( undefined );
+export const MapboxContext: Context< MountedMapsContextValue > =
+	createContext( undefined );
 
 /**
  * This is a MapProvider component that provides a Mapbox context to its children.

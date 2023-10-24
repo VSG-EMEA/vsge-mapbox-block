@@ -131,6 +131,8 @@ export function MapBox( {
 			// Find features intersecting the bounding box.
 			const clickedEl = event.originalEvent?.target as HTMLElement;
 
+			if ( ! mapRef ) return;
+
 			/**
 			 * The map was clicked
 			 */
@@ -167,6 +169,8 @@ export function MapBox( {
 				'.mapboxgl-marker'
 			) as MarkerHTMLElement | null;
 
+			if ( ! markerEl ) return console.log( 'no marker data found' );
+
 			/**
 			 * A marker was clicked, get the marker data
 			 */
@@ -198,7 +202,10 @@ export function MapBox( {
 			/**
 			 * Click Marker case
 			 */
-			if ( markerEl?.dataset?.markerName === 'click-marker' ) {
+			if (
+				markerEl?.dataset?.markerName === 'click-marker' &&
+				markerData
+			) {
 				// prints the popup that allow the user to find a location
 				addPopup(
 					map,
