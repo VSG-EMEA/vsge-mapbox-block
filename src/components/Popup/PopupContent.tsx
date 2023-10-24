@@ -137,28 +137,34 @@ export function PinPointPopup( props: {
 			<p>Find A location?</p>
 			<button
 				onClick={ () => {
+					// get the current temp pin data
+					const currentPinData = listings.find( ( listing ) => {
+						return listing.type === 'Temp';
+					} );
+					// sort the array and get the nearest store
 					const sortedNearestStores = locateNearestStore(
 						location,
 						listings
 					);
+					// create a new temp pin
+					const myLocationPin = {
+						...currentPinData,
+						text: __( 'My location' ),
+						place_name: __( 'Clicked Pin' ),
+						geometry: {
+							coordinates: location,
+						},
+						properties: {
+							icon: 'myLocation',
+						},
+					};
 					const sortedListings = showNearestStore(
-						{
-							text: __( 'My location' ),
-							place_name: __( 'Clicked Pin' ),
-							geometry: {
-								coordinates: location,
-							},
-							properties: {
-								distance: 0,
-								icon: 'myLocation',
-							},
-						} as unknown as MapboxGeocoder.Result,
+						myLocationPin as unknown as MapboxGeocoder.Result,
 						sortedNearestStores,
 						mapRef as RefObject< HTMLDivElement >,
 						map
 					);
-
-					setFilteredListings( sortedListings );
+					setFilteredListings( [ ...sortedListings, myLocationPin ] );
 				} }
 			>
 				{ __( 'Find the nearest store?' ) }

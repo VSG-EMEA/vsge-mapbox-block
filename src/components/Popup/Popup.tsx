@@ -12,7 +12,7 @@ import { SEARCH_RESULTS_SHOWN } from '../../constants';
  * marker's properties.
  *
  * @param                      map             - The map parameter is a mapboxgl.Map object
- * @param                      map.current - The mapboxgl.Map object representing the map on which the popup will be displayed.
+ * @param                      map.current     - The mapboxgl.Map object representing the map on which the popup will be displayed.
  * @param {MapBoxListing}      marker          - The marker parameter is
  *                                             either a MapBoxListing object or an object with a geometry property that contains coordinates in the
  *                                             LngLatLike format. It is used to set the location of the popup on the map.
@@ -23,7 +23,7 @@ import { SEARCH_RESULTS_SHOWN } from '../../constants';
  * @return A `mapboxgl.Popup` object is being returned.
  */
 export function addPopup(
-	map: RefObject< mapboxgl.Map | null>,
+	map: RefObject< mapboxgl.Map | null >,
 	marker: MapBoxListing | MapboxGeocoder.Result,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup {
@@ -93,7 +93,7 @@ export function showNearestStore(
 		map,
 		location,
 		<SearchPopup
-			icon={ 'geocoder' }
+			icon={ 'user' }
 			name={ location.text }
 			category={ location.properties?.category }
 			maki={ location.properties?.maki }
