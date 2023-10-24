@@ -93,7 +93,7 @@ export function showNearestStore(
 		map,
 		location,
 		<SearchPopup
-			icon={ 'user' }
+			icon={ 'home' }
 			name={ location.text }
 			category={ location.properties?.category }
 			maki={ location.properties?.maki }

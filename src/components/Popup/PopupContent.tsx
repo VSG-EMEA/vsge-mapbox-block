@@ -8,7 +8,7 @@ import { Icon } from '@wordpress/components';
 import { TagList } from '../TagItem';
 import { mapMarker } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
-import { ICON_SIZE } from '../../constants';
+import { ICON_SIZE, MARKER_TYPE_TEMP } from '../../constants';
 import { layouts, svgArray } from '@mapbox/maki';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
@@ -164,7 +164,7 @@ export function PinPointPopup( props: {
 				onClick={ () => {
 					// get the current temp pin data
 					const currentPinData = listings.find( ( listing ) => {
-						return listing.type === 'Temp';
+						return listing.type === MARKER_TYPE_TEMP;
 					} );
 					// sort the array and get the nearest store
 					const sortedNearestStores = locateNearestStore(

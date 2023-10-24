@@ -1,7 +1,7 @@
 // Default marker style
 import { __ } from '@wordpress/i18n';
 import { CoordinatesDef, MapBoxListing, MarkerPropsStyle } from '../../types';
-import { DEFAULT_COLOR, DEFAULT_COLOR_ALT } from '../../constants';
+import { DEFAULT_COLOR, DEFAULT_COLOR_ALT, MARKER_TYPE_TEMP } from '../../constants';
 
 export const defaultMarkerSize: number = 48;
 
@@ -63,7 +63,7 @@ export function generateTempMarkerData(
 ): MapBoxListing {
 	return {
 		id,
-		type: 'Temp',
+		type: MARKER_TYPE_TEMP,
 		properties: {
 			name: 'click-marker',
 			icon: 'pin',
@@ -84,7 +84,7 @@ export function generateGeocoderMarkerData(
 ): MapBoxListing {
 	return {
 		id,
-		type: 'Temp',
+		type: MARKER_TYPE_TEMP,
 		properties: {
 			name: 'geocoder-marker',
 			icon: 'geocoder',
@@ -105,7 +105,7 @@ export function geocoderMarkerDefaults(
 ): MapBoxListing {
 	return {
 		id,
-		type: 'Temp',
+		type: MARKER_TYPE_TEMP,
 		properties: {
 			name: 'geocoder-marker',
 			icon: 'geocoder',

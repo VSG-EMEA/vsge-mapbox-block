@@ -19,6 +19,11 @@ export const ICON_SIZE: number = 36;
 export const DEFAULT_GEOCODER_TYPE_SEARCH: string = 'country,region,postcode';
 
 /**
+ * Markers
+ */
+export const MARKER_TYPE_TEMP = 'Temp';
+
+/**
  * The mapbox map layout styles
  *
  * @see https://docs.mapbox.com/api/maps/styles/#mapbox-styles

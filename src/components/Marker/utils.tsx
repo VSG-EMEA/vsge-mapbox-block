@@ -3,6 +3,7 @@ import { MapBoxListing, MarkerHTMLElement } from '../../types';
 import type { RefObject } from 'react';
 import { getBbox } from '../../utils/spatialCalcs';
 import { fitInView } from '../../utils/view';
+import { MARKER_TYPE_TEMP } from '../../constants';
 
 export function createMarkerEl(
 	markerEl: HTMLElement,
@@ -74,7 +75,7 @@ export function removeTempMarkers(
  */
 export function removeTempListings( listings: MapBoxListing[] ) {
 	return listings.filter( ( listing ) => {
-		return listing.type !== 'Temp';
+		return listing.type !== MARKER_TYPE_TEMP;
 	} );
 }
 
