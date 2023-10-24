@@ -144,8 +144,8 @@ export interface MarkerProps {
 	draggable: boolean;
 	iconSize?: number;
 	iconColor?: string;
-	itemTags?: TagCollection[];
-	itemFilters?: TagCollection[];
+	itemTags?: TagArray;
+	itemFilters?: TagArray;
 	distance?: number;
 }
 

@@ -1,7 +1,7 @@
-import { useMapboxContext } from './MapboxContext';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
 import mapboxgl from 'mapbox-gl';
 import { useEffect } from '@wordpress/element';
-import { MapBox } from './index';
+import { MapBox } from '../Mapbox';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	__experimentalUnitControl as UnitControl,
@@ -22,7 +22,7 @@ import {
 	setMapElevation,
 	setMapThreeDimensionality,
 	setMapWheelZoom,
-} from './utils';
+} from '../Mapbox/utils';
 import classNames from 'classnames';
 import { getMapDefaults } from '../../utils';
 import { EditPanelIcons } from './EditPanelIcons';

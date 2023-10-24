@@ -1,7 +1,7 @@
 import { useBlockProps } from '@wordpress/block-editor';
-import { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
+import type { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
 import { MapProvider } from './components/Mapbox/MapboxContext';
-import { MapEdit } from './components/Mapbox/Edit';
+import { MapEdit } from './components/Edit/Edit';
 import { MapAttributes } from './types';
 
 /**

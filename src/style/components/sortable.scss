@@ -31,13 +31,34 @@
       }
     }
 
+    .sortable-pins-column {
+      width: 50%;
+      align-self: start;
+
+      &__title {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+
+      hr {
+        margin: 0 0 8px;
+      }
+    }
+
     .sortable-pins-checkbox {
       display: flex;
+      margin-bottom: 4px;
       label {
         text-overflow: ellipsis;
         overflow: hidden;
       }
     }
+  }
+
+  .marker-preview {
+    width: 24px;
+    height: 24px;
   }
 
   .icon-item {

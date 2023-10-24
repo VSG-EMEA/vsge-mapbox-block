@@ -1,4 +1,5 @@
 import { FilterCollection, TagCollection } from '../../types';
+import { safeSlug } from '../../utils';
 
 /**
  * This is a TypeScript React component that renders a tag item with a specific ID and value.
@@ -11,13 +12,10 @@ import { FilterCollection, TagCollection } from '../../types';
  * based on the `id` of the `MapFilter` object passed as a prop, and displays the `value` of the
  * `MapFilter` object as its content.
  */
-export const TagItem = ( props: {
-	key: number;
-	attributes: TagCollection;
-} ) => {
+export const TagItem = ( props: { attributes: TagCollection } ) => {
 	return (
 		<span
-			className={ 'tag-' + String( props.key ) }
+			className={ 'tag-' + safeSlug( props.attributes.tag ) }
 			title={ props.attributes.tag }
 		>
 			{ props.attributes.tag }
