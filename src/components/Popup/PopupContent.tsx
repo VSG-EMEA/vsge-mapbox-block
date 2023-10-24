@@ -31,6 +31,7 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 		address = '',
 		city = '',
 		postalCode = '',
+        countryCode = '',
 		country = '',
 		emailAddress = '',
 		website = '',
@@ -55,17 +56,41 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 				) : (
 					<h3>{ name }</h3>
 				) }
-				{ address && <p>{ address }</p> }
-				<p>{ `${ city } - ${ country } ${ postalCode }` }</p>
-				{ emailAddress || (
-					<a href={ 'mailto:' + emailAddress } className={ 'email' }>
-						<p>{ emailAddress }</p>
-					</a>
+				{ address && <p>{ address } { postalCode }</p> }
+				{ phone && (
+					<p>
+						Phone:{ ' ' }
+						<a href={ 'tel:' + phone } className="email-link">
+							{ phone }
+						</a>
+					</p>
 				) }
-				{ phone || (
-					<a href={ 'tel:' + phone }>
-						<p>{ phone }</p>
-					</a>
+
+				<p>
+					{ address && address }
+					<br />
+					{ country && country } { city && city }{ ' ' }
+					{ countryCode && '(' + countryCode + ')' }
+				</p>
+
+				{ website && (
+					<p>
+						Website:{ ' ' }
+						<a href={ '//' + website } className="website-link">
+							{ website }
+						</a>
+					</p>
+				) }
+				{ emailAddress && (
+					<p>
+						Email:{ ' ' }
+						<a
+							href={ 'mailto:' + emailAddress }
+							className="email-link"
+						>
+							{ emailAddress }
+						</a>
+					</p>
 				) }
 				<TagList tags={ itemTags } className={ 'popup-tag-list' } />
 				{ !! distance && (

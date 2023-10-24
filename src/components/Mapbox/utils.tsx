@@ -136,6 +136,13 @@ export function getMarkerData(
 	return markersList.find( ( marker ) => marker.id === id );
 }
 
+/**
+ * Returns a list of MapBoxListing objects based on the given listings and filteredListings.
+ *
+ * @param {MapBoxListing[]} listings         - An array of MapBoxListing objects representing all the listings.
+ * @param {MapBoxListing[]} filteredListings - An array of MapBoxListing objects representing the filtered listings.
+ * @return {MapBoxListing[]} - An array of MapBoxListing objects. If filteredListings is not empty, it returns the filteredListings; otherwise, it returns the listings.
+ */
 export function getListing(
 	listings: MapBoxListing[],
 	filteredListings: MapBoxListing[]

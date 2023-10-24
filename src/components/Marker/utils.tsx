@@ -74,7 +74,7 @@ export function removeTempMarkers(
  */
 export function removeTempListings( listings: MapBoxListing[] ) {
 	return listings.filter( ( listing ) => {
-		return listing.type !== 'temp';
+		return listing.type !== 'Temp';
 	} );
 }
 

@@ -2,6 +2,7 @@ import { Feature, Geometry } from '@turf/turf';
 import mapboxgl, { LngLat } from 'mapbox-gl';
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { MutableRefObject } from 'react';
 
 export type CoordinatesDef = [ number, number ];
 
@@ -58,7 +59,7 @@ export type MapAttributes = {
 };
 
 export type MountedMapsContextValue = {
-	map: RefObject< mapboxgl.Map | null >;
+	map: MutableRefObject< mapboxgl.Map | null >;
 	lngLat?: LngLat;
 	listings: MapBoxListing[];
 	filteredListings: MapBoxListing[];

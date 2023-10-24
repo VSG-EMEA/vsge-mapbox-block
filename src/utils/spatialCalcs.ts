@@ -1,5 +1,5 @@
 import { Coord, distance, Units } from '@turf/turf';
-import { MapBoxListing, MapItem } from '../types';
+import { CoordinatesDef, MapBoxListing, MapItem } from '../types';
 import { LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
 
 /**
@@ -16,24 +16,27 @@ import { LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
  * `distance` property to the store object.
  */
 export function locateNearestStore(
-	result: LngLatLike,
+	result: CoordinatesDef,
 	storesArray: MapBoxListing[]
 ) {
 	const options: { units: Units | undefined } = { units: 'kilometers' };
 
-	storesArray.forEach( function ( store ) {
-		delete store.properties.distance;
-		Object.defineProperty( store.properties, 'distance', {
-			value: distance(
-				result as Coord,
-				store.geometry as Coord,
-				options
-			),
-			writable: true,
-			enumerable: true,
-			configurable: true,
+	storesArray = storesArray
+		.filter( ( store ) => store.type === 'Feature' )
+		.map( ( store ) => {
+			delete store.properties.distance;
+			Object.defineProperty( store.properties, 'distance', {
+				value: distance(
+					result as Coord,
+					store.geometry as Coord,
+					options
+				),
+				writable: true,
+				enumerable: true,
+				configurable: true,
+			} );
+			return store;
 		} );
-	} );
 
 	storesArray.sort( ( a, b ) => {
 		if ( ! a.properties.distance || ! b.properties.distance ) {

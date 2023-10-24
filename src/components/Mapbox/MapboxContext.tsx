@@ -14,7 +14,7 @@ import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import type { Context, MutableRefObject, RefObject } from 'react';
 
-export const MapboxContext: Context< MountedMapsContextValue > = createContext<
+export const MapboxContext = createContext<
 	Context< MountedMapsContextValue > | undefined
 >( undefined );
 
@@ -64,24 +64,26 @@ export function MapProvider( {
 
 	return (
 		<MapboxContext.Provider
-			value={ {
-				map,
-				lngLat,
-				setLngLat,
-				listings,
-				setListings,
-				filteredListings,
-				setFilteredListings,
-				loaded,
-				setLoaded,
-				mapDefaults,
-				mapRef,
-				geoCoder,
-				setGeoCoder,
-				geocoderRef,
-				markersRef,
-				mapIcons,
-			} }
+			value={
+				{
+					map,
+					lngLat,
+					setLngLat,
+					listings,
+					setListings,
+					filteredListings,
+					setFilteredListings,
+					loaded,
+					setLoaded,
+					mapDefaults,
+					mapRef,
+					geoCoder,
+					setGeoCoder,
+					geocoderRef,
+					markersRef,
+					mapIcons,
+				} as MountedMapsContextValue
+			}
 		>
 			{ children }
 		</MapboxContext.Provider>
