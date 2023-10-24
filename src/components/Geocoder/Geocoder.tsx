@@ -44,7 +44,7 @@ function geocoderMarkerDefaults(
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
  *
- * @param id - The id of the marker.
+ * @param id         - The id of the marker.
  * @param markersRef - The ref object for the map container.
  * @return A mapboxgl.Marker object is being returned.
  */
@@ -86,6 +86,7 @@ export const initGeomarker = (
  * Initializes the geocoder for the map.
  *
  * @param {mapboxgl.Map}                          map                 - The Mapbox map object.
+ * @param                                         map.current
  * @param {RefObject<HTMLDivElement> | undefined} mapRef              - The ref object for the map container.
  * @param {RefObject<HTMLDivElement> | undefined} geocoderRef         - The ref object for the geocoder container.
  * @param                                         marker              - The marker object.
@@ -96,7 +97,7 @@ export const initGeomarker = (
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
  */
 export const initGeocoder = (
-	map: { current: mapboxgl.Map },
+	map: RefObject< mapboxgl.Map | null >,
 	mapRef: RefObject< HTMLDivElement > | undefined,
 	geocoderRef: RefObject< HTMLDivElement > | undefined,
 	marker: mapboxgl.Marker,
@@ -119,7 +120,7 @@ export const initGeocoder = (
 
 		if ( geocoder && geocoderRef ) {
 			( geocoderRef.current as HTMLElement ).appendChild(
-				geocoder.onAdd( map )
+				geocoder.onAdd( map.current )
 			);
 		}
 
@@ -146,7 +147,7 @@ export const initGeocoder = (
 
 		function onGeocoderResult( ev ) {
 			// remove any popup or temp marker (clicked point, another geocoder marker) from the map
-			removeTempMarkers( mapRef as RefObject< HTMLDivElement >, [
+			listings = removeTempMarkers( listings, mapRef, [
 				'geocoder-marker',
 			] );
 			removePopups( mapRef as RefObject< HTMLDivElement > );

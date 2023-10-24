@@ -4,6 +4,7 @@ import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import type { RefObject } from 'react';
 import { getListing } from '../Mapbox/utils';
 import { useMapboxContext } from '../Mapbox/MapboxContext';
+import { __ } from '@wordpress/i18n';
 
 /**
  * This is a TypeScript React component that renders a list of MapBox listings with a click event
@@ -64,7 +65,7 @@ export const Sidebar = (): JSX.Element | null => {
 	if ( ! listings )
 		return (
 			<div className={ 'result' }>
-				<p> no listings found</p>
+				<p>{ __( 'no listings found' ) }</p>
 			</div>
 		);
 

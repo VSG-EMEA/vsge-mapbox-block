@@ -14,6 +14,7 @@ import { locateNearestStore } from '../../utils/spatialCalcs';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
 import { showNearestStore } from './Popup';
+import type mapboxgl from 'mapbox-gl';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
 The component destructures the `props` object to extract the properties `itemTags`, `itemFilters`,
@@ -119,7 +120,7 @@ export function SearchPopup( props: SearchMarkerProps ): JSX.Element {
 }
 
 export function PinPointPopup( props: {
-	map: { current: mapboxgl.Map };
+	map: RefObject< mapboxgl.Map | null >;
 	location: CoordinatesDef;
 	mapRef: RefObject< HTMLDivElement >;
 	listings: MapBoxListing[];
@@ -127,7 +128,7 @@ export function PinPointPopup( props: {
 } ): JSX.Element {
 	const { location, map, mapRef, listings, setFilteredListings } = props;
 
-	if ( ! map ) {
+	if ( ! map.current ) {
 		return null;
 	}
 

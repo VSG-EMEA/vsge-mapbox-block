@@ -11,7 +11,8 @@ import { SEARCH_RESULTS_SHOWN } from '../../constants';
  * This function adds a popup to a Mapbox map with custom content or default content based on a
  * marker's properties.
  *
- * @param                      map             - The mapboxgl.Map object representing the map on which the popup will be displayed.
+ * @param                      map             - The map parameter is a mapboxgl.Map object
+ * @param                      map.current - The mapboxgl.Map object representing the map on which the popup will be displayed.
  * @param {MapBoxListing}      marker          - The marker parameter is
  *                                             either a MapBoxListing object or an object with a geometry property that contains coordinates in the
  *                                             LngLatLike format. It is used to set the location of the popup on the map.
@@ -22,7 +23,7 @@ import { SEARCH_RESULTS_SHOWN } from '../../constants';
  * @return A `mapboxgl.Popup` object is being returned.
  */
 export function addPopup(
-	map: { current: mapboxgl.Map },
+	map: RefObject< mapboxgl.Map | null>,
 	marker: MapBoxListing | MapboxGeocoder.Result,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup {
@@ -72,13 +73,14 @@ export function removePopups( mapRef: RefObject< HTMLDivElement > ) {
  * @param {MapboxGeocoder.Result}     location            - The location object.
  * @param {MapBoxListing[]}           sortedNearestStores - The sorted list of nearest stores.
  * @param {RefObject<HTMLDivElement>} mapRef              - The reference to the map container.
- * @param map      The map object.
+ * @param                             map                 The map object.
+ * @param                             map.current
  */
 export function showNearestStore(
 	location: MapboxGeocoder.Result,
 	sortedNearestStores: MapBoxListing[],
 	mapRef: RefObject< HTMLDivElement >,
-	map: { current: mapboxgl.Map }
+	map: RefObject< mapboxgl.Map | null >
 ): MapBoxListing[] {
 	const newFilteredListings: MapBoxListing[] = [
 		...sortedNearestStores.slice( 0, SEARCH_RESULTS_SHOWN ),
