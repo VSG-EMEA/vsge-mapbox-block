@@ -252,7 +252,7 @@ export function MapEdit( {
 						<Button
 							variant="secondary"
 							onClick={ () => {
-								if ( map ) pullMapOptions( map );
+								if ( map.current ) pullMapOptions( map.current );
 							} }
 						>
 							{ __( 'Get Current view' ) }
@@ -270,8 +270,8 @@ export function MapEdit( {
 									...attributes,
 									latitude: newValue || 0,
 								} );
-								if ( map && newValue )
-									map.setCenter( [ newValue, longitude ] );
+								if ( map.current && newValue )
+									map.current.setCenter( [ newValue, longitude ] );
 							} }
 						/>
 						<RangeControl
@@ -286,7 +286,7 @@ export function MapEdit( {
 									longitude: newValue || 0,
 								} );
 								if ( newValue )
-									map?.setCenter( [ latitude, newValue ] );
+									map.current?.setCenter( [ latitude, newValue ] );
 							} }
 						/>
 						<RangeControl
@@ -300,7 +300,7 @@ export function MapEdit( {
 									...attributes,
 									pitch: newValue || 0,
 								} );
-								if ( newValue ) map?.setPitch( newValue );
+								if ( newValue ) map.current?.setPitch( newValue );
 							} }
 						/>
 						<RangeControl
@@ -314,7 +314,7 @@ export function MapEdit( {
 									...attributes,
 									bearing: newValue || 0,
 								} );
-								if ( newValue ) map?.setBearing( newValue );
+								if ( newValue ) map.current?.setBearing( newValue );
 							} }
 						/>
 						<RangeControl
@@ -328,7 +328,7 @@ export function MapEdit( {
 									...attributes,
 									mapZoom: newValue || 0,
 								} );
-								if ( newValue ) map?.setZoom( newValue );
+								if ( newValue ) map.current?.setZoom( newValue );
 							} }
 						/>
 						<SelectControl
@@ -341,7 +341,7 @@ export function MapEdit( {
 									mapStyle: newValue,
 								} );
 								if ( newValue )
-									map?.setStyle(
+									map.current?.setStyle(
 										'mapbox://styles/mapbox/' + newValue
 									);
 							} }
@@ -355,7 +355,7 @@ export function MapEdit( {
 									...attributes,
 									mapProjection: newValue,
 								} );
-								if ( newValue ) map?.setProjection( newValue );
+								if ( newValue ) map.current?.setProjection( newValue );
 							} }
 						/>
 						<UnitControl
