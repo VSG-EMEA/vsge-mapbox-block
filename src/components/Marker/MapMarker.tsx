@@ -31,13 +31,23 @@ export function mapMarker(
 		// Render a Marker Component on our new DOM node
 		markersRef.current[ listing.id ] = null;
 		markersRef.current[ listing.id ] = document.createElement( 'div' );
-		markersRef.current[ listing.id ].className = `marker marker-${ safeSlug(
+		markersRef.current[ listing.id ].id = 'marker-' + listing.id;
+		markersRef.current[ listing.id ].className = `marker-${ safeSlug(
+			listing.type
+		) }`;
+		markersRef.current[ listing.id ].dataset.id = Number( listing.id );
+		markersRef.current[ listing.id ].dataset.markerType = listing.type;
+		markersRef.current[ listing.id ].dataset.markerName = safeSlug(
 			listing.properties.name
-		) } marker-${ safeSlug( listing.type ) }`;
+		);
+
 		const root = createRoot( markersRef.current[ listing.id ] );
 
 		let markerIcon: JSX.Element | null;
 
+		/**
+		 * The user defined icons are prefixed with 'custom-'
+		 */
 		if ( listing.properties.icon?.startsWith( 'custom-' ) ) {
 			let svgIcon = getMarkerSvg( listing.properties.icon, icons );
 			svgIcon = modifySVG(

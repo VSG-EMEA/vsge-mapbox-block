@@ -22,17 +22,9 @@ export function Marker( {
 	feature: MapBoxListing;
 	children?: JSX.Element | null;
 } ): JSX.Element {
-	const slug = safeSlug( feature.properties.name );
-
 	return (
 		<button
 			className={ 'marker marker-' + feature.id } // this is important to prevent duplicates
-			id={
-				feature.type !== 'temp' ? 'marker-' + feature.id : 'marker-temp'
-			}
-			data-id={ feature.id }
-			data-marker-type={ feature.type }
-			data-marker-name={ slug }
 		>
 			{ children ?? (
 				<DefaultMarker

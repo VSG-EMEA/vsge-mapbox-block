@@ -1,5 +1,5 @@
 import mapboxgl, { LngLatLike, MapEventType } from 'mapbox-gl';
-import { MapBoxListing } from '../../types';
+import { MapBoxListing, MarkerHTMLElement } from '../../types';
 import type { RefObject } from 'react';
 import { getBbox } from '../../utils/spatialCalcs';
 import { fitInView } from '../../utils/view';
@@ -7,7 +7,7 @@ import { fitInView } from '../../utils/view';
 export function createMarkerEl(
 	markerEl: HTMLElement,
 	listing: MapBoxListing,
-	map: { current: mapboxgl.Map }
+	map: RefObject< mapboxgl.Map | null >
 ) {
 	// Render a Marker Component on our new DOM node
 	const markerElement = new mapboxgl.Marker( markerEl, {
@@ -31,30 +31,39 @@ export function createMarkerEl(
 /**
  * Removes temporary markers from the specified element.
  *
+ * @param                             listings
  * @param {RefObject<HTMLDivElement>} maboxRef        - The reference to the HTMLDivElement
  * @param                             excludedMarkers
  * @return {void} This function does not return anything
  */
 export function removeTempMarkers(
+	listings: MapBoxListing[],
 	maboxRef: RefObject< HTMLDivElement > | undefined,
 	excludedMarkers: string[] = []
-) {
+): MapBoxListing[] {
 	if ( maboxRef?.current ) {
-		const markerTemp = maboxRef?.current.querySelectorAll(
+		// get the markers from the map
+		const markers = maboxRef?.current.querySelectorAll(
 			'.marker-temp'
 		) as NodeListOf< HTMLElement >;
-		markerTemp.forEach( ( marker ) => {
+		// Loop through the markers and remove them
+		markers.forEach( ( marker ) => {
 			// Check if the marker is excluded
 			if (
-				excludedMarkers.length &&
-				marker?.dataset?.markerName &&
-				excludedMarkers.includes( marker?.dataset?.markerName )
-			)
-				return;
-			// Remove the marker
-			marker?.remove();
+				excludedMarkers.length === 0 &&
+                marker?.dataset?.markerName &&
+				! excludedMarkers.includes( marker.dataset?.markerName )
+			) {
+				// Remove the marker from the listings array
+				if ( listings[ Number( marker.dataset.id ) ] )
+					delete listings[ Number( marker.dataset.id ) ];
+				// Remove the marker from the DOM
+				marker?.remove();
+			}
 		} );
 	}
+
+	return listings;
 }
 
 /**
@@ -76,18 +85,27 @@ export function removeTempListings( listings: MapBoxListing[] ) {
  *                                    marker that needs to be removed from a map.
  * @param {HTMLDivElement} mapElement - The map element to remove the marker from.
  */
-export function removeMarkerEl( id: number, mapElement: HTMLDivElement ) {
-	mapElement.querySelector( '#marker-' + id )?.parentElement?.remove();
+export function removeMarkerEl(
+	id: number,
+	mapElement: HTMLDivElement
+): boolean {
+	const targetMarker = mapElement.querySelector( '#marker-' + id );
+	if ( targetMarker ) {
+		targetMarker?.remove();
+		return true;
+	}
+	return false;
 }
 /**
  * Updates the listings on the map.
  * @param filteredStores - The filtered listings.
  * @param map
+ * @param map.current
  * @param mapRef
  */
 export function updateCamera(
 	filteredStores: MapBoxListing[],
-	map: mapboxgl.Map,
+	map: RefObject< mapboxgl.Map | null >,
 	mapRef: RefObject< HTMLDivElement > | undefined
 ): void {
 	if ( ! map ) return;
