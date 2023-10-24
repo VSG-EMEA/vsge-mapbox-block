@@ -62,8 +62,8 @@ export function generateTempMarkerData(
 	coordinates: CoordinatesDef | [ number, number ]
 ): MapBoxListing {
 	return {
-		type: 'temp',
 		id,
+		type: 'temp',
 		properties: {
 			name: 'click-marker',
 			icon: 'pin',

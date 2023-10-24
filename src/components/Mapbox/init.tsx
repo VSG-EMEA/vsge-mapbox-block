@@ -3,13 +3,13 @@ import type {
 	MapboxBlockDefaults,
 	MapBoxListing,
 } from '../../types';
-import type { Feature } from '@turf/turf';
-import { getNextId } from '../../utils/dataset';
+import { getNextId, prepareStores } from '../../utils/dataset';
 import { initGeocoder, initGeomarker } from '../Geocoder/Geocoder';
 import type { RefObject } from 'react';
 import { geoMarkerStyle } from './defaults';
 import { setMapElevation, setMapThreeDimensionality } from './utils';
 import mapboxgl from 'mapbox-gl';
+import { Feature } from '@turf/turf';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -72,14 +72,15 @@ export function initMap(
 			type: 'geojson',
 			data: {
 				type: 'FeatureCollection',
-				features:
-					mapboxOptions.listings as Feature< GeoJSON.Geometry >[],
+				features: prepareStores(
+					mapboxOptions.listings as Feature< GeoJSON.Geometry >[]
+				),
 			},
 		} );
 
 		// Add a layer showing the places.
 		map.addLayer( {
-			id: 'geojson-stores',
+			id: 'stores',
 			type: 'symbol',
 			source: 'geojson-stores',
 			layout: {
