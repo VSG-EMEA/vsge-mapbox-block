@@ -97,6 +97,13 @@
     }
   }
 
+  // the sortable listings column
+  .sortable-listings {
+     .components-base-control {
+      margin-bottom: 12px;
+    }
+  }
+
   .sortable-tags,
   .sortable-filters {
     .dnd-wrap {

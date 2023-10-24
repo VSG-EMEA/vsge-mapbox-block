@@ -138,6 +138,91 @@ export const PinCard = ( props: {
 							/>
 						</div>
 
+						<Flex justify={ 'space-between' } align={ 'center' }>
+							<SelectControl
+								label={ __( 'type' ) }
+								value={ itemData.type }
+								options={ [
+									{
+										value: 'point',
+										label: 'Point',
+									},
+								] }
+								onChange={ ( newValue ) => {
+									setItemData( {
+										...itemData,
+										geometry: {
+											...itemData.geometry,
+											type: newValue,
+										},
+									} );
+								} }
+							/>
+							<TextControl
+								label={ __( 'lat' ) }
+								value={
+									itemData.geometry.coordinates[ 0 ] || 0
+								}
+								onChange={ ( newValue ) =>
+									setItemData( {
+										...itemData,
+										geometry: {
+											...itemData.geometry,
+											coordinates: [
+												Number(
+													itemData.geometry
+														?.coordinates[ 1 ]
+												) || 0,
+												Number( newValue ) || 0,
+											],
+										},
+									} )
+								}
+							/>
+							<TextControl
+								label={ __( 'lang' ) }
+								value={
+									itemData.geometry.coordinates[ 1 ] || 0
+								}
+								onChange={ ( newValue ) =>
+									setItemData( {
+										...itemData,
+										geometry: {
+											...itemData.geometry,
+											coordinates: [
+												Number( newValue ) || 0,
+												Number(
+													itemData.geometry
+														?.coordinates[ 1 ]
+												) || 0,
+											],
+										},
+									} )
+								}
+							/>
+							<Button
+								icon={ upload }
+								variant={ 'secondary' }
+								disabled={ ! lngLat?.lng || ! lngLat?.lat }
+								onClick={ () => {
+									setItemData( {
+										...itemData,
+										geometry: {
+											type: 'Point',
+											coordinates: [
+												lngLat?.lng || 0,
+												lngLat?.lat || 0,
+											],
+										},
+									} );
+								} }
+								label={ __( 'Add Pin' ) }
+								showTooltip={ true }
+							/>
+						</Flex>
+
+						<hr />
+
 						{ /** main Item Data */ }
 						<TextControl
 							label={ __( 'name' ) }
@@ -239,89 +324,6 @@ export const PinCard = ( props: {
 							__nextHasNoMarginBottom={ true }
 						></TextareaControl>
 
-						<Flex justify={ 'bottom' }>
-							<SelectControl
-								label={ __( 'type' ) }
-								value={ itemData.type }
-								options={ [
-									{
-										value: 'point',
-										label: 'Point',
-									},
-								] }
-								onChange={ ( newValue ) => {
-									setItemData( {
-										...itemData,
-										geometry: {
-											...itemData.geometry,
-											type: newValue,
-										},
-									} );
-								} }
-							/>
-							<TextControl
-								label={ __( 'lat' ) }
-								value={
-									itemData.geometry.coordinates[ 0 ] || 0
-								}
-								onChange={ ( newValue ) =>
-									setItemData( {
-										...itemData,
-										geometry: {
-											...itemData.geometry,
-											coordinates: [
-												Number(
-													itemData.geometry
-														?.coordinates[ 1 ]
-												) || 0,
-												Number( newValue ) || 0,
-											],
-										},
-									} )
-								}
-							/>
-							<TextControl
-								label={ __( 'lang' ) }
-								value={
-									itemData.geometry.coordinates[ 1 ] || 0
-								}
-								onChange={ ( newValue ) =>
-									setItemData( {
-										...itemData,
-										geometry: {
-											...itemData.geometry,
-											coordinates: [
-												Number( newValue ) || 0,
-												Number(
-													itemData.geometry
-														?.coordinates[ 1 ]
-												) || 0,
-											],
-										},
-									} )
-								}
-							/>
-							<Button
-								icon={ upload }
-								variant={ 'secondary' }
-								disabled={ ! lngLat?.lng || ! lngLat?.lat }
-								onClick={ () => {
-									setItemData( {
-										...itemData,
-										geometry: {
-											type: 'Point',
-											coordinates: [
-												lngLat?.lng || 0,
-												lngLat?.lat || 0,
-											],
-										},
-									} );
-								} }
-								label={ __( 'Add Pin' ) }
-								showTooltip={ true }
-							/>
-						</Flex>
-
 						{ /** Tags */ }
 						<Flex direction={ 'row' } justify={ 'top' }>
 							<FlexItem className={ 'sortable-pins-column' }>
@@ -360,7 +362,9 @@ export const PinCard = ( props: {
 								className={ 'sortable-pins-column' }
 								style={ { width: '50%', alignSelf: 'start' } }
 							>
-								<h4>Filter</h4>
+								<h4 className={ 'sortable-pins-column__title' }>
+									{ __( 'Filters' ) }
+								</h4>
 								<hr />
 								{ filters?.map( ( checkbox, i ) => (
 									<CheckboxControl
@@ -409,7 +413,11 @@ export const PinCard = ( props: {
 							step={ 1 }
 						/>
 
-						<Flex direction={ 'row' } justify={ 'top' } gap={'rem'} >
+						<Flex
+							direction={ 'row' }
+							justify={ 'top' }
+							gap={ 'rem' }
+						>
 							<IconPreview
 								iconID={ itemData.properties?.icon }
 								iconset={ icons }
