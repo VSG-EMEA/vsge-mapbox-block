@@ -11,7 +11,7 @@ import {
 	MarkerPropsStyle,
 	MountedMapsContextValue,
 } from '../../types';
-import { geoMarkerStyle } from '../Mapbox/defaults';
+import { geocoderMarkerDefaults, geoMarkerStyle } from '../Mapbox/defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import { removePopups, showNearestStore } from '../Popup/Popup';
 import { fitInView, flyToStore } from '../../utils/view';
@@ -19,27 +19,6 @@ import { PinPoint } from '../Marker/marker-icons';
 import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { useMapboxContext } from '../Mapbox/MapboxContext';
-
-function geocoderMarkerDefaults(
-	id: number,
-	defaultStyle: MarkerPropsStyle
-): MapBoxListing {
-	return {
-		type: 'temp',
-		id,
-		properties: {
-			name: 'geocoder-marker',
-			icon: 'geocoder',
-			iconSize: defaultStyle.size,
-			iconColor: defaultStyle.color,
-			draggable: true,
-		},
-		geometry: {
-			type: 'Point',
-			coordinates: [ 0, 0 ] as CoordinatesDef,
-		},
-	};
-}
 
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
@@ -163,12 +142,12 @@ export const initGeocoder = (
 			// Add the active class to the geocoder
 			geocoderRef?.current?.classList.add( 'active' );
 
-			if ( searchResult && filteredListings ) {
+			if ( searchResult ) {
 				// Remove the active class from the geocoder
 				geocoderRef?.current?.classList.remove( 'disabled' );
 
 				const sortedNearestStores = locateNearestStore(
-					searchResult.geometry,
+					searchResult.geometry as CoordinatesDef,
 					filteredListings
 				);
 
@@ -206,7 +185,7 @@ export const initGeocoder = (
 				);
 
 				// Display the nearest store
-				setFilteredListings( newFilteredListings );
+				setFilteredListings( [ ...newFilteredListings, geoMarker ] );
 			}
 		}
 
