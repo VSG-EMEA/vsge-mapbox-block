@@ -118,27 +118,27 @@ export function MapEdit( {
 
 	useEffect( () => {
 		if ( loaded ) {
-			map.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
+			map.current.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
 			refreshMap();
 		}
 	}, [ mapStyle ] );
 
 	useEffect( () => {
 		if ( loaded ) {
-			setMapThreeDimensionality( map, freeViewCamera );
+			setMapThreeDimensionality( map.current, freeViewCamera );
 		}
 	}, [ freeViewCamera ] );
 
 	useEffect( () => {
 		if ( loaded ) {
-			setMapElevation( map, elevation );
+			setMapElevation( map.current, elevation );
 			refreshMap();
 		}
 	}, [ elevation ] );
 
 	useEffect( () => {
 		if ( loaded ) {
-			setMapWheelZoom( map, mouseWheelZoom );
+			setMapWheelZoom( map.current, mouseWheelZoom );
 		}
 	}, [ mouseWheelZoom ] );
 
