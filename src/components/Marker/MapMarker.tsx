@@ -20,7 +20,7 @@ export function mapMarker(
 	listing: MapBoxListing,
 	markersRef: RefObject< HTMLButtonElement[] >,
 	icons: MarkerIcon[]
-): JSX.Element {
+): void {
 	// Check if the coordinates are valid
 	if (
 		listing?.geometry &&
@@ -43,31 +43,41 @@ export function mapMarker(
 
 		const root = createRoot( markersRef.current[ listing.id ] );
 
-		let markerIcon: JSX.Element | null;
+		let markerIcon: JSX.Element | undefined;
 
 		/**
 		 * The user defined icons are prefixed with 'custom-'
 		 */
 		if ( listing.properties.icon?.startsWith( 'custom-' ) ) {
 			let svgIcon = getMarkerSvg( listing.properties.icon, icons );
-			svgIcon = modifySVG(
-				svgIcon,
-				listing.properties.iconColor,
-				listing.properties.iconSize
-			);
-			markerIcon = (
-				<div dangerouslySetInnerHTML={ { __html: svgIcon } } />
-			);
+			if ( svgIcon !== undefined ) {
+				svgIcon = modifySVG(
+					svgIcon,
+					listing.properties.iconColor,
+					listing.properties.iconSize
+				);
+				markerIcon = (
+					<div dangerouslySetInnerHTML={ { __html: svgIcon } } />
+				);
+			}
 		} else if (
 			[ 'geocoder', 'pin' ].includes( listing.properties.icon )
 		) {
+			/**
+			 * The GeoCoder and the ClickedPoint pin icons were thin pin marker
+			 */
 			markerIcon = (
 				<PinPoint
 					color={ listing.properties.iconColor }
 					size={ listing.properties.iconSize }
 				/>
 			);
-		} else {
+		}
+
+		/**
+		 * if no marker is defined, use the default one
+		 */
+		if ( ! markerIcon ) {
 			markerIcon = (
 				<DefaultMarker
 					color={ listing.properties.iconColor }
