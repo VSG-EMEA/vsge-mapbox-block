@@ -169,10 +169,8 @@ export const PinCard = ( props: {
 										geometry: {
 											...itemData.geometry,
 											coordinates: [
-												Number(
-													itemData.geometry
-														?.coordinates[ 1 ]
-												) || 0,
+												itemData.geometry
+													?.coordinates[ 0 ] || 0,
 												Number( newValue ) || 0,
 											],
 										},
@@ -191,10 +189,8 @@ export const PinCard = ( props: {
 											...itemData.geometry,
 											coordinates: [
 												Number( newValue ) || 0,
-												Number(
-													itemData.geometry
-														?.coordinates[ 1 ]
-												) || 0,
+												itemData.geometry
+													?.coordinates[ 1 ] || 0,
 											],
 										},
 									} )

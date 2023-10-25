@@ -56,7 +56,7 @@ export function MapEdit( {
 		mapboxOptions: { tags, icons, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef, loaded, setLoaded } = useMapboxContext();
+	const { map, mapRef, loaded, setListings } = useMapboxContext();
 
 	/**
 	 * This function sets options for a Mapbox map and updates the markers accordingly.
@@ -68,6 +68,7 @@ export function MapEdit( {
 	 *                                          `mapboxOptions` object is a property of the `attributes` object, which is being updated using the
 	 */
 	const setOptions = ( key: string, value: string | number | boolean ) => {
+		// update the map
 		setAttributes( {
 			...attributes,
 			mapboxOptions: {
@@ -141,6 +142,12 @@ export function MapEdit( {
 			setMapWheelZoom( map.current, mouseWheelZoom );
 		}
 	}, [ mouseWheelZoom ] );
+
+	useEffect( () => {
+		if ( loaded ) {
+			setListings( attributes.mapboxOptions.listings );
+		}
+	}, [ attributes.mapboxOptions ] );
 
 	const blockProps = useBlockProps( {
 		className: classNames( 'wp-block-vsge-mapbox', 'block-mapbox' ),
@@ -252,7 +259,8 @@ export function MapEdit( {
 						<Button
 							variant="secondary"
 							onClick={ () => {
-								if ( map.current ) pullMapOptions( map.current );
+								if ( map.current )
+									pullMapOptions( map.current );
 							} }
 						>
 							{ __( 'Get Current view' ) }
@@ -271,7 +279,10 @@ export function MapEdit( {
 									latitude: newValue || 0,
 								} );
 								if ( map.current && newValue )
-									map.current.setCenter( [ newValue, longitude ] );
+									map.current.setCenter( [
+										newValue,
+										longitude,
+									] );
 							} }
 						/>
 						<RangeControl
@@ -286,7 +297,10 @@ export function MapEdit( {
 									longitude: newValue || 0,
 								} );
 								if ( newValue )
-									map.current?.setCenter( [ latitude, newValue ] );
+									map.current?.setCenter( [
+										latitude,
+										newValue,
+									] );
 							} }
 						/>
 						<RangeControl
@@ -300,7 +314,8 @@ export function MapEdit( {
 									...attributes,
 									pitch: newValue || 0,
 								} );
-								if ( newValue ) map.current?.setPitch( newValue );
+								if ( newValue )
+									map.current?.setPitch( newValue );
 							} }
 						/>
 						<RangeControl
@@ -314,7 +329,8 @@ export function MapEdit( {
 									...attributes,
 									bearing: newValue || 0,
 								} );
-								if ( newValue ) map.current?.setBearing( newValue );
+								if ( newValue )
+									map.current?.setBearing( newValue );
 							} }
 						/>
 						<RangeControl
@@ -328,7 +344,8 @@ export function MapEdit( {
 									...attributes,
 									mapZoom: newValue || 0,
 								} );
-								if ( newValue ) map.current?.setZoom( newValue );
+								if ( newValue )
+									map.current?.setZoom( newValue );
 							} }
 						/>
 						<SelectControl
@@ -355,7 +372,8 @@ export function MapEdit( {
 									...attributes,
 									mapProjection: newValue,
 								} );
-								if ( newValue ) map.current?.setProjection( newValue );
+								if ( newValue )
+									map.current?.setProjection( newValue );
 							} }
 						/>
 						<UnitControl
