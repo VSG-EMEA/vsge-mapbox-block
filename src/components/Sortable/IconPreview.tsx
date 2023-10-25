@@ -1,6 +1,7 @@
 import { MarkerIcon } from '../../types';
 import { __ } from '@wordpress/i18n';
 import { Icon } from '@wordpress/components';
+import { getMarkerSvg } from '../../utils/svg';
 
 /**
  * Renders an icon preview based on the provided `iconID` and `iconset`.
@@ -12,21 +13,20 @@ import { Icon } from '@wordpress/components';
  * @return {JSX.Element} The rendered icon preview component.
  */
 export function IconPreview( props: {
-	icon: MarkerIcon;
-	iconset: MarkerIcon[];
+	iconName: string;
+	iconSet: MarkerIcon[];
 } ) {
-	const { icon, iconset } = props;
-	const iconMarkup = iconset.find( ( obj ) => obj?.id === icon?.id );
-	return iconMarkup ? (
+	const { iconName, iconSet } = props;
+	return iconName ? (
 		<div
 			className={ 'marker-preview' }
 			dangerouslySetInnerHTML={ {
-				__html: iconMarkup?.content || __( 'error 😥' ),
+				__html: getMarkerSvg( iconName, iconSet ) ?? __( 'error 😥' ),
 			} }
 		/>
 	) : (
 		<div className={ 'marker-preview' }>
-			<Icon icon={ 'marker' } size={ 24 } />
+			<Icon icon={ 'warning' } size={ 24 } />
 		</div>
 	);
 }

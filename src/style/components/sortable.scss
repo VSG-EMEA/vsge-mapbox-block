@@ -82,6 +82,45 @@
     }
   }
 
+  /**
+   * the panel to edit the marker icon
+   */
+  .marker-icon-item {
+    display: flex;
+    align-content: start;
+    justify-content: left;
+
+    &__preview {
+      position: relative;
+      .svg-wrapper {
+        width: 64px;
+        min-width: 64px;
+        padding: 8px;
+        margin: 4px 12px 4px 0;
+        border: 1px solid #ddd;
+        height: 64px;
+        display: flex;
+        border-radius: 8px;
+      }
+    }
+
+    .remove-sortable-item {
+      position: absolute;
+      top: 0;
+      right: 6px;
+      padding: 0;
+      min-width: 24px;
+      .components-button.has-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .components-base-control {
+      margin-bottom: 8px;
+    }
+  }
+
   .marker-button {
     background: none;
     border: none;

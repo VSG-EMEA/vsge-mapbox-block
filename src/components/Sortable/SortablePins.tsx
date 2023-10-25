@@ -415,12 +415,12 @@ export const PinCard = ( props: {
 
 						<Flex
 							direction={ 'row' }
-							justify={ 'top' }
-							gap={ 'rem' }
+							justify={ 'space-between' }
+							gap={ '8px' }
 						>
 							<IconPreview
-								iconID={ itemData.properties?.icon }
-								iconset={ icons }
+								iconName={ itemData.properties?.icon }
+								iconSet={ icons }
 							/>
 							<SelectControl
 								label={ __( 'Select a Marker' ) }
@@ -481,28 +481,31 @@ export const PinCard = ( props: {
 							</Button>
 						</Flex>
 						<PanelRow>
-							<Button
-								onClick={ () => deleteItem( itemData.id ) }
-								variant={ 'secondary' }
-								icon="trash"
-								iconSize={ 16 }
-							/>
-							<Button
-								onClick={ () => resetListing() }
-								variant={ 'secondary' }
-								iconSize={ 16 }
-								icon={ reset }
-							>
-								{ __( 'Reset' ) }
-							</Button>
-							<Button
-								onClick={ () => updateItem( itemData ) }
-								variant={ 'primary' }
-								iconSize={ 16 }
-								icon={ download }
-							>
-								{ __( 'Save' ) }
-							</Button>
+							<Flex gap={ '8px' }>
+								<Button
+									onClick={ () => deleteItem( itemData.id ) }
+									variant={ 'secondary' }
+									icon="trash"
+									iconSize={ 16 }
+								/>
+								<Button
+									onClick={ () => resetListing() }
+									variant={ 'secondary' }
+									iconSize={ 16 }
+									icon={ reset }
+								>
+									{ __( 'Reset' ) }
+								</Button>
+								<Button
+									style={ { marginLeft: 'auto' } }
+									onClick={ () => updateItem( itemData ) }
+									variant={ 'primary' }
+									iconSize={ 16 }
+									icon={ download }
+								>
+									{ __( 'Save' ) }
+								</Button>
+							</Flex>
 						</PanelRow>
 					</div>
 				</div>
