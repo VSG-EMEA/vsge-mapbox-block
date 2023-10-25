@@ -83,3 +83,13 @@ export function normalize( string: string ) {
 	return '';
 }
 
+/**
+ * Checks if two values are equal by comparing their string representations.
+ *
+ * @param {any} a - The first value to compare.
+ * @param {any} b - The second value to compare.
+ * @return {boolean} True if the values are equal, false otherwise.
+ */
+export const equalsCheck = ( a: any, b: any ): boolean => {
+	return JSON.stringify( a ) === JSON.stringify( b );
+};

@@ -1,8 +1,14 @@
 import { Button, Icon, SelectControl } from '@wordpress/components';
-import { useContext, useEffect, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { filterListingsBy, fitInView } from '../../utils/view';
-import { TagArray, MountedMapsContextValue } from '../../types';
-import { MapboxContext } from './MapboxContext';
+import {
+	FilterCollection,
+	MapboxOptions,
+	MountedMapsContextValue,
+} from '../../types';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
+import { __ } from '@wordpress/i18n';
+import { removePopups } from '../Popup/Popup';
 
 /**
  * trasform an array of strings into a select values that could be used with select control
@@ -12,9 +18,11 @@ import { MapboxContext } from './MapboxContext';
  * @param            selectValues.value
  * @return {SelectControl.Option[]} the select values
  */
-function topbarBuildSelectFromArray( selectValues: TagArray[] ) {
+function topbarBuildSelectFromArray(
+	selectValues: FilterCollection[]
+): { label: string; value: string }[] {
 	return selectValues.map( ( item ) => {
-		return { label: item.value, value: item.value };
+		return { label: item.value ?? '', value: item.value ?? '' };
 	} );
 }
 
@@ -34,21 +42,47 @@ const centerViewIcon = () => (
 	/>
 );
 
-export const TopBar = ( attributes ) => {
+const resetIcon = () => (
+	<Icon
+		icon={ () => (
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				height="24"
+				viewBox="0 -960 960 960"
+				width={ '24' }
+			>
+				<path d="M440-122q-121-15-200.5-105.5T160-440q0-66 26-126.5T260-672l57 57q-38 34-57.5 79T240-440q0 88 56 155.5T440-202v80Zm80 0v-80q87-16 143.5-83T720-440q0-100-70-170t-170-70h-3l44 44-56 56-140-140 140-140 56 56-44 44h3q134 0 227 93t93 227q0 121-79.5 211.5T520-122Z" />
+			</svg>
+		) }
+	/>
+);
+
+export const TopBar = ( attributes: {
+	fitView: boolean;
+	tagsEnabled: boolean;
+	filtersEnabled: boolean;
+	mapboxOptions: MapboxOptions;
+} ) => {
 	const {
 		map,
 		mapRef,
 		listings,
+		filteredListings,
+		setListings,
 		setFilteredListings,
-	}: MountedMapsContextValue = useContext( MapboxContext );
+	}: MountedMapsContextValue = useMapboxContext();
 	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
 	const [ filter, setFilter ] = useState( '' );
 	const [ tag, setTag ] = useState( '' );
 
 	useEffect( () => {
 		if ( filter === '' ) {
-			setFilteredListings( null );
+			// if no filter is present, reset the filter list
+			if ( filteredListings.length > 0 ) {
+				setFilteredListings( [] );
+			}
 		} else if ( listings && listings.length > 0 ) {
+			// if a filter is present, filter the listings
 			setFilteredListings(
 				filterListingsBy( listings, 'itemFilters', filter )
 			);
@@ -64,6 +98,20 @@ export const TopBar = ( attributes ) => {
 					: 'map-topbar-hidden'
 			}
 		>
+			{ filteredListings.length > 0 ? (
+				<Button
+					icon={ resetIcon }
+					isSmall={ true }
+					className={ 'reset-filters' }
+					onClick={ () => {
+						removePopups( mapRef );
+						setFilteredListings( [] );
+						setListings( attributes.mapboxOptions.listings );
+					} }
+				>
+					{ __( 'Reset Filters' ) }
+				</Button>
+			) : null }
 			{ fitView ? (
 				<Button
 					icon={ centerViewIcon }
@@ -71,7 +119,7 @@ export const TopBar = ( attributes ) => {
 					className={ 'fit-view' }
 					onClick={ () => fitInView( map, listings, mapRef ) }
 				>
-					fit-view
+					{ __( 'Fit View' ) }
 				</Button>
 			) : null }
 

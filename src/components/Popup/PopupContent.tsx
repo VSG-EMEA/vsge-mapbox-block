@@ -1,15 +1,20 @@
-import { CoordinatesDef, MapBoxListing, MarkerProps, SearchMarkerProps } from '../../types';
-import { Button, Icon } from '@wordpress/components';
-import { TagList } from './TagItem';
+import {
+	CoordinatesDef,
+	MapBoxListing,
+	MarkerProps,
+	SearchMarkerProps,
+} from '../../types';
+import { Icon } from '@wordpress/components';
+import { TagList } from '../TagItem';
 import { mapMarker } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
-import { ICON_SIZE } from '../../constants';
+import { ICON_SIZE, MARKER_TYPE_TEMP } from '../../constants';
 import { layouts, svgArray } from '@mapbox/maki';
 import { locateNearestStore } from '../../utils/spatialCalcs';
-import { showNearestStore } from '../../utils/dataset';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
-import mapboxgl from 'mapbox-gl';
+import { showNearestStore } from './Popup';
+import type mapboxgl from 'mapbox-gl';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
 The component destructures the `props` object to extract the properties `itemTags`, `itemFilters`,
@@ -17,7 +22,7 @@ The component destructures the `props` object to extract the properties `itemTag
 `MarkerProps` type. It then returns a JSX element that displays the extracted properties in a
 specific format. The `PopupContent` component is used to render the content of a popup that appears
 when a marker is clicked on a map. */
-export function PopupContent( props: MarkerProps ) {
+export function PopupContent( props: MarkerProps ): JSX.Element {
 	const {
 		itemTags,
 		itemFilters,
@@ -26,6 +31,7 @@ export function PopupContent( props: MarkerProps ) {
 		address = '',
 		city = '',
 		postalCode = '',
+        countryCode = '',
 		country = '',
 		emailAddress = '',
 		website = '',
@@ -47,18 +53,44 @@ export function PopupContent( props: MarkerProps ) {
 					<a href={ website }>
 						<h3>{ name }</h3>
 					</a>
-				) : <h3>{ name }</h3>}
-				{ address && <p>{ address }</p> }
-				<p>{ `${ city } - ${ country } ${ postalCode }` }</p>
-				{ emailAddress || (
-					<a href={ 'mailto:' + emailAddress } className={ 'email' }>
-						<p>{ emailAddress }</p>
-					</a>
+				) : (
+					<h3>{ name }</h3>
 				) }
-				{ phone || (
-					<a href={ 'tel:' + phone }>
-						<p>{ phone }</p>
-					</a>
+				{ address && <p>{ address } { postalCode }</p> }
+				{ phone && (
+					<p>
+						Phone:{ ' ' }
+						<a href={ 'tel:' + phone } className="email-link">
+							{ phone }
+						</a>
+					</p>
+				) }
+
+				<p>
+					{ address && address }
+					<br />
+					{ country && country } { city && city }{ ' ' }
+					{ countryCode && '(' + countryCode + ')' }
+				</p>
+
+				{ website && (
+					<p>
+						Website:{ ' ' }
+						<a href={ '//' + website } className="website-link">
+							{ website }
+						</a>
+					</p>
+				) }
+				{ emailAddress && (
+					<p>
+						Email:{ ' ' }
+						<a
+							href={ 'mailto:' + emailAddress }
+							className="email-link"
+						>
+							{ emailAddress }
+						</a>
+					</p>
 				) }
 				<TagList tags={ itemTags } className={ 'popup-tag-list' } />
 				{ !! distance && (
@@ -78,7 +110,7 @@ function getIcon( icon: string ) {
 	return iconIndex !== -1 ? svgArray[ iconIndex ] : undefined;
 }
 
-export function SearchPopup( props: SearchMarkerProps ) {
+export function SearchPopup( props: SearchMarkerProps ): JSX.Element {
 	const { name = '', category = '', maki = '', distance = 0 } = props;
 
 	const icon = getIcon( maki );
@@ -113,61 +145,62 @@ export function SearchPopup( props: SearchMarkerProps ) {
 }
 
 export function PinPointPopup( props: {
+	map: RefObject< mapboxgl.Map | null >;
 	location: CoordinatesDef;
-	filteredListings?: MapBoxListing[];
+	mapRef: RefObject< HTMLDivElement >;
 	listings: MapBoxListing[];
 	setFilteredListings: ( listings: MapBoxListing[] ) => void;
-	mapRef: RefObject< HTMLDivElement > | undefined;
-	map: mapboxgl.Map | null;
-} ) {
-	const {
-		location,
-		filteredListings,
-		listings,
-		setFilteredListings,
-		mapRef,
-		map,
-	} = props;
+} ): JSX.Element {
+	const { location, map, mapRef, listings, setFilteredListings } = props;
+
+	if ( ! map.current ) {
+		return null;
+	}
 
 	return (
 		<div className={ 'mapbox-popup-inner mapbox-popup-newpin' }>
 			<p>Find A location?</p>
-			<Button
+			<button
 				onClick={ () => {
+					// get the current temp pin data
+					const currentPinData = listings.find( ( listing ) => {
+						return listing.type === MARKER_TYPE_TEMP;
+					} );
+					// sort the array and get the nearest store
 					const sortedNearestStores = locateNearestStore(
 						location,
-						filteredListings ?? listings
+						listings
 					);
+					// create a new temp pin
+					const myLocationPin = {
+						...currentPinData,
+						text: __( 'My location' ),
+						place_name: __( 'Clicked Pin' ),
+						geometry: {
+							coordinates: location,
+						},
+						properties: {
+							icon: 'myLocation',
+						},
+					};
 					const sortedListings = showNearestStore(
-						{
-							text: __( 'My location' ),
-							place_name: __( 'Clicked Pin' ),
-							geometry: {
-								coordinates: location,
-							},
-							properties: {
-								distance: 0,
-								icon: 'myLocation',
-							},
-						} as unknown as MapboxGeocoder.Result,
+						myLocationPin as unknown as MapboxGeocoder.Result,
 						sortedNearestStores,
-						listings,
 						mapRef as RefObject< HTMLDivElement >,
 						map
 					);
-
-					setFilteredListings( sortedListings );
+					setFilteredListings( [ ...sortedListings, myLocationPin ] );
 				} }
 			>
 				{ __( 'Find the nearest store?' ) }
-			</Button>
-			<Button
+			</button>
+			<button
 				onClick={ () => {
 					setFilteredListings( listings );
 				} }
 			>
 				Reset
-			</Button>
+			</button>
 		</div>
 	);
 }

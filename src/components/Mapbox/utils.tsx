@@ -1,89 +1,14 @@
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
-import type {
-	MapAttributes,
-	MapboxBlockDefaults,
-	MapBoxListing,
-} from '../../types';
-import { Feature } from '@turf/turf';
-
-/**
- * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
- * specified.
- *
- * @param {HTMLElement} mapRef     The HTML element that will contain the map.
- * @param {Object}      attributes An object containing various attributes for initializing the map, including
- *                                 latitude, longitude, pitch, bearing, mapZoom, mapStyle, and freeViewCamera.
- * @param {Object}      defaults   An object containing default values for the map.
- * @return {mapboxgl.Map} a mapboxgl.Map object.
- */
-export function initMap(
-	mapRef: string | HTMLDivElement,
-	attributes: MapAttributes,
-	defaults: MapboxBlockDefaults
-): mapboxgl.Map {
-	const {
-		latitude,
-		longitude,
-		pitch,
-		bearing,
-		mapZoom,
-		mapStyle,
-		mouseWheelZoom,
-		freeViewCamera,
-		mapboxOptions,
-	} = attributes;
-
-	const map = new mapboxgl.Map( {
-		container: mapRef,
-		style: 'mapbox://styles/mapbox/' + mapStyle,
-		antialias: true,
-		center: [ longitude, latitude ],
-		zoom: mapZoom,
-		bearing,
-		pitch,
-		scrollZoom: mouseWheelZoom,
-		dragRotate: freeViewCamera,
-	} );
-
-	map.on( 'load', function () {
-		// Set the map's terrain layer.
-		setMapElevation( map, attributes.elevation );
-
-		// Add navigation control (the +/- zoom buttons)
-		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );
-
-		setMapThreeDimensionality( map, attributes.freeViewCamera );
-
-		// Set up the language.
-		if ( map.getLayer( 'country-label' ) )
-			map.setLayoutProperty( 'country-label', 'text-field', [
-				'get',
-				'name_' + defaults?.language?.substring( 0, 2 ) || 'en',
-			] );
-
-		// Add a GeoJSON source for the stores
-		map.addSource( 'geojson-stores', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features:
-					mapboxOptions.listings as Feature< GeoJSON.Geometry >[],
-			},
-		} );
-
-		// Add a layer showing the places.
-		map.addLayer( {
-			id: 'geojson-stores',
-			type: 'symbol',
-			source: 'geojson-stores',
-			layout: {
-				'icon-allow-overlap': true,
-			},
-		} );
-	} );
-
-	return map;
-}
+import type { MapBoxListing } from '../../types';
+import { SearchMarkerProps } from '../../types';
+import { removeMarkerEl } from '../Marker/utils';
+import { flyToStore } from '../../utils/view';
+import {
+	PinPointPopup,
+	PopupContent,
+	SearchPopup,
+} from '../Popup/PopupContent';
+import { addPopup } from '../Popup/Popup';
 
 /**
  * The function sets the elevation of a Mapbox map to either a globe or a mercator projection and adds
@@ -154,30 +79,6 @@ export function setMapThreeDimensionality(
 }
 
 /**
- * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
- * class from any previously active feature.
- *
- * @param {MapBoxListing} item - The `item` parameter is of type `Feature`, which is likely an object
- *                             representing a geographic feature on a map. It may contain properties such as the feature's ID,
- *                             coordinates, and other attributes. The function `highlightListing` is using this parameter to
- *                             identify a specific feature and highlight its corresponding
- */
-export function highlightListing( item: MapBoxListing ) {
-
-	document.getElementById( 'feature-listing' )?.classList.add( 'filtered' );
-
-	const activeItem = document.getElementsByClassName( 'active-store' );
-	if ( activeItem[ 0 ] ) {
-		activeItem[ 0 ].classList.remove( 'active-store' );
-	}
-
-	if ( item.properties ) {
-		const listing = document.getElementById( 'marker-' + item.id );
-		listing?.classList.add( 'active-store' );
-	}
-}
-
-/**
  * This function enables or disables mouse wheel zoom and touch zoom/rotate on a map depending on the
  * boolean value passed as an argument.
  *
@@ -208,7 +109,7 @@ export function setMapWheelZoom( map: mapboxgl.Map, mouseWheelZoom: boolean ) {
  *                                             array with the marker that matches the given ID removed.
  * @return a new array of MapboxGeoJSONFeature objects that do not have the specified id.
  */
-function removeMarkerById(
+export function removeMarkerById(
 	id: number,
 	markersList: MapboxGeoJSONFeature[]
 ): MapboxGeoJSONFeature[] {
@@ -233,4 +134,32 @@ export function getMarkerData(
 	markersList: MapBoxListing[]
 ): MapBoxListing | undefined {
 	return markersList.find( ( marker ) => marker.id === id );
+}
+
+/**
+ * Returns a list of MapBoxListing objects based on the given listings and filteredListings.
+ *
+ * @param {MapBoxListing[]} listings         - An array of MapBoxListing objects representing all the listings.
+ * @param {MapBoxListing[]} filteredListings - An array of MapBoxListing objects representing the filtered listings.
+ * @return {MapBoxListing[]} - An array of MapBoxListing objects. If filteredListings is not empty, it returns the filteredListings; otherwise, it returns the listings.
+ */
+export function getListing(
+	listings: MapBoxListing[],
+	filteredListings: MapBoxListing[]
+): MapBoxListing[] {
+	return filteredListings.length > 0 ? filteredListings : listings;
+}
+
+/**
+ * Updates the listing on the map.
+ *
+ * @param {MapBoxListing} mapListing - The map listing to be updated.
+ * @param                 currentMap
+ */
+export function updateListing(
+	mapListing: MapBoxListing,
+	currentMap: HTMLDivElement
+) {
+	// remove previous marker and popup
+	removeMarkerEl( mapListing.id, currentMap );
 }

@@ -17,26 +17,34 @@ import { __ } from '@wordpress/i18n';
 import { getNextId } from '../../utils/dataset';
 import { MarkerIcon } from '../../types';
 
-export const IconItem = ( props ) => {
+export const IconItem = ( props: {
+	id: number;
+	name: string;
+	content: string;
+	setIcon: ( props: any ) => void;
+	removeIcon: ( id: number ) => void;
+} ) => {
 	const { id, name, content, setIcon, removeIcon } = props;
 
 	return (
-		<FlexItem className={ 'icon-item' + id }>
-			<div
-				className={ 'icon-item-preview' }
-				dangerouslySetInnerHTML={ { __html: content } }
-			/>
-
-			<div>
+		<FlexItem className={ 'marker-icon-item icon-item-' + id }>
+			<div className={ 'marker-icon-item__preview' }>
+				<div
+					className={ 'svg-wrapper' }
+					dangerouslySetInnerHTML={ { __html: content } }
+				></div>
 				<Button
 					icon={ cancelCircleFilled }
-					text={ __( 'remove' ) }
+					title={ __( 'Delete icon' ) }
 					className={ 'remove-sortable-item' }
 					style={ { width: '50%' } }
 					onClick={ () => removeIcon( id ) }
 				/>
+			</div>
+
+			<div>
 				<TextControl
-					label={ __( 'Marker' ) }
+					placeholder={ __( 'Marker Name' ) }
 					value={ name || 'mapMarker' }
 					onChange={ ( newValue ) =>
 						setIcon( {
@@ -46,7 +54,7 @@ export const IconItem = ( props ) => {
 					}
 				/>
 				<TextControl
-					label={ __( 'svg markup' ) }
+					placeholder={ __( 'svg markup' ) }
 					value={ content || '<svg></svg>' }
 					onChange={ ( newValue ) =>
 						setIcon( {
@@ -60,7 +68,7 @@ export const IconItem = ( props ) => {
 	);
 };
 
-export const PanelIcons = ( {
+export const EditPanelIcons = ( {
 	icons = [],
 	setOptions,
 }: {
@@ -102,12 +110,15 @@ export const PanelIcons = ( {
 			<PanelBody title="Pointer" icon={ mapMarker } initialOpen={ false }>
 				<Flex direction={ 'column' }>
 					{ icons?.map( ( icon, index ) => (
-						<IconItem
-							key={ index }
-							{ ...icon }
-							setIcon={ setIcon }
-							removeIcon={ removeIcon }
-						/>
+						<>
+							<IconItem
+								key={ index }
+								{ ...icon }
+								setIcon={ setIcon }
+								removeIcon={ removeIcon }
+							/>
+							<hr />
+						</>
 					) ) }
 				</Flex>
 				<Button

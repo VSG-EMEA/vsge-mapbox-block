@@ -1,7 +1,7 @@
-import { MapboxContext } from './MapboxContext';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
 import mapboxgl from 'mapbox-gl';
-import { useContext, useEffect } from '@wordpress/element';
-import { MapBox } from './index';
+import { useEffect } from '@wordpress/element';
+import { MapBox } from '../Mapbox';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	__experimentalUnitControl as UnitControl,
@@ -22,10 +22,10 @@ import {
 	setMapElevation,
 	setMapThreeDimensionality,
 	setMapWheelZoom,
-} from './utils';
+} from '../Mapbox/utils';
 import classNames from 'classnames';
 import { getMapDefaults } from '../../utils';
-import { PanelIcons } from './PanelIcons';
+import { EditPanelIcons } from './EditPanelIcons';
 
 export function MapEdit( {
 	attributes,
@@ -56,7 +56,7 @@ export function MapEdit( {
 		mapboxOptions: { tags, icons, filters, listings },
 	}: MapAttributes = attributes;
 
-	const { map, mapRef } = useContext( MapboxContext );
+	const { map, mapRef, loaded, setListings } = useMapboxContext();
 
 	/**
 	 * This function sets options for a Mapbox map and updates the markers accordingly.
@@ -68,6 +68,7 @@ export function MapEdit( {
 	 *                                          `mapboxOptions` object is a property of the `attributes` object, which is being updated using the
 	 */
 	const setOptions = ( key: string, value: string | number | boolean ) => {
+		// update the map
 		setAttributes( {
 			...attributes,
 			mapboxOptions: {
@@ -111,36 +112,42 @@ export function MapEdit( {
 	}
 
 	useEffect( () => {
-		if ( map ) {
+		if ( loaded ) {
 			refreshMap();
 		}
 	}, [ align ] );
 
 	useEffect( () => {
-		if ( map ) {
-			map.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
+		if ( loaded ) {
+			map.current.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
 			refreshMap();
 		}
 	}, [ mapStyle ] );
 
 	useEffect( () => {
-		if ( map ) {
-			setMapThreeDimensionality( map, freeViewCamera );
+		if ( loaded ) {
+			setMapThreeDimensionality( map.current, freeViewCamera );
 		}
 	}, [ freeViewCamera ] );
 
 	useEffect( () => {
-		if ( map ) {
-			setMapElevation( map, elevation );
+		if ( loaded ) {
+			setMapElevation( map.current, elevation );
 			refreshMap();
 		}
 	}, [ elevation ] );
 
 	useEffect( () => {
-		if ( map ) {
-			setMapWheelZoom( map, mouseWheelZoom );
+		if ( loaded ) {
+			setMapWheelZoom( map.current, mouseWheelZoom );
 		}
 	}, [ mouseWheelZoom ] );
+
+	useEffect( () => {
+		if ( loaded ) {
+			setListings( attributes.mapboxOptions.listings );
+		}
+	}, [ attributes.mapboxOptions ] );
 
 	const blockProps = useBlockProps( {
 		className: classNames( 'wp-block-vsge-mapbox', 'block-mapbox' ),
@@ -252,7 +259,8 @@ export function MapEdit( {
 						<Button
 							variant="secondary"
 							onClick={ () => {
-								if ( map ) pullMapOptions( map );
+								if ( map.current )
+									pullMapOptions( map.current );
 							} }
 						>
 							{ __( 'Get Current view' ) }
@@ -270,8 +278,11 @@ export function MapEdit( {
 									...attributes,
 									latitude: newValue || 0,
 								} );
-								if ( map && newValue )
-									map.setCenter( [ newValue, longitude ] );
+								if ( map.current && newValue )
+									map.current.setCenter( [
+										newValue,
+										longitude,
+									] );
 							} }
 						/>
 						<RangeControl
@@ -286,7 +297,10 @@ export function MapEdit( {
 									longitude: newValue || 0,
 								} );
 								if ( newValue )
-									map?.setCenter( [ latitude, newValue ] );
+									map.current?.setCenter( [
+										latitude,
+										newValue,
+									] );
 							} }
 						/>
 						<RangeControl
@@ -300,7 +314,8 @@ export function MapEdit( {
 									...attributes,
 									pitch: newValue || 0,
 								} );
-								if ( newValue ) map?.setPitch( newValue );
+								if ( newValue )
+									map.current?.setPitch( newValue );
 							} }
 						/>
 						<RangeControl
@@ -314,7 +329,8 @@ export function MapEdit( {
 									...attributes,
 									bearing: newValue || 0,
 								} );
-								if ( newValue ) map?.setBearing( newValue );
+								if ( newValue )
+									map.current?.setBearing( newValue );
 							} }
 						/>
 						<RangeControl
@@ -328,7 +344,8 @@ export function MapEdit( {
 									...attributes,
 									mapZoom: newValue || 0,
 								} );
-								if ( newValue ) map?.setZoom( newValue );
+								if ( newValue )
+									map.current?.setZoom( newValue );
 							} }
 						/>
 						<SelectControl
@@ -341,7 +358,7 @@ export function MapEdit( {
 									mapStyle: newValue,
 								} );
 								if ( newValue )
-									map?.setStyle(
+									map.current?.setStyle(
 										'mapbox://styles/mapbox/' + newValue
 									);
 							} }
@@ -355,13 +372,14 @@ export function MapEdit( {
 									...attributes,
 									mapProjection: newValue,
 								} );
-								if ( newValue ) map?.setProjection( newValue );
+								if ( newValue )
+									map.current?.setProjection( newValue );
 							} }
 						/>
 						<UnitControl
 							value={ mapHeight }
 							label={ __( 'Map Height' ) }
-							onChange={ ( newValue: string ) => {
+							onChange={ ( newValue ) => {
 								setAttributes( {
 									...attributes,
 									mapHeight: newValue || '',
@@ -401,7 +419,7 @@ export function MapEdit( {
 				<Panel>
 					<PanelBody title="Map Pins" icon={ list }>
 						<Sortable
-							items={ listings || [] }
+							items={ listings }
 							tax={ 'listings' }
 							setOptions={ setOptions }
 							mapboxOptions={ attributes.mapboxOptions }
@@ -409,7 +427,7 @@ export function MapEdit( {
 					</PanelBody>
 				</Panel>
 
-				<PanelIcons icons={ icons } setOptions={ setOptions } />
+				<EditPanelIcons icons={ icons } setOptions={ setOptions } />
 
 				<Panel>
 					<PanelBody

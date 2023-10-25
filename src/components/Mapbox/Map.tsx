@@ -3,12 +3,10 @@
 optional elements based on the values of `fitView`, `tagsEnabled`, and `filtersEnabled` properties
 of the `attributes` object. It also contains a `div` with class `map` and a `ref` to the
 `mapContainer` prop. The component is exported for use in other parts of the codebase. */
-import { RefObject } from 'react';
+import { MountedMapsContextValue } from '../../types';
+import { useMapboxContext } from './MapboxContext';
 
-export function Map( {
-	mapRef,
-}: {
-	mapRef: RefObject< HTMLDivElement >;
-} ): JSX.Element {
-	return <div className={ 'map' } ref={ mapRef }></div>;
+export function Map(): JSX.Element {
+	const { mapRef }: MountedMapsContextValue = useMapboxContext();
+	return <div className={ 'map' } ref={ mapRef } />;
 }

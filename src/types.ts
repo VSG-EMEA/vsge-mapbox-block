@@ -1,6 +1,12 @@
-import { Feature, Geometry } from '@turf/turf';
-import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
-import { Dispatch, RefObject, SetStateAction } from 'react';
+import type { Feature, Geometry } from '@turf/turf';
+import mapboxgl, { LngLat } from 'mapbox-gl';
+import type {
+	MutableRefObject,
+	ComponentType,
+	Dispatch,
+	RefObject,
+	SetStateAction,
+} from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 export type CoordinatesDef = [ number, number ];
@@ -13,7 +19,15 @@ export type MapboxBlockDefaults = {
 
 export type TagArray = string[];
 
-export type TagCollection = { id: number; value: string };
+export type FilterCollection = { id: number; value?: string };
+export type TagCollection = { id: number; tag: string };
+
+export interface SortableProps {
+	items: MapBoxListing[] | FilterCollection[];
+	tax: string;
+	setOptions: Function;
+	mapboxOptions?: MapboxOptions;
+}
 
 export interface MarkerIcon {
 	id: number;
@@ -23,8 +37,8 @@ export interface MarkerIcon {
 
 export type MapboxOptions = {
 	icons: MarkerIcon[];
-	tags: TagCollection[];
-	filters: TagCollection[];
+	tags: FilterCollection[];
+	filters: FilterCollection[];
 	listings: MapBoxListing[];
 };
 
@@ -49,6 +63,33 @@ export type MapAttributes = {
 	mapboxOptions: MapboxOptions;
 };
 
+export type MountedMapsContextValue =
+	| {
+			map: MutableRefObject< mapboxgl.Map | null >;
+			lngLat?: LngLat;
+			listings: MapBoxListing[];
+			filteredListings: MapBoxListing[];
+			setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
+			setFilteredListings: Dispatch< MapBoxListing[] >;
+			setLngLat: Dispatch< SetStateAction< LngLat | null > >;
+			geoCoder?: MapboxGeocoder;
+			setGeoCoder?: SetStateAction< any >;
+			mapRef?: RefObject< HTMLDivElement >;
+			markersRef: RefObject< HTMLButtonElement[] >;
+			geocoderRef?: RefObject< HTMLDivElement >;
+			loaded: boolean;
+			setLoaded: Dispatch< SetStateAction< boolean > >;
+			mapDefaults?: MapboxBlockDefaults;
+			mapIcons?: MarkerIcon[];
+			Provider: ComponentType;
+	  }
+	| undefined;
+
+export type selectOptions = {
+	label: string;
+	value: string;
+};
+
 export interface MapItem extends Feature {
 	geometry: Geometry;
 	properties: MarkerProps;
@@ -60,27 +101,6 @@ export interface MapItem extends Feature {
 	} | null;
 }
 
-export type MountedMapsContextValue = {
-	map: mapboxgl.Map | null;
-	lngLat?: LngLat;
-	setMap: Dispatch< SetStateAction< mapboxgl.Map | null > >;
-	listings: MapBoxListing[];
-	filteredListings: MapBoxListing[] | null;
-	setListings: Dispatch< SetStateAction< MapBoxListing[] | null > >;
-	setFilteredListings: Dispatch< MapBoxListing[] | null >;
-	setLngLat: Dispatch< SetStateAction< LngLat | null > >;
-	geoCoder?: MapboxGeocoder;
-	setGeoCoder?: SetStateAction< any >;
-	mapRef?: RefObject< HTMLDivElement >;
-	geocoderRef?: RefObject< HTMLDivElement >;
-	mapDefaults?: MapboxBlockDefaults;
-};
-
-export type selectOptions = {
-	label: string;
-	value: string;
-};
-
 export interface MapBoxListing {
 	id: number;
 	type: string;
@@ -89,6 +109,7 @@ export interface MapBoxListing {
 		type: string;
 		coordinates: CoordinatesDef;
 	};
+	ref?: RefObject< HTMLElement >;
 }
 
 /**
@@ -123,8 +144,8 @@ export interface MarkerProps {
 	draggable: boolean;
 	iconSize?: number;
 	iconColor?: string;
-	itemTags?: TagArray[];
-	itemFilters?: TagArray[];
+	itemTags?: TagArray;
+	itemFilters?: TagArray;
 	distance?: number;
 }
 
@@ -137,12 +158,6 @@ export interface MarkerPropsStyle {
 export interface SearchMarkerProps extends MarkerProps {
 	category: string;
 	maki: string;
-}
-
-export interface MarkerItem {
-	geometry: Geometry;
-	properties?: MarkerProps;
-	element?: HTMLElement;
 }
 
 export interface MarkerHTMLElement extends HTMLElement {

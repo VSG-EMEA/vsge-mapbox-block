@@ -3,36 +3,18 @@ import { StringItem } from './SortableItems';
 import { PinCard } from './SortablePins';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { useContext, useEffect } from '@wordpress/element';
-import { MapboxContext } from '../Mapbox/MapboxContext';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
 import { plusCircle } from '@wordpress/icons';
 import { getNextId, reorder } from '../../utils/dataset';
-import { MapBoxListing, MapboxOptions, TagArray, MapItem } from '../../types';
+import { MapBoxListing, SortableProps } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
 import { defaultMarkerProps } from '../Mapbox/defaults';
-import { removePopups } from '../Mapbox/Popup';
-
-interface SortableProps {
-	items: TagArray[];
-	tax: string;
-	setOptions: Function;
-	mapboxOptions?: MapboxOptions;
-}
+import { removePopups } from '../Popup/Popup';
 
 export const Sortable = ( props: SortableProps ): JSX.Element => {
-	const {
-		items,
-		tax,
-		setOptions,
-		mapboxOptions,
-	}: {
-		items: TagArray[] | MapItem[];
-		tax: string;
-		setOptions: Function;
-		mapboxOptions?: MapboxOptions;
-	} = props;
+	const { items, tax, setOptions, mapboxOptions } = props;
 
-	const { lngLat, mapRef } = useContext( MapboxContext );
+	const { lngLat, mapRef } = useMapboxContext();
 
 	/**
 	 * Fired when the drag ends on a droppable item
@@ -60,12 +42,13 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 	/**
 	 * This function updates an item in a list of items using the new value provided.
 	 *
-	 * @param {MapBoxListing} newValue - newValue is a parameter of type MapBoxListing, which is an object
-	 *                                 containing updated information for an item. This function is used to update an item in an array of
-	 *                                 items (props.items) by finding the item with a matching id and replacing its properties with the
-	 *                                 updated values from newValue. The updated array
+	 * @param {MapBoxListing} newValue    - newValue is a parameter of type MapBoxListing, which is an object
+	 *                                    containing updated information for an item. This function is used to update an item in an array of
+	 *                                    items (props.items) by finding the item with a matching id and replacing its properties with the
+	 *                                    updated values from newValue. The updated array
+	 * @param                 newValue.id
 	 */
-	function updateItem( newValue: MapBoxListing ) {
+	function updateItem( newValue: { id: number } ) {
 		const newItems = props.items.map( ( item ) =>
 			item.id === newValue.id
 				? {
@@ -117,6 +100,8 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 	 *                        listing to be added. It is used to assign a unique ID to the new listing being created.
 	 */
 	function addNewListing( nextId: number ) {
+		if ( ! mapRef ) return;
+		// add the new listing
 		const newListing: Pick<
 			MapBoxListing,
 			'id' | 'type' | 'properties' | 'geometry'
@@ -173,7 +158,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 			<DragDropContext
 				onDragEnd={ ( result: DropResult ) =>
 					_onDragEnd( {
-						destination: result.destination,
+						destination: result.destination ?? { index: 0 },
 						source: result.source,
 					} )
 				}
@@ -198,7 +183,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 								  ) )
 								: items?.map( ( item, index: number ) => (
 										<PinCard
-											item={ item }
+											item={ item as MapBoxListing }
 											key={ item.id }
 											index={ index }
 											updateItem={ updateItem }

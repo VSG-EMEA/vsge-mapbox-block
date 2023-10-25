@@ -1,5 +1,6 @@
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing } from '../types';
+import { MutableRefObject, RefObject } from 'react';
 
 /**
  * The function recenterView takes a map and default values and flies the map to the default center and
@@ -27,6 +28,7 @@ export function recenterView( map, defaults ) {
  * @param {CoordinatesDef} coordinates - The coordinates parameter is a variable that represents the
  *                                     latitude and longitude of a location on a map. It is used to set the center of the map when the
  *                                     flyToStore function is called.
+ * @param                  map.current
  * @param                  store
  * @param {number}         [zoom=8]    - The zoom parameter is a number that determines the level of zoom for the
  *                                     map. A higher number means the map will be more zoomed in, while a lower number means the map will
@@ -36,12 +38,12 @@ export function recenterView( map, defaults ) {
  * to a new location and zoom level.
  */
 export function flyToStore(
-	map: mapboxgl.Map,
+	map: { current: mapboxgl.Map },
 	store: MapBoxListing,
 	zoom: number = 8
 ) {
 	if ( store?.geometry?.coordinates )
-		return map.flyTo( {
+		return map.current.flyTo( {
 			center: store.geometry.coordinates,
 			zoom,
 		} );
@@ -104,15 +106,16 @@ export function filterListingsBy(
  * @param                   mapRef   The map reference is an instance of the Mapbox GL JS map that is being used to display the map.
  */
 export function fitInView(
-	map: mapboxgl.Map,
+	map: MutableRefObject< mapboxgl.Map | null >,
 	listings: MapBoxListing[],
-	mapRef: React.RefObject< HTMLDivElement > | undefined
+	mapRef: RefObject< HTMLDivElement > | undefined
 ) {
+	if ( ! mapRef || ! mapRef.current ) return;
+
 	const bounds = new mapboxgl.LngLatBounds();
 	let padding = 0;
-	if ( mapRef ) {
-		padding = mapRef.current.offsetWidth * 0.1;
-	}
+
+	padding = mapRef.current.offsetWidth * 0.1;
 
 	if ( listings.length !== 0 ) {
 		listings.forEach( ( point ) => {
@@ -131,8 +134,8 @@ export function fitInView(
 			bounds._ne.lng = lng - 0.5;
 		}
 
-		map.fitBounds( bounds, { padding } );
+		map.current.fitBounds( bounds, { padding } );
 	}
 
-	map.resize();
+	map.current.resize();
 }

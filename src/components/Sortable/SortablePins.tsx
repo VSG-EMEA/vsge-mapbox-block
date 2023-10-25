@@ -1,41 +1,40 @@
-import { useContext, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
 	ColorPicker,
 	Flex,
-	Popover,
 	FlexItem,
+	PanelRow,
+	Popover,
 	RangeControl,
 	SelectControl,
 	TextareaControl,
 	TextControl,
-	PanelRow,
 } from '@wordpress/components';
-import { upload, download, reset } from '@wordpress/icons';
+import { download, reset, upload } from '@wordpress/icons';
 import { Draggable } from 'react-beautiful-dnd';
 import { __ } from '@wordpress/i18n';
 import {
+	FilterCollection,
 	MapBoxListing,
-	TagArray,
 	MarkerIcon,
-	TagCollection,
+	TagArray,
 } from '../../types';
-import { getNextId } from '../../utils/dataset';
-import { Position } from 'geojson';
-import { MapboxContext } from '../Mapbox/MapboxContext';
+import { useMapboxContext } from '../Mapbox/MapboxContext';
+import { IconPreview } from './IconPreview';
 
 export const PinCard = ( props: {
 	item: MapBoxListing;
 	index: number;
 	updateItem: Function;
 	deleteItem: Function;
-	tags: TagCollection[];
-	filters: TagCollection[];
+	tags: FilterCollection[];
+	filters: FilterCollection[];
 	icons: MarkerIcon[];
 } ) => {
 	const { item, index, updateItem, deleteItem, tags, filters, icons } = props;
-	const { lngLat } = useContext( MapboxContext );
+	const { lngLat } = useMapboxContext();
 	const [ isOpen, setIsOpen ] = useState( false );
 	const [ showColorPicker, setShowColorPicker ] = useState( false );
 	const [ itemData, setItemData ] = useState( item as MapBoxListing );
@@ -70,11 +69,11 @@ export const PinCard = ( props: {
 	 * @param isChecked the new value
 	 */
 	function updateMapFilter(
-		mapFilter: TagArray[] = [],
+		mapFilter: TagArray | undefined = [],
 		value: string,
 		isChecked: boolean
-	) {
-		// if newvalue is true add the value to the array
+	): TagArray {
+		// if the new value is true add the value to the array
 		if ( isChecked ) {
 			return [ ...mapFilter, value ];
 		}
@@ -137,13 +136,88 @@ export const PinCard = ( props: {
 								iconSize={ 16 }
 								icon={ 'arrow-down' }
 							/>
-							<Button
-								onClick={ () => deleteItem( itemData.id ) }
-								isSmall={ true }
-								icon="trash"
-								iconSize={ 16 }
-							/>
 						</div>
+
+						<Flex justify={ 'space-between' } align={ 'center' }>
+							<SelectControl
+								label={ __( 'type' ) }
+								value={ itemData.type }
+								options={ [
+									{
+										value: 'point',
+										label: 'Point',
+									},
+								] }
+								onChange={ ( newValue ) => {
+									setItemData( {
+										...itemData,
+										geometry: {
+											...itemData.geometry,
+											type: newValue,
+										},
+									} );
+								} }
+							/>
+							<TextControl
+								label={ __( 'lat' ) }
+								value={
+									itemData.geometry.coordinates[ 0 ] || 0
+								}
+								onChange={ ( newValue ) =>
+									setItemData( {
+										...itemData,
+										geometry: {
+											...itemData.geometry,
+											coordinates: [
+												itemData.geometry
+													?.coordinates[ 0 ] || 0,
+												Number( newValue ) || 0,
+											],
+										},
+									} )
+								}
+							/>
+							<TextControl
+								label={ __( 'lang' ) }
+								value={
+									itemData.geometry.coordinates[ 1 ] || 0
+								}
+								onChange={ ( newValue ) =>
+									setItemData( {
+										...itemData,
+										geometry: {
+											...itemData.geometry,
+											coordinates: [
+												Number( newValue ) || 0,
+												itemData.geometry
+													?.coordinates[ 1 ] || 0,
+											],
+										},
+									} )
+								}
+							/>
+							<Button
+								icon={ upload }
+								variant={ 'secondary' }
+								disabled={ ! lngLat?.lng || ! lngLat?.lat }
+								onClick={ () => {
+									setItemData( {
+										...itemData,
+										geometry: {
+											type: 'Point',
+											coordinates: [
+												lngLat?.lng || 0,
+												lngLat?.lat || 0,
+											],
+										},
+									} );
+								} }
+								label={ __( 'Add Pin' ) }
+								showTooltip={ true }
+							/>
+						</Flex>
+
+						<hr />
 
 						{ /** main Item Data */ }
 						<TextControl
@@ -246,91 +320,13 @@ export const PinCard = ( props: {
 							__nextHasNoMarginBottom={ true }
 						></TextareaControl>
 
-						<Flex justify={ 'bottom' }>
-							<SelectControl
-								label={ __( 'type' ) }
-								value={ itemData.type }
-								options={ [
-									{
-										value: 'point',
-										label: 'Point',
-									},
-								] }
-								onChange={ ( newValue ) => {
-									setItemData( {
-										...itemData,
-										geometry: {
-											...itemData.geometry,
-											type: newValue,
-										},
-									} );
-								} }
-							/>
-							<TextControl
-								label={ __( 'lat' ) }
-								value={
-									itemData.geometry.coordinates[ 0 ] || 0
-								}
-								disabled={ true }
-								onChange={ ( newValue ) =>
-									setItemData( {
-										geometry: {
-											...itemData.geometry,
-											coordinates: [
-												itemData.geometry
-													.coordinates[ 0 ] || 0,
-												newValue,
-											] as Position[],
-										},
-									} )
-								}
-							/>
-							<TextControl
-								label={ __( 'lang' ) }
-								value={
-									itemData.geometry.coordinates[ 1 ] || 0
-								}
-								disabled={ true }
-								onChange={ ( newValue ) =>
-									setItemData( {
-										geometry: {
-											...itemData.geometry,
-											coordinates: [
-												newValue,
-												itemData.geometry
-													.coordinates[ 1 ],
-											] as Position[],
-										},
-									} )
-								}
-							/>
-							<Button
-								icon={ upload }
-								variant={ 'secondary' }
-								disabled={ ! lngLat?.lng || ! lngLat?.lat }
-								onClick={ () => {
-									setItemData( {
-										...itemData,
-										geometry: {
-											type: 'Point',
-											coordinates: [
-												lngLat?.lng || 0,
-												lngLat?.lat || 0,
-											],
-										},
-									} );
-								} }
-								label={ __( 'Add Pin' ) }
-								showTooltip={ true }
-							/>
-						</Flex>
-
 						{ /** Tags */ }
 						<Flex direction={ 'row' } justify={ 'top' }>
-							<FlexItem
-								style={ { width: '50%', alignSelf: 'start' } }
-							>
-								<h4>Tags</h4>
+							<FlexItem className={ 'sortable-pins-column' }>
+								<h4 className={ 'sortable-pins-column__title' }>
+									Tags
+								</h4>
+								<hr />
 
 								{ tags?.map( ( checkbox, i ) => (
 									<CheckboxControl
@@ -359,9 +355,13 @@ export const PinCard = ( props: {
 								) ) }
 							</FlexItem>
 							<FlexItem
+								className={ 'sortable-pins-column' }
 								style={ { width: '50%', alignSelf: 'start' } }
 							>
-								<h4>Filter</h4>
+								<h4 className={ 'sortable-pins-column__title' }>
+									{ __( 'Filters' ) }
+								</h4>
+								<hr />
 								{ filters?.map( ( checkbox, i ) => (
 									<CheckboxControl
 										label={ checkbox.value }
@@ -389,6 +389,7 @@ export const PinCard = ( props: {
 								) ) }
 							</FlexItem>
 						</Flex>
+						<hr />
 
 						{ /** Marker Style */ }
 						<h4>Marker</h4>
@@ -407,79 +408,100 @@ export const PinCard = ( props: {
 							max={ 100 }
 							step={ 1 }
 						/>
-						<SelectControl
-							label={ __( 'Select a Marker' ) }
-							value={ itemData.properties?.icon }
-							options={ [
-								{ value: 'default', label: __( 'Default' ) },
-								...icons.map( ( icon ) => {
-									return {
-										value: 'custom-' + String( icon.id ),
-										label: icon.name,
-									};
-								} ),
-							] }
-							onChange={ ( newValue ) => {
-								setItemData( {
-									...itemData,
-									properties: {
-										...itemData.properties,
-										icon: newValue,
-									},
-								} );
-							} }
-						/>
 
-						<Button
-							onClick={ () =>
-								setShowColorPicker( ! showColorPicker )
-							}
-							variant={ 'tertiary' }
-							className="marker-button"
-							iconSize={ 16 }
-							icon={ 'paint-brush' }
-							aria-label={ __( 'Marker' ) }
-							aria-haspopup="true"
-							aria-expanded={ showColorPicker }
+						<Flex
+							direction={ 'row' }
+							justify={ 'space-between' }
+							gap={ '8px' }
 						>
-							<span
-								className="color-preview"
-								style={ {
-									backgroundColor:
-										itemData.properties?.iconColor ||
-										'#000',
+							<IconPreview
+								iconName={ itemData.properties?.icon }
+								iconSet={ icons }
+							/>
+							<SelectControl
+								label={ __( 'Select a Marker' ) }
+								value={ itemData.properties?.icon }
+								options={ [
+									{
+										value: 'default',
+										label: __( 'Default' ),
+									},
+									...icons.map( ( icon ) => {
+										return {
+											value:
+												'custom-' + String( icon.id ),
+											label: icon.name,
+										};
+									} ),
+								] }
+								onChange={ ( newValue ) => {
+									setItemData( {
+										...itemData,
+										properties: {
+											...itemData.properties,
+											icon: newValue,
+										},
+									} );
 								} }
-							></span>
-							Marker
-							{ showColorPicker && (
-								<Popover>
-									<ColorPicker
-										defaultValue={ '#f00' }
-										color={ itemData.properties?.iconColor }
-										onChangeComplete={ setMarkerColor }
-									/>
-								</Popover>
-							) }
-						</Button>
+							/>
+							<Button
+								onClick={ () =>
+									setShowColorPicker( ! showColorPicker )
+								}
+								variant={ 'tertiary' }
+								className="marker-button"
+								iconSize={ 16 }
+								aria-label={ __( 'Marker' ) }
+								aria-haspopup="true"
+								aria-expanded={ showColorPicker }
+							>
+								<span
+									className="color-preview"
+									style={ {
+										backgroundColor:
+											itemData.properties?.iconColor ||
+											'#000',
+									} }
+								></span>
+								{ showColorPicker && (
+									<Popover>
+										<ColorPicker
+											defaultValue={ '#f00' }
+											color={
+												itemData.properties?.iconColor
+											}
+											onChangeComplete={ setMarkerColor }
+										/>
+									</Popover>
+								) }
+							</Button>
+						</Flex>
 						<PanelRow>
-							<Button
-								onClick={ () => updateItem( itemData ) }
-								label={ __( 'Save item data' ) }
-								variant={ 'primary' }
-								iconSize={ 16 }
-								icon={ download }
-							>
-								{ __( 'Save changes' ) }
-							</Button>
-							<Button
-								onClick={ () => resetListing() }
-								label={ __( 'Reset' ) }
-								variant={ 'secondary' }
-								iconSize={ 16 }
-								icon={ reset }
-							>
-								{ __( 'Reset' ) }
-							</Button>
+							<Flex gap={ '8px' }>
+								<Button
+									onClick={ () => deleteItem( itemData.id ) }
+									variant={ 'secondary' }
+									icon="trash"
+									iconSize={ 16 }
+								/>
+								<Button
+									onClick={ () => resetListing() }
+									variant={ 'secondary' }
+									iconSize={ 16 }
+									icon={ reset }
+								>
+									{ __( 'Reset' ) }
+								</Button>
+								<Button
+									style={ { marginLeft: 'auto' } }
+									onClick={ () => updateItem( itemData ) }
+									variant={ 'primary' }
+									iconSize={ 16 }
+									icon={ download }
+								>
+									{ __( 'Save' ) }
+								</Button>
+							</Flex>
 						</PanelRow>
 					</div>
 				</div>
