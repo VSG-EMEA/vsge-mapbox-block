@@ -1,30 +1,30 @@
 /* Marker tweaks */
 .wp-block-vsge-mapbox .map-wrapper {
-	.map .mapboxgl-popup {
-		padding-bottom: 50px;
+  .map .mapboxgl-popup {
+    padding-bottom: 50px;
 
-		&-close-button {
-			// display:none;
-			margin: 0;
-			background-color: transparent;
-			color: var(--color__gray-800);
-			border: 0 !important;
-			min-width: 32px;
-			font-size: 28px;
-			padding: 0;
-		}
+    &-close-button {
+      // display:none;
+      margin: 0;
+      background-color: transparent;
+      color: var(--color__gray-800);
+      border: 0 !important;
+      min-width: 32px;
+      font-size: 28px;
+      padding: 0;
+    }
 
-		&-content {
-			font-weight: 400;
+    &-content {
+      font-weight: 400;
       padding: 1rem 1.5rem 1rem 1rem;
       width: 100%;
-			line-height: var(--text__line-height-headline);
+      line-height: var(--text__line-height-headline);
 
-			img.gray-marker {
-				position: absolute;
-				left: 24px;
-			}
-		}
+      img.gray-marker {
+        position: absolute;
+        left: 24px;
+      }
+    }
 
     .mapbox-popup-inner {
       gap: 1rem;
@@ -37,6 +37,7 @@
         text-align: center;
         margin: auto;
         min-width: inherit;
+
         svg {
           margin: auto;
           width: 100%;
@@ -56,33 +57,30 @@
       }
     }
 
-		&-anchor-bottom .mapboxgl-popup-tip {
-			filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.1));
-		}
+    &-anchor-bottom .mapboxgl-popup-tip {
+      filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.1));
+    }
 
     a {
       text-decoration: inherit;
     }
 
-		h3 {
-			font-weight: 600;
-			font-size: 16px;
-      margin: 0;
-      color: var(--wp--preset--color--primary);
-		}
+    h3 {
+      color: #484848;
+      font-weight: 600;
+      font-size: 16px;
+      margin: 0 0 6px;
+    }
 
-		h4 {
-			font-size: 14px;
-		}
+    h4 {
+      font-size: 14px;
+      margin: 0 0 6px;
+    }
 
-		h4,
-		p {
-			color: #9b9b9b;
-			margin: 0;
-		}
-
-		p {
-			font-size: 13px;
-		}
-	}
+    p {
+      color: #9b9b9b;
+      font-size: 13px;
+      margin: 0 0 2px;
+    }
+  }
 }

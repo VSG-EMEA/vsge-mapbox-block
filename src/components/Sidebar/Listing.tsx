@@ -102,68 +102,72 @@ export const Listing = ( {
 	} = jsonFeature;
 	return (
 		<div className={ 'mapbox-sidebar-feature listing' }>
-			<Icon icon={ mapMarker } />
-			<div
-				role="presentation"
-				onClick={ () => {
-					removePopups( mapRef );
-					enableListing( map, jsonFeature );
-				} }
-			>
-				<TagList
-					tags={ itemFilters }
-					className={ 'sidebar-filter-list' }
-				/>
-				<h4 className="title">{ name }</h4>
-				{ address && <p>{ address }</p> }
-				{ phone && (
-					<p>
-						Phone:{ ' ' }
-						<a href={ 'tel:' + phone } className="email-link">
-							{ phone }
-						</a>
-					</p>
-				) }
+			<TagList
+				tags={ itemFilters }
+				className={ 'sidebar-filter-list filter-list' }
+			/>
+			<div className="mapbox-sidebar-feature__inner">
+				<Icon icon={ mapMarker } />
+				<div
+					role="presentation"
+					onClick={ () => {
+						removePopups( mapRef );
+						enableListing( map, jsonFeature );
+					} }
+				>
+					<h4 className="title">{ name }</h4>
+					{ address && <p>{ address }</p> }
+					{ phone && (
+						<p>
+							Phone:{ ' ' }
+							<a href={ 'tel:' + phone } className="email-link">
+								{ phone }
+							</a>
+						</p>
+					) }
 
-				<p>
-					{ address && address }
-					<br />
-					{ country && country } { city && city }{ ' ' }
-					{ countryCode && '(' + countryCode + ')' }
-				</p>
+					<p>
+						{ address && address }
+						<br />
+						{ country && country } { city && city }{ ' ' }
+						{ countryCode && '(' + countryCode + ')' }
+					</p>
 
-				{ website && (
-					<p>
-						Website:{ ' ' }
-						<a href={ '//' + website } className="website-link">
-							{ website }
-						</a>
-					</p>
-				) }
-				{ emailAddress && (
-					<p>
-						Email:{ ' ' }
-						<a
-							href={ 'mailto:' + emailAddress }
-							className="email-link"
-						>
-							{ emailAddress }
-						</a>
-					</p>
-				) }
-				{ distance && (
-					<p className={ 'store-distance' }>
-						{ __( 'Distance: ' ) + distance.toFixed( 1 ) + 'Km' }
-					</p>
-				) }
-				{ itemTags?.length ? (
-					<>
-						<TagList
-							tags={ itemTags }
-							className={ 'sidebar-tag-list' }
-						/>
-					</>
-				) : null }
+					{ website && (
+						<p>
+							Website:{ ' ' }
+							<a href={ '//' + website } className="website-link">
+								{ website }
+							</a>
+						</p>
+					) }
+					{ emailAddress && (
+						<p>
+							Email:{ ' ' }
+							<a
+								href={ 'mailto:' + emailAddress }
+								className="email-link"
+							>
+								{ emailAddress }
+							</a>
+						</p>
+					) }
+					{ distance && (
+						<p className={ 'store-distance' }>
+							{ __( 'Distance: ' ) +
+								distance.toFixed( 1 ) +
+								'Km' }
+						</p>
+					) }
+					{ itemTags?.length ? (
+						<>
+							<TagList
+								tags={ itemTags }
+								className={ 'sidebar-tag-list tag-list' }
+							/>
+						</>
+					) : null }
+				</div>
 			</div>
 		</div>
 	);

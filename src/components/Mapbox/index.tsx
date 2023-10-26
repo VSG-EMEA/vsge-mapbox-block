@@ -213,6 +213,7 @@ export function MapBox( {
 					<PinPointPopup
 						location={ markerCoordinates ?? clickedPoint }
 						listings={ listings }
+                        setListings={ setListings }
 						setFilteredListings={ setFilteredListings }
 						mapRef={ mapRef }
 						map={ map }

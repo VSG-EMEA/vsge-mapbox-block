@@ -1,46 +1,40 @@
 .wp-block-vsge-mapbox .map-wrapper {
-	.map-sidebar {
-		min-width: 300px;
-		overflow: hidden;
-		padding-right: var(--size__margin);
+  .map-sidebar {
+    min-width: 300px;
+    overflow: hidden;
+    padding-right: var(--size__margin);
 
-		display: flex;
-		flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-		@media #{$mq__phablet} {
+    @media #{$mq__phablet} {
       width: 100vw;
-		}
-
-		p {
-			margin: 0;
-			padding: 0;
-		}
-
-    .sidebar-filter-list {
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      font-weight: 700;
     }
 
-		.feature-listing {
-			overflow: auto;
+    p {
+      margin: 0;
+      padding: 0;
+    }
 
-			@media #{$mq__phablet} {
-				padding-bottom: var(--wp--preset--spacing--30);
-				display: block;
-				max-height: 80vh;
-			}
+    .feature-listing {
+      overflow: auto;
 
-			&.filtered {
-				.map-item {
-					display: none;
-				}
+      @media #{$mq__phablet} {
+        padding-bottom: var(--wp--preset--spacing--30);
+        display: block;
+        max-height: 80vh;
+      }
 
-				.map-item.active-store {
-					display: block;
-				}
-			}
-		}
+      &.filtered {
+        .map-item {
+          display: none;
+        }
+
+        .map-item.active-store {
+          display: block;
+        }
+      }
+    }
 
     ::-webkit-scrollbar {
       height: 8px;
@@ -58,5 +52,5 @@
     ::-webkit-scrollbar-corner {
       background: #ddd;
     }
-	}
+  }
 }

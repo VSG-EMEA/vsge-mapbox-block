@@ -12,7 +12,7 @@ import { MutableRefObject, RefObject } from 'react';
  * @return The `recenterView` function is returning a call to the `flyTo` method of the `map` object
  * with an object argument containing the `center` and `zoom` properties.
  */
-export function recenterView( map, defaults ) {
+export function recenterView( map: mapboxgl.Map, defaults: any ): any {
 	return map.flyTo( {
 		center: [ defaults.latitude, defaults.longitude ],
 		zoom: defaults.zoom,

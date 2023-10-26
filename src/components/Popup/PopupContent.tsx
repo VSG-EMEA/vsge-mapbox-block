@@ -13,7 +13,7 @@ import { layouts, svgArray } from '@mapbox/maki';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
-import { showNearestStore } from './Popup';
+import { removePopups, showNearestStore } from './Popup';
 import type mapboxgl from 'mapbox-gl';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
@@ -31,73 +31,84 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 		address = '',
 		city = '',
 		postalCode = '',
-        countryCode = '',
+		countryCode = '',
 		country = '',
 		emailAddress = '',
 		website = '',
 		distance = null,
 	} = props;
 	return (
-		<div className={ 'mapbox-popup-inner' } style={ { display: 'flex' } }>
-			<div>
-				<Icon icon={ mapMarker } size={ 36 } />
-			</div>
-			<div>
-				{ itemFilters?.length ? (
-					<TagList
-						tags={ itemFilters }
-						className={ 'popup-filter-list' }
-					/>
-				) : null }
-				{ website ? (
-					<a href={ website }>
+		<div className={ 'mapbox-popup-wrap' }>
+			<TagList
+				tags={ itemFilters }
+				className={ 'popup-filter-list filter-list' }
+			/>
+			<div
+				className={ 'mapbox-popup-inner' }
+				style={ { display: 'flex' } }
+			>
+				<div>
+					<Icon icon={ mapMarker } size={ 36 } />
+				</div>
+				<div>
+					{ website ? (
+						<a href={ website }>
+							<h3>{ name }</h3>
+						</a>
+					) : (
 						<h3>{ name }</h3>
-					</a>
-				) : (
-					<h3>{ name }</h3>
-				) }
-				{ address && <p>{ address } { postalCode }</p> }
-				{ phone && (
-					<p>
-						Phone:{ ' ' }
-						<a href={ 'tel:' + phone } className="email-link">
-							{ phone }
-						</a>
-					</p>
-				) }
+					) }
+					{ address && (
+						<p>
+							{ address } { postalCode }
+						</p>
+					) }
+					{ phone && (
+						<p>
+							Phone:{ ' ' }
+							<a href={ 'tel:' + phone } className="email-link">
+								{ phone }
+							</a>
+						</p>
+					) }
 
-				<p>
-					{ address && address }
-					<br />
-					{ country && country } { city && city }{ ' ' }
-					{ countryCode && '(' + countryCode + ')' }
-				</p>
+					<p>
+						{ address && address }
+						<br />
+						{ country && country } { city && city }{ ' ' }
+						{ countryCode && '(' + countryCode + ')' }
+					</p>
 
-				{ website && (
-					<p>
-						Website:{ ' ' }
-						<a href={ '//' + website } className="website-link">
-							{ website }
-						</a>
-					</p>
-				) }
-				{ emailAddress && (
-					<p>
-						Email:{ ' ' }
-						<a
-							href={ 'mailto:' + emailAddress }
-							className="email-link"
-						>
-							{ emailAddress }
-						</a>
-					</p>
-				) }
-				<TagList tags={ itemTags } className={ 'popup-tag-list' } />
-				{ !! distance && (
-					<p>
-						{ __( 'Distance: ' ) + `${ distance.toFixed( 2 ) }Km` }
-					</p>
-				) }
+					{ website && (
+						<p>
+							Website:{ ' ' }
+							<a href={ '//' + website } className="website-link">
+								{ website }
+							</a>
+						</p>
+					) }
+					{ emailAddress && (
+						<p>
+							Email:{ ' ' }
+							<a
+								href={ 'mailto:' + emailAddress }
+								className="email-link"
+							>
+								{ emailAddress }
+							</a>
+						</p>
+					) }
+					<TagList
+						tags={ itemTags }
+						className={ 'popup-tag-list tag-list' }
+					/>
+					{ !! distance && (
+						<p>
+							{ __( 'Distance: ' ) +
+								`${ distance.toFixed( 2 ) }Km` }
+						</p>
+					) }
+				</div>
 			</div>
 		</div>
 	);
@@ -149,6 +160,7 @@ export function PinPointPopup( props: {
 	location: CoordinatesDef;
 	mapRef: RefObject< HTMLDivElement >;
 	listings: MapBoxListing[];
+	setListings: ( listings: MapBoxListing[] ) => void;
 	setFilteredListings: ( listings: MapBoxListing[] ) => void;
 } ): JSX.Element {
 	const { location, map, mapRef, listings, setFilteredListings } = props;
@@ -159,7 +171,7 @@ export function PinPointPopup( props: {
 
 	return (
 		<div className={ 'mapbox-popup-inner mapbox-popup-newpin' }>
-			<p>Find A location?</p>
+			<h4>{ __( 'My location' ) }</h4>
 			<button
 				onClick={ () => {
 					// get the current temp pin data
@@ -196,7 +208,8 @@ export function PinPointPopup( props: {
 			</button>
 			<button
 				onClick={ () => {
-					setFilteredListings( listings );
+					removePopups( mapRef );
+					setFilteredListings( [] );
 				} }
 			>
 				Reset

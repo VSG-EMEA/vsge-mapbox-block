@@ -12,3 +12,28 @@
     transform: translateX(-50%);
 	}
 }
+
+
+.tag-list span.item {
+  display: inline-block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0 6px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.05);
+  margin: 0 8px 8px 0;
+  border-radius: 10px;
+}
+
+.filter-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 40px;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  &.popup-filter-list {
+    padding-left: 52px;
+  }
+}
