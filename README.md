@@ -17,6 +17,7 @@ The Mapbox Gutenberg Block is a powerful WordPress block that allows you to easi
 - **Map Styles**: Choose from various map styles.
 - **Map Projection**: Select the projection type.
 - **Map Height**: Customize the height of the map.
+- **Non blocking plugin load**: This block takes advantage of webpack's dynamic loading to minimise the impact of mapbox plugin loading times on the pages of your site
 
 ## Installation
 
@@ -32,11 +33,32 @@ The Mapbox Gutenberg Block is a powerful WordPress block that allows you to easi
 3. Configure the map settings, including markers, filters, camera settings, and more.
 4. Publish or update your post/page to display the interactive map.
 
+## Obtaining a Mapbox Token
+
+To use Mapbox GL in your project, you'll need a Mapbox Token. Mapbox offers a pay-as-you-go plan that allows you to use Mapbox for free up to a certain limit (please refer to the price page of mapbox).
+
+Here's how to get your Mapbox Token:
+
+1. Create a Mapbox Account: If you don't already have one, you can create a free Mapbox account by visiting Mapbox Account Creation Page. Sign up and log in [here](https://account.mapbox.com/auth/signup/).
+2. Access Token Management: After logging in, you'll be directed to your Mapbox Account Landing Page. Here, you'll find options for managing your Mapbox tokens.
+3. Create a New Token or Use Default Public Token: You can either create a new token by following the on-screen instructions or use your Default Public Token. Remember to keep your token safe and confidential.
+
 ## Configuration
 
 You can configure the Mapbox Gutenberg Block via the block settings panel in the WordPress block editor. Customize the map's appearance, add markers, set camera settings, and manage filters from within the block.
 
-For detailed instructions and examples, please refer to the [documentation](link-to-documentation).
+## Dev (wp-env)
+
+You can use wp-env to develop with mapbox-block, all you have to do is create a .wp-env file and add this (remember to add your key)
+```
+{
+  "plugins": ["."],
+  "core": null,
+  "config": {
+    "MAPBOX_TOKEN": "MYKEY-MYKEY1MYKEY2MYKEY3MYKEY4MYKEY5MYKEY6"
+  }
+}
+```
 
 ## License
 
