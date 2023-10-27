@@ -4,17 +4,19 @@ const path = require( 'path' );
 module.exports = {
 	...defaultConfig,
 	entry: {
-		'mapbox': path.resolve( process.cwd(), `src/index.tsx` ),
-		'mapbox-frontend': path.resolve( process.cwd(), `src/components/Mapbox/frontend.tsx` ),
+		'mapbox-block': path.resolve( process.cwd(), `src/index.tsx` ),
+		'mapbox-frontend': path.resolve( process.cwd(), `src/frontend.tsx` ),
 	},
-	module: {
-		rules: [
-			{
-				test: /\.[tjmc]sx?$/,
-				use: [ 'babel-loader' ],
-				exclude: /node_modules/,
-			},
-		],
-		...defaultConfig.module,
-	},
+  optimization: {
+    ...defaultConfig.optimization,
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    },
+  },
 };
