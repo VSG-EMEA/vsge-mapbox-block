@@ -6,11 +6,15 @@
   "keywords": [
     "mapbox"
   ],
+
   "category": "embed",
-  "editorStyle": "file:./build/mapbox.css",
+  "editorStyle": [
+    "file:./build/vendors.css",
+    "file:./build/mapbox-block.css"
+  ],
   "style": [
-    "file:./build/mapbox-frontend.css",
-    "file:./build/style-mapbox-frontend.css"
+    "file:./build/vendors.css",
+    "file:./build/mapbox-frontend.css"
   ],
   "supports": {
     "align": true,
@@ -96,6 +100,12 @@
       }
     }
   },
-  "viewScript": "vsge-mapbox-frontend",
-  "editorScript": "vsge-mapbox-block"
+  "viewScript": [
+    "vsge-mapbox-vendors",
+    "vsge-mapbox-frontend"
+  ],
+  "editorScript": [
+    "vsge-mapbox-vendors",
+    "vsge-mapbox-block"
+  ]
 }

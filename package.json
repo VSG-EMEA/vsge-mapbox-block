@@ -15,8 +15,6 @@
   "scripts": {
     "packages-update": "wp-scripts packages-update",
     "build": "wp-scripts build",
-    "build:types": "tsc --project tsconfig.types.json",
-    "build:withTypes": "npm run build && npm run build:types",
     "start": "wp-scripts start",
     "format": "wp-scripts format /src",
     "lint:css": "wp-scripts lint-style /src/style",
