@@ -1,8 +1,6 @@
-import { safeSlug } from '../../utils';
 import { DefaultMarker } from './marker-icons';
 import { MapBoxListing } from '../../types';
 import { DEFAULT_COLOR } from '../../constants';
-import type { RefObject } from 'react';
 
 /**
  * This is a TypeScript React function that renders a marker with a button and optional children

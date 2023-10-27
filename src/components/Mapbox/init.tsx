@@ -1,20 +1,14 @@
-import type {
-	MapAttributes,
-	MapboxBlockDefaults,
-	MapBoxListing,
-} from '../../types';
-import { getNextId, prepareStores } from '../../utils/dataset';
-import { initGeocoder, initGeomarker } from '../Geocoder/Geocoder';
-import type { RefObject } from 'react';
-import { geoMarkerStyle } from './defaults';
+import type { MapAttributes, MapboxBlockDefaults } from '../../types';
+import { prepareStores } from '../../utils/dataset';
 import { setMapElevation, setMapThreeDimensionality } from './utils';
 import mapboxgl from 'mapbox-gl';
-import { Feature } from '@turf/turf';
+import type { Feature } from '@turf/turf';
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
  * specified.
  *
+ * @param               mapboxgl
  * @param {HTMLElement} mapRef     The HTML element that will contain the map.
  * @param {Object}      attributes An object containing various attributes for initializing the map, including
  *                                 latitude, longitude, pitch, bearing, mapZoom, mapStyle, and freeViewCamera.
@@ -22,6 +16,7 @@ import { Feature } from '@turf/turf';
  * @return {mapboxgl.Map} a mapboxgl.Map object.
  */
 export function initMap(
+	mapboxgl: any,
 	mapRef: string | HTMLDivElement,
 	attributes: MapAttributes,
 	defaults: MapboxBlockDefaults
@@ -90,39 +85,4 @@ export function initMap(
 	} );
 
 	return map;
-}
-
-export function initGeoCoder(
-	map: mapboxgl.Map,
-	mapRef: RefObject< HTMLDivElement >,
-	markersRef: RefObject< HTMLButtonElement[] >,
-	geocoderRef: RefObject< HTMLDivElement > | undefined,
-	listings: MapBoxListing[],
-	filteredListings: MapBoxListing[],
-	setFilteredListings: ( listings: MapBoxListing[] ) => void,
-	mapDefaults: MapboxBlockDefaults
-) {
-	const geomarkerListing = initGeomarker(
-		getNextId( listings ),
-		markersRef,
-		map,
-		mapRef
-	);
-
-	const marker: mapboxgl.Marker = {
-		element: geomarkerListing,
-		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
-		draggable: true,
-	};
-
-	return initGeocoder(
-		map,
-		mapRef,
-		geocoderRef,
-		marker,
-		listings,
-		filteredListings,
-		setFilteredListings,
-		mapDefaults
-	);
 }

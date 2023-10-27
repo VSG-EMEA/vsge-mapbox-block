@@ -27,8 +27,9 @@ import { mapMarker } from '../Marker/MapMarker';
 import { Sidebar } from '../Sidebar';
 import { addPopup, removePopups } from '../Popup/Popup';
 import { PinPointPopup } from '../Popup/PopupContent';
-import { initGeoCoder, initMap } from './init';
+import { initMap } from './init';
 import { equalsCheck } from '../../utils';
+import { initGeoCoder } from '../Geocoder/init';
 
 /**
  * Renders a MapBox component.
@@ -37,13 +38,16 @@ import { equalsCheck } from '../../utils';
  * @param {MapAttributes}       props.attributes  - The attributes of the MapBox component.
  * @param {MapboxBlockDefaults} props.mapDefaults - The default settings for the MapBox component.
  * @param {boolean}             [props.isEditor]  - A boolean indicating whether the component is being used in an editor.
+ * @param                       props.mapboxgl
  * @return {JSX.Element} The rendered MapBox component.
  */
 export function MapBox( {
+	mapboxgl,
 	attributes,
 	mapDefaults,
 	isEditor,
 }: {
+	mapboxgl: any;
 	attributes: MapAttributes;
 	mapDefaults: MapboxBlockDefaults;
 	isEditor?: boolean;
@@ -213,7 +217,7 @@ export function MapBox( {
 					<PinPointPopup
 						location={ markerCoordinates ?? clickedPoint }
 						listings={ listings }
-                        setListings={ setListings }
+						setListings={ setListings }
 						setFilteredListings={ setFilteredListings }
 						mapRef={ mapRef }
 						map={ map }
@@ -239,7 +243,12 @@ export function MapBox( {
 
 		if ( mapDefaults?.accessToken && mapRef?.current ) {
 			// Initialize map and store the map instance
-			map.current = initMap( mapRef.current, attributes, mapDefaults );
+			map.current = initMap(
+				mapboxgl,
+				mapRef.current,
+				attributes,
+				mapDefaults
+			);
 
 			// Add the language control to the map
 			const language = new MapboxLanguage();
@@ -249,6 +258,7 @@ export function MapBox( {
 			if ( attributes.geocoderEnabled ) {
 				setGeoCoder(
 					initGeoCoder(
+						mapboxgl,
 						map,
 						mapRef,
 						markersRef,

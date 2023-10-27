@@ -1,14 +1,6 @@
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
 import type { MapBoxListing } from '../../types';
-import { SearchMarkerProps } from '../../types';
 import { removeMarkerEl } from '../Marker/utils';
-import { flyToStore } from '../../utils/view';
-import {
-	PinPointPopup,
-	PopupContent,
-	SearchPopup,
-} from '../Popup/PopupContent';
-import { addPopup } from '../Popup/Popup';
 
 /**
  * The function sets the elevation of a Mapbox map to either a globe or a mercator projection and adds

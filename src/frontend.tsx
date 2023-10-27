@@ -1,13 +1,14 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-import '../../style/style.scss';
+import './style/style.scss';
 
 import { createRoot, Suspense } from '@wordpress/element';
-import { MapBox } from './';
-import { MapProvider } from './MapboxContext';
-import { getMapDefaults } from '../../utils';
-import { MapAttributes } from '../../types';
+import { MapBox } from './components/Mapbox/';
+import { MapProvider } from './components/Mapbox/MapboxContext';
+import { MapAttributes } from './types';
+import Loader from './components/Loader';
+import { getMapDefaults } from './utils';
 
 /**
  * This function creates a React component that renders a MapBox map with given attributes and default
@@ -18,19 +19,25 @@ import { MapAttributes } from '../../types';
  *                                 for the MapBox component, such as the map's center coordinates, zoom level, and map style. These
  *                                 options are passed down to the MapBox component as props.
  */
-export function createMapRoot( el: HTMLElement, attributes: MapAttributes ) {
+export async function createMapRoot(
+	el: HTMLElement,
+	attributes: MapAttributes
+) {
 	// initialize the map with React
-	const componentRoot = createRoot( el );
-	componentRoot.render(
-		<Suspense fallback={ <div className="wp-block-placeholder" /> }>
-			<MapProvider attributes={ attributes }>
-				<MapBox
-					attributes={ attributes }
-					mapDefaults={ getMapDefaults() }
-				/>
-			</MapProvider>
-		</Suspense>
-	);
+	await import( 'mapbox-gl' ).then( ( mapboxgl ) => {
+		const componentRoot = createRoot( el );
+		componentRoot.render(
+			<Suspense fallback={ <Loader wrapperHeight={ '50vh' } /> }>
+				<MapProvider attributes={ attributes }>
+					<MapBox
+						mapboxgl={ mapboxgl.default }
+						attributes={ attributes }
+						mapDefaults={ getMapDefaults() }
+					/>
+				</MapProvider>
+			</Suspense>
+		);
+	} );
 }
 
 /**

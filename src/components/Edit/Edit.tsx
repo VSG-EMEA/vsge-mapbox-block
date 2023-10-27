@@ -1,7 +1,7 @@
 import { useMapboxContext } from '../Mapbox/MapboxContext';
-import mapboxgl from 'mapbox-gl';
 import { useEffect } from '@wordpress/element';
 import { MapBox } from '../Mapbox';
+import mapboxgl from 'mapbox-gl';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	__experimentalUnitControl as UnitControl,
@@ -454,6 +454,7 @@ export function MapEdit( {
 				attributes={ attributes }
 				mapDefaults={ getMapDefaults() }
 				isEditor={ true }
+				mapboxgl={ mapboxgl }
 			/>
 		</div>
 	);

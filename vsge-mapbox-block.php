@@ -80,6 +80,14 @@ function vsge_mapbox_frontend_scripts(): void {
 			'locale'       => get_locale()
 		)
 	);
+
+	wp_register_script(
+		'vsge-mapbox-vendors',
+		VSGE_MB_PLUGIN_URL . 'build/vendors.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
 }
 add_action( 'wp_enqueue_scripts', 'vsge_mapbox_frontend_scripts' );
 
@@ -93,7 +101,7 @@ function vsge_mapbox_block_scripts(): void {
 
 	wp_register_script(
 		'vsge-mapbox-block',
-		VSGE_MB_PLUGIN_URL . 'build/mapbox.js',
+		VSGE_MB_PLUGIN_URL . 'build/mapbox-block.js',
 		$asset['dependencies'],
 		$asset['version'],
 		true
@@ -107,6 +115,14 @@ function vsge_mapbox_block_scripts(): void {
 			'accessToken'  => vsge_get_token(),
 			'locale'       => get_locale()
 		)
+	);
+
+	wp_register_script(
+		'vsge-mapbox-vendors',
+		VSGE_MB_PLUGIN_URL . 'build/vendors.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'vsge_mapbox_block_scripts' );

@@ -1,5 +1,5 @@
-import mapboxgl, { LngLatLike, MapEventType } from 'mapbox-gl';
-import { MapBoxListing, MarkerHTMLElement } from '../../types';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
+import { MapBoxListing } from '../../types';
 import type { RefObject } from 'react';
 import { getBbox } from '../../utils/spatialCalcs';
 import { fitInView } from '../../utils/view';
@@ -52,7 +52,7 @@ export function removeTempMarkers(
 			// Check if the marker is excluded
 			if (
 				excludedMarkers.length === 0 &&
-                marker?.dataset?.markerName &&
+				marker?.dataset?.markerName &&
 				! excludedMarkers.includes( marker.dataset?.markerName )
 			) {
 				// Remove the marker from the listings array
