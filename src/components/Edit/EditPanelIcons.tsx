@@ -2,17 +2,11 @@ import {
 	Button,
 	Flex,
 	FlexItem,
-	Icon,
 	Panel,
 	PanelBody,
 	TextControl,
 } from '@wordpress/components';
-import {
-	mapMarker,
-	plusCircle,
-	cancelCircleFilled,
-	image,
-} from '@wordpress/icons';
+import { cancelCircleFilled, mapMarker, plusCircle } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { getNextId } from '../../utils/dataset';
 import { MarkerIcon } from '../../types';
