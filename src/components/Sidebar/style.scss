@@ -1,14 +1,15 @@
 .wp-block-vsge-mapbox .map-wrapper {
   .map-sidebar {
-    min-width: 300px;
+    width: var(--mabox-sidebar-width);
+    max-width: var(--mabox-sidebar-width);
     overflow: hidden;
     padding-right: var(--size__margin);
 
     display: flex;
     flex-direction: column;
 
-    @media #{$mq__phablet} {
-      width: 100vw;
+    @media (max-width : 600px) {
+      max-width: 100vw;
     }
 
     p {
@@ -19,7 +20,7 @@
     .feature-listing {
       overflow: auto;
 
-      @media #{$mq__phablet} {
+      @media (max-width : 600px) {
         padding-bottom: var(--wp--preset--spacing--30);
         display: block;
         max-height: 80vh;

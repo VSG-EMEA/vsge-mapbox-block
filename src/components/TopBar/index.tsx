@@ -8,7 +8,8 @@ import {
 } from '../../types';
 import { useMapboxContext } from '../Mapbox/MapboxContext';
 import { __ } from '@wordpress/i18n';
-import { removePopups } from '../Popup/Popup';
+import { removePopups } from '../Popup/';
+import './style.scss';
 
 /**
  * trasform an array of strings into a select values that could be used with select control

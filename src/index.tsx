@@ -4,7 +4,7 @@ import { registerBlockType } from '@wordpress/blocks';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-import './style/style-admin.scss';
+import './style/admin.scss';
 
 /** the edit function */
 import Edit from './edit';

@@ -1,7 +1,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-import './style/style.scss';
+import './style/frontend.scss';
 
 import { createRoot, Suspense } from '@wordpress/element';
 import { MapBox } from './components/Mapbox/';

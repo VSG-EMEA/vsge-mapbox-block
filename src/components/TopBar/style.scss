@@ -1,7 +1,7 @@
 .wp-block-vsge-mapbox .map-wrapper {
 
 	.map-topbar {
-		height: $topbar-height;
+		height: var(--mabox-topbar-height);
 		display: flex;
 		justify-content: flex-end;
 		align-content: center;
@@ -14,11 +14,11 @@
 		.components-base-control {
 			margin: 0 .5rem;
 			max-width: 250px;
-			height: $topbar_elements_height;
+			height: var(--mabox-topbar-height);
 		}
 
 		.components-select-control select {
-			height: $topbar_elements_height;
+			height: var(--mabox-topbar-height);
 			font-family: var(--font__family);
 			font-weight: 500;
 			text-overflow: ellipsis;
@@ -44,7 +44,7 @@
 
 			svg {
 				vertical-align: sub;
-				line-height: $topbar_elements_height;
+				line-height: var(--mabox-topbar-height);
         margin-right: .5rem;
 			}
 		}

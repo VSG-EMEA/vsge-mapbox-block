@@ -21,15 +21,16 @@ import {
 	removeTempMarkers,
 } from '../Marker/utils';
 import { getNextId } from '../../utils/dataset';
-import { generateTempMarkerData } from './defaults';
+import { generateTempMarkerData } from '../Marker/defaults';
 import { clearListingsDistances } from '../../utils/spatialCalcs';
 import { mapMarker } from '../Marker/MapMarker';
 import { Sidebar } from '../Sidebar';
-import { addPopup, removePopups } from '../Popup/Popup';
+import { addPopup, removePopups } from '../Popup/';
 import { PinPointPopup } from '../Popup/PopupContent';
 import { initMap } from './init';
 import { equalsCheck } from '../../utils';
 import { initGeoCoder } from '../Geocoder/init';
+import './style.scss';
 
 /**
  * Renders a MapBox component.

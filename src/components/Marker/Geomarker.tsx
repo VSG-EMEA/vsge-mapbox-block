@@ -1,8 +1,8 @@
-import { PinPoint } from '../Marker/marker-icons';
+import { PinPoint } from './marker-icons';
 import { createRoot } from '@wordpress/element';
 import { Marker } from './';
 import type { RefObject } from 'react';
-import { geocoderMarkerDefaults, geoMarkerStyle } from '../Mapbox/defaults';
+import { geocoderMarkerDefaults, geoMarkerStyle } from './defaults';
 
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.

@@ -8,8 +8,25 @@ import { plusCircle } from '@wordpress/icons';
 import { getNextId, reorder } from '../../utils/dataset';
 import { MapBoxListing, SortableProps } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
-import { defaultMarkerProps } from '../Mapbox/defaults';
-import { removePopups } from '../Popup/Popup';
+import { removePopups } from '../Popup/';
+import { defaultColors, defaultMarkerSize } from '../Marker/defaults';
+
+import './style.scss';
+
+export const defaultMarkerProps = {
+	name: __( 'New Marker' ),
+	description: '',
+	address: '',
+	location: '',
+	city: '',
+	cap: '',
+	icon: 'default',
+	iconSize: defaultMarkerSize,
+	iconColor: defaultColors[ 0 ],
+	draggable: false,
+	itemTags: [],
+	itemFilters: [],
+};
 
 export const Sortable = ( props: SortableProps ): JSX.Element => {
 	const { items, tax, setOptions, mapboxOptions } = props;

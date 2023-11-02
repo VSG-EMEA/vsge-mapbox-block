@@ -7,13 +7,14 @@ import {
 	MapboxBlockDefaults,
 	MapBoxListing,
 } from '../../types';
-import { geoMarkerStyle } from '../Mapbox/defaults';
+import { geoMarkerStyle } from '../Marker/defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
-import { removePopups, showNearestStore } from '../Popup/Popup';
+import { removePopups, showNearestStore } from '../Popup/';
 import { fitInView, flyToStore } from '../../utils/view';
 import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { initGeomarker } from '../Marker/Geomarker';
+import './style.scss';
 
 /**
  * Initializes the geocoder for the map.

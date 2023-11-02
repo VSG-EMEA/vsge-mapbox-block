@@ -107,7 +107,7 @@ export function MapEdit( {
 		// wait 100 ms then resize the map
 		setTimeout( () => {
 			// get the mapRef element width and height
-			if ( mapRef?.current?.style ) map?.resize();
+			if ( mapRef?.current?.style ) map.current?.resize();
 		}, timeout );
 	}
 

@@ -3,11 +3,12 @@ import { mapMarker } from '@wordpress/icons';
 import { MapBoxListing, SearchMarkerProps } from '../../types';
 import mapboxgl from 'mapbox-gl';
 import { TagList } from '../TagItem';
-import { addPopup, removePopups } from '../Popup/Popup';
-import { RefObject } from 'react';
+import { removePopups } from '../Popup/';
+import type { RefObject, MutableRefObject } from 'react';
 import { __ } from '@wordpress/i18n';
 import { flyToStore } from '../../utils/view';
 import { PopupContent, SearchPopup } from '../Popup/PopupContent';
+import './style.scss';
 
 /**
  * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
@@ -38,7 +39,7 @@ export function highlightListing( item: MapBoxListing ) {
  * @param {mapboxgl.Map}  map    - The map object.
  * @param {MapBoxListing} marker - The listing marker object.
  */
-export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
+export function enableListing( map: MutableRefObject< mapboxgl.Map | null >, marker: MapBoxListing ) {
 	console.log( 'Listing enabled', marker );
 
 	// 1. Fly to the point

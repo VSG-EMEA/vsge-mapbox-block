@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
 import type { RefObject } from 'react';
 import { PopupContent, SearchPopup } from './PopupContent';
-import { defaultMarkerSize } from '../Mapbox/defaults';
+import { defaultMarkerSize } from '../Marker/defaults';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { SEARCH_RESULTS_SHOWN } from '../../constants';
 

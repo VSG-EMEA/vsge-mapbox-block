@@ -1,7 +1,10 @@
 // Default marker style
-import { __ } from '@wordpress/i18n';
 import { CoordinatesDef, MapBoxListing, MarkerPropsStyle } from '../../types';
-import { DEFAULT_COLOR, DEFAULT_COLOR_ALT, MARKER_TYPE_TEMP } from '../../constants';
+import {
+	DEFAULT_COLOR,
+	DEFAULT_COLOR_ALT,
+	MARKER_TYPE_TEMP,
+} from '../../constants';
 
 export const defaultMarkerSize: number = 48;
 
@@ -25,21 +28,6 @@ export const tempMarkerStyle: MarkerBasicStyle = {
 export const geoMarkerStyle: MarkerBasicStyle = {
 	color: DEFAULT_COLOR_ALT,
 	size: defaultMarkerSize,
-};
-
-export const defaultMarkerProps = {
-	name: __( 'New Marker' ),
-	description: '',
-	address: '',
-	location: '',
-	city: '',
-	cap: '',
-	icon: 'default',
-	iconSize: defaultMarkerSize,
-	iconColor: defaultColors[ 0 ],
-	draggable: false,
-	itemTags: [],
-	itemFilters: [],
 };
 
 /**

@@ -38,12 +38,12 @@ export function recenterView( map: mapboxgl.Map, defaults: any ): any {
  * to a new location and zoom level.
  */
 export function flyToStore(
-	map: { current: mapboxgl.Map },
+	map: MutableRefObject< mapboxgl.Map | null >,
 	store: MapBoxListing,
 	zoom: number = 8
 ) {
 	if ( store?.geometry?.coordinates )
-		return map.current.flyTo( {
+		return map.current?.flyTo( {
 			center: store.geometry.coordinates,
 			zoom,
 		} );

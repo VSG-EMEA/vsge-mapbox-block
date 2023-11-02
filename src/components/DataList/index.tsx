@@ -1,3 +1,5 @@
+import './style.scss';
+
 /**
  * Extracts text from geocoder results.
  *

@@ -1,6 +1,7 @@
 import { DefaultMarker } from './marker-icons';
 import { MapBoxListing } from '../../types';
 import { DEFAULT_COLOR } from '../../constants';
+import './style.scss';
 
 /**
  * This is a TypeScript React function that renders a marker with a button and optional children

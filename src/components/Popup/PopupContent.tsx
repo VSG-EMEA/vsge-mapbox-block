@@ -13,7 +13,7 @@ import { layouts, svgArray } from '@mapbox/maki';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
-import { removePopups, showNearestStore } from './Popup';
+import { removePopups, showNearestStore } from './';
 import type mapboxgl from 'mapbox-gl';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.

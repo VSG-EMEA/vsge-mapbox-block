@@ -1,5 +1,6 @@
-import { FilterCollection, TagArray, TagCollection } from '../../types';
+import { TagArray } from '../../types';
 import { safeSlug } from '../../utils';
+import './style.scss';
 
 /**
  * This is a TypeScript React component that renders a tag item with a specific ID and value.

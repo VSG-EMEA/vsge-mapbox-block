@@ -1,10 +1,11 @@
-import { Listing } from './Listing';
+import { Listing } from '../Listing/';
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
 import type { RefObject } from 'react';
 import { getListing } from '../Mapbox/utils';
 import { useMapboxContext } from '../Mapbox/MapboxContext';
 import { __ } from '@wordpress/i18n';
+import './style.scss';
 
 /**
  * This is a TypeScript React component that renders a list of MapBox listings with a click event

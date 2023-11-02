@@ -1,7 +1,7 @@
 .wp-block-vsge-mapbox .map-wrapper {
 
 	.geocoder {
-		height: $topbar-height;
+		height: var(--mabox-topbar-height);
     padding-bottom: 8px;
 	}
 
@@ -15,12 +15,12 @@
 			border: 0;
 			max-width: calc(100% - 6px);
 			border-bottom: 1px solid var(--wp--preset--color--cyan-bluish-gray);
-			height: $topbar_elements_height;
+			height: var(--mabox-topbar-height);
 			padding: 6px var(--wp--preset--spacing--40) 6px 48px;
 			font-family: var(--wp--preset--font-family--default);
 			font-weight: 300;
 
-			@media #{$mq__phablet} {
+			@media (max-width : 600px) {
 				font-size: .25rem;
 			}
 		}
@@ -36,7 +36,7 @@
 			height: 24px;
 			top: 12px;
 
-			@media #{$mq__phablet} {
+			@media (max-width : 600px) {
 				left: 8px;
 			}
 		}
@@ -59,7 +59,7 @@
 				background-color: transparent;
 				color: var(--wp--preset--color--gray);
 
-				@media #{$mq__phablet} {
+				@media (max-width : 600px) {
 					top: 2px;
 				}
 			}

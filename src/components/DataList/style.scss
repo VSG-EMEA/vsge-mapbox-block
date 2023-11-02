@@ -1,0 +1,11 @@
+.filter-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 40px;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  &.popup-filter-list {
+    padding-left: 52px;
+  }
+}
