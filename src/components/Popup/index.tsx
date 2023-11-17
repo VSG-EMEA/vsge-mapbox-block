@@ -6,6 +6,7 @@ import { PopupContent, SearchPopup } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { SEARCH_RESULTS_SHOWN } from '../../constants';
+import './style.scss';
 
 /**
  * This function adds a popup to a Mapbox map with custom content or default content based on a

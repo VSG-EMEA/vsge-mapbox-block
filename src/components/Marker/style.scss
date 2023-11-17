@@ -1,15 +1,16 @@
 .wp-block-vsge-mapbox .map-wrapper {
-  .marker {
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    background: transparent;
-    transition: inherit;
 
-    &.active {
-      transition: 125ms;
-      transform: scale(1.2);
-      transform-origin: bottom center;
-    }
-  }
+	.marker {
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		background: transparent;
+		transition: inherit;
+
+		&.active {
+			transition: 125ms;
+			transform: scale(1.2);
+			transform-origin: bottom center;
+		}
+	}
 }

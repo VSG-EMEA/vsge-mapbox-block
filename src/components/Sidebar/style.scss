@@ -1,57 +1,59 @@
 .wp-block-vsge-mapbox .map-wrapper {
-  .map-sidebar {
-    width: var(--mabox-sidebar-width);
-    max-width: var(--mabox-sidebar-width);
-    overflow: hidden;
-    padding-right: var(--size__margin);
 
-    display: flex;
-    flex-direction: column;
+	.map-sidebar {
+		width: var(--mabox-sidebar-width);
+		max-width: var(--mabox-sidebar-width);
+		overflow: hidden;
+		padding-right: var(--size__margin);
 
-    @media (max-width : 600px) {
-      max-width: 100vw;
-    }
+		display: flex;
+		flex-direction: column;
 
-    p {
-      margin: 0;
-      padding: 0;
-    }
+		@media (max-width: 600px) {
+			max-width: 100vw;
+		}
 
-    .feature-listing {
-      overflow: auto;
+		p {
+			margin: 0;
+			padding: 0;
+		}
 
-      @media (max-width : 600px) {
-        padding-bottom: var(--wp--preset--spacing--30);
-        display: block;
-        max-height: 80vh;
-      }
+		.feature-listing {
+			overflow: auto;
 
-      &.filtered {
-        .map-item {
-          display: none;
-        }
+			@media (max-width: 600px) {
+				padding-bottom: var(--wp--preset--spacing--30);
+				display: block;
+				max-height: 80vh;
+			}
 
-        .map-item.active-store {
-          display: block;
-        }
-      }
-    }
+			&.filtered {
 
-    ::-webkit-scrollbar {
-      height: 8px;
-      width: 8px;
-      -webkit-border-radius: 4px;
-      background: #ddd;
-    }
+				.map-item {
+					display: none;
+				}
 
-    ::-webkit-scrollbar-thumb {
-      background: #aaa;
-      -webkit-border-radius: 4px;
-      -webkit-box-shadow: 0 2px 4px rgba(255, 255, 255, 0.25) inset;
-    }
+				.map-item.active-store {
+					display: block;
+				}
+			}
+		}
 
-    ::-webkit-scrollbar-corner {
-      background: #ddd;
-    }
-  }
+		::-webkit-scrollbar {
+			height: 8px;
+			width: 8px;
+			-webkit-border-radius: 4px;
+			background: var(--mapbox--color--gray-light);
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: var(--mapbox--color--gray-light);
+			-webkit-border-radius: 4px;
+			-webkit-box-shadow: 0 2px 4px rgba(255, 255, 255, 0.25) inset;
+		}
+
+		::-webkit-scrollbar-corner {
+			background: var(--mapbox--color--gray-light);
+		}
+	}
 }

@@ -2,7 +2,7 @@
 
 	.dnd-wrap {
 		padding: 0.25rem;
-		background: #fff;
+		background: var(--mapbox--color--white);
 		border: 1px solid #ccc;
 		border-radius: 2px;
 		margin: 0 0 6px;
@@ -136,10 +136,10 @@
 		.color-preview {
 			width: 20px;
 			height: 20px;
-			border: 1px solid #ccc;
+			border: 1px solid var(--mapbox--color--gray-light);
 			display: inline-block;
 			margin-right: 10px;
-			background-color: #666;
+			background-color: var(--mapbox--color--gray-dark);
 		}
 	}
 

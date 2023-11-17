@@ -1,67 +1,68 @@
 .wp-block-vsge-mapbox .map-wrapper {
-  .mapbox-sidebar-feature {
-    cursor: pointer;
-    position: relative;
-    border-bottom: 1px solid #eee;
-    padding: 1.3rem 1rem;
-    margin: 0 4px 4px 0;
-    border-radius: 4px;
-    background: #f3f3f3;
-    text-decoration: none;
 
-    &__inner {
-      display: flex;
-      gap: .5rem;
-    }
+	.mapbox-sidebar-feature {
+		cursor: pointer;
+		position: relative;
+		border-bottom: 1px solid var(--mapbox--color--gray-200);
+		padding: 1.3rem 1rem;
+		margin: 0 4px 4px 0;
+		border-radius: 4px;
+		background: var(--mapbox--color--gray-100);
+		text-decoration: none;
 
-    &:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-    }
+		&__inner {
+			display: flex;
+			gap: 0.5rem;
+		}
 
-    .title {
-      display: block;
-      color: #484848;
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 1.1;
-      margin: 0 0 8px;
-      transition: 0.3s;
+		&:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+		}
 
-      small {
-        font-weight: 400;
-      }
-    }
+		.title {
+			display: block;
+			color: var(--mapbox--color--gray-dark);
+			font-weight: 600;
+			font-size: 18px;
+			line-height: 1.1;
+			margin: 0 0 8px;
+			transition: 0.3s;
+
+			small {
+				font-weight: 400;
+			}
+		}
 
 
-    svg {
-      align-self: flex-start;
-      min-width: 32px;
-    }
+		svg {
+			align-self: flex-start;
+			min-width: 32px;
+		}
 
-    p.partnership {
-      line-height: 15px;
-      margin: 0;
-      font-size: 11px;
-      text-transform: uppercase;
-      color: #757575;
-    }
+		p.partnership {
+			line-height: 15px;
+			margin: 0;
+			font-size: 11px;
+			text-transform: uppercase;
+			color: var(--mapbox--color--gray-dark);
+		}
 
-    p,
-    a {
-      line-height: 18px;
-      margin: 0;
-      font-size: 14px;
-      color: #757575;
-    }
+		p,
+		a {
+			line-height: 18px;
+			margin: 0;
+			font-size: 14px;
+			color: var(--mapbox--color--gray-dark);
+		}
 
-    &.active-store .title,
-    .title:hover {
-      color: #3f51b5;
-    }
+		&.active-store .title,
+		.title:hover {
+			color: var(--mapbox--color--primary-accent);
+		}
 
-    &.active-store {
-      background-color: #f3f3f3;
-    }
-  }
+		&.active-store {
+			background-color: var(--mapbox--color--gray-100);
+		}
+	}
 }

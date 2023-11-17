@@ -11,7 +11,7 @@
 			font-size: 9px;
 			line-height: 10px;
 			text-transform: uppercase;
-			color: #888;
+			color: var(--mapbox--color--gray-dark);
 
 			&:before {
 				content: "+";
