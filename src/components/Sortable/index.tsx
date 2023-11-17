@@ -14,7 +14,7 @@ import { defaultColors, defaultMarkerSize } from '../Marker/defaults';
 import './style.scss';
 
 export const defaultMarkerProps = {
-	name: __( 'New Marker' ),
+	name: __( 'New Marker', 'vsge-mapbox-block' ),
 	description: '',
 	address: '',
 	location: '',
@@ -127,7 +127,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 			type: 'Feature',
 			properties: {
 				...defaultMarkerProps,
-				name: [ __( 'New Marker' ), String( nextId ) ].join( ' ' ),
+				name: [ __( 'New Marker', 'vsge-mapbox-block' ), String( nextId ) ].join( ' ' ),
 			},
 			geometry: {
 				type: 'Point',
@@ -150,7 +150,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 			...items,
 			{
 				id: nextId,
-				value: [ __( 'New' ), tax, nextId ].join( ' ' ),
+				value: [ __( 'New', 'vsge-mapbox-block' ), tax, nextId ].join( ' ' ),
 			},
 		] );
 	}
@@ -219,7 +219,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 			</DragDropContext>
 			<Button
 				icon={ plusCircle }
-				text={ __( 'Add new' ) }
+				text={ __( 'Add new', 'vsge-mapbox-block' ) }
 				className={ 'add-new-sortable-item' }
 				style={ { width: '100%' } }
 				onClick={ () => {

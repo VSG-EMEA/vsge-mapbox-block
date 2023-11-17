@@ -4,7 +4,7 @@
  * Version: 0.0.2
  * Description: VSGE - mapbox block
  * Author:            codekraft
- * Text Domain:       vsgemap
+ * Text Domain:       vsge-mapbox-block
  */
 define( 'VSGE_MB_PLUGIN_DIR', __DIR__ );
 define( 'VSGE_MB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

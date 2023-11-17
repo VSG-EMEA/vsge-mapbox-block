@@ -58,7 +58,7 @@ export function initGeoCoder(
 			mapboxgl,
 			marker,
 			language: mapDefaults.language || 'en',
-			placeholder: __( 'Find the nearest store' ),
+			placeholder: __( 'Find the nearest store', 'vsge-mapbox-block' ),
 			types: DEFAULT_GEOCODER_TYPE_SEARCH,
 		} );
 

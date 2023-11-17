@@ -23,7 +23,7 @@ export function IconPreview( props: {
 		<div
 			className={ 'marker-preview' }
 			dangerouslySetInnerHTML={ {
-				__html: getMarkerSvg( iconName, iconSet ) ?? __( 'error 😥' ),
+				__html: getMarkerSvg( iconName, iconSet ) ?? __( 'error 😥', 'vsge-mapbox-block' ),
 			} }
 		/>
 	) : (

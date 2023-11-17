@@ -110,7 +110,7 @@ export const TopBar = ( attributes: {
 						setListings( attributes.mapboxOptions.listings );
 					} }
 				>
-					{ __( 'Reset Filters' ) }
+					{ __( 'Reset Filters', 'vsge-mapbox-block' ) }
 				</Button>
 			) : null }
 			{ fitView ? (
@@ -120,7 +120,7 @@ export const TopBar = ( attributes: {
 					className={ 'fit-view' }
 					onClick={ () => fitInView( map, listings, mapRef ) }
 				>
-					{ __( 'Fit View' ) }
+					{ __( 'Fit View', 'vsge-mapbox-block' ) }
 				</Button>
 			) : null }
 

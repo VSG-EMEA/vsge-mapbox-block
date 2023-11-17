@@ -159,7 +159,7 @@ export function MapEdit( {
 				<Panel>
 					<PanelBody title="Options" icon={ cog }>
 						<ToggleControl
-							label={ __( 'Enable Sidebar' ) }
+							label={ __( 'Enable Sidebar', 'vsge-mapbox-block' ) }
 							checked={ sidebarEnabled }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -174,7 +174,7 @@ export function MapEdit( {
 						/>
 						{ sidebarEnabled && (
 							<ToggleControl
-								label={ __( 'Enable Geocoder' ) }
+								label={ __( 'Enable Geocoder', 'vsge-mapbox-block' ) }
 								checked={ geocoderEnabled }
 								onChange={ ( newValue: boolean ) => {
 									setAttributes( {
@@ -185,7 +185,7 @@ export function MapEdit( {
 							/>
 						) }
 						<ToggleControl
-							label={ __( 'Enable Filters' ) }
+							label={ __( 'Enable Filters', 'vsge-mapbox-block' ) }
 							checked={ filtersEnabled }
 							onChange={ ( newValue: boolean ) =>
 								setAttributes( {
@@ -195,7 +195,7 @@ export function MapEdit( {
 							}
 						/>
 						<ToggleControl
-							label={ __( 'Enable Tag' ) }
+							label={ __( 'Enable Tag', 'vsge-mapbox-block' ) }
 							checked={ tagsEnabled }
 							onChange={ ( newValue: boolean ) =>
 								setAttributes( {
@@ -205,7 +205,7 @@ export function MapEdit( {
 							}
 						/>
 						<ToggleControl
-							label={ __( 'Enable fitView' ) }
+							label={ __( 'Enable fitView', 'vsge-mapbox-block' ) }
 							checked={ fitView }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -216,7 +216,7 @@ export function MapEdit( {
 							} }
 						/>
 						<ToggleControl
-							label={ __( 'Enable Elevation' ) }
+							label={ __( 'Enable Elevation', 'vsge-mapbox-block' ) }
 							checked={ elevation }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -227,7 +227,7 @@ export function MapEdit( {
 							} }
 						/>
 						<ToggleControl
-							label={ __( 'Enable camera 3d rotation' ) }
+							label={ __( 'Enable camera 3d rotation', 'vsge-mapbox-block' ) }
 							checked={ freeViewCamera }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -240,7 +240,7 @@ export function MapEdit( {
 							} }
 						/>
 						<ToggleControl
-							label={ __( 'Enable Zoom with mouse wheel' ) }
+							label={ __( 'Enable Zoom with mouse wheel', 'vsge-mapbox-block' ) }
 							checked={ mouseWheelZoom }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -254,7 +254,7 @@ export function MapEdit( {
 				</Panel>
 				<Panel>
 					<PanelBody title="Settings" icon={ tool }>
-						<h2>{ __( 'Camera Options' ) }</h2>
+						<h2>{ __( 'Camera Options', 'vsge-mapbox-block' ) }</h2>
 
 						<Button
 							variant="secondary"
@@ -263,12 +263,12 @@ export function MapEdit( {
 									pullMapOptions( map.current );
 							} }
 						>
-							{ __( 'Get Current view' ) }
+							{ __( 'Get Current view', 'vsge-mapbox-block' ) }
 						</Button>
 
-						<h2>{ __( 'Camera Fine tuning' ) }</h2>
+						<h2>{ __( 'Camera Fine tuning', 'vsge-mapbox-block' ) }</h2>
 						<RangeControl
-							label={ __( 'Latitude' ) }
+							label={ __( 'Latitude', 'vsge-mapbox-block' ) }
 							value={ latitude }
 							min={ -90 }
 							max={ 90 }
@@ -286,7 +286,7 @@ export function MapEdit( {
 							} }
 						/>
 						<RangeControl
-							label={ __( 'Longitude' ) }
+							label={ __( 'Longitude', 'vsge-mapbox-block' ) }
 							value={ longitude }
 							min={ -180 }
 							max={ 180 }
@@ -378,7 +378,7 @@ export function MapEdit( {
 						/>
 						<UnitControl
 							value={ mapHeight }
-							label={ __( 'Map Height' ) }
+							label={ __( 'Map Height', 'vsge-mapbox-block' ) }
 							onChange={ ( newValue ) => {
 								setAttributes( {
 									...attributes,

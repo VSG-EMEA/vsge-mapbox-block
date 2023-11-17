@@ -128,7 +128,8 @@ export const PinCard = ( props: {
 						<div className={ 'controlgroup-feature-item' }>
 							<h4>
 								({ itemData.id }) -{ ' ' }
-								{ itemData.properties?.name || __( 'New' ) }
+								{ itemData.properties?.name ||
+									__( 'New', 'vsge-mapbox-block' ) }
 							</h4>
 							<Button
 								onClick={ () => setIsOpen( ! isOpen ) }
@@ -140,7 +141,7 @@ export const PinCard = ( props: {
 
 						<Flex justify={ 'space-between' } align={ 'center' }>
 							<SelectControl
-								label={ __( 'type' ) }
+								label={ __( 'type', 'vsge-mapbox-block' ) }
 								value={ itemData.type }
 								options={ [
 									{
@@ -159,7 +160,7 @@ export const PinCard = ( props: {
 								} }
 							/>
 							<TextControl
-								label={ __( 'lat' ) }
+								label={ __( 'lat', 'vsge-mapbox-block' ) }
 								value={
 									itemData.geometry.coordinates[ 0 ] || 0
 								}
@@ -178,7 +179,7 @@ export const PinCard = ( props: {
 								}
 							/>
 							<TextControl
-								label={ __( 'lang' ) }
+								label={ __( 'lang', 'vsge-mapbox-block' ) }
 								value={
 									itemData.geometry.coordinates[ 1 ] || 0
 								}
@@ -212,7 +213,7 @@ export const PinCard = ( props: {
 										},
 									} );
 								} }
-								label={ __( 'Add Pin' ) }
+								label={ __( 'Add Pin', 'vsge-mapbox-block' ) }
 								showTooltip={ true }
 							/>
 						</Flex>
@@ -221,7 +222,7 @@ export const PinCard = ( props: {
 
 						{ /** main Item Data */ }
 						<TextControl
-							label={ __( 'name' ) }
+							label={ __( 'Name', 'vsge-mapbox-block' ) }
 							type={ 'text' }
 							style={ { margin: 0 } }
 							value={ itemData.properties?.name || 'New' }
@@ -236,7 +237,7 @@ export const PinCard = ( props: {
 							} }
 						></TextControl>
 						<TextControl
-							label={ __( 'phone' ) }
+							label={ __( 'Phone', 'vsge-mapbox-block' ) }
 							type={ 'tel' }
 							value={ itemData.properties?.phone || '' }
 							onChange={ ( newValue ) => {
@@ -278,7 +279,7 @@ export const PinCard = ( props: {
 							} }
 						></TextControl>
 						<TextControl
-							label={ __( 'website' ) }
+							label={ __( 'website', 'vsge-mapbox-block' ) }
 							type={ 'url' }
 							value={ itemData.properties?.website || '' }
 							onChange={ ( newValue ) => {
@@ -348,7 +349,7 @@ export const PinCard = ( props: {
 							} }
 						></TextControl>
 						<TextareaControl
-							label={ __( 'Address' ) }
+							label={ __( 'Address', 'vsge-mapbox-block' ) }
 							value={ itemData.properties?.address || '' }
 							onChange={ ( newValue ) => {
 								setItemData( {
@@ -401,7 +402,7 @@ export const PinCard = ( props: {
 								style={ { width: '50%', alignSelf: 'start' } }
 							>
 								<h4 className={ 'sortable-pins-column__title' }>
-									{ __( 'Filters' ) }
+									{ __( 'Filters', 'vsge-mapbox-block' ) }
 								</h4>
 								<hr />
 								{ filters?.map( ( checkbox, i ) => (
@@ -461,12 +462,18 @@ export const PinCard = ( props: {
 								iconSet={ icons }
 							/>
 							<SelectControl
-								label={ __( 'Select a Marker' ) }
+								label={ __(
+									'Select a Marker',
+									'vsge-mapbox-block'
+								) }
 								value={ itemData.properties?.icon }
 								options={ [
 									{
 										value: 'default',
-										label: __( 'Default' ),
+										label: __(
+											'Default',
+											'vsge-mapbox-block'
+										),
 									},
 									...icons.map( ( icon ) => {
 										return {
@@ -493,7 +500,10 @@ export const PinCard = ( props: {
 								variant={ 'tertiary' }
 								className="marker-button"
 								iconSize={ 16 }
-								aria-label={ __( 'Marker' ) }
+								aria-label={ __(
+									'Marker',
+									'vsge-mapbox-block'
+								) }
 								aria-haspopup="true"
 								aria-expanded={ showColorPicker }
 							>
@@ -532,7 +542,7 @@ export const PinCard = ( props: {
 									iconSize={ 16 }
 									icon={ reset }
 								>
-									{ __( 'Reset' ) }
+									{ __( 'Reset', 'vsge-mapbox-block' ) }
 								</Button>
 								<Button
 									style={ { marginLeft: 'auto' } }
@@ -541,7 +551,7 @@ export const PinCard = ( props: {
 									iconSize={ 16 }
 									icon={ download }
 								>
-									{ __( 'Save' ) }
+									{ __( 'Save', 'vsge-mapbox-block' ) }
 								</Button>
 							</Flex>
 						</PanelRow>
