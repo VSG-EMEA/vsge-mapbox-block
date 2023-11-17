@@ -39,7 +39,10 @@ export function highlightListing( item: MapBoxListing ) {
  * @param {mapboxgl.Map}  map    - The map object.
  * @param {MapBoxListing} marker - The listing marker object.
  */
-export function enableListing( map: MutableRefObject< mapboxgl.Map | null >, marker: MapBoxListing ) {
+export function enableListing(
+	map: MutableRefObject< mapboxgl.Map | null >,
+	marker: MapBoxListing
+) {
 	console.log( 'Listing enabled', marker );
 
 	// 1. Fly to the point
@@ -89,11 +92,13 @@ export const Listing = ( {
 	const {
 		properties: {
 			name,
-			phone,
 			city,
+			phone,
+			mobile,
+			address,
 			country,
 			countryCode,
-			address,
+			postalCode = '',
 			itemTags,
 			itemFilters,
 			emailAddress,
@@ -117,7 +122,6 @@ export const Listing = ( {
 					} }
 				>
 					<h4 className="title">{ name }</h4>
-					{ address && <p>{ address }</p> }
 					{ phone && (
 						<p>
 							Phone:{ ' ' }
@@ -155,7 +159,7 @@ export const Listing = ( {
 					) }
 					{ distance && (
 						<p className={ 'store-distance' }>
-							{ __( 'Distance: ' ) +
+							{ __( 'Distance: ', 'vsge-mapbox-block' ) +
 								distance.toFixed( 1 ) +
 								'Km' }
 						</p>

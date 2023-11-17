@@ -28,13 +28,14 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 		itemFilters,
 		name = '',
 		phone = '',
+		mobile = '',
 		address = '',
 		city = '',
 		postalCode = '',
 		countryCode = '',
 		country = '',
-		emailAddress = '',
 		website = '',
+		emailAddress = '',
 		distance = null,
 	} = props;
 	return (
@@ -52,22 +53,24 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 				</div>
 				<div>
 					{ website ? (
-						<a href={ website }>
-							<h3>{ name }</h3>
+						<a href={ website } className={ 'popup-website' }>
+							<h3 className={ 'popup-name' }>{ name }</h3>
 						</a>
 					) : (
-						<h3>{ name }</h3>
-					) }
-					{ address && (
-						<p>
-							{ address } { postalCode }
-						</p>
+						<h3 className={ 'popup-name' }>{ name }</h3>
 					) }
 					{ phone && (
-						<p>
-							Phone:{ ' ' }
-							<a href={ 'tel:' + phone } className="email-link">
-								{ phone }
+						<p className={ 'popup-phone' }>
+							<a href={ 'tel:' + phone }>
+								{ __( 'Phone: ', 'vsge-mapbox-block' ) + phone }
+							</a>
+						</p>
+					) }
+					{ mobile && (
+						<p className={ 'popup-phone' }>
+							<a href={ 'tel:' + mobile }>
+								{ __( 'Mobile: ', 'vsge-mapbox-block' ) +
+									mobile }
 							</a>
 						</p>
 					) }
@@ -87,6 +90,7 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 							</a>
 						</p>
 					) }
+
 					{ emailAddress && (
 						<p>
 							Email:{ ' ' }
@@ -98,13 +102,14 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 							</a>
 						</p>
 					) }
+
 					<TagList
 						tags={ itemTags }
 						className={ 'popup-tag-list tag-list' }
 					/>
 					{ !! distance && (
 						<p>
-							{ __( 'Distance: ' ) +
+							{ __( 'Distance: ', 'vsge-mapbox-block' ) +
 								`${ distance.toFixed( 2 ) }Km` }
 						</p>
 					) }
@@ -171,49 +176,57 @@ export function PinPointPopup( props: {
 
 	return (
 		<div className={ 'mapbox-popup-inner mapbox-popup-newpin' }>
-			<h4>{ __( 'My location' ) }</h4>
-			<button
-				onClick={ () => {
-					// get the current temp pin data
-					const currentPinData = listings.find( ( listing ) => {
-						return listing.type === MARKER_TYPE_TEMP;
-					} );
-					// sort the array and get the nearest store
-					const sortedNearestStores = locateNearestStore(
-						location,
-						listings
-					);
-					// create a new temp pin
-					const myLocationPin = {
-						...currentPinData,
-						text: __( 'My location' ),
-						place_name: __( 'Clicked Pin' ),
-						geometry: {
-							coordinates: location,
-						},
-						properties: {
-							icon: 'myLocation',
-						},
-					};
-					const sortedListings = showNearestStore(
-						myLocationPin as unknown as MapboxGeocoder.Result,
-						sortedNearestStores,
-						mapRef as RefObject< HTMLDivElement >,
-						map
-					);
-					setFilteredListings( [ ...sortedListings, myLocationPin ] );
-				} }
-			>
-				{ __( 'Find the nearest store?' ) }
-			</button>
-			<button
-				onClick={ () => {
-					removePopups( mapRef );
-					setFilteredListings( [] );
-				} }
-			>
-				Reset
-			</button>
+			<h3>{ __( 'My location', 'vsge-mapbox-block' ) }</h3>
+			<div className={ 'mapbox-popup-newpin-buttons' }>
+				<button
+					onClick={ () => {
+						// get the current temp pin data
+						const currentPinData = listings.find( ( listing ) => {
+							return listing.type === MARKER_TYPE_TEMP;
+						} );
+						// sort the array and get the nearest store
+						const sortedNearestStores = locateNearestStore(
+							location,
+							listings
+						);
+						// create a new temp pin
+						const myLocationPin = {
+							...currentPinData,
+							text: __( 'My location', 'vsge-mapbox-block' ),
+							place_name: __(
+								'Clicked Pin',
+								'vsge-mapbox-block'
+							),
+							geometry: {
+								coordinates: location,
+							},
+							properties: {
+								icon: 'myLocation',
+							},
+						};
+						const sortedListings = showNearestStore(
+							myLocationPin as unknown as MapboxGeocoder.Result,
+							sortedNearestStores,
+							mapRef as RefObject< HTMLDivElement >,
+							map
+						);
+						setFilteredListings( [
+							...sortedListings,
+							myLocationPin,
+						] );
+					} }
+				>
+					{ __( 'Find the nearest store?', 'vsge-mapbox-block' ) }
+				</button>
+				<button
+					onClick={ () => {
+						removePopups( mapRef );
+						setFilteredListings( [] );
+					} }
+				>
+					Reset
+				</button>
+			</div>
 		</div>
 	);
 }

@@ -250,7 +250,21 @@ export const PinCard = ( props: {
 							} }
 						></TextControl>
 						<TextControl
-							label={ __( 'email' ) }
+							label={ __( 'Mobile', 'vsge-mapbox-block' ) }
+							type={ 'tel' }
+							value={ itemData.properties?.mobile || '' }
+							onChange={ ( newValue ) => {
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										Mobile: newValue,
+									},
+								} );
+							} }
+						></TextControl>
+						<TextControl
+							label={ __( 'Email', 'vsge-mapbox-block' ) }
 							type={ 'email' }
 							value={ itemData.properties?.emailAddress || '' }
 							onChange={ ( newValue ) => {
@@ -278,7 +292,21 @@ export const PinCard = ( props: {
 							} }
 						></TextControl>
 						<TextControl
-							label={ __( 'Country' ) }
+							label={ __( 'City', 'vsge-mapbox-block' ) }
+							type={ 'text' }
+							value={ itemData.properties?.city || '' }
+							onChange={ ( newValue ) => {
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										city: newValue,
+									},
+								} );
+							} }
+						></TextControl>
+						<TextControl
+							label={ __( 'Country', 'vsge-mapbox-block' ) }
 							type={ 'text' }
 							value={ itemData.properties?.country || '' }
 							onChange={ ( newValue ) => {
@@ -292,7 +320,21 @@ export const PinCard = ( props: {
 							} }
 						></TextControl>
 						<TextControl
-							label={ __( 'Country Code' ) }
+							label={ __( 'Postal Code', 'vsge-mapbox-block' ) }
+							type={ 'text' }
+							value={ itemData.properties?.postalCode || '' }
+							onChange={ ( newValue ) => {
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										postalCode: newValue,
+									},
+								} );
+							} }
+						></TextControl>
+						<TextControl
+							label={ __( 'Country Code', 'vsge-mapbox-block' ) }
 							type={ 'text' }
 							value={ itemData.properties?.countryCode || '' }
 							onChange={ ( newValue ) => {
