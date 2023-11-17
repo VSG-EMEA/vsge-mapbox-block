@@ -1,86 +1,100 @@
 /* Marker tweaks */
 .wp-block-vsge-mapbox .map-wrapper {
-  .map .mapboxgl-popup {
-    padding-bottom: 50px;
 
-    &-close-button {
-      // display:none;
-      margin: 0;
-      background-color: transparent;
-      color: var(--color__gray-800);
-      border: 0 !important;
-      min-width: 32px;
-      font-size: 28px;
-      padding: 0;
-    }
+	.map .mapboxgl-popup {
+		padding-bottom: 50px;
 
-    &-content {
-      font-weight: 400;
-      padding: 1rem 1.5rem 1rem 1rem;
-      width: 100%;
-      line-height: var(--text__line-height-headline);
+		&-close-button {
+			// display:none;
+			margin: 0;
+			background-color: transparent;
+			color: var(--color__gray-800);
+			border: 0 !important;
+			min-width: 32px;
+			font-size: 28px;
+			padding: 0;
+		}
 
-      img.gray-marker {
-        position: absolute;
-        left: 24px;
-      }
-    }
+		&-content {
+			font-weight: 400;
+			padding: 1rem 1.5rem 1rem 1rem;
+			width: 100%;
+			line-height: var(--text__line-height-headline);
 
-    .mapbox-popup-inner {
-      gap: 1rem;
-      max-width: 280px;
-      padding-right: 2rem;
-      width: 100%;
+			img.gray-marker {
+				position: absolute;
+				left: 24px;
+			}
+		}
 
-      &.mapbox-popup-search {
-        flex-direction: column;
-        text-align: center;
-        margin: auto;
-        min-width: inherit;
+		.mapbox-popup-inner {
+			gap: 1rem;
+			max-width: 280px;
+			padding-right: 2rem;
+			width: 100%;
 
-        svg {
-          margin: auto;
-          width: 100%;
-          height: 100%;
-        }
-      }
+			&.mapbox-popup-search {
+				flex-direction: column;
+				text-align: center;
+				margin: auto;
+				min-width: inherit;
 
-      &.mapbox-popup-newpin button {
-        background: #174b85;
-        color: white;
-        padding: 8px 10px;
-        border: none;
-        margin: 0 4px 0 0;
-        text-transform: uppercase;
-        font-size: 11px;
-        font-weight: 700;
-      }
-    }
+				svg {
+					margin: auto;
+					width: 100%;
+					height: 100%;
+				}
+			}
 
-    &-anchor-bottom .mapboxgl-popup-tip {
-      filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.1));
-    }
+			&.mapbox-popup-newpin {
 
-    a {
-      text-decoration: inherit;
-    }
+				.mapbox-popup-newpin-buttons {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-top: 1rem;
+				}
 
-    h3 {
-      color: #484848;
-      font-weight: 600;
-      font-size: 16px;
-      margin: 0 0 6px;
-    }
+				button {
+					background: var(--mapbox--color--white);
+					color: var(--mapbox--color--primary);
+					padding: 0.8rem 0.6rem;
+					border: 1px solid var(--mapbox--color--primary);
 
-    h4 {
-      font-size: 14px;
-      margin: 0 0 6px;
-    }
+					text-transform: uppercase;
+					font-size: 0.66rem;
+					font-weight: 600;
 
-    p {
-      color: #9b9b9b;
-      font-size: 13px;
-      margin: 0 0 2px;
-    }
-  }
+					& + button {
+						background: var(--mapbox--color--primary);
+						color: var(--mapbox--color--white);
+					}
+				}
+			}
+		}
+
+		&-anchor-bottom .mapboxgl-popup-tip {
+			filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.1));
+		}
+	}
+}
+
+.wp-block-vsge-mapbox .map-wrapper {
+
+	.mapbox-sidebar-feature,
+	.mapbox-popup-wrap {
+
+		.filter-list {
+			display: flex;
+			flex-direction: column;
+			padding-left: 40px;
+			font-size: 0.66rem;
+			text-transform: uppercase;
+			font-weight: 600;
+
+			&.popup-filter-list {
+				padding-left: 52px;
+			}
+		}
+	}
 }

@@ -6,13 +6,13 @@
 		justify-content: flex-end;
 		align-content: center;
 
-    &-hidden {
-      display: none;
-    }
+		&-hidden {
+			display: none;
+		}
 
 		button,
 		.components-base-control {
-			margin: 0 .5rem;
+			margin: 0 0.5rem;
 			max-width: 250px;
 			height: var(--mabox-topbar-height);
 		}
@@ -24,12 +24,12 @@
 			text-overflow: ellipsis;
 		}
 
-    .components-input-control__backdrop {
-      border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
-    }
+		.components-input-control__backdrop {
+			border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
+		}
 
 		button {
-      background: var(--wp--preset--color--white);
+			background: var(--wp--preset--color--white);
 			border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
 
 			&:focus,
@@ -45,7 +45,7 @@
 			svg {
 				vertical-align: sub;
 				line-height: var(--mabox-topbar-height);
-        margin-right: .5rem;
+				margin-right: 0.5rem;
 			}
 		}
 

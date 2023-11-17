@@ -1,4 +1,42 @@
 .map-wrapper {
-  --mabox-topbar-height: 40px;
-  --mabox-sidebar-width: 400px;
+	--mabox-topbar-height: 40px;
+	--mabox-sidebar-width: 400px;
+
+	--mapbox--color--primary: #004a83;
+	--mapbox--color--primary-accent: #1285dc;
+	--mapbox--color--white: #fff;
+	--mapbox--color--black: #333;
+	--mapbox--color--gray-dark: #666;
+	--mapbox--color--gray-light: #a7a7a7;
+	--mapbox--color--gray-200: #eee;
+	--mapbox--color--gray-100: #f7f7f7;
+	--mapbox--color--background: var(--mapbox--color--white);
+	--mapbox--color--text: var(--mapbox--color--black);
+}
+
+.wp-block-vsge-mapbox .map-wrapper {
+	font-size: 13px;
+	color: var(--mapbox--color--gray-dark);
+
+	a {
+		text-decoration: inherit;
+	}
+
+	h3 {
+		color: var(--mapbox--color--black);
+		font-weight: 600;
+		font-size: 16px;
+		margin: 0 0 6px;
+	}
+
+	h4 {
+		color: var(--mapbox--color--gray-dark);
+		font-size: 14px;
+		margin: 0 0 6px;
+	}
+
+	p,
+	span {
+		margin: 0 0 2px;
+	}
 }
