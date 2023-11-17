@@ -66,7 +66,7 @@ export const Sidebar = (): JSX.Element | null => {
 	if ( ! listings )
 		return (
 			<div className={ 'result' }>
-				<p>{ __( 'no listings found' ) }</p>
+				<p>{ __( 'no listings found', 'vsge-mapbox-block' ) }</p>
 			</div>
 		);
 

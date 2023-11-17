@@ -29,7 +29,7 @@ export const IconItem = ( props: {
 				></div>
 				<Button
 					icon={ cancelCircleFilled }
-					title={ __( 'Delete icon' ) }
+					title={ __( 'Delete icon', 'vsge-mapbox-block' ) }
 					className={ 'remove-sortable-item' }
 					style={ { width: '50%' } }
 					onClick={ () => removeIcon( id ) }
@@ -38,7 +38,7 @@ export const IconItem = ( props: {
 
 			<div>
 				<TextControl
-					placeholder={ __( 'Marker Name' ) }
+					placeholder={ __( 'Marker Name', 'vsge-mapbox-block' ) }
 					value={ name || 'mapMarker' }
 					onChange={ ( newValue ) =>
 						setIcon( {
@@ -48,7 +48,7 @@ export const IconItem = ( props: {
 					}
 				/>
 				<TextControl
-					placeholder={ __( 'svg markup' ) }
+					placeholder={ __( 'svg markup', 'vsge-mapbox-block' ) }
 					value={ content || '<svg></svg>' }
 					onChange={ ( newValue ) =>
 						setIcon( {
@@ -86,7 +86,7 @@ export const EditPanelIcons = ( {
 			...icons,
 			{
 				id: nextId,
-				name: [ __( 'New Marker ' ), nextId ].join( ' ' ),
+				name: [ __( 'New Marker ', 'vsge-mapbox-block' ), nextId ].join( ' ' ),
 				content: undefined,
 			},
 		] );
@@ -117,7 +117,7 @@ export const EditPanelIcons = ( {
 				</Flex>
 				<Button
 					icon={ plusCircle }
-					text={ __( 'Add new' ) }
+					text={ __( 'Add new', 'vsge-mapbox-block' ) }
 					className={ 'add-new-sortable-item' }
 					style={ { width: '50%' } }
 					onClick={ () => addNewIcon( getNextId( icons ) ) }
