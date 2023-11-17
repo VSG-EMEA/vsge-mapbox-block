@@ -1,0 +1,223 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#: src/components/Edit/Edit.tsx:162
+msgid "Enable Sidebar"
+msgstr "Activer la barre latérale"
+
+#: src/components/Edit/Edit.tsx:177
+msgid "Enable Geocoder"
+msgstr "Activer le géocodeur"
+
+#: src/components/Edit/Edit.tsx:188
+msgid "Enable Filters"
+msgstr "Activer les filtres"
+
+#: src/components/Edit/Edit.tsx:198
+msgid "Enable Tag"
+msgstr "Activer l'étiquette"
+
+#: src/components/Edit/Edit.tsx:208
+msgid "Enable fitView"
+msgstr "Activer fitView"
+
+#: src/components/Edit/Edit.tsx:219
+msgid "Enable Elevation"
+msgstr "Activer l'élévation"
+
+#: src/components/Edit/Edit.tsx:230
+msgid "Enable camera 3d rotation"
+msgstr "Activer la rotation 3D de la caméra"
+
+#: src/components/Edit/Edit.tsx:243
+msgid "Enable Zoom with mouse wheel"
+msgstr "Activer le zoom avec la molette de la souris"
+
+#: src/components/Edit/Edit.tsx:257
+msgid "Camera Options"
+msgstr "Options de l'appareil photo"
+
+#: src/components/Edit/Edit.tsx:266
+msgid "Get Current view"
+msgstr "Obtenir la vue actuelle"
+
+#: src/components/Edit/Edit.tsx:269
+msgid "Camera Fine tuning"
+msgstr "Réglage fin de la caméra"
+
+#: src/components/Edit/Edit.tsx:271
+msgid "Latitude"
+msgstr "Latitude"
+
+#: src/components/Edit/Edit.tsx:289
+msgid "Longitude"
+msgstr "Longitude"
+
+#: src/components/Edit/Edit.tsx:381
+msgid "Map Height"
+msgstr "Hauteur de la carte"
+
+#: src/components/Edit/EditPanelIcons.tsx:120
+#: src/components/Sortable/index.tsx:222
+msgid "Add new"
+msgstr "Ajouter"
+
+#: src/components/Edit/EditPanelIcons.tsx:32
+msgid "Delete icon"
+msgstr "supprimer l'icône"
+
+#: src/components/Edit/EditPanelIcons.tsx:41
+msgid "Marker Name"
+msgstr "Nom du lieu"
+
+#: src/components/Edit/EditPanelIcons.tsx:51
+msgid "svg markup"
+msgstr "balisage svg"
+
+#: src/components/Edit/EditPanelIcons.tsx:89
+msgid "New Marker "
+msgstr "Nouveau marqueur"
+
+#: src/components/Geocoder/init.ts:61
+msgid "Find the nearest store"
+msgstr "Trouver le magasin le plus proche"
+
+#: src/components/Listing/index.tsx:162
+#: src/components/Popup/PopupContent.tsx:112
+msgid "Distance: "
+msgstr "Distance : "
+
+#: src/components/Popup/PopupContent.tsx:195
+msgid "My location"
+msgstr "Ma position"
+
+#: src/components/Popup/PopupContent.tsx:196
+msgid "Clicked Pin"
+msgstr "Épingle cliquée"
+
+#: src/components/Popup/PopupContent.tsx:219
+msgid "Find the nearest store?"
+msgstr "Trouver le magasin le plus proche ?"
+
+#: src/components/Popup/PopupContent.tsx:65
+msgid "Phone: "
+msgstr "Téléphone :"
+
+#: src/components/Popup/PopupContent.tsx:72
+msgid "Mobile: "
+msgstr "Portable :"
+
+#: src/components/Sidebar/index.tsx:69
+msgid "no listings found"
+msgstr "aucune liste trouvée"
+
+#: src/components/Sortable/IconPreview.tsx:26
+msgid "error 😥"
+msgstr "erreur 😥"
+
+#: src/components/Sortable/SortablePins.tsx:132
+#: src/components/Sortable/index.tsx:153
+msgid "New"
+msgstr "Nouveau"
+
+#: src/components/Sortable/SortablePins.tsx:144
+msgid "type"
+msgstr "type"
+
+#: src/components/Sortable/SortablePins.tsx:163
+msgid "lat"
+msgstr "latitude"
+
+#: src/components/Sortable/SortablePins.tsx:182
+msgid "lang"
+msgstr "lang"
+
+#: src/components/Sortable/SortablePins.tsx:216
+msgid "Add Pin"
+msgstr "Ajouter une épingle"
+
+#: src/components/Sortable/SortablePins.tsx:225
+msgid "Name"
+msgstr "Nom"
+
+#: src/components/Sortable/SortablePins.tsx:240
+msgid "Phone"
+msgstr "Téléphone"
+
+#: src/components/Sortable/SortablePins.tsx:254
+msgid "Mobile"
+msgstr "Mobile"
+
+#: src/components/Sortable/SortablePins.tsx:268
+msgid "Email"
+msgstr "E-mail"
+
+#: src/components/Sortable/SortablePins.tsx:282
+msgid "website"
+msgstr "site web"
+
+#: src/components/Sortable/SortablePins.tsx:296
+msgid "City"
+msgstr "Ville"
+
+#: src/components/Sortable/SortablePins.tsx:310
+msgid "Country"
+msgstr "Pays"
+
+#: src/components/Sortable/SortablePins.tsx:324
+msgid "Postal Code"
+msgstr "Code postal"
+
+#: src/components/Sortable/SortablePins.tsx:338
+msgid "Country Code"
+msgstr "Code du pays"
+
+#: src/components/Sortable/SortablePins.tsx:352
+msgid "Address"
+msgstr "Adresse"
+
+#: src/components/Sortable/SortablePins.tsx:405
+msgid "Filters"
+msgstr "Filtres"
+
+#: src/components/Sortable/SortablePins.tsx:465
+msgid "Select a Marker"
+msgstr "Sélectionner un marqueur"
+
+#: src/components/Sortable/SortablePins.tsx:473
+msgid "Default"
+msgstr "Défaut"
+
+#: src/components/Sortable/SortablePins.tsx:503
+msgid "Marker"
+msgstr "Marqueur"
+
+#: src/components/Sortable/SortablePins.tsx:545
+msgid "Reset"
+msgstr "Remettre A Zéro"
+
+#: src/components/Sortable/SortablePins.tsx:554
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: src/components/Sortable/index.tsx:130
+msgid "New Marker"
+msgstr "Nouveau marqueur"
+
+#: src/components/TopBar/index.tsx:113
+msgid "Reset Filters"
+msgstr "Réinitialiser les filtres"
+
+#: src/components/TopBar/index.tsx:123
+msgid "Fit View"
+msgstr "Vue Ajuster"
