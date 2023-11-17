@@ -122,7 +122,6 @@ export const Listing = ( {
 					} }
 				>
 					<h4 className="title">{ name }</h4>
-					{ address && <p>{ address }</p> }
 					{ phone && (
 						<p>
 							Phone:{ ' ' }
