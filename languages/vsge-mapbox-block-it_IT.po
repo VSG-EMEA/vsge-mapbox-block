@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: \n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vsge-mapbox-"
+"block\n"
+"POT-Creation-Date: 2023-11-17T19:44:17+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,213 +13,237 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.3.2\n"
 
-#: src/components/Edit/Edit.tsx:162
-msgid "Enable Sidebar"
-msgstr "Abilita la barra laterale"
+#. Plugin Name of the plugin
+msgid "vsge-mapbox-block"
+msgstr "vsge-mapbox-block"
 
-#: src/components/Edit/Edit.tsx:177
-msgid "Enable Geocoder"
-msgstr "Abilita il geocoder"
+#. Description of the plugin
+msgid "VSGE - mapbox block"
+msgstr "VSGE - blocco mapbox"
 
-#: src/components/Edit/Edit.tsx:188
-msgid "Enable Filters"
-msgstr "Abilita Filtri"
+#. Author of the plugin
+msgid "codekraft"
+msgstr "codekraft"
 
-#: src/components/Edit/Edit.tsx:198
-msgid "Enable Tag"
-msgstr "Abilitazione del tag"
-
-#: src/components/Edit/Edit.tsx:208
-msgid "Enable fitView"
-msgstr "Abilita fitView"
-
-#: src/components/Edit/Edit.tsx:219
-msgid "Enable Elevation"
-msgstr "Abilitazione dell'elevazione"
-
-#: src/components/Edit/Edit.tsx:230
-msgid "Enable camera 3d rotation"
-msgstr "Abilita la rotazione 3D della telecamera"
-
-#: src/components/Edit/Edit.tsx:243
-msgid "Enable Zoom with mouse wheel"
-msgstr "Abilita lo zoom con la rotella del mouse"
-
-#: src/components/Edit/Edit.tsx:257
-msgid "Camera Options"
-msgstr "Opzioni della telecamera"
-
-#: src/components/Edit/Edit.tsx:266
-msgid "Get Current view"
-msgstr "Ottenere la vista corrente"
-
-#: src/components/Edit/Edit.tsx:269
-msgid "Camera Fine tuning"
-msgstr "Regolazione fine della telecamera"
-
-#: src/components/Edit/Edit.tsx:271
-msgid "Latitude"
-msgstr "Latitudine"
-
-#: src/components/Edit/Edit.tsx:289
-msgid "Longitude"
-msgstr "Longitudine"
-
-#: src/components/Edit/Edit.tsx:381
-msgid "Map Height"
-msgstr "Altezza mappa"
-
-#: src/components/Edit/EditPanelIcons.tsx:120
-#: src/components/Sortable/index.tsx:222
-msgid "Add new"
-msgstr "Aggiungi nuovo"
-
-#: src/components/Edit/EditPanelIcons.tsx:32
-msgid "Delete icon"
-msgstr "Elimina Icona"
-
-#: src/components/Edit/EditPanelIcons.tsx:41
-msgid "Marker Name"
-msgstr "Nome Segnaposto"
-
-#: src/components/Edit/EditPanelIcons.tsx:51
-msgid "svg markup"
-msgstr "markup svg"
-
-#: src/components/Edit/EditPanelIcons.tsx:89
-msgid "New Marker "
-msgstr "Nuovo marcatore"
-
-#: src/components/Geocoder/init.ts:61
-msgid "Find the nearest store"
-msgstr "Trova il negozio più vicino"
-
-#: src/components/Listing/index.tsx:162
-#: src/components/Popup/PopupContent.tsx:112
-msgid "Distance: "
-msgstr "Distanza: "
-
-#: src/components/Popup/PopupContent.tsx:195
-msgid "My location"
-msgstr "La mia località"
-
-#: src/components/Popup/PopupContent.tsx:196
-msgid "Clicked Pin"
-msgstr "Pin cliccato"
-
-#: src/components/Popup/PopupContent.tsx:219
-msgid "Find the nearest store?"
-msgstr "Trovare il negozio più vicino?"
-
-#: src/components/Popup/PopupContent.tsx:65
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
 msgid "Phone: "
 msgstr "Telefono: "
 
-#: src/components/Popup/PopupContent.tsx:72
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
 msgid "Mobile: "
 msgstr "Mobile: "
 
-#: src/components/Sidebar/index.tsx:69
-msgid "no listings found"
-msgstr "nessun annuncio trovato"
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "Distance: "
+msgstr "Distanza: "
 
-#: src/components/Sortable/IconPreview.tsx:26
-msgid "error 😥"
-msgstr "errore 😥"
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "My location"
+msgstr "La mia località"
 
-#: src/components/Sortable/SortablePins.tsx:132
-#: src/components/Sortable/index.tsx:153
-msgid "New"
-msgstr "Nuovo"
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "Clicked Pin"
+msgstr "Pin cliccato"
 
-#: src/components/Sortable/SortablePins.tsx:144
-msgid "type"
-msgstr "tipo"
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "Find the nearest store?"
+msgstr "Trovare il negozio più vicino?"
 
-#: src/components/Sortable/SortablePins.tsx:163
-msgid "lat"
-msgstr "Lat"
-
-#: src/components/Sortable/SortablePins.tsx:182
-msgid "lang"
-msgstr "lingua"
-
-#: src/components/Sortable/SortablePins.tsx:216
-msgid "Add Pin"
-msgstr "Aggiungi Pin"
-
-#: src/components/Sortable/SortablePins.tsx:225
-msgid "Name"
-msgstr "Nome"
-
-#: src/components/Sortable/SortablePins.tsx:240
-msgid "Phone"
-msgstr "Telefono"
-
-#: src/components/Sortable/SortablePins.tsx:254
-msgid "Mobile"
-msgstr "Cellulare"
-
-#: src/components/Sortable/SortablePins.tsx:268
-msgid "Email"
-msgstr "E-mail"
-
-#: src/components/Sortable/SortablePins.tsx:282
-msgid "website"
-msgstr "website"
-
-#: src/components/Sortable/SortablePins.tsx:296
-msgid "City"
-msgstr "Città"
-
-#: src/components/Sortable/SortablePins.tsx:310
-msgid "Country"
-msgstr "Paese"
-
-#: src/components/Sortable/SortablePins.tsx:324
-msgid "Postal Code"
-msgstr "Codice postale"
-
-#: src/components/Sortable/SortablePins.tsx:338
-msgid "Country Code"
-msgstr "Codice Paese"
-
-#: src/components/Sortable/SortablePins.tsx:352
-msgid "Address"
-msgstr "Indirizzo"
-
-#: src/components/Sortable/SortablePins.tsx:405
-msgid "Filters"
-msgstr "Filtri"
-
-#: src/components/Sortable/SortablePins.tsx:465
-msgid "Select a Marker"
-msgstr "Selezionare un marcatore"
-
-#: src/components/Sortable/SortablePins.tsx:473
-msgid "Default"
-msgstr "Predefinito"
-
-#: src/components/Sortable/SortablePins.tsx:503
-msgid "Marker"
-msgstr "Segnaposto"
-
-#: src/components/Sortable/SortablePins.tsx:545
-msgid "Reset"
-msgstr "Reset"
-
-#: src/components/Sortable/SortablePins.tsx:554
-msgid "Save"
-msgstr "Salva"
-
-#: src/components/Sortable/index.tsx:130
-msgid "New Marker"
-msgstr "Nuovo Segnaposto"
-
-#: src/components/TopBar/index.tsx:113
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
 msgid "Reset Filters"
 msgstr "Resetta filtri"
 
-#: src/components/TopBar/index.tsx:123
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
 msgid "Fit View"
 msgstr "Vista in forma"
+
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "no listings found"
+msgstr "nessun annuncio trovato"
+
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "Find the nearest store"
+msgstr "Trova il negozio più vicino"
+
+#: build/mapbox-block.js:1
+msgid "error 😥"
+msgstr "errore 😥"
+
+#: build/mapbox-block.js:1
+msgid "New"
+msgstr "Nuovo"
+
+#: build/mapbox-block.js:1
+msgid "type"
+msgstr "tipo"
+
+#: build/mapbox-block.js:1
+msgid "lat"
+msgstr "Lat"
+
+#: build/mapbox-block.js:1
+msgid "lang"
+msgstr "lingua"
+
+#: build/mapbox-block.js:1
+msgid "Add Pin"
+msgstr "Aggiungi Pin"
+
+#: build/mapbox-block.js:1
+msgid "Name"
+msgstr "Nome"
+
+#: build/mapbox-block.js:1
+msgid "Phone"
+msgstr "Telefono"
+
+#: build/mapbox-block.js:1
+msgid "Mobile"
+msgstr "Cellulare"
+
+#: build/mapbox-block.js:1
+msgid "Email"
+msgstr "E-mail"
+
+#: build/mapbox-block.js:1
+msgid "website"
+msgstr "website"
+
+#: build/mapbox-block.js:1
+msgid "City"
+msgstr "Città"
+
+#: build/mapbox-block.js:1
+msgid "Country"
+msgstr "Paese"
+
+#: build/mapbox-block.js:1
+msgid "Postal Code"
+msgstr "Codice postale"
+
+#: build/mapbox-block.js:1
+msgid "Country Code"
+msgstr "Codice Paese"
+
+#: build/mapbox-block.js:1
+msgid "Address"
+msgstr "Indirizzo"
+
+#: build/mapbox-block.js:1
+msgid "Filters"
+msgstr "Filtri"
+
+#: build/mapbox-block.js:1
+msgid "Select a Marker"
+msgstr "Selezionare un marcatore"
+
+#: build/mapbox-block.js:1
+msgid "Default"
+msgstr "Predefinito"
+
+#: build/mapbox-block.js:1
+msgid "Marker"
+msgstr "Segnaposto"
+
+#: build/mapbox-block.js:1
+msgid "Reset"
+msgstr "Reset"
+
+#: build/mapbox-block.js:1
+msgid "Save"
+msgstr "Salva"
+
+#: build/mapbox-block.js:1
+msgid "New Marker"
+msgstr "Nuovo Segnaposto"
+
+#: build/mapbox-block.js:1
+msgid "Add new"
+msgstr "Aggiungi nuovo"
+
+#: build/mapbox-block.js:1
+msgid "Delete icon"
+msgstr "Elimina Icona"
+
+#: build/mapbox-block.js:1
+msgid "Marker Name"
+msgstr "Nome Segnaposto"
+
+#: build/mapbox-block.js:1
+msgid "svg markup"
+msgstr "markup svg"
+
+#: build/mapbox-block.js:1
+msgid "New Marker "
+msgstr "Nuovo marcatore"
+
+#: build/mapbox-block.js:1
+msgid "Enable Sidebar"
+msgstr "Abilita la barra laterale"
+
+#: build/mapbox-block.js:1
+msgid "Enable Geocoder"
+msgstr "Abilita il geocoder"
+
+#: build/mapbox-block.js:1
+msgid "Enable Filters"
+msgstr "Abilita Filtri"
+
+#: build/mapbox-block.js:1
+msgid "Enable Tag"
+msgstr "Abilitazione del tag"
+
+#: build/mapbox-block.js:1
+msgid "Enable fitView"
+msgstr "Abilita fitView"
+
+#: build/mapbox-block.js:1
+msgid "Enable Elevation"
+msgstr "Abilitazione dell'elevazione"
+
+#: build/mapbox-block.js:1
+msgid "Enable camera 3d rotation"
+msgstr "Abilita la rotazione 3D della telecamera"
+
+#: build/mapbox-block.js:1
+msgid "Enable Zoom with mouse wheel"
+msgstr "Abilita lo zoom con la rotella del mouse"
+
+#: build/mapbox-block.js:1
+msgid "Camera Options"
+msgstr "Opzioni della telecamera"
+
+#: build/mapbox-block.js:1
+msgid "Get Current view"
+msgstr "Ottenere la vista corrente"
+
+#: build/mapbox-block.js:1
+msgid "Camera Fine tuning"
+msgstr "Regolazione fine della telecamera"
+
+#: build/mapbox-block.js:1
+msgid "Latitude"
+msgstr "Latitudine"
+
+#: build/mapbox-block.js:1
+msgid "Longitude"
+msgstr "Longitudine"
+
+#: build/mapbox-block.js:1
+msgid "Map Height"
+msgstr "Altezza mappa"
+
+#: block.json
+msgctxt "block title"
+msgid "MapBox"
+msgstr "Mappa"
+
+#: block.json
+msgctxt "block description"
+msgid "A block that displays the map using mapbox"
+msgstr "Un blocco che visualizza la mappa utilizzando mapbox"
+
+#: block.json
+msgctxt "block keyword"
+msgid "mapbox"
+msgstr "mapbox"

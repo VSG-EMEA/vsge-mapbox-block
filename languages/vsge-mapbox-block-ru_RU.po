@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: \n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vsge-mapbox-"
+"block\n"
+"POT-Creation-Date: 2023-11-17T19:44:17+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,213 +13,237 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.3.2\n"
 
-#: src/components/Edit/Edit.tsx:162
-msgid "Enable Sidebar"
-msgstr "Включить боковую панель"
+#. Plugin Name of the plugin
+msgid "vsge-mapbox-block"
+msgstr "vsge-mapbox-block"
 
-#: src/components/Edit/Edit.tsx:177
-msgid "Enable Geocoder"
-msgstr "Включить геокодер"
+#. Description of the plugin
+msgid "VSGE - mapbox block"
+msgstr "VSGE - блок mapbox"
 
-#: src/components/Edit/Edit.tsx:188
-msgid "Enable Filters"
-msgstr "Включить фильтры"
+#. Author of the plugin
+msgid "codekraft"
+msgstr "codekraft"
 
-#: src/components/Edit/Edit.tsx:198
-msgid "Enable Tag"
-msgstr "Включить тег"
-
-#: src/components/Edit/Edit.tsx:208
-msgid "Enable fitView"
-msgstr "Включить функцию fitView"
-
-#: src/components/Edit/Edit.tsx:219
-msgid "Enable Elevation"
-msgstr "Разрешить повышение"
-
-#: src/components/Edit/Edit.tsx:230
-msgid "Enable camera 3d rotation"
-msgstr "Включить поворот камеры в 3d"
-
-#: src/components/Edit/Edit.tsx:243
-msgid "Enable Zoom with mouse wheel"
-msgstr "Включить функцию масштабирования с помощью колеса мыши"
-
-#: src/components/Edit/Edit.tsx:257
-msgid "Camera Options"
-msgstr "Параметры камеры"
-
-#: src/components/Edit/Edit.tsx:266
-msgid "Get Current view"
-msgstr "Получить текущий вид"
-
-#: src/components/Edit/Edit.tsx:269
-msgid "Camera Fine tuning"
-msgstr "Тонкая настройка камеры"
-
-#: src/components/Edit/Edit.tsx:271
-msgid "Latitude"
-msgstr "Широта"
-
-#: src/components/Edit/Edit.tsx:289
-msgid "Longitude"
-msgstr "Долгота"
-
-#: src/components/Edit/Edit.tsx:381
-msgid "Map Height"
-msgstr "Высота карты"
-
-#: src/components/Edit/EditPanelIcons.tsx:120
-#: src/components/Sortable/index.tsx:222
-msgid "Add new"
-msgstr "Добавить новый"
-
-#: src/components/Edit/EditPanelIcons.tsx:32
-msgid "Delete icon"
-msgstr "Удалить иконку"
-
-#: src/components/Edit/EditPanelIcons.tsx:41
-msgid "Marker Name"
-msgstr "Имя Метки"
-
-#: src/components/Edit/EditPanelIcons.tsx:51
-msgid "svg markup"
-msgstr "разметка svg"
-
-#: src/components/Edit/EditPanelIcons.tsx:89
-msgid "New Marker "
-msgstr "Новый маркер "
-
-#: src/components/Geocoder/init.ts:61
-msgid "Find the nearest store"
-msgstr "Найти ближайший магазин"
-
-#: src/components/Listing/index.tsx:162
-#: src/components/Popup/PopupContent.tsx:112
-msgid "Distance: "
-msgstr "Расстояние: "
-
-#: src/components/Popup/PopupContent.tsx:195
-msgid "My location"
-msgstr "Моё местоположение"
-
-#: src/components/Popup/PopupContent.tsx:196
-msgid "Clicked Pin"
-msgstr "Нажатая кнопка"
-
-#: src/components/Popup/PopupContent.tsx:219
-msgid "Find the nearest store?"
-msgstr "Найти ближайший магазин?"
-
-#: src/components/Popup/PopupContent.tsx:65
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
 msgid "Phone: "
 msgstr "Телефон: "
 
-#: src/components/Popup/PopupContent.tsx:72
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
 msgid "Mobile: "
 msgstr "Мобильный: "
 
-#: src/components/Sidebar/index.tsx:69
-msgid "no listings found"
-msgstr "объявления не найдены"
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "Distance: "
+msgstr "Расстояние: "
 
-#: src/components/Sortable/IconPreview.tsx:26
-msgid "error 😥"
-msgstr "ошибка 😥"
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "My location"
+msgstr "Моё местоположение"
 
-#: src/components/Sortable/SortablePins.tsx:132
-#: src/components/Sortable/index.tsx:153
-msgid "New"
-msgstr "Новый"
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "Clicked Pin"
+msgstr "Нажатая кнопка"
 
-#: src/components/Sortable/SortablePins.tsx:144
-msgid "type"
-msgstr "тип"
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "Find the nearest store?"
+msgstr "Найти ближайший магазин?"
 
-#: src/components/Sortable/SortablePins.tsx:163
-msgid "lat"
-msgstr "лат"
-
-#: src/components/Sortable/SortablePins.tsx:182
-msgid "lang"
-msgstr "язык"
-
-#: src/components/Sortable/SortablePins.tsx:216
-msgid "Add Pin"
-msgstr "Добавить булавку"
-
-#: src/components/Sortable/SortablePins.tsx:225
-msgid "Name"
-msgstr "Имя"
-
-#: src/components/Sortable/SortablePins.tsx:240
-msgid "Phone"
-msgstr "Телефон"
-
-#: src/components/Sortable/SortablePins.tsx:254
-msgid "Mobile"
-msgstr "Мобильный"
-
-#: src/components/Sortable/SortablePins.tsx:268
-msgid "Email"
-msgstr "Email"
-
-#: src/components/Sortable/SortablePins.tsx:282
-msgid "website"
-msgstr "веб-сайт"
-
-#: src/components/Sortable/SortablePins.tsx:296
-msgid "City"
-msgstr "Город"
-
-#: src/components/Sortable/SortablePins.tsx:310
-msgid "Country"
-msgstr "Страна"
-
-#: src/components/Sortable/SortablePins.tsx:324
-msgid "Postal Code"
-msgstr "Почтовый индекс"
-
-#: src/components/Sortable/SortablePins.tsx:338
-msgid "Country Code"
-msgstr "Код страны"
-
-#: src/components/Sortable/SortablePins.tsx:352
-msgid "Address"
-msgstr "Адрес"
-
-#: src/components/Sortable/SortablePins.tsx:405
-msgid "Filters"
-msgstr "Фильтры"
-
-#: src/components/Sortable/SortablePins.tsx:465
-msgid "Select a Marker"
-msgstr "Выберите маркер"
-
-#: src/components/Sortable/SortablePins.tsx:473
-msgid "Default"
-msgstr "По умолчанию"
-
-#: src/components/Sortable/SortablePins.tsx:503
-msgid "Marker"
-msgstr "Маркер"
-
-#: src/components/Sortable/SortablePins.tsx:545
-msgid "Reset"
-msgstr "Сброс"
-
-#: src/components/Sortable/SortablePins.tsx:554
-msgid "Save"
-msgstr "Сохранить"
-
-#: src/components/Sortable/index.tsx:130
-msgid "New Marker"
-msgstr "Новая Метка"
-
-#: src/components/TopBar/index.tsx:113
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
 msgid "Reset Filters"
 msgstr "Сбросить фильтры"
 
-#: src/components/TopBar/index.tsx:123
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
 msgid "Fit View"
 msgstr "Вид установки"
+
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "no listings found"
+msgstr "объявления не найдены"
+
+#: build/mapbox-block.js:1 build/mapbox-frontend.js:1
+msgid "Find the nearest store"
+msgstr "Найти ближайший магазин"
+
+#: build/mapbox-block.js:1
+msgid "error 😥"
+msgstr "ошибка 😥"
+
+#: build/mapbox-block.js:1
+msgid "New"
+msgstr "Новый"
+
+#: build/mapbox-block.js:1
+msgid "type"
+msgstr "тип"
+
+#: build/mapbox-block.js:1
+msgid "lat"
+msgstr "лат"
+
+#: build/mapbox-block.js:1
+msgid "lang"
+msgstr "язык"
+
+#: build/mapbox-block.js:1
+msgid "Add Pin"
+msgstr "Добавить булавку"
+
+#: build/mapbox-block.js:1
+msgid "Name"
+msgstr "Имя"
+
+#: build/mapbox-block.js:1
+msgid "Phone"
+msgstr "Телефон"
+
+#: build/mapbox-block.js:1
+msgid "Mobile"
+msgstr "Мобильный"
+
+#: build/mapbox-block.js:1
+msgid "Email"
+msgstr "Email"
+
+#: build/mapbox-block.js:1
+msgid "website"
+msgstr "веб-сайт"
+
+#: build/mapbox-block.js:1
+msgid "City"
+msgstr "Город"
+
+#: build/mapbox-block.js:1
+msgid "Country"
+msgstr "Страна"
+
+#: build/mapbox-block.js:1
+msgid "Postal Code"
+msgstr "Почтовый индекс"
+
+#: build/mapbox-block.js:1
+msgid "Country Code"
+msgstr "Код страны"
+
+#: build/mapbox-block.js:1
+msgid "Address"
+msgstr "Адрес"
+
+#: build/mapbox-block.js:1
+msgid "Filters"
+msgstr "Фильтры"
+
+#: build/mapbox-block.js:1
+msgid "Select a Marker"
+msgstr "Выберите маркер"
+
+#: build/mapbox-block.js:1
+msgid "Default"
+msgstr "По умолчанию"
+
+#: build/mapbox-block.js:1
+msgid "Marker"
+msgstr "Маркер"
+
+#: build/mapbox-block.js:1
+msgid "Reset"
+msgstr "Сброс"
+
+#: build/mapbox-block.js:1
+msgid "Save"
+msgstr "Сохранить"
+
+#: build/mapbox-block.js:1
+msgid "New Marker"
+msgstr "Новая Метка"
+
+#: build/mapbox-block.js:1
+msgid "Add new"
+msgstr "Добавить новый"
+
+#: build/mapbox-block.js:1
+msgid "Delete icon"
+msgstr "Удалить иконку"
+
+#: build/mapbox-block.js:1
+msgid "Marker Name"
+msgstr "Имя Метки"
+
+#: build/mapbox-block.js:1
+msgid "svg markup"
+msgstr "разметка svg"
+
+#: build/mapbox-block.js:1
+msgid "New Marker "
+msgstr "Новый маркер "
+
+#: build/mapbox-block.js:1
+msgid "Enable Sidebar"
+msgstr "Включить боковую панель"
+
+#: build/mapbox-block.js:1
+msgid "Enable Geocoder"
+msgstr "Включить геокодер"
+
+#: build/mapbox-block.js:1
+msgid "Enable Filters"
+msgstr "Включить фильтры"
+
+#: build/mapbox-block.js:1
+msgid "Enable Tag"
+msgstr "Включить тег"
+
+#: build/mapbox-block.js:1
+msgid "Enable fitView"
+msgstr "Включить функцию fitView"
+
+#: build/mapbox-block.js:1
+msgid "Enable Elevation"
+msgstr "Разрешить повышение"
+
+#: build/mapbox-block.js:1
+msgid "Enable camera 3d rotation"
+msgstr "Включить поворот камеры в 3d"
+
+#: build/mapbox-block.js:1
+msgid "Enable Zoom with mouse wheel"
+msgstr "Включить функцию масштабирования с помощью колеса мыши"
+
+#: build/mapbox-block.js:1
+msgid "Camera Options"
+msgstr "Параметры камеры"
+
+#: build/mapbox-block.js:1
+msgid "Get Current view"
+msgstr "Получить текущий вид"
+
+#: build/mapbox-block.js:1
+msgid "Camera Fine tuning"
+msgstr "Тонкая настройка камеры"
+
+#: build/mapbox-block.js:1
+msgid "Latitude"
+msgstr "Широта"
+
+#: build/mapbox-block.js:1
+msgid "Longitude"
+msgstr "Долгота"
+
+#: build/mapbox-block.js:1
+msgid "Map Height"
+msgstr "Высота карты"
+
+#: block.json
+msgctxt "block title"
+msgid "MapBox"
+msgstr "MapBox"
+
+#: block.json
+msgctxt "block description"
+msgid "A block that displays the map using mapbox"
+msgstr "Блок, отображающий карту с помощью mapbox"
+
+#: block.json
+msgctxt "block keyword"
+msgid "mapbox"
+msgstr "mapbox"
