@@ -4,7 +4,7 @@ import { MapBoxListing, SearchMarkerProps } from '../../types';
 import mapboxgl from 'mapbox-gl';
 import { TagList } from '../TagItem';
 import { removePopups } from '../Popup/';
-import type { RefObject, MutableRefObject } from 'react';
+import type { MutableRefObject, RefObject } from 'react';
 import { __ } from '@wordpress/i18n';
 import { flyToStore } from '../../utils/view';
 import { PopupContent, SearchPopup } from '../Popup/PopupContent';
@@ -43,24 +43,19 @@ export function enableListing(
 	map: MutableRefObject< mapboxgl.Map | null >,
 	marker: MapBoxListing
 ) {
-	console.log( 'Listing enabled', marker );
-
 	// 1. Fly to the point
 	flyToStore( map, marker );
 
 	const getPopupTemplate = (
-		marker: MapBoxListing
+		mkr: MapBoxListing
 	): JSX.Element | undefined => {
-		if ( marker.type === 'Feature' ) {
-			return <PopupContent { ...marker.properties } />;
-		} else if ( marker.properties.name === 'geocoder' ) {
+		if ( mkr.type === 'Feature' ) {
+			return <PopupContent { ...mkr.properties } />;
+		} else if ( mkr.properties.name === 'geocoder' ) {
 			return (
-				<SearchPopup
-					{ ...( marker.properties as SearchMarkerProps ) }
-				/>
+				<SearchPopup { ...( mkr.properties as SearchMarkerProps ) } />
 			);
 		}
-		return null;
 	};
 
 	// 2. Close all other popups and display popup for clicked store
@@ -76,7 +71,6 @@ export function enableListing(
  * @param                p
  * @param {Object}       p.jsonFeature
  * @param {mapboxgl.Map} p.map
- * @param                p.listings
  * @return A React component that renders a listing of properties if the type is 'Feature', and
  * returns null otherwise. The listing includes the name, phone, and address of the property.
  */
@@ -86,7 +80,7 @@ export const Listing = ( {
 	mapRef,
 }: {
 	jsonFeature: MapBoxListing;
-	map: mapboxgl.Map;
+	map: MutableRefObject< mapboxgl.Map | null >;
 	mapRef: RefObject< HTMLDivElement >;
 } ) => {
 	const {

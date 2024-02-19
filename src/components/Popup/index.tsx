@@ -1,7 +1,7 @@
-import { createRef, createRoot } from '@wordpress/element';
+import { createRef, createRoot, useRef } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
-import type { RefObject } from 'react';
+import type { MutableRefObject, RefObject } from 'react';
 import { PopupContent, SearchPopup } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
@@ -24,19 +24,23 @@ import './style.scss';
  * @return A `mapboxgl.Popup` object is being returned.
  */
 export function addPopup(
-	map: RefObject< mapboxgl.Map | null >,
+	map: MutableRefObject< mapboxgl.Map | null >,
 	marker: MapBoxListing | MapboxGeocoder.Result,
 	children: JSX.Element | null = null
-): mapboxgl.Popup {
+): mapboxgl.Popup | null {
 	if ( ! marker ) {
+		/* eslint-disable no-console */
 		console.error( 'Marker not found', marker );
-		return;
+		return null;
+	}
+	const popupRef = createRef< HTMLDivElement >();
+
+	if ( ! popupRef.current && map.current ) {
+		return null;
 	}
 
-	const popupRef: RefObject< HTMLDivElement > = createRef();
-
 	// Create a new DOM root and save it to the React ref
-	popupRef.current = document.createElement( 'div' ) as HTMLDivElement;
+	popupRef.current = document.createElement( 'div' );
 	const root = createRoot( popupRef.current );
 
 	// Render a Marker Component on our new DOM node
