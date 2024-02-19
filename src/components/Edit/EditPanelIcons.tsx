@@ -86,7 +86,9 @@ export const EditPanelIcons = ( {
 			...icons,
 			{
 				id: nextId,
-				name: [ __( 'New Marker ', 'vsge-mapbox-block' ), nextId ].join( ' ' ),
+				name: [ __( 'New Marker ', 'vsge-mapbox-block' ), nextId ].join(
+					' '
+				),
 				content: undefined,
 			},
 		] );
@@ -104,15 +106,12 @@ export const EditPanelIcons = ( {
 			<PanelBody title="Pointer" icon={ mapMarker } initialOpen={ false }>
 				<Flex direction={ 'column' }>
 					{ icons?.map( ( icon, index ) => (
-						<>
-							<IconItem
-								key={ index }
-								{ ...icon }
-								setIcon={ setIcon }
-								removeIcon={ removeIcon }
-							/>
-							<hr />
-						</>
+						<IconItem
+							key={ index }
+							{ ...icon }
+							setIcon={ setIcon }
+							removeIcon={ removeIcon }
+						/>
 					) ) }
 				</Flex>
 				<Button
