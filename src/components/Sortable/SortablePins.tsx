@@ -93,7 +93,7 @@ export const PinCard = ( props: {
 	 *
 	 * @param newValue the new value of the color picker
 	 */
-	function setMarkerColor( newValue: ColorPicker.OnChangeCompleteValue ) {
+	function setMarkerColor( newValue ) {
 		setItemData( {
 			...itemData,
 			properties: {
@@ -259,7 +259,7 @@ export const PinCard = ( props: {
 									...itemData,
 									properties: {
 										...itemData.properties,
-										Mobile: newValue,
+										mobile: newValue,
 									},
 								} );
 							} }
@@ -388,7 +388,7 @@ export const PinCard = ( props: {
 													itemTags: updateMapFilter(
 														itemData.properties
 															?.itemTags,
-														checkbox.value,
+														checkbox.value || '',
 														isChecked
 													),
 												},
