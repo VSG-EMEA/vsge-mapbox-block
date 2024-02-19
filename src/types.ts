@@ -132,7 +132,7 @@ export interface MarkerProps {
 	name: string;
 	description?: string;
 	phone?: string;
-  mobile?: string;
+	mobile?: string;
 	address?: string;
 	city?: string;
 	postalCode?: string;

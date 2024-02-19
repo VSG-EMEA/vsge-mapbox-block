@@ -7,7 +7,10 @@ import { MarkerIcon } from '../types';
  * @param {MarkerIcon[]} iconset - An array of MarkerIcon objects representing the icon set.
  * @return {string} The SVG content of the marker icon matching the given icon ID, or undefined if no matching icon is found.
  */
-export function getMarkerSvg( icon: string, iconset: MarkerIcon[] ): string {
+export function getMarkerSvg(
+	icon: string,
+	iconset: MarkerIcon[]
+): string | undefined {
 	const iconID = Number( icon.split( '-' )[ 1 ] );
 	return iconset.find( ( obj ) => obj.id === iconID )?.content;
 }
