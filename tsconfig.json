@@ -3,6 +3,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "jsx": "react-jsx",
+    "lib": [ "esnext", "dom", "dom.iterable", "es2022" ],
     // Search under node_modules for non-relative imports.
     "moduleResolution": "node",
     "sourceMap": true,
