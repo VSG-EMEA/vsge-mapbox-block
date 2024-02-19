@@ -36,6 +36,7 @@
     "@types/i18n": "^0.13.10",
     "@types/jest": "^29.5.12",
     "@types/jest-environment-puppeteer": "^5.0.6",
+    "@types/mapbox__maki": "^7.2.2",
     "@types/mapbox__mapbox-gl-geocoder": "^4.7.7",
     "@types/mapbox-gl": "^2.7.21",
     "@types/node": "^20.11.19",
