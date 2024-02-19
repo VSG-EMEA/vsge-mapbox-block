@@ -375,7 +375,7 @@ export const PinCard = ( props: {
 									<CheckboxControl
 										label={ checkbox.value }
 										checked={ itemData.properties?.itemTags?.includes(
-											checkbox.value
+											checkbox.value as string
 										) }
 										key={ i }
 										className={ 'sortable-pins-checkbox' }
@@ -409,7 +409,7 @@ export const PinCard = ( props: {
 									<CheckboxControl
 										label={ checkbox.value }
 										checked={ itemData.properties?.itemFilters?.includes(
-											checkbox.value
+											checkbox.value as string
 										) }
 										key={ i }
 										className={ 'sortable-pins-checkbox' }
@@ -422,7 +422,7 @@ export const PinCard = ( props: {
 														updateMapFilter(
 															itemData.properties
 																?.itemFilters,
-															checkbox.value,
+															checkbox.value as string,
 															isChecked
 														),
 												},
