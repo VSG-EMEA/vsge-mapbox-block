@@ -98,12 +98,13 @@ export function removeMarkerEl(
 	}
 	return false;
 }
+
 /**
- * Updates the listings on the map.
- * @param filteredStores - The filtered listings.
- * @param map
- * @param map.current
- * @param mapRef
+ * Adjusts the camera view on the map to include the filtered listings.
+ *
+ * @param {MapBoxListing[]}                  filteredStores - An array of filtered store listings.
+ * @param {RefObject<mapboxgl.Map | null>}   map            - A React ref object containing the map instance.
+ * @param {RefObject<HTMLDivElement | null>} mapRef         - A React ref object containing the map's DOM element.
  */
 export function updateCamera(
 	filteredStores: MapBoxListing[],

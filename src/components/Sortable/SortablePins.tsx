@@ -40,6 +40,7 @@ export const PinCard = ( props: {
 	const [ itemData, setItemData ] = useState( item as MapBoxListing );
 
 	if ( ! item?.properties ) {
+		// eslint-disable-next-line no-console
 		console.error( 'Missing properties for item', item );
 		return null;
 	}
@@ -91,9 +92,10 @@ export const PinCard = ( props: {
 	/**
 	 * This function sets the marker color
 	 *
-	 * @param newValue the new value of the color picker
+	 * @param newValue     the new value of the color picker
+	 * @param newValue.hex the hex value
 	 */
-	function setMarkerColor( newValue ) {
+	function setMarkerColor( newValue: { hex: string } ) {
 		setItemData( {
 			...itemData,
 			properties: {
