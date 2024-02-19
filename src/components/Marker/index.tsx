@@ -17,13 +17,16 @@ import './style.scss';
 export function Marker( {
 	feature,
 	children = null,
+	classes = 'marker',
 }: {
 	feature: MapBoxListing;
 	children?: JSX.Element | null;
+	classes?: string;
 } ): JSX.Element {
+	classes = classes + ` marker-${ feature.id } ${ classes }`;
 	return (
 		<button
-			className={ 'marker marker-' + feature.id } // this is important to prevent duplicates
+			className={ classes } // this is important to prevent duplicates
 		>
 			{ children ?? (
 				<DefaultMarker

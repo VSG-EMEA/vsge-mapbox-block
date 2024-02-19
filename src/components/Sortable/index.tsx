@@ -127,7 +127,10 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 			type: 'Feature',
 			properties: {
 				...defaultMarkerProps,
-				name: [ __( 'New Marker', 'vsge-mapbox-block' ), String( nextId ) ].join( ' ' ),
+				name: [
+					__( 'New Marker', 'vsge-mapbox-block' ),
+					String( nextId ),
+				].join( ' ' ),
 			},
 			geometry: {
 				type: 'Point',
@@ -150,7 +153,9 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 			...items,
 			{
 				id: nextId,
-				value: [ __( 'New', 'vsge-mapbox-block' ), tax, nextId ].join( ' ' ),
+				value: [ __( 'New', 'vsge-mapbox-block' ), tax, nextId ].join(
+					' '
+				),
 			},
 		] );
 	}

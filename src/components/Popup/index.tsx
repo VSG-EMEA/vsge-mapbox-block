@@ -107,7 +107,7 @@ export function showNearestStore(
 
 	/** Highlight the listing for the closest store. */
 	mapRef?.current
-		?.querySelector( '#marker-' + sortedNearestStores[ 1 ].id )
+		?.querySelector( '#marker-' + sortedNearestStores[ 0 ].id )
 		?.classList.add( 'active' );
 
 	return newFilteredListings;
