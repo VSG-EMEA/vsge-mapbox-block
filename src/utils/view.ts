@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import { MapBoxListing } from '../types';
+import { MapBoxListing, MarkerProps } from '../types';
 import { MutableRefObject, RefObject } from 'react';
 
 /**
@@ -86,10 +86,10 @@ export function filterListingsBy(
 	let filteredListings: MapBoxListing[] = [];
 
 	filteredListings = listings.filter( ( listing: MapBoxListing ) => {
-		if ( typeof listing.properties?.[ by ] === 'object' ) {
-			return listing.properties?.[ by ].includes( term );
+		if ( listing.properties && by in listing.properties ) {
+			return listing.properties[ by as keyof MarkerProps ] === term;
 		}
-		return listing.properties?.[ by ] === term;
+		return listing.properties[ by as keyof MarkerProps ] === term;
 	} );
 
 	return filteredListings;
@@ -108,9 +108,9 @@ export function filterListingsBy(
 export function fitInView(
 	map: MutableRefObject< mapboxgl.Map | null >,
 	listings: MapBoxListing[],
-	mapRef: RefObject< HTMLDivElement > | undefined
+	mapRef: RefObject< HTMLDivElement >
 ) {
-	if ( ! mapRef || ! mapRef.current ) return;
+	if ( ! map.current || ! mapRef.current ) return;
 
 	const bounds = new mapboxgl.LngLatBounds();
 	let padding = 0;
@@ -126,8 +126,8 @@ export function fitInView(
 			bounds._sw.lat === bounds._ne.lat &&
 			bounds._sw.lng === bounds._ne.lng
 		) {
-			const lat = parseFloat( bounds._sw.lat );
-			const lng = parseFloat( bounds._sw.lng );
+			const lat = bounds._sw.lat;
+			const lng = bounds._sw.lng;
 			bounds._sw.lat = lat + 0.5;
 			bounds._ne.lat = lat - 0.5;
 			bounds._sw.lng = lng + 0.5;
