@@ -8,8 +8,9 @@ import { MARKER_TYPE_TEMP } from '../../constants';
 export function createMarkerEl(
 	markerEl: HTMLElement,
 	listing: MapBoxListing,
-	map: RefObject< mapboxgl.Map | null >
+	map: RefObject< mapboxgl.Map >
 ) {
+	if ( ! map.current ) return;
 	// Render a Marker Component on our new DOM node
 	const markerElement = new mapboxgl.Marker( markerEl, {
 		offset: [ 0, ( listing?.properties?.iconSize || 0 ) * -0.5 ],
@@ -107,9 +108,9 @@ export function removeMarkerEl(
 export function updateCamera(
 	filteredStores: MapBoxListing[],
 	map: RefObject< mapboxgl.Map | null >,
-	mapRef: RefObject< HTMLDivElement > | undefined
+	mapRef: RefObject< HTMLDivElement | null >
 ): void {
-	if ( ! map ) return;
+	if ( ! map || ! mapRef.current ) return;
 
 	// if filtered listings are present
 	if ( filteredStores?.length ) {
@@ -124,13 +125,13 @@ export function updateCamera(
 				filteredStores[ 1 ].geometry
 			);
 
-			map?.cameraForBounds( bbox, {
+			map?.current?.cameraForBounds( bbox, {
 				padding: 50,
 			} );
 		} else {
-			fitInView( map, filteredStores, mapRef );
+			fitInView( map, filteredStores, mapRef.current );
 		}
 		return;
 	}
-	fitInView( map, filteredStores, mapRef );
+	fitInView( map, filteredStores, mapRef.current );
 }
