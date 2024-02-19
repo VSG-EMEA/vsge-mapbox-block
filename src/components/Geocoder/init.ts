@@ -13,7 +13,7 @@ import { removePopups, showNearestStore } from '../Popup/';
 import { fitInView, flyToStore } from '../../utils/view';
 import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
-import { initGeomarker } from '../Marker/Geomarker';
+import { initGeoMarker } from '../Marker/Geomarker';
 import './style.scss';
 
 /**
@@ -42,9 +42,13 @@ export function initGeoCoder(
 	setFilteredListings: ( listings: MapBoxListing[] ) => void,
 	mapDefaults: MapboxBlockDefaults
 ): MapboxGeocoder | undefined {
-	const geomarkerListing = initGeomarker( getNextId( listings ), markersRef );
+	if ( map.current === null ) {
+		return;
+	}
 
-	const marker: mapboxgl.Marker = {
+	const geomarkerListing = initGeoMarker( getNextId( listings ), markersRef );
+
+	const marker = {
 		element: geomarkerListing,
 		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
 		draggable: true,
@@ -53,7 +57,7 @@ export function initGeoCoder(
 	let searchResult: MapboxGeocoder.Result | undefined;
 
 	if ( mapDefaults.accessToken ) {
-		const geocoder: MapboxGeocoder = new MapboxGeocoder( {
+		const geocoder = new MapboxGeocoder( {
 			accessToken: mapDefaults.accessToken,
 			mapboxgl,
 			marker,
@@ -89,7 +93,9 @@ export function initGeoCoder(
 			fitInView( map, listings, mapRef );
 		}
 
-		function onGeocoderResult( ev ) {
+		function onGeocoderResult( ev: {
+			result: MapboxGeocoder.Result | undefined;
+		} ) {
 			// remove any popup or temp marker (clicked point, another geocoder marker) from the map
 			listings = removeTempMarkers( listings, mapRef, [
 				'geocoder-marker',
@@ -112,11 +118,13 @@ export function initGeoCoder(
 				geocoderRef?.current?.classList.remove( 'disabled' );
 
 				const sortedNearestStores = locateNearestStore(
-					searchResult.geometry as CoordinatesDef,
+					searchResult.geometry,
 					filteredListings
 				);
 
+				// @ts-ignore
 				const geoMarker = geocoder.mapMarker;
+				console.log( geocoder );
 
 				// The map marker element
 				// const markerEl = geocoder.mapMarker.getElement() as HTMLElement;
