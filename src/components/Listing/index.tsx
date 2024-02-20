@@ -9,6 +9,11 @@ import { __ } from '@wordpress/i18n';
 import { flyToStore } from '../../utils/view';
 import { PopupContent, SearchPopup } from '../Popup/PopupContent';
 import './style.scss';
+import { Website } from '../UIComponents/Website';
+import { Phone } from '../UIComponents/Phone';
+import { AddressLine } from '../UIComponents/AddressLine';
+import { EmailAddr } from '../UIComponents/EmailAddr';
+import { DistanceLabel } from '../UIComponents/DistanceLabel';
 
 /**
  * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
@@ -86,6 +91,7 @@ export const Listing = ( {
 			city,
 			phone,
 			mobile,
+			company,
 			address,
 			country,
 			countryCode,
@@ -113,53 +119,46 @@ export const Listing = ( {
 					} }
 				>
 					<h4 className="title">{ name }</h4>
-					{ phone && (
-						<p>
-							Phone:{ ' ' }
-							<a href={ 'tel:' + phone } className="email-link">
-								{ phone }
-							</a>
-						</p>
-					) }
 
-					<p>
-						{ address && address }
-						<br />
-						{ country && country } { city && city }{ ' ' }
-						{ countryCode && '(' + countryCode + ')' }
-					</p>
+					<Website
+						websiteUri={ website }
+						text={ company || website }
+						className={ 'listings-company-label' }
+					/>
 
-					{ website && (
-						<p>
-							Website:{ ' ' }
-							<a href={ '//' + website } className="website-link">
-								{ website }
-							</a>
-						</p>
-					) }
-					{ emailAddress && (
-						<p>
-							Email:{ ' ' }
-							<a
-								href={ 'mailto:' + emailAddress }
-								className="email-link"
-							>
-								{ emailAddress }
-							</a>
-						</p>
-					) }
-					{ distance && (
-						<p className={ 'store-distance' }>
-							{ __( 'Distance: ', 'vsge-mapbox-block' ) +
-								distance.toFixed( 1 ) +
-								'Km' }
-						</p>
-					) }
+					<Phone
+						phone={ phone }
+						label="Phone"
+						className={ 'listings-phone-label' }
+					/>
+
+					<AddressLine
+						className={ 'listings-address-label' }
+						address={ address }
+						city={ city }
+						country={ country }
+						countryCode={ countryCode }
+					/>
+
+					<EmailAddr
+						emailAddress={ emailAddress }
+						label={ __( 'Email', 'vsge-mapbox-block' ) }
+						className={ 'listings-email-label' }
+					/>
+
+					<DistanceLabel
+						distance={ distance }
+						label={ __( 'Distance: ', 'vsge-mapbox-block' ) }
+						className={ 'store-distance' }
+					/>
+
 					{ itemTags?.length ? (
 						<>
 							<TagList
 								tags={ itemTags }
-								className={ 'sidebar-tag-list tag-list' }
+								className={
+									'listings-tag sidebar-tag-list tag-list'
+								}
 							/>
 						</>
 					) : null }

@@ -119,6 +119,7 @@ export interface MapBoxListing {
  * @property {number}   id          the id
  * @property {string}   name        the name
  * @property {string}   description the description
+ * @property {string=}  company     the company
  * @property {string=}  city        the city
  * @property {string=}  postalCode  the postal code
  * @property {string=}  country     the country
@@ -133,6 +134,7 @@ export interface MarkerProps {
 	description?: string;
 	phone?: string;
 	mobile?: string;
+	company?: string;
 	address?: string;
 	city?: string;
 	postalCode?: string;
