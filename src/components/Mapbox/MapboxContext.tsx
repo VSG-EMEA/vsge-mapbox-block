@@ -10,9 +10,9 @@ import {
 	MapBoxListing,
 	MountedMapsContextValue,
 } from '../../types';
-import mapboxgl, { LngLatLike } from 'mapbox-gl';
+import mapboxgl, { LngLat } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import type { Context, MutableRefObject } from 'react';
+import type { MutableRefObject } from 'react';
 import { __ } from '@wordpress/i18n';
 
 export const MapboxContext = createContext< null | MountedMapsContextValue >(
@@ -43,7 +43,7 @@ export function MapProvider( {
 	const [ geoCoder, setGeoCoder ] = useState< MapboxGeocoder | undefined >(
 		undefined
 	);
-	const [ lngLat, setLngLat ] = useState( [ 0, 0 ] as LngLatLike );
+	const [ lngLat, setLngLat ] = useState( { lng: 0, lat: 0 } as LngLat );
 	const [ listings, setListings ] = useState(
 		attributes.mapboxOptions.listings as MapBoxListing[]
 	);

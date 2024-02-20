@@ -26,11 +26,11 @@ import { clearListingsDistances } from '../../utils/spatialCalcs';
 import { mapMarker } from '../Marker/MapMarker';
 import { Sidebar } from '../Sidebar';
 import { addPopup, removePopups } from '../Popup/';
-import { PinPointPopup } from '../Popup/PopupContent';
 import { initMap } from './init';
 import { equalsCheck } from '../../utils';
 import { initGeoCoder } from '../Geocoder/init';
 import './style.scss';
+import { PinPointPopup } from '../Popup/PinPointPopup';
 
 /**
  * Renders a MapBox component.
@@ -211,7 +211,8 @@ export function MapBox( {
 			 */
 			if (
 				markerEl?.dataset?.markerName === 'click-marker' &&
-				markerData
+				markerData &&
+				map.current
 			) {
 				// prints the popup that allow the user to find a location
 				addPopup(
@@ -232,7 +233,7 @@ export function MapBox( {
 			/**
 			 * Default Marker case
 			 */
-			if ( markerData?.type === 'Feature' ) {
+			if ( markerData?.type === 'Feature' && map.current ) {
 				// popup the marker data on the currentMap
 				addPopup( map.current, markerData );
 			}
@@ -260,7 +261,7 @@ export function MapBox( {
 			// Add the geocoder to the map
 			if (
 				attributes.geocoderEnabled &&
-				markersRef.current &&
+				markersRef?.current &&
 				geocoderRef?.current
 			) {
 				setGeoCoder(
