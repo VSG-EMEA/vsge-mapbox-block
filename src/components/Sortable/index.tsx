@@ -117,7 +117,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 	 *                        listing to be added. It is used to assign a unique ID to the new listing being created.
 	 */
 	function addNewListing( nextId: number ) {
-		if ( ! mapRef ) return;
+		if ( ! mapRef?.current ) return;
 		// add the new listing
 		const newListing: Pick<
 			MapBoxListing,
@@ -137,7 +137,7 @@ export const Sortable = ( props: SortableProps ): JSX.Element => {
 				coordinates: [ lngLat?.lng || 0, lngLat?.lat || 0 ],
 			},
 		};
-		removePopups( mapRef );
+		removePopups( mapRef.current );
 		setOptions( 'listings', [ ...items, newListing ] );
 	}
 
