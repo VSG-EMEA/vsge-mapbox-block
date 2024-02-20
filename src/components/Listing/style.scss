@@ -23,9 +23,9 @@
 			display: block;
 			color: var(--mapbox--color--gray-dark);
 			font-weight: 600;
-			font-size: 18px;
-			line-height: 1.1;
-			margin: 0 0 8px;
+			font-size: 1.2rem;
+			line-height: 1.2;
+			margin: 0 0 .5rem;
 			transition: 0.3s;
 
 			small {
@@ -50,7 +50,7 @@
 		a {
 			line-height: 18px;
 			margin: 0;
-			font-size: 14px;
+			font-size: .75rem;
 			color: var(--mapbox--color--gray-dark);
 		}
 
