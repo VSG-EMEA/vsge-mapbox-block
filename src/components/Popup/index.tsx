@@ -1,7 +1,6 @@
-import { createRef, createRoot, useRef } from '@wordpress/element';
+import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
-import type { MutableRefObject, RefObject } from 'react';
 import { PopupContent, SearchPopup } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
@@ -24,7 +23,7 @@ import './style.scss';
  * @return A `mapboxgl.Popup` object is being returned.
  */
 export function addPopup(
-	map: MutableRefObject< mapboxgl.Map | null >,
+	map: mapboxgl.Map,
 	marker: MapBoxListing | MapboxGeocoder.Result,
 	children: JSX.Element | null = null
 ): mapboxgl.Popup | null {
@@ -33,11 +32,7 @@ export function addPopup(
 		console.error( 'Marker not found', marker );
 		return null;
 	}
-	const popupRef = createRef< HTMLDivElement >();
-
-	if ( ! popupRef.current && map.current ) {
-		return null;
-	}
+	const popupRef = createRef< HTMLDivElement | null >();
 
 	// Create a new DOM root and save it to the React ref
 	popupRef.current = document.createElement( 'div' );
@@ -48,12 +43,15 @@ export function addPopup(
 		children ?? <PopupContent { ...( marker.properties as MarkerProps ) } />
 	);
 
-	return new mapboxgl.Popup( {
-		offset: ( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,
-	} )
-		.setLngLat( marker?.geometry?.coordinates as CoordinatesDef )
-		.setDOMContent( popupRef.current )
-		.addTo( map.current );
+	return map !== null
+		? new mapboxgl.Popup( {
+				offset:
+					( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,
+		  } )
+				.setLngLat( marker?.geometry?.coordinates as CoordinatesDef )
+				.setDOMContent( popupRef.current )
+				.addTo( map )
+		: null;
 }
 
 /**
@@ -61,12 +59,12 @@ export function addPopup(
  *
  * @param mapRef
  */
-export function removePopups( mapRef: RefObject< HTMLDivElement > ) {
+export function removePopups( mapRef: HTMLDivElement ) {
 	if ( ! mapRef ) {
 		return;
 	}
 	// removes the active popup
-	const popUps = mapRef.current?.querySelectorAll( '.mapboxgl-popup' );
+	const popUps = mapRef?.querySelectorAll( '.mapboxgl-popup' );
 	if ( popUps?.length ) {
 		popUps.forEach( ( popUp ) => popUp.remove() );
 	}
@@ -84,14 +82,14 @@ export function removePopups( mapRef: RefObject< HTMLDivElement > ) {
 export function showNearestStore(
 	location: MapboxGeocoder.Result,
 	sortedNearestStores: MapBoxListing[],
-	mapRef: RefObject< HTMLDivElement >,
-	map: RefObject< mapboxgl.Map | null >
+	mapRef: HTMLDivElement,
+	map: mapboxgl.Map
 ): MapBoxListing[] {
 	const newFilteredListings: MapBoxListing[] = [
 		...sortedNearestStores.slice( 0, SEARCH_RESULTS_SHOWN ),
 	];
 
-	removePopups( mapRef as RefObject< HTMLDivElement > );
+	removePopups( mapRef as HTMLDivElement );
 
 	/* Open a popup for the closest store. */
 	addPopup(
@@ -110,7 +108,7 @@ export function showNearestStore(
 	addPopup( map, newFilteredListings[ 0 ] );
 
 	/** Highlight the listing for the closest store. */
-	mapRef?.current
+	mapRef
 		?.querySelector( '#marker-' + sortedNearestStores[ 0 ].id )
 		?.classList.add( 'active' );
 

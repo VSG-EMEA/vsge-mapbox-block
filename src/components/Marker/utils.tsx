@@ -40,30 +40,28 @@ export function createMarkerEl(
  */
 export function removeTempMarkers(
 	listings: MapBoxListing[],
-	maboxRef: RefObject< HTMLDivElement > | undefined,
+	maboxRef: HTMLDivElement,
 	excludedMarkers: string[] = []
 ): MapBoxListing[] {
-	if ( maboxRef?.current ) {
-		// get the markers from the map
-		const markers = maboxRef?.current.querySelectorAll(
-			'.marker-temp'
-		) as NodeListOf< HTMLElement >;
-		// Loop through the markers and remove them
-		markers.forEach( ( marker ) => {
-			// Check if the marker is excluded
-			if (
-				excludedMarkers.length === 0 &&
-				marker?.dataset?.markerName &&
-				! excludedMarkers.includes( marker.dataset?.markerName )
-			) {
-				// Remove the marker from the listings array
-				if ( listings[ Number( marker.dataset.id ) ] )
-					delete listings[ Number( marker.dataset.id ) ];
-				// Remove the marker from the DOM
-				marker?.remove();
-			}
-		} );
-	}
+	// get the markers from the map
+	const markers = maboxRef?.querySelectorAll(
+		'.marker-temp'
+	) as NodeListOf< HTMLElement >;
+	// Loop through the markers and remove them
+	markers.forEach( ( marker ) => {
+		// Check if the marker is excluded
+		if (
+			excludedMarkers.length === 0 &&
+			marker?.dataset?.markerName &&
+			! excludedMarkers.includes( marker.dataset?.markerName )
+		) {
+			// Remove the marker from the listings array
+			if ( listings[ Number( marker.dataset.id ) ] )
+				delete listings[ Number( marker.dataset.id ) ];
+			// Remove the marker from the DOM
+			marker?.remove();
+		}
+	} );
 
 	return listings;
 }
@@ -111,7 +109,7 @@ export function updateCamera(
 	map: RefObject< mapboxgl.Map | null >,
 	mapRef: RefObject< HTMLDivElement | null >
 ): void {
-	if ( ! map || ! mapRef.current ) return;
+	if ( ! map.current || ! mapRef.current ) return;
 
 	// if filtered listings are present
 	if ( filteredStores?.length ) {
@@ -130,9 +128,9 @@ export function updateCamera(
 				padding: 50,
 			} );
 		} else {
-			fitInView( map, filteredStores, mapRef.current );
+			fitInView( map.current, filteredStores, mapRef.current );
 		}
 		return;
 	}
-	fitInView( map, filteredStores, mapRef.current );
+	fitInView( map.current, filteredStores, mapRef.current );
 }

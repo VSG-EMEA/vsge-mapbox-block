@@ -22,8 +22,8 @@ import './style.scss';
  */
 function Listings( props: {
 	listings: MapBoxListing[];
-	map: MutableRefObject< mapboxgl.Map | null >;
-	mapRef: RefObject< HTMLDivElement >;
+	map: mapboxgl.Map;
+	mapRef: HTMLDivElement;
 } ) {
 	return (
 		<div className={ 'feature-listing' }>
@@ -60,7 +60,7 @@ export const Sidebar = (): JSX.Element | null => {
 	}: MountedMapsContextValue = useMapboxContext();
 
 	// return null if the map is not loaded
-	if ( ! loaded || ! mapRef ) return null;
+	if ( ! loaded ) return null;
 
 	// return a message if there are no listings
 	if ( ! listings )
@@ -73,8 +73,8 @@ export const Sidebar = (): JSX.Element | null => {
 	return (
 		<Listings
 			listings={ getListing( listings, filteredListings ) }
-			map={ map }
-			mapRef={ mapRef }
+			map={ map.current }
+			mapRef={ mapRef.current }
 		/>
 	);
 };

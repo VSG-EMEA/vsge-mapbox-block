@@ -4,7 +4,6 @@ import { createRoot } from '@wordpress/element';
 import { getMarkerSvg, modifySVG } from '../../utils/svg';
 import { Marker } from './index';
 import { DefaultMarker, PinPoint } from './marker-icons';
-import type { RefObject } from 'react';
 import { MapBoxListing, MarkerIcon } from '../../types';
 
 /**
@@ -18,30 +17,24 @@ import { MapBoxListing, MarkerIcon } from '../../types';
  */
 export function mapMarker(
 	listing: MapBoxListing,
-	markersRef: RefObject< HTMLDivElement[] >,
+	markersRef: HTMLDivElement[],
 	icons: MarkerIcon[]
 ): void {
 	// Check if the coordinates are valid
-	if (
-		listing?.geometry &&
-		areValidCoordinates(
-			listing?.geometry?.coordinates as [ number, number ]
-		)
-	) {
-		if ( ! markersRef.current || markersRef.current[ listing.id ] ) return;
+	if ( areValidCoordinates( listing?.geometry?.coordinates ) ) {
 		// Render a Marker Component on our new DOM node
-		markersRef.current[ listing.id ] = document.createElement( 'div' );
-		markersRef.current[ listing.id ].id = 'marker-' + listing.id;
-		markersRef.current[ listing.id ].className = `marker-${ safeSlug(
+		markersRef[ listing.id ] = document.createElement( 'div' );
+		markersRef[ listing.id ].id = 'marker-' + listing.id;
+		markersRef[ listing.id ].className = `marker-${ safeSlug(
 			listing.type
 		) }`;
-		markersRef.current[ listing.id ].dataset.id = listing.id.toString();
-		markersRef.current[ listing.id ].dataset.markerType = listing.type;
-		markersRef.current[ listing.id ].dataset.markerName = safeSlug(
+		markersRef[ listing.id ].dataset.id = listing.id.toString();
+		markersRef[ listing.id ].dataset.markerType = listing.type;
+		markersRef[ listing.id ].dataset.markerName = safeSlug(
 			listing.properties.name
 		);
 
-		const root = createRoot( markersRef.current[ listing.id ] );
+		const root = createRoot( markersRef[ listing.id ] );
 
 		let markerIcon: JSX.Element | undefined;
 
