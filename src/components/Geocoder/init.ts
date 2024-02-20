@@ -1,7 +1,6 @@
 import { getNextId } from '../../utils/dataset';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
-import type { RefObject } from 'react';
 import { MapboxBlockDefaults, MapBoxListing } from '../../types';
 import { geoMarkerStyle } from '../Marker/defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
@@ -15,23 +14,23 @@ import './style.scss';
 /**
  * Initializes the geocoder for the map.
  *
- * @param                                         mapboxgl
- * @param {mapboxgl.Map}                          map                 - The Mapbox map object.
- * @param                                         map.current
- * @param {RefObject<HTMLDivElement>} mapRef              - The ref object for the map container.
- * @param                                         markersRef
- * @param {RefObject<HTMLDivElement>} geocoderRef         - The ref object for the geocoder container.
- * @param {MapBoxListing[]}           listings            - The array of mapbox listings.
- * @param {MapBoxListing[]}                filteredListings    - The array of filtered mapbox listings.
- * @param {(listings: MapBoxListing[]) => void}   setFilteredListings - The function to set the filtered listings.
- * @param                                         mapDefaults
+ * @param                                       mapboxgl
+ * @param {mapboxgl.Map}                        map                 - The Mapbox map object.
+ * @param                                       map.current         - The Mapbox current instance.
+ * @param {HTMLDivElement}                      mapRef              - The ref object for the map container.
+ * @param                                       markersRef          - The ref object for the markers' container.
+ * @param {HTMLDivElement}                      geocoderRef         - The ref object for the geocoder container.
+ * @param {MapBoxListing[]}                     listings            - The array of mapbox listings.
+ * @param {MapBoxListing[]}                     filteredListings    - The array of filtered mapbox listings.
+ * @param {(listings: MapBoxListing[]) => void} setFilteredListings - The function to set the filtered listings.
+ * @param                                       mapDefaults
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
  */
 export function initGeoCoder(
 	mapboxgl: any,
 	map: mapboxgl.Map,
 	mapRef: HTMLDivElement,
-	markersRef: HTMLDivElement[],
+	markersRef: HTMLButtonElement[],
 	geocoderRef: HTMLDivElement,
 	listings: MapBoxListing[],
 	filteredListings: MapBoxListing[],
@@ -40,7 +39,7 @@ export function initGeoCoder(
 ): MapboxGeocoder | undefined {
 	const geomarkerListing = initGeoMarker( getNextId( listings ), markersRef );
 
-	const marker: mapboxgl.Marker = {
+	const marker = {
 		element: geomarkerListing,
 		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
 		draggable: true,
@@ -52,7 +51,7 @@ export function initGeoCoder(
 		const geocoder = new MapboxGeocoder( {
 			accessToken: mapDefaults.accessToken,
 			mapboxgl,
-			marker,
+			marker: mapboxgl.Marker,
 			language: mapDefaults.language || 'en',
 			placeholder: __( 'Find the nearest store', 'vsge-mapbox-block' ),
 			types: DEFAULT_GEOCODER_TYPE_SEARCH,
