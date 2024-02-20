@@ -161,16 +161,18 @@ export function SearchPopup( props: SearchMarkerProps ): JSX.Element {
 }
 
 export function PinPointPopup( props: {
-	map: RefObject< mapboxgl.Map | null >;
+	map: RefObject< mapboxgl.Map >;
 	location: CoordinatesDef;
-	mapRef: RefObject< HTMLDivElement >;
+	mapRef: HTMLDivElement;
 	listings: MapBoxListing[];
 	setListings: ( listings: MapBoxListing[] ) => void;
-	setFilteredListings: ( listings: MapBoxListing[] ) => void;
-} ): JSX.Element {
+	setFilteredListings: (
+		listings: ( MapBoxListing | MapboxGeocoder.Result )[]
+	) => void;
+} ): JSX.Element | null {
 	const { location, map, mapRef, listings, setFilteredListings } = props;
 
-	if ( ! map.current ) {
+	if ( ! mapRef ) {
 		return null;
 	}
 
@@ -190,7 +192,7 @@ export function PinPointPopup( props: {
 							listings
 						);
 						// create a new temp pin
-						const myLocationPin = {
+						const myLocationPin: MapboxGeocoder.Result = {
 							...currentPinData,
 							text: __( 'My location', 'vsge-mapbox-block' ),
 							place_name: __(
@@ -205,9 +207,9 @@ export function PinPointPopup( props: {
 							},
 						};
 						const sortedListings = showNearestStore(
-							myLocationPin as unknown as MapboxGeocoder.Result,
+							myLocationPin,
 							sortedNearestStores,
-							mapRef as RefObject< HTMLDivElement >,
+							mapRef,
 							map
 						);
 						setFilteredListings( [
