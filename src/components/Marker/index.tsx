@@ -26,7 +26,7 @@ export function Marker( {
 } ): JSX.Element {
 	classes = classes + ` marker-${ feature.id } ${ classes }`;
 	return (
-		<button
+		<span
 			className={ classes } // this is important to prevent duplicates
 		>
 			{ children ?? (
@@ -35,6 +35,6 @@ export function Marker( {
 					size={ feature.properties.iconSize as number }
 				/>
 			) }
-		</button>
+		</span>
 	);
 }
