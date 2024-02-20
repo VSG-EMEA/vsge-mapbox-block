@@ -13,7 +13,13 @@ import { FilterCollection, TagArray, TagCollection } from '../../types';
  * @param props.deleteItem a function to delete the item
  * @class
  */
-export const StringItem = ( props ) => {
+export const StringItem = ( props: {
+	tax: string;
+	item: FilterCollection;
+	index: number;
+	updateItem: Function;
+	deleteItem: Function;
+} ) => {
 	const {
 		tax,
 		item,
@@ -43,7 +49,7 @@ export const StringItem = ( props ) => {
 						} }
 					>
 						<TextControl
-							value={ item.value }
+							value={ item?.value || '' }
 							onChange={ ( newValue ) =>
 								updateItem( {
 									...item,

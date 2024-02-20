@@ -225,7 +225,7 @@ export function MapBox( {
 						setListings={ setListings }
 						setFilteredListings={ setFilteredListings }
 						mapRef={ mapRef.current }
-						map={ map }
+						map={ map.current }
 					/>
 				);
 				return;
