@@ -82,7 +82,7 @@ export function MapBox( {
 	const updateMarkers = useCallback(
 		( stores: MapBoxListing[], currentStores?: MapBoxListing[] | null ) => {
 			stores?.forEach( ( store ) => {
-				const newSet = markersRef.current;
+				const newSet = markersRef.current || [];
 				// check if the store already exists and has the same coordinates
 				if (
 					newSet?.length === 0 ||
@@ -103,11 +103,7 @@ export function MapBox( {
 					);
 
 					// Create the marker element
-					mapMarker(
-						store,
-						markersRef.current,
-						mapIcons as MarkerIcon[]
-					);
+					mapMarker( store, newSet, mapIcons as MarkerIcon[] );
 
 					if ( markersRef.current ) {
 						// Add the marker to the DOM
@@ -178,6 +174,7 @@ export function MapBox( {
 				'.mapboxgl-marker'
 			) as MarkerHTMLElement | null;
 
+			// eslint-disable-next-line no-console
 			if ( ! markerEl ) return console.log( 'no marker data found' );
 
 			/**
@@ -192,6 +189,7 @@ export function MapBox( {
 			 * Editor case
 			 */
 			if ( isEditor ) {
+				// eslint-disable-next-line no-console
 				return console.log(
 					'todo: handle editor click',
 					markerEl,

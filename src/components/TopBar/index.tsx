@@ -96,7 +96,7 @@ export const TopBar = ( attributes: {
 				isSmall={ true }
 				className={ 'reset-filters' }
 				onClick={ () => {
-					mapRef?.current && removePopups( mapRef.current );
+					if ( mapRef?.current ) removePopups( mapRef.current );
 					setFilteredListings( [] );
 					setListings( attributes.mapboxOptions.listings );
 				} }
