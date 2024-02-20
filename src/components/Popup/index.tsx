@@ -1,11 +1,12 @@
 import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
-import { PopupContent, SearchPopup } from './PopupContent';
+import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { SEARCH_RESULTS_SHOWN } from '../../constants';
 import './style.scss';
+import { SearchPopup } from './SearchPopup';
 
 /**
  * This function adds a popup to a Mapbox map with custom content or default content based on a
@@ -73,14 +74,14 @@ export function removePopups( mapRef: HTMLDivElement ) {
 /**
  * Displays the nearest store and updates the filtered listings.
  *
- * @param {MapboxGeocoder.Result}     location            - The location object.
- * @param {MapBoxListing[]}           sortedNearestStores - The sorted list of nearest stores.
- * @param {RefObject<HTMLDivElement>} mapRef              - The reference to the map container.
- * @param                             map                 The map object.
- * @param                             map.current
+ * @param {MapboxGeocoder.Result} location            - The location object.
+ * @param {MapBoxListing[]}       sortedNearestStores - The sorted list of nearest stores.
+ * @param {HTMLDivElement}        mapRef              - The reference to the map container.
+ * @param                         map                 The map object.
+ * @param                         map.current
  */
 export function showNearestStore(
-	location: MapboxGeocoder.Result,
+	location: MapBoxListing,
 	sortedNearestStores: MapBoxListing[],
 	mapRef: HTMLDivElement,
 	map: mapboxgl.Map
@@ -97,7 +98,7 @@ export function showNearestStore(
 		location,
 		<SearchPopup
 			icon={ 'home' }
-			name={ location.text }
+			name={ location.properties?.name }
 			category={ location.properties?.category }
 			maki={ location.properties?.maki }
 			draggable={ true }
