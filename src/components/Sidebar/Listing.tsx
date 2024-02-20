@@ -1,18 +1,19 @@
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
-import { MapBoxListing, SearchMarkerProps } from '../../types';
+import { MapBoxListing, MarkerProps } from '../../types';
 import mapboxgl from 'mapbox-gl';
 import { TagList } from '../TagItem';
 import { removePopups } from '../Popup/';
 import { __ } from '@wordpress/i18n';
 import { flyToStore } from '../../utils/view';
-import { PopupContent, SearchPopup } from '../Popup/PopupContent';
+import { PopupContent } from '../Popup/PopupContent';
 import './style.scss';
-import { LinkTo, Website } from '../UIComponents/Website';
+import { LinkTo } from '../UIComponents/Website';
 import { Phone } from '../UIComponents/Phone';
 import { AddressLine } from '../UIComponents/AddressLine';
 import { EmailAddr } from '../UIComponents/EmailAddr';
 import { DistanceLabel } from '../UIComponents/DistanceLabel';
+import { SearchPopup } from '../Popup/SearchPopup';
 
 /**
  * The function highlights a specific feature in a listing by adding a CSS class to it and removing the
@@ -52,9 +53,7 @@ export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
 		if ( mkr.type === 'Feature' ) {
 			return <PopupContent { ...mkr.properties } />;
 		} else if ( mkr.properties.name === 'geocoder' ) {
-			return (
-				<SearchPopup { ...( mkr.properties as SearchMarkerProps ) } />
-			);
+			return <SearchPopup { ...( mkr.properties as MarkerProps ) } />;
 		}
 	};
 
@@ -142,6 +141,7 @@ export const Listing = ( {
 						city={ city }
 						country={ country }
 						countryCode={ countryCode }
+						postalCode={ postalCode }
 					/>
 
 					<EmailAddr
