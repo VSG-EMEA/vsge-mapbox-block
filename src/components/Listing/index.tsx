@@ -39,10 +39,7 @@ export function highlightListing( item: MapBoxListing ) {
  * @param {mapboxgl.Map}  map    - The map object.
  * @param {MapBoxListing} marker - The listing marker object.
  */
-export function enableListing(
-	map: MutableRefObject< mapboxgl.Map | null >,
-	marker: MapBoxListing
-) {
+export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
 	// 1. Fly to the point
 	flyToStore( map, marker );
 
@@ -80,8 +77,8 @@ export const Listing = ( {
 	mapRef,
 }: {
 	jsonFeature: MapBoxListing;
-	map: MutableRefObject< mapboxgl.Map | null >;
-	mapRef: RefObject< HTMLDivElement >;
+	map: mapboxgl.Map;
+	mapRef: HTMLDivElement;
 } ) => {
 	const {
 		properties: {
