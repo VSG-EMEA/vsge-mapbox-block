@@ -13,15 +13,15 @@ import { geocoderMarkerDefaults, geoMarkerStyle } from './defaults';
  */
 export const initGeoMarker = (
 	id: number,
-	markersRef: RefObject< Element[] >
+	markersRef: HTMLButtonElement[]
 ): Element | null => {
-	if ( ! markersRef.current || ! markersRef.current[ id ] ) return null;
+	if ( ! markersRef || ! markersRef[ id ] ) return null;
 
 	// Create a new DOM root and save it to the React ref
-	markersRef.current[ id ] = document.createElement( 'button' ) as Element;
-	markersRef.current[ id ].className = 'marker marker-geocoder disabled';
+	markersRef[ id ] = document.createElement( 'button' );
+	markersRef[ id ].className = 'marker marker-geocoder disabled';
 
-	const root = createRoot( markersRef.current[ id ] );
+	const root = createRoot( markersRef[ id ] );
 
 	const defaultStyle = geoMarkerStyle;
 	const markerData = geocoderMarkerDefaults( id, defaultStyle );
@@ -42,5 +42,5 @@ export const initGeoMarker = (
 		 ) as JSX.Element
 	);
 
-	return markersRef.current ? markersRef.current[ id ] : null;
+	return markersRef[ id ];
 };
