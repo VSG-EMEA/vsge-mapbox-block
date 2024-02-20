@@ -15,6 +15,7 @@ import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { initGeoMarker } from '../Marker/Geomarker';
 import './style.scss';
+import { Marker } from 'mapbox-gl';
 
 /**
  * Initializes the geocoder for the map.
@@ -22,33 +23,29 @@ import './style.scss';
  * @param                                         mapboxgl
  * @param {mapboxgl.Map}                          map                 - The Mapbox map object.
  * @param                                         map.current
- * @param {RefObject<HTMLDivElement> | undefined} mapRef              - The ref object for the map container.
+ * @param {RefObject<HTMLDivElement>} mapRef              - The ref object for the map container.
  * @param                                         markersRef
- * @param {RefObject<HTMLDivElement> | undefined} geocoderRef         - The ref object for the geocoder container.
- * @param {MapBoxListing[] | undefined}           listings            - The array of mapbox listings.
- * @param {MapBoxListing[] | null}                filteredListings    - The array of filtered mapbox listings.
+ * @param {RefObject<HTMLDivElement>} geocoderRef         - The ref object for the geocoder container.
+ * @param {MapBoxListing[]}           listings            - The array of mapbox listings.
+ * @param {MapBoxListing[]}                filteredListings    - The array of filtered mapbox listings.
  * @param {(listings: MapBoxListing[]) => void}   setFilteredListings - The function to set the filtered listings.
  * @param                                         mapDefaults
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
  */
 export function initGeoCoder(
 	mapboxgl: any,
-	map: RefObject< mapboxgl.Map >,
-	mapRef: RefObject< HTMLDivElement >,
-	markersRef: RefObject< HTMLButtonElement[] >,
-	geocoderRef: RefObject< HTMLDivElement > | undefined,
+	map: mapboxgl.Map,
+	mapRef: HTMLDivElement,
+	markersRef: HTMLButtonElement[],
+	geocoderRef: HTMLDivElement,
 	listings: MapBoxListing[],
 	filteredListings: MapBoxListing[],
 	setFilteredListings: ( listings: MapBoxListing[] ) => void,
 	mapDefaults: MapboxBlockDefaults
 ): MapboxGeocoder | undefined {
-	if ( map.current === null ) {
-		return;
-	}
-
 	const geomarkerListing = initGeoMarker( getNextId( listings ), markersRef );
 
-	const marker = {
+	const marker: mapboxgl.Marker = {
 		element: geomarkerListing,
 		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
 		draggable: true,
@@ -67,9 +64,7 @@ export function initGeoCoder(
 		} );
 
 		if ( geocoder && geocoderRef ) {
-			( geocoderRef.current as HTMLElement ).appendChild(
-				geocoder.onAdd( map.current )
-			);
+			( geocoderRef as HTMLElement ).appendChild( geocoder.onAdd( map ) );
 		}
 
 		function onGeocoderClear() {
@@ -77,9 +72,9 @@ export function initGeoCoder(
 				.getElementById( 'feature-listing' )
 				?.classList.remove( 'filtered' );
 			// Remove the active class from the geocoder
-			geocoderRef?.current?.classList.remove( 'active' );
+			geocoderRef?.classList.remove( 'active' );
 			// add the hide class to the geocoder
-			geocoderRef?.current?.classList.add( 'disabled' );
+			geocoderRef?.classList.add( 'disabled' );
 
 			// Reset the displayed listings
 			if ( filteredListings.length > 0 ) {
@@ -88,7 +83,7 @@ export function initGeoCoder(
 			// Remove the search result
 			searchResult = undefined;
 			// Remove the popup, if any
-			removePopups( mapRef as RefObject< HTMLDivElement > );
+			removePopups( mapRef );
 			// Center the map
 			fitInView( map, listings, mapRef );
 		}
@@ -100,7 +95,7 @@ export function initGeoCoder(
 			listings = removeTempMarkers( listings, mapRef, [
 				'geocoder-marker',
 			] );
-			removePopups( mapRef as RefObject< HTMLDivElement > );
+			removePopups( mapRef );
 
 			// if there are no filtered listings, copy the listings to the filtered listings
 			if ( ! filteredListings?.length ) {
@@ -111,11 +106,11 @@ export function initGeoCoder(
 			searchResult = ev.result;
 
 			// Add the active class to the geocoder
-			geocoderRef?.current?.classList.add( 'active' );
+			geocoderRef?.classList.add( 'active' );
 
 			if ( searchResult ) {
 				// Remove the active class from the geocoder
-				geocoderRef?.current?.classList.remove( 'disabled' );
+				geocoderRef?.classList.remove( 'disabled' );
 
 				const sortedNearestStores = locateNearestStore(
 					searchResult.geometry,
@@ -153,7 +148,7 @@ export function initGeoCoder(
 				const newFilteredListings = showNearestStore(
 					searchResult,
 					sortedNearestStores,
-					mapRef as RefObject< HTMLDivElement >,
+					mapRef,
 					map
 				);
 
