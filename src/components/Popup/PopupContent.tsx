@@ -15,6 +15,10 @@ import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { RefObject } from 'react';
 import { removePopups, showNearestStore } from './';
 import type mapboxgl from 'mapbox-gl';
+import { Phone } from '../UIComponents/Phone';
+import { EmailAddr } from '../UIComponents/EmailAddr';
+import { DistanceLabel } from '../UIComponents/DistanceLabel';
+import { Website } from '../UIComponents/Website';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
 The component destructures the `props` object to extract the properties `itemTags`, `itemFilters`,
@@ -27,6 +31,7 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 		itemTags,
 		itemFilters,
 		name = '',
+		company = '',
 		phone = '',
 		mobile = '',
 		address = '',
@@ -59,60 +64,45 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 					) : (
 						<h3 className={ 'popup-name' }>{ name }</h3>
 					) }
-					{ phone && (
-						<p className={ 'popup-phone' }>
-							<a href={ 'tel:' + phone }>
-								{ __( 'Phone: ', 'vsge-mapbox-block' ) + phone }
-							</a>
-						</p>
-					) }
-					{ mobile && (
-						<p className={ 'popup-phone' }>
-							<a href={ 'tel:' + mobile }>
-								{ __( 'Mobile: ', 'vsge-mapbox-block' ) +
-									mobile }
-							</a>
-						</p>
-					) }
+					<Phone
+						phone={ phone }
+						label={ __( 'Phone: ', 'vsge-mapbox-block' ) }
+						className={ 'popup-phone' }
+					/>
+					<Phone
+						phone={ mobile }
+						label={ __( 'Mobile: ', 'vsge-mapbox-block' ) }
+						className={ 'popup-mobile' }
+					/>
 
-					<p>
-						{ address && address }
-						<br />
-						{ country && country } { city && city }{ ' ' }
-						{ countryCode && '(' + countryCode + ')' }
-					</p>
+					<AddressLine
+						address={ address }
+						country={ country }
+						city={ city }
+						countryCode={ countryCode }
+					/>
 
-					{ website && (
-						<p>
-							Website:{ ' ' }
-							<a href={ '//' + website } className="website-link">
-								{ website }
-							</a>
-						</p>
-					) }
+					<Website
+						websiteUri={ website }
+						text={ company }
+						className={ 'website-link' }
+					/>
 
-					{ emailAddress && (
-						<p>
-							Email:{ ' ' }
-							<a
-								href={ 'mailto:' + emailAddress }
-								className="email-link"
-							>
-								{ emailAddress }
-							</a>
-						</p>
-					) }
+					<EmailAddr
+						emailAddress={ emailAddress }
+						label={ __( 'Email', 'vsge-mapbox-block' ) }
+						className={ 'popup-email' }
+					/>
 
 					<TagList
 						tags={ itemTags }
 						className={ 'popup-tag-list tag-list' }
 					/>
-					{ !! distance && (
-						<p>
-							{ __( 'Distance: ', 'vsge-mapbox-block' ) +
-								`${ distance.toFixed( 2 ) }Km` }
-						</p>
-					) }
+					<DistanceLabel
+						distance={ distance }
+						label={ __( 'Distance: ', 'vsge-mapbox-block' ) }
+						className={ 'popup-distance-labek' }
+					/>
 				</div>
 			</div>
 		</div>
@@ -161,7 +151,7 @@ export function SearchPopup( props: SearchMarkerProps ): JSX.Element {
 }
 
 export function PinPointPopup( props: {
-	map: RefObject< mapboxgl.Map >;
+	map: mapboxgl.Map;
 	location: CoordinatesDef;
 	mapRef: HTMLDivElement;
 	listings: MapBoxListing[];
