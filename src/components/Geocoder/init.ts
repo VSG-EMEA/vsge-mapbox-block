@@ -2,11 +2,7 @@ import { getNextId } from '../../utils/dataset';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
 import type { RefObject } from 'react';
-import {
-	CoordinatesDef,
-	MapboxBlockDefaults,
-	MapBoxListing,
-} from '../../types';
+import { MapboxBlockDefaults, MapBoxListing } from '../../types';
 import { geoMarkerStyle } from '../Marker/defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import { removePopups, showNearestStore } from '../Popup/';
@@ -15,7 +11,6 @@ import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { initGeoMarker } from '../Marker/Geomarker';
 import './style.scss';
-import { Marker } from 'mapbox-gl';
 
 /**
  * Initializes the geocoder for the map.
@@ -36,7 +31,7 @@ export function initGeoCoder(
 	mapboxgl: any,
 	map: mapboxgl.Map,
 	mapRef: HTMLDivElement,
-	markersRef: HTMLButtonElement[],
+	markersRef: HTMLDivElement[],
 	geocoderRef: HTMLDivElement,
 	listings: MapBoxListing[],
 	filteredListings: MapBoxListing[],
@@ -119,7 +114,6 @@ export function initGeoCoder(
 
 				// @ts-ignore
 				const geoMarker = geocoder.mapMarker;
-				console.log( geocoder );
 
 				// The map marker element
 				// const markerEl = geocoder.mapMarker.getElement() as HTMLElement;
@@ -127,7 +121,6 @@ export function initGeoCoder(
 
 				geoMarker.onclick = () => {
 					// Remove the active class from the geocoder
-					console.log( 'geocoder.clear' );
 					geocoder.clear();
 				};
 				geoMarker.on( 'dragend', () => {
@@ -138,12 +131,6 @@ export function initGeoCoder(
 
 					flyToStore( map, geoMarker );
 				} );
-
-				console.log( 'Search result', searchResult );
-				console.log(
-					'nearest store to search result coordinates in km: ',
-					sortedNearestStores[ 0 ].properties.distance
-				);
 
 				const newFilteredListings = showNearestStore(
 					searchResult,

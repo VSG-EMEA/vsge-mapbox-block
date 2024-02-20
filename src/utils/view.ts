@@ -59,20 +59,20 @@ export function filterListings(
 	filteredIds: number[] | null
 ): MapBoxListing[] {
 	// Filter the listings based on the provided filteredIds
-	const tempListings = filteredIds
+	return filteredIds
 		? listings.filter( ( listing ) => {
 				return ( filteredIds as number[] )?.includes( listing.id );
 		  } )
 		: listings;
-
-	return tempListings;
 }
 
 /**
  * Filters the given list of MapBox listings based on a specified criteria.
  *
- * @param {MapBoxListing[]} listings - The list of MapBox listings to filter.
- * @param {tag: string; filter: string}          terms     - The value to compare against the listings.
+ * @param {MapBoxListing[]}             listings     - The list of MapBox listings to filter.
+ * @param {tag: string; filter: string} terms        - The value to compare against the listings.
+ * @param                               terms.tag    - The tag to filter the listings by.
+ * @param                               terms.filter - The filter to filter the listings by.
  * @return {MapBoxListing[]} The filtered list of MapBox listings.
  */
 export function filterListingsBy(

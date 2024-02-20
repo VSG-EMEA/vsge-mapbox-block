@@ -31,7 +31,7 @@ JSX element that maps over the `tags` array (if it exists) and renders a `TagIte
 each `MapFilter` object in the array. The `key` prop is set to the `index` of each item in the
 array. The `TagList` component is exported so it can be used in other parts of the codebase. */
 export function TagList( props: {
-	tags: TagArray | undefined;
+	tags: TagArray;
 	className?: string;
 } ): JSX.Element | null {
 	const { tags, className } = props;

@@ -4,12 +4,11 @@ import { MapBoxListing, SearchMarkerProps } from '../../types';
 import mapboxgl from 'mapbox-gl';
 import { TagList } from '../TagItem';
 import { removePopups } from '../Popup/';
-import type { MutableRefObject, RefObject } from 'react';
 import { __ } from '@wordpress/i18n';
 import { flyToStore } from '../../utils/view';
 import { PopupContent, SearchPopup } from '../Popup/PopupContent';
 import './style.scss';
-import { Website } from '../UIComponents/Website';
+import { LinkTo, Website } from '../UIComponents/Website';
 import { Phone } from '../UIComponents/Phone';
 import { AddressLine } from '../UIComponents/AddressLine';
 import { EmailAddr } from '../UIComponents/EmailAddr';
@@ -40,7 +39,6 @@ export function highlightListing( item: MapBoxListing ) {
 
 /**
  * Enables the listing feature on the map.
- *
  * @param {mapboxgl.Map}  map    - The map object.
  * @param {MapBoxListing} marker - The listing marker object.
  */
@@ -120,16 +118,22 @@ export const Listing = ( {
 				>
 					<h4 className="title">{ name }</h4>
 
-					<Website
+					<LinkTo
 						websiteUri={ website }
 						text={ company || website }
-						className={ 'listings-company-label' }
+						className={ 'listings-company-link' }
 					/>
 
 					<Phone
 						phone={ phone }
 						label="Phone"
 						className={ 'listings-phone-label' }
+					/>
+
+					<Phone
+						phone={ mobile }
+						label="Mobile"
+						className={ 'listings-mobile-label' }
 					/>
 
 					<AddressLine
@@ -152,16 +156,10 @@ export const Listing = ( {
 						className={ 'store-distance' }
 					/>
 
-					{ itemTags?.length ? (
-						<>
-							<TagList
-								tags={ itemTags }
-								className={
-									'listings-tag sidebar-tag-list tag-list'
-								}
-							/>
-						</>
-					) : null }
+					<TagList
+						tags={ itemTags }
+						className={ 'listings-tag sidebar-tag-list tag-list' }
+					/>
 				</div>
 			</div>
 		</div>

@@ -12,13 +12,14 @@ import { ICON_SIZE, MARKER_TYPE_TEMP } from '../../constants';
 import { layouts, svgArray } from '@mapbox/maki';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { RefObject } from 'react';
+import { Dispatch } from 'react';
 import { removePopups, showNearestStore } from './';
 import type mapboxgl from 'mapbox-gl';
 import { Phone } from '../UIComponents/Phone';
 import { EmailAddr } from '../UIComponents/EmailAddr';
 import { DistanceLabel } from '../UIComponents/DistanceLabel';
-import { Website } from '../UIComponents/Website';
+import { LinkTo, Website } from '../UIComponents/Website';
+import { AddressLine } from '../UIComponents/AddressLine';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
 The component destructures the `props` object to extract the properties `itemTags`, `itemFilters`,
@@ -66,26 +67,27 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 					) }
 					<Phone
 						phone={ phone }
-						label={ __( 'Phone: ', 'vsge-mapbox-block' ) }
+						label={ __( 'Phone', 'vsge-mapbox-block' ) }
 						className={ 'popup-phone' }
 					/>
 					<Phone
 						phone={ mobile }
-						label={ __( 'Mobile: ', 'vsge-mapbox-block' ) }
+						label={ __( 'Mobile', 'vsge-mapbox-block' ) }
 						className={ 'popup-mobile' }
 					/>
 
 					<AddressLine
+						className={ 'popup-address' }
 						address={ address }
-						country={ country }
 						city={ city }
+						country={ country }
 						countryCode={ countryCode }
 					/>
 
-					<Website
+					<LinkTo
 						websiteUri={ website }
 						text={ company }
-						className={ 'website-link' }
+						className={ 'popup-website' }
 					/>
 
 					<EmailAddr
@@ -100,7 +102,7 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 					/>
 					<DistanceLabel
 						distance={ distance }
-						label={ __( 'Distance: ', 'vsge-mapbox-block' ) }
+						label={ __( 'Distance', 'vsge-mapbox-block' ) }
 						className={ 'popup-distance-labek' }
 					/>
 				</div>
@@ -155,10 +157,8 @@ export function PinPointPopup( props: {
 	location: CoordinatesDef;
 	mapRef: HTMLDivElement;
 	listings: MapBoxListing[];
-	setListings: ( listings: MapBoxListing[] ) => void;
-	setFilteredListings: (
-		listings: ( MapBoxListing | MapboxGeocoder.Result )[]
-	) => void;
+	setListings: Dispatch< MapBoxListing[] >;
+	setFilteredListings: Dispatch< MapBoxListing[] >;
 } ): JSX.Element | null {
 	const { location, map, mapRef, listings, setFilteredListings } = props;
 
@@ -203,7 +203,7 @@ export function PinPointPopup( props: {
 							map
 						);
 						setFilteredListings( [
-							...sortedListings,
+							...( sortedListings as MapBoxListing ),
 							myLocationPin,
 						] );
 					} }
