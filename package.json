@@ -1,7 +1,7 @@
 {
   "name": "vsge-mapbox-block",
   "description": "a wordpress block that allow to show mapbox maps",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "author": "codekraft",
   "license": "GPL-2.0-or-later",
   "main": "./build/mapbox.js",
