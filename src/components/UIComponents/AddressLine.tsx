@@ -1,8 +1,8 @@
 export const AddressLine = ( {
-	address,
-	country,
-	city,
-	countryCode,
+	address = '',
+	country = '',
+	city = '',
+	countryCode = '',
 	className = 'address-line',
 }: {
 	address?: string;
@@ -14,9 +14,8 @@ export const AddressLine = ( {
 	if ( ! address ) return null;
 	return (
 		<p className={ className }>
-			{ address }
-			<br />
-			{ city } { country } { countryCode && '(' + countryCode + ')' }
+			{ address ? address + <br /> : null }
+			{ city } { country } { countryCode && `(${ countryCode })` }
 		</p>
 	);
 };
