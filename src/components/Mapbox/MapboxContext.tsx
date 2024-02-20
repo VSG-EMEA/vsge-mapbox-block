@@ -12,7 +12,7 @@ import {
 } from '../../types';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import type { Context, MutableRefObject, RefObject } from 'react';
+import type { Context, MutableRefObject } from 'react';
 
 export const MapboxContext: Context< MountedMapsContextValue > =
 	createContext( undefined );
@@ -52,14 +52,9 @@ export function MapProvider( {
 	const mapDefaults = getMapDefaults();
 	const mapIcons = attributes.mapboxOptions.icons;
 
-	const mapRef: RefObject< HTMLDivElement > = useRef< HTMLDivElement | null >(
-		null
-	);
-	const geocoderRef: RefObject< HTMLDivElement > =
-		useRef< HTMLDivElement | null >( null );
-	const markersRef: RefObject< HTMLButtonElement[] > = useRef<
-		HTMLButtonElement[]
-	>( [] );
+	const mapRef = useRef< HTMLDivElement >( null );
+	const geocoderRef = useRef< HTMLDivElement >( null );
+	const markersRef = useRef< HTMLButtonElement[] >( [] );
 
 	return (
 		<MapboxContext.Provider

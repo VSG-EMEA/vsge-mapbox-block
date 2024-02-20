@@ -82,10 +82,12 @@ export function MapBox( {
 	const updateMarkers = useCallback(
 		( stores: MapBoxListing[], currentStores?: MapBoxListing[] | null ) => {
 			stores?.forEach( ( store ) => {
+				const newSet = markersRef.current;
 				// check if the store already exists and has the same coordinates
 				if (
-					currentStores &&
-					currentStores.find(
+					newSet?.length === 0 ||
+					! currentStores ||
+					! currentStores.find(
 						( s ) =>
 							s.id === store.id &&
 							equalsCheck(
@@ -94,8 +96,6 @@ export function MapBox( {
 							)
 					)
 				) {
-					// Update the marker
-				} else {
 					// otherwise create a new marker
 					removeMarkerEl(
 						store.id,
@@ -103,12 +103,16 @@ export function MapBox( {
 					);
 
 					// Create the marker element
-					mapMarker( store, markersRef, mapIcons as MarkerIcon[] );
+					mapMarker(
+						store,
+						markersRef.current,
+						mapIcons as MarkerIcon[]
+					);
 
-					if ( markersRef.current[ store.id ] ) {
+					if ( markersRef.current ) {
 						// Add the marker to the DOM
 						createMarkerEl(
-							markersRef?.current[ store.id ],
+							markersRef.current[ store.id ],
 							store,
 							map
 						);
@@ -136,7 +140,7 @@ export function MapBox( {
 			// Find features intersecting the bounding box.
 			const clickedEl = event.originalEvent?.target as HTMLElement;
 
-			if ( ! mapRef ) return;
+			if ( ! mapRef?.current ) return;
 
 			/**
 			 * The map was clicked
@@ -144,7 +148,7 @@ export function MapBox( {
 			if ( clickedEl.nodeName === 'CANVAS' ) {
 				// remove the distance data from each listing
 				clearListingsDistances( listings );
-				removePopups( mapRef );
+				removePopups( mapRef.current );
 
 				// clear the temp marker from the list
 				// let newListings = removeTempMarkers( listings, mapRef );
@@ -157,7 +161,7 @@ export function MapBox( {
 					clickedPoint
 				);
 
-				let newListings = removeTempMarkers( listings, mapRef );
+				let newListings = removeTempMarkers( listings, mapRef.current );
 
 				// store the new marker in the markers array
 				newListings = [
@@ -179,7 +183,7 @@ export function MapBox( {
 			/**
 			 * A marker was clicked, get the marker data
 			 */
-			const markerData: MapBoxListing | undefined = getMarkerData(
+			const markerData = getMarkerData(
 				Number( markerEl.dataset?.id ) || 0,
 				listings
 			);
@@ -213,14 +217,14 @@ export function MapBox( {
 			) {
 				// prints the popup that allow the user to find a location
 				addPopup(
-					map,
+					map.current,
 					markerData,
 					<PinPointPopup
 						location={ markerCoordinates ?? clickedPoint }
 						listings={ listings }
 						setListings={ setListings }
 						setFilteredListings={ setFilteredListings }
-						mapRef={ mapRef }
+						mapRef={ mapRef.current }
 						map={ map }
 					/>
 				);
@@ -232,7 +236,7 @@ export function MapBox( {
 			 */
 			if ( markerData?.type === 'Feature' ) {
 				// popup the marker data on the currentMap
-				addPopup( map, markerData );
+				addPopup( map.current, markerData );
 			}
 		},
 		[ map, mapRef, listings, setFilteredListings ]
@@ -256,14 +260,18 @@ export function MapBox( {
 			map.current.addControl( language );
 
 			// Add the geocoder to the map
-			if ( attributes.geocoderEnabled ) {
+			if (
+				attributes.geocoderEnabled &&
+				markersRef.current &&
+				geocoderRef?.current
+			) {
 				setGeoCoder(
 					initGeoCoder(
 						mapboxgl,
-						map,
-						mapRef,
-						markersRef,
-						geocoderRef,
+						map.current,
+						mapRef.current,
+						markersRef.current,
+						geocoderRef.current,
 						listings,
 						filteredListings,
 						setFilteredListings,
