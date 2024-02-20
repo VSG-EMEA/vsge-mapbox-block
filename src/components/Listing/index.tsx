@@ -4,7 +4,6 @@ import { MapBoxListing, SearchMarkerProps } from '../../types';
 import mapboxgl from 'mapbox-gl';
 import { TagList } from '../TagItem';
 import { removePopups } from '../Popup/';
-import type { MutableRefObject, RefObject } from 'react';
 import { __ } from '@wordpress/i18n';
 import { flyToStore } from '../../utils/view';
 import { PopupContent, SearchPopup } from '../Popup/PopupContent';
@@ -152,16 +151,10 @@ export const Listing = ( {
 						className={ 'store-distance' }
 					/>
 
-					{ itemTags?.length ? (
-						<>
-							<TagList
-								tags={ itemTags }
-								className={
-									'listings-tag sidebar-tag-list tag-list'
-								}
-							/>
-						</>
-					) : null }
+					<TagList
+						tags={ itemTags }
+						className={ 'listings-tag sidebar-tag-list tag-list' }
+					/>
 				</div>
 			</div>
 		</div>
