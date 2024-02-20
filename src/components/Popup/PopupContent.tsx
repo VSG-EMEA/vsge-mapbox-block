@@ -18,7 +18,7 @@ import type mapboxgl from 'mapbox-gl';
 import { Phone } from '../UIComponents/Phone';
 import { EmailAddr } from '../UIComponents/EmailAddr';
 import { DistanceLabel } from '../UIComponents/DistanceLabel';
-import { Website } from '../UIComponents/Website';
+import { LinkTo, Website } from '../UIComponents/Website';
 import { AddressLine } from '../UIComponents/AddressLine';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
@@ -67,12 +67,12 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 					) }
 					<Phone
 						phone={ phone }
-						label={ __( 'Phone: ', 'vsge-mapbox-block' ) }
+						label={ __( 'Phone', 'vsge-mapbox-block' ) }
 						className={ 'popup-phone' }
 					/>
 					<Phone
 						phone={ mobile }
-						label={ __( 'Mobile: ', 'vsge-mapbox-block' ) }
+						label={ __( 'Mobile', 'vsge-mapbox-block' ) }
 						className={ 'popup-mobile' }
 					/>
 
@@ -84,7 +84,7 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 						countryCode={ countryCode }
 					/>
 
-					<Website
+					<LinkTo
 						websiteUri={ website }
 						text={ company }
 						className={ 'popup-website' }
@@ -102,7 +102,7 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 					/>
 					<DistanceLabel
 						distance={ distance }
-						label={ __( 'Distance: ', 'vsge-mapbox-block' ) }
+						label={ __( 'Distance', 'vsge-mapbox-block' ) }
 						className={ 'popup-distance-labek' }
 					/>
 				</div>
