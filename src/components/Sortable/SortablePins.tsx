@@ -237,7 +237,22 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
+						<TextControl
+							label={ __( 'Company', 'vsge-mapbox-block' ) }
+							type={ 'text' }
+							style={ { margin: 0 } }
+							value={ itemData.properties?.company || '' }
+							onChange={ ( newValue ) => {
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										company: newValue,
+									},
+								} );
+							} }
+						/>
 						<TextControl
 							label={ __( 'Phone', 'vsge-mapbox-block' ) }
 							type={ 'tel' }
@@ -251,7 +266,7 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
 						<TextControl
 							label={ __( 'Mobile', 'vsge-mapbox-block' ) }
 							type={ 'tel' }
@@ -265,7 +280,7 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
 						<TextControl
 							label={ __( 'Email', 'vsge-mapbox-block' ) }
 							type={ 'email' }
@@ -279,7 +294,7 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
 						<TextControl
 							label={ __( 'website', 'vsge-mapbox-block' ) }
 							type={ 'url' }
@@ -293,7 +308,7 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
 						<TextControl
 							label={ __( 'City', 'vsge-mapbox-block' ) }
 							type={ 'text' }
@@ -307,7 +322,7 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
 						<TextControl
 							label={ __( 'Country', 'vsge-mapbox-block' ) }
 							type={ 'text' }
@@ -321,7 +336,7 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
 						<TextControl
 							label={ __( 'Postal Code', 'vsge-mapbox-block' ) }
 							type={ 'text' }
@@ -335,7 +350,7 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
 						<TextControl
 							label={ __( 'Country Code', 'vsge-mapbox-block' ) }
 							type={ 'text' }
@@ -349,7 +364,7 @@ export const PinCard = ( props: {
 									},
 								} );
 							} }
-						></TextControl>
+						/>
 						<TextareaControl
 							label={ __( 'Address', 'vsge-mapbox-block' ) }
 							value={ itemData.properties?.address || '' }
@@ -363,7 +378,7 @@ export const PinCard = ( props: {
 								} );
 							} }
 							__nextHasNoMarginBottom={ true }
-						></TextareaControl>
+						/>
 
 						{ /** Tags */ }
 						<Flex direction={ 'row' } justify={ 'top' }>
