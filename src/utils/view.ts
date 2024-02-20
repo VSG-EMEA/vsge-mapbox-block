@@ -1,6 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import { MapBoxListing, MarkerProps } from '../types';
-import { MutableRefObject, RefObject } from 'react';
+import { MapBoxListing } from '../types';
 
 /**
  * The function recenterView takes a map and default values and flies the map to the default center and
@@ -28,7 +27,6 @@ export function recenterView( map: mapboxgl.Map, defaults: any ): any {
  * @param {CoordinatesDef} coordinates - The coordinates parameter is a variable that represents the
  *                                     latitude and longitude of a location on a map. It is used to set the center of the map when the
  *                                     flyToStore function is called.
- * @param                  map.current
  * @param                  store
  * @param {number}         [zoom=8]    - The zoom parameter is a number that determines the level of zoom for the
  *                                     map. A higher number means the map will be more zoomed in, while a lower number means the map will
@@ -38,12 +36,12 @@ export function recenterView( map: mapboxgl.Map, defaults: any ): any {
  * to a new location and zoom level.
  */
 export function flyToStore(
-	map: MutableRefObject< mapboxgl.Map | null >,
+	map: mapboxgl.Map,
 	store: MapBoxListing,
 	zoom: number = 8
 ) {
 	if ( store?.geometry?.coordinates )
-		return map.current?.flyTo( {
+		return map?.flyTo( {
 			center: store.geometry.coordinates,
 			zoom,
 		} );
@@ -74,25 +72,30 @@ export function filterListings(
  * Filters the given list of MapBox listings based on a specified criteria.
  *
  * @param {MapBoxListing[]} listings - The list of MapBox listings to filter.
- * @param {string}          by       - The criteria to filter the listings by.
- * @param {string}          term     - The value to compare against the listings.
+ * @param {tag: string; filter: string}          terms     - The value to compare against the listings.
  * @return {MapBoxListing[]} The filtered list of MapBox listings.
  */
 export function filterListingsBy(
 	listings: MapBoxListing[],
-	by: string,
-	term: string
+	terms: { tag: string; filter: string }
 ): MapBoxListing[] {
-	let filteredListings: MapBoxListing[] = [];
+	const { tag = '', filter = '' } = terms;
 
-	filteredListings = listings.filter( ( listing: MapBoxListing ) => {
-		if ( listing.properties && by in listing.properties ) {
-			return listing.properties[ by as keyof MarkerProps ] === term;
+	return listings.filter( ( listing: MapBoxListing ) => {
+		if ( listing.properties ) {
+			if ( tag ) {
+				if ( listing.properties.itemTags?.includes( tag ) ) {
+					return true;
+				}
+			}
+			if ( filter ) {
+				if ( listing.properties.itemFilters?.includes( filter ) ) {
+					return true;
+				}
+			}
 		}
-		return listing.properties[ by as keyof MarkerProps ] === term;
+		return false;
 	} );
-
-	return filteredListings;
 }
 
 /**
@@ -106,16 +109,16 @@ export function filterListingsBy(
  * @param                   mapRef   The map reference is an instance of the Mapbox GL JS map that is being used to display the map.
  */
 export function fitInView(
-	map: MutableRefObject< mapboxgl.Map | null >,
+	map: mapboxgl.Map,
 	listings: MapBoxListing[],
-	mapRef: RefObject< HTMLDivElement >
+	mapRef: HTMLDivElement
 ) {
-	if ( ! map.current || ! mapRef.current ) return;
+	if ( ! map || ! mapRef ) return;
 
 	const bounds = new mapboxgl.LngLatBounds();
 	let padding = 0;
 
-	padding = mapRef.current.offsetWidth * 0.1;
+	padding = mapRef.offsetWidth * 0.1;
 
 	if ( listings.length !== 0 ) {
 		listings.forEach( ( point ) => {
@@ -134,8 +137,8 @@ export function fitInView(
 			bounds._ne.lng = lng - 0.5;
 		}
 
-		map.current.fitBounds( bounds, { padding } );
+		map.fitBounds( bounds, { padding } );
 	}
 
-	map.current.resize();
+	map.resize();
 }

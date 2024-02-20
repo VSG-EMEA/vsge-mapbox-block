@@ -65,13 +65,13 @@ export type MapAttributes = {
 
 export type MountedMapsContextValue =
 	| {
-			map: MutableRefObject< mapboxgl.Map | null >;
+			map: MutableRefObject< mapboxgl.Map >;
 			lngLat?: LngLat;
 			listings: MapBoxListing[];
 			filteredListings: MapBoxListing[];
 			setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
 			setFilteredListings: Dispatch< MapBoxListing[] >;
-			setLngLat: Dispatch< SetStateAction< LngLat | null > >;
+			setLngLat: Dispatch< SetStateAction< LngLat > >;
 			geoCoder?: MapboxGeocoder;
 			setGeoCoder?: SetStateAction< any >;
 			mapRef?: RefObject< HTMLDivElement >;
