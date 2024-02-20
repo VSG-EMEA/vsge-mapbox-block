@@ -1,5 +1,5 @@
 import type { Feature, Geometry } from '@turf/turf';
-import mapboxgl, { LngLat } from 'mapbox-gl';
+import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
 import type {
 	MutableRefObject,
 	ComponentType,
@@ -17,7 +17,7 @@ export type MapboxBlockDefaults = {
 	language: string;
 };
 
-export type TagArray = string[];
+export type TagArray = string[] | undefined;
 
 export type FilterCollection = { id: number; value?: string };
 export type TagCollection = { id: number; tag: string };
@@ -63,27 +63,25 @@ export type MapAttributes = {
 	mapboxOptions: MapboxOptions;
 };
 
-export type MountedMapsContextValue =
-	| {
-			map: MutableRefObject< mapboxgl.Map >;
-			lngLat?: LngLat;
-			listings: MapBoxListing[];
-			filteredListings: MapBoxListing[];
-			setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
-			setFilteredListings: Dispatch< MapBoxListing[] >;
-			setLngLat: Dispatch< SetStateAction< LngLat > >;
-			geoCoder?: MapboxGeocoder;
-			setGeoCoder?: SetStateAction< any >;
-			mapRef?: RefObject< HTMLDivElement >;
-			markersRef: RefObject< HTMLButtonElement[] >;
-			geocoderRef?: RefObject< HTMLDivElement >;
-			loaded: boolean;
-			setLoaded: Dispatch< SetStateAction< boolean > >;
-			mapDefaults?: MapboxBlockDefaults;
-			mapIcons?: MarkerIcon[];
-			Provider: ComponentType;
-	  }
-	| undefined;
+export type MountedMapsContextValue = {
+	map: MutableRefObject< mapboxgl.Map | null >;
+	lngLat?: LngLatLike;
+	setLngLat: Dispatch< SetStateAction< LngLatLike > >;
+	listings: MapBoxListing[];
+	filteredListings: MapBoxListing[];
+	setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
+	setFilteredListings: Dispatch< MapBoxListing[] >;
+	geoCoder?: MapboxGeocoder;
+	setGeoCoder?: SetStateAction< any >;
+	mapRef?: RefObject< HTMLDivElement >;
+	markersRef: MutableRefObject< HTMLDivElement[] >;
+	geocoderRef?: RefObject< HTMLDivElement >;
+	loaded: boolean;
+	setLoaded: Dispatch< SetStateAction< boolean > >;
+	mapDefaults?: MapboxBlockDefaults;
+	mapIcons?: MarkerIcon[];
+	Provider: ComponentType;
+};
 
 export type selectOptions = {
 	label: string;
