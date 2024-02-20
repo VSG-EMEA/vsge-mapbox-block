@@ -8,8 +8,9 @@ import { MARKER_TYPE_TEMP } from '../../constants';
 export function createMarkerEl(
 	markerEl: HTMLElement,
 	listing: MapBoxListing,
-	map: RefObject< mapboxgl.Map | null >
+	map: RefObject< mapboxgl.Map >
 ) {
+	if ( ! map.current ) return;
 	// Render a Marker Component on our new DOM node
 	const markerElement = new mapboxgl.Marker( markerEl, {
 		offset: [ 0, ( listing?.properties?.iconSize || 0 ) * -0.5 ],
@@ -97,19 +98,20 @@ export function removeMarkerEl(
 	}
 	return false;
 }
+
 /**
- * Updates the listings on the map.
- * @param filteredStores - The filtered listings.
- * @param map
- * @param map.current
- * @param mapRef
+ * Adjusts the camera view on the map to include the filtered listings.
+ *
+ * @param {MapBoxListing[]}                  filteredStores - An array of filtered store listings.
+ * @param {RefObject<mapboxgl.Map | null>}   map            - A React ref object containing the map instance.
+ * @param {RefObject<HTMLDivElement | null>} mapRef         - A React ref object containing the map's DOM element.
  */
 export function updateCamera(
 	filteredStores: MapBoxListing[],
 	map: RefObject< mapboxgl.Map | null >,
-	mapRef: RefObject< HTMLDivElement > | undefined
+	mapRef: RefObject< HTMLDivElement | null >
 ): void {
-	if ( ! map ) return;
+	if ( ! map || ! mapRef.current ) return;
 
 	// if filtered listings are present
 	if ( filteredStores?.length ) {
@@ -124,13 +126,13 @@ export function updateCamera(
 				filteredStores[ 1 ].geometry
 			);
 
-			map?.cameraForBounds( bbox, {
+			map?.current?.cameraForBounds( bbox, {
 				padding: 50,
 			} );
 		} else {
-			fitInView( map, filteredStores, mapRef );
+			fitInView( map, filteredStores, mapRef.current );
 		}
 		return;
 	}
-	fitInView( map, filteredStores, mapRef );
+	fitInView( map, filteredStores, mapRef.current );
 }

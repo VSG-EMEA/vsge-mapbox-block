@@ -11,16 +11,14 @@ import { geocoderMarkerDefaults, geoMarkerStyle } from './defaults';
  * @param markersRef - The ref object for the map container.
  * @return A mapboxgl.Marker object is being returned.
  */
-export const initGeomarker = (
+export const initGeoMarker = (
 	id: number,
-	markersRef: RefObject< HTMLButtonElement[] >
-): HTMLButtonElement | null => {
-	markersRef.current[ id ] = null;
+	markersRef: RefObject< Element[] >
+): Element | null => {
+	if ( ! markersRef.current || ! markersRef.current[ id ] ) return null;
 
 	// Create a new DOM root and save it to the React ref
-	markersRef.current[ id ] = document.createElement(
-		'div'
-	) as HTMLDivElement;
+	markersRef.current[ id ] = document.createElement( 'button' ) as Element;
 	markersRef.current[ id ].className = 'marker marker-geocoder disabled';
 
 	const root = createRoot( markersRef.current[ id ] );
@@ -30,17 +28,19 @@ export const initGeomarker = (
 
 	// Render a Marker Component on our new DOM node
 	root.render(
-		<Marker
-			className={ 'marker marker-geocoder disabled' }
-			feature={ markerData }
-			children={
-				<PinPoint
-					color={ defaultStyle.color }
-					size={ defaultStyle.size }
-				/>
-			}
-		/>
+		(
+			<Marker
+				classes={ 'marker marker-geocoder disabled' }
+				feature={ markerData }
+				children={
+					<PinPoint
+						color={ defaultStyle.color }
+						size={ defaultStyle.size }
+					/>
+				}
+			/>
+		 ) as JSX.Element
 	);
 
-	return markersRef.current[ id ];
+	return markersRef.current ? markersRef.current[ id ] : null;
 };

@@ -1,15 +1,14 @@
 .wp-block-vsge-mapbox .map-wrapper {
-
 	.geocoder {
 		height: var(--mabox-topbar-height);
-    padding-bottom: 8px;
+		padding-bottom: 8px;
 	}
 
 	.mapboxgl-ctrl-geocoder {
-    width: 100%;
-    max-width: inherit;
-    box-shadow: inherit;
-    border-radius: 0;
+		width: 100%;
+		max-width: inherit;
+		box-shadow: inherit;
+		border-radius: 0;
 
 		input {
 			border: 0;
@@ -20,8 +19,8 @@
 			font-family: var(--wp--preset--font-family--default);
 			font-weight: 300;
 
-			@media (max-width : 600px) {
-				font-size: .25rem;
+			@media (max-width: 600px) {
+				font-size: 0.25rem;
 			}
 		}
 
@@ -36,7 +35,7 @@
 			height: 24px;
 			top: 12px;
 
-			@media (max-width : 600px) {
+			@media (max-width: 600px) {
 				left: 8px;
 			}
 		}
@@ -59,7 +58,7 @@
 				background-color: transparent;
 				color: var(--wp--preset--color--gray);
 
-				@media (max-width : 600px) {
+				@media (max-width: 600px) {
 					top: 2px;
 				}
 			}

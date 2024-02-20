@@ -119,26 +119,26 @@ export function MapEdit( {
 
 	useEffect( () => {
 		if ( loaded ) {
-			map.current.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
+			map.current?.setStyle( 'mapbox://styles/mapbox/' + mapStyle );
 			refreshMap();
 		}
 	}, [ mapStyle ] );
 
 	useEffect( () => {
-		if ( loaded ) {
+		if ( loaded && map.current ) {
 			setMapThreeDimensionality( map.current, freeViewCamera );
 		}
 	}, [ freeViewCamera ] );
 
 	useEffect( () => {
-		if ( loaded ) {
+		if ( loaded && map.current ) {
 			setMapElevation( map.current, elevation );
 			refreshMap();
 		}
 	}, [ elevation ] );
 
 	useEffect( () => {
-		if ( loaded ) {
+		if ( loaded && map.current ) {
 			setMapWheelZoom( map.current, mouseWheelZoom );
 		}
 	}, [ mouseWheelZoom ] );
@@ -159,7 +159,10 @@ export function MapEdit( {
 				<Panel>
 					<PanelBody title="Options" icon={ cog }>
 						<ToggleControl
-							label={ __( 'Enable Sidebar', 'vsge-mapbox-block' ) }
+							label={ __(
+								'Enable Sidebar',
+								'vsge-mapbox-block'
+							) }
 							checked={ sidebarEnabled }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -174,7 +177,10 @@ export function MapEdit( {
 						/>
 						{ sidebarEnabled && (
 							<ToggleControl
-								label={ __( 'Enable Geocoder', 'vsge-mapbox-block' ) }
+								label={ __(
+									'Enable Geocoder',
+									'vsge-mapbox-block'
+								) }
 								checked={ geocoderEnabled }
 								onChange={ ( newValue: boolean ) => {
 									setAttributes( {
@@ -185,7 +191,10 @@ export function MapEdit( {
 							/>
 						) }
 						<ToggleControl
-							label={ __( 'Enable Filters', 'vsge-mapbox-block' ) }
+							label={ __(
+								'Enable Filters',
+								'vsge-mapbox-block'
+							) }
 							checked={ filtersEnabled }
 							onChange={ ( newValue: boolean ) =>
 								setAttributes( {
@@ -205,7 +214,10 @@ export function MapEdit( {
 							}
 						/>
 						<ToggleControl
-							label={ __( 'Enable fitView', 'vsge-mapbox-block' ) }
+							label={ __(
+								'Enable fitView',
+								'vsge-mapbox-block'
+							) }
 							checked={ fitView }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -216,7 +228,10 @@ export function MapEdit( {
 							} }
 						/>
 						<ToggleControl
-							label={ __( 'Enable Elevation', 'vsge-mapbox-block' ) }
+							label={ __(
+								'Enable Elevation',
+								'vsge-mapbox-block'
+							) }
 							checked={ elevation }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -227,7 +242,10 @@ export function MapEdit( {
 							} }
 						/>
 						<ToggleControl
-							label={ __( 'Enable camera 3d rotation', 'vsge-mapbox-block' ) }
+							label={ __(
+								'Enable camera 3d rotation',
+								'vsge-mapbox-block'
+							) }
 							checked={ freeViewCamera }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -240,7 +258,10 @@ export function MapEdit( {
 							} }
 						/>
 						<ToggleControl
-							label={ __( 'Enable Zoom with mouse wheel', 'vsge-mapbox-block' ) }
+							label={ __(
+								'Enable Zoom with mouse wheel',
+								'vsge-mapbox-block'
+							) }
 							checked={ mouseWheelZoom }
 							onChange={ ( newValue: boolean ) => {
 								setAttributes( {
@@ -266,7 +287,9 @@ export function MapEdit( {
 							{ __( 'Get Current view', 'vsge-mapbox-block' ) }
 						</Button>
 
-						<h2>{ __( 'Camera Fine tuning', 'vsge-mapbox-block' ) }</h2>
+						<h2>
+							{ __( 'Camera Fine tuning', 'vsge-mapbox-block' ) }
+						</h2>
 						<RangeControl
 							label={ __( 'Latitude', 'vsge-mapbox-block' ) }
 							value={ latitude }

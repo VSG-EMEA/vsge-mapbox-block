@@ -18,7 +18,7 @@ import { MapBoxListing, MarkerIcon } from '../../types';
  */
 export function mapMarker(
 	listing: MapBoxListing,
-	markersRef: RefObject< HTMLButtonElement[] >,
+	markersRef: RefObject< HTMLDivElement[] >,
 	icons: MarkerIcon[]
 ): void {
 	// Check if the coordinates are valid
@@ -28,14 +28,14 @@ export function mapMarker(
 			listing?.geometry?.coordinates as [ number, number ]
 		)
 	) {
+		if ( ! markersRef.current || markersRef.current[ listing.id ] ) return;
 		// Render a Marker Component on our new DOM node
-		markersRef.current[ listing.id ] = null;
 		markersRef.current[ listing.id ] = document.createElement( 'div' );
 		markersRef.current[ listing.id ].id = 'marker-' + listing.id;
 		markersRef.current[ listing.id ].className = `marker-${ safeSlug(
 			listing.type
 		) }`;
-		markersRef.current[ listing.id ].dataset.id = Number( listing.id );
+		markersRef.current[ listing.id ].dataset.id = listing.id.toString();
 		markersRef.current[ listing.id ].dataset.markerType = listing.type;
 		markersRef.current[ listing.id ].dataset.markerName = safeSlug(
 			listing.properties.name

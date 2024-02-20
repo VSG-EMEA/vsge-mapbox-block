@@ -40,6 +40,7 @@ export const PinCard = ( props: {
 	const [ itemData, setItemData ] = useState( item as MapBoxListing );
 
 	if ( ! item?.properties ) {
+		// eslint-disable-next-line no-console
 		console.error( 'Missing properties for item', item );
 		return null;
 	}
@@ -91,9 +92,10 @@ export const PinCard = ( props: {
 	/**
 	 * This function sets the marker color
 	 *
-	 * @param newValue the new value of the color picker
+	 * @param newValue     the new value of the color picker
+	 * @param newValue.hex the hex value
 	 */
-	function setMarkerColor( newValue: ColorPicker.OnChangeCompleteValue ) {
+	function setMarkerColor( newValue: { hex: string } ) {
 		setItemData( {
 			...itemData,
 			properties: {
@@ -259,7 +261,7 @@ export const PinCard = ( props: {
 									...itemData,
 									properties: {
 										...itemData.properties,
-										Mobile: newValue,
+										mobile: newValue,
 									},
 								} );
 							} }
@@ -375,7 +377,7 @@ export const PinCard = ( props: {
 									<CheckboxControl
 										label={ checkbox.value }
 										checked={ itemData.properties?.itemTags?.includes(
-											checkbox.value
+											checkbox.value as string
 										) }
 										key={ i }
 										className={ 'sortable-pins-checkbox' }
@@ -388,7 +390,7 @@ export const PinCard = ( props: {
 													itemTags: updateMapFilter(
 														itemData.properties
 															?.itemTags,
-														checkbox.value,
+														checkbox.value || '',
 														isChecked
 													),
 												},
@@ -409,7 +411,7 @@ export const PinCard = ( props: {
 									<CheckboxControl
 										label={ checkbox.value }
 										checked={ itemData.properties?.itemFilters?.includes(
-											checkbox.value
+											checkbox.value as string
 										) }
 										key={ i }
 										className={ 'sortable-pins-checkbox' }
@@ -422,7 +424,7 @@ export const PinCard = ( props: {
 														updateMapFilter(
 															itemData.properties
 																?.itemFilters,
-															checkbox.value,
+															checkbox.value as string,
 															isChecked
 														),
 												},

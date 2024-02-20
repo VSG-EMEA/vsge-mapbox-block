@@ -1,7 +1,7 @@
 import { Listing } from '../Listing/';
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing, MountedMapsContextValue } from '../../types';
-import type { RefObject } from 'react';
+import type { MutableRefObject, RefObject } from 'react';
 import { getListing } from '../Mapbox/utils';
 import { useMapboxContext } from '../Mapbox/MapboxContext';
 import { __ } from '@wordpress/i18n';
@@ -22,7 +22,7 @@ import './style.scss';
  */
 function Listings( props: {
 	listings: MapBoxListing[];
-	map: mapboxgl.Map;
+	map: MutableRefObject< mapboxgl.Map | null >;
 	mapRef: RefObject< HTMLDivElement >;
 } ) {
 	return (
