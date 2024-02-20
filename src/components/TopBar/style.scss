@@ -1,4 +1,5 @@
 .wp-block-vsge-mapbox .map-wrapper {
+
 	.map-topbar {
 		height: var(--mabox-topbar-height);
 		display: flex;
@@ -16,15 +17,19 @@
 			height: var(--mabox-topbar-height);
 		}
 
-		.components-select-control select {
-			height: var(--mabox-topbar-height);
-			font-family: var(--font__family);
-			font-weight: 500;
-			text-overflow: ellipsis;
-		}
+		.components {
 
-		.components-input-control__backdrop {
-			border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
+			&-select-control select {
+				height: var(--mabox-topbar-height);
+				font-family: var(--font__family);
+				font-weight: 500;
+				text-overflow: ellipsis;
+			}
+
+			&-input-control__backdrop {
+				border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
+			}
+
 		}
 
 		button {

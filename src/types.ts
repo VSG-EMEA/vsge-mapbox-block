@@ -65,8 +65,8 @@ export type MapAttributes = {
 
 export type MountedMapsContextValue = {
 	map: MutableRefObject< mapboxgl.Map | null >;
-	lngLat?: LngLatLike;
-	setLngLat: Dispatch< SetStateAction< LngLatLike > >;
+	lngLat?: LngLat;
+	setLngLat: Dispatch< SetStateAction< LngLat > >;
 	listings: MapBoxListing[];
 	filteredListings: MapBoxListing[];
 	setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
@@ -74,13 +74,12 @@ export type MountedMapsContextValue = {
 	geoCoder?: MapboxGeocoder;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
-	markersRef: MutableRefObject< HTMLDivElement[] >;
+	markersRef: MutableRefObject< HTMLButtonElement[] >;
 	geocoderRef?: RefObject< HTMLDivElement >;
 	loaded: boolean;
 	setLoaded: Dispatch< SetStateAction< boolean > >;
 	mapDefaults?: MapboxBlockDefaults;
 	mapIcons?: MarkerIcon[];
-	Provider: ComponentType;
 };
 
 export type selectOptions = {
@@ -102,6 +101,7 @@ export interface MapItem extends Feature {
 export interface MapBoxListing {
 	id: number;
 	type: string;
+	text?: string;
 	properties: MarkerProps;
 	geometry: {
 		type: string;
@@ -128,6 +128,8 @@ export interface MapBoxListing {
  * @property {string[]} filters     the filters
  */
 export interface MarkerProps {
+	category?: string; // search results
+	maki?: string; // search result
 	name: string;
 	description?: string;
 	phone?: string;
@@ -154,11 +156,6 @@ export interface MarkerPropsStyle {
 	color?: string;
 	size?: number;
 	children?: JSX.Element;
-}
-
-export interface SearchMarkerProps extends MarkerProps {
-	category: string;
-	maki: string;
 }
 
 export interface MarkerHTMLElement extends HTMLElement {
