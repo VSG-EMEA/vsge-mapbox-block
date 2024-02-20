@@ -539,7 +539,13 @@ export const PinCard = ( props: {
 											color={
 												itemData.properties?.iconColor
 											}
-											onChangeComplete={ setMarkerColor }
+											onChangeComplete={ ( color ) =>
+												setMarkerColor(
+													color as {
+														hex: string;
+													}
+												)
+											}
 										/>
 									</Popover>
 								) }
