@@ -77,21 +77,12 @@ export const TopBar = ( attributes: {
 	const [ tag, setTag ] = useState( '' );
 
 	useEffect( () => {
-		if ( filter === '' ) {
-			// if no filter is present, reset the filter list
-			if ( filteredListings.length > 0 ) {
-				setFilteredListings( [] );
-			}
-		} else if ( listings && listings.length > 0 ) {
-			// if a filter is present, filter the listings
-			setFilteredListings(
-				filterListingsBy( listings, 'itemFilters', filter )
-			);
-		}
-	}, [ filter ] );
+		// if a filter is selected, filter the listings by filter
+		setFilteredListings( filterListingsBy( listings, { filter, tag } ) );
+	}, [ filter, tag ] );
 
 	// if no special stuff is required, return null
-	return (
+	return mapRef?.current && map?.current ? (
 		<div
 			className={
 				fitView || filtersEnabled || tagsEnabled
@@ -99,26 +90,30 @@ export const TopBar = ( attributes: {
 					: 'map-topbar-hidden'
 			}
 		>
-			{ filteredListings.length > 0 ? (
-				<Button
-					icon={ resetIcon }
-					isSmall={ true }
-					className={ 'reset-filters' }
-					onClick={ () => {
-						removePopups( mapRef );
-						setFilteredListings( [] );
-						setListings( attributes.mapboxOptions.listings );
-					} }
-				>
-					{ __( 'Reset Filters', 'vsge-mapbox-block' ) }
-				</Button>
-			) : null }
-			{ fitView ? (
+			<Button
+				icon={ resetIcon }
+				hidden={ filteredListings.length !== listings.length }
+				isSmall={ true }
+				className={ 'reset-filters' }
+				onClick={ () => {
+					mapRef?.current && removePopups( mapRef.current );
+					setFilteredListings( [] );
+					setListings( attributes.mapboxOptions.listings );
+				} }
+			>
+				{ __( 'Reset Filters', 'vsge-mapbox-block' ) }
+			</Button>
+
+			{ fitView && map ? (
 				<Button
 					icon={ centerViewIcon }
 					isSmall={ true }
 					className={ 'fit-view' }
-					onClick={ () => fitInView( map, listings, mapRef ) }
+					onClick={ () =>
+						mapRef?.current &&
+						map?.current &&
+						fitInView( map.current, listings, mapRef.current )
+					}
 				>
 					{ __( 'Fit View', 'vsge-mapbox-block' ) }
 				</Button>
@@ -131,7 +126,7 @@ export const TopBar = ( attributes: {
 					options={ [
 						{
 							value: '',
-							label: 'Select a filter',
+							label: __( 'Select a filter' ),
 						},
 						...topbarBuildSelectFromArray( mapboxOptions.filters ),
 					] }
@@ -147,8 +142,7 @@ export const TopBar = ( attributes: {
 					options={ [
 						{
 							value: '',
-							label: 'Select a tag',
-							disabled: true,
+							label: __( 'Select a tag' ),
 						},
 						...topbarBuildSelectFromArray( mapboxOptions.tags ),
 					] }
@@ -157,5 +151,5 @@ export const TopBar = ( attributes: {
 				/>
 			) : null }
 		</div>
-	);
+	) : null;
 };
