@@ -13,9 +13,11 @@ import {
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import type { Context, MutableRefObject } from 'react';
+import { __ } from '@wordpress/i18n';
 
-export const MapboxContext: Context< MountedMapsContextValue > =
-	createContext( undefined );
+export const MapboxContext = createContext< null | MountedMapsContextValue >(
+	null
+);
 
 /**
  * This is a MapProvider component that provides a Mapbox context to its children.
@@ -53,31 +55,29 @@ export function MapProvider( {
 	const mapIcons = attributes.mapboxOptions.icons;
 
 	const mapRef = useRef< HTMLDivElement >( null );
-	const geocoderRef = useRef< HTMLDivElement >( null );
+	const geocoderRef = useRef< HTMLDivElement | null >( null );
 	const markersRef = useRef< HTMLButtonElement[] >( [] );
 
 	return (
 		<MapboxContext.Provider
-			value={
-				{
-					map,
-					lngLat,
-					setLngLat,
-					listings,
-					setListings,
-					filteredListings,
-					setFilteredListings,
-					loaded,
-					setLoaded,
-					mapDefaults,
-					mapRef,
-					geoCoder,
-					setGeoCoder,
-					geocoderRef,
-					markersRef,
-					mapIcons,
-				} as MountedMapsContextValue
-			}
+			value={ {
+				map,
+				lngLat,
+				setLngLat,
+				listings,
+				setListings,
+				filteredListings,
+				setFilteredListings,
+				loaded,
+				setLoaded,
+				mapDefaults,
+				mapRef,
+				geoCoder,
+				setGeoCoder,
+				geocoderRef,
+				markersRef,
+				mapIcons,
+			} }
 		>
 			{ children }
 		</MapboxContext.Provider>
@@ -91,9 +91,9 @@ export function MapProvider( {
  */
 export function useMapboxContext() {
 	const context = useContext( MapboxContext );
-	if ( context === undefined ) {
+	if ( context === null ) {
 		throw new Error(
-			'useMapboxContext must be used within a MapboxProvider'
+			__( 'useMapboxContext must be used within a MapboxProvider' )
 		);
 	}
 	return context;
