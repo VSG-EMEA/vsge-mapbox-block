@@ -3,9 +3,9 @@ export const EmailAddr = ( {
 	label,
 	className,
 }: {
-	emailAddress: string;
-	label: string;
-	className: string;
+	emailAddress?: string;
+	label?: string;
+	className?: string;
 } ) => {
 	if ( ! emailAddress ) return null;
 	return (

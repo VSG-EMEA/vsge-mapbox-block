@@ -3,9 +3,9 @@ export const Phone = ( {
 	label,
 	className,
 }: {
-	phone: string;
-	label: string;
-	className: string;
+	phone?: string;
+	label?: string;
+	className?: string;
 } ) => {
 	if ( ! phone ) {
 		return null;

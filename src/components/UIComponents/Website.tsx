@@ -3,9 +3,9 @@ export const Website = ( {
 	text,
 	className,
 }: {
-	websiteUri: string;
-	text: string;
-	className: string;
+	websiteUri?: string;
+	text?: string;
+	className?: string;
 } ) => {
 	if ( ! websiteUri ) return null;
 	return (

@@ -3,14 +3,13 @@ export const AddressLine = ( {
 	country,
 	city,
 	countryCode,
-	className,
+	className = 'address-line',
 }: {
 	address?: string;
 	country?: string;
 	city?: string;
 	countryCode?: string;
-	label: string;
-	className: string;
+	className?: string;
 } ) => {
 	if ( ! address ) return null;
 	return (

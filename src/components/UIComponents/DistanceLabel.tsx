@@ -5,9 +5,9 @@ export const DistanceLabel = ( {
 	label,
 	className,
 }: {
-	distance: number | null;
-	label: string;
-	className: string;
+	distance?: number | null;
+	label?: string;
+	className?: string;
 } ) => {
 	if ( ! distance ) return null;
 	return (
