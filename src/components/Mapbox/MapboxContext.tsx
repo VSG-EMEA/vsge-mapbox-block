@@ -47,9 +47,9 @@ export function MapProvider( {
 	const [ listings, setListings ] = useState(
 		attributes.mapboxOptions.listings as MapBoxListing[]
 	);
-	const [ filteredListings, setFilteredListings ] = useState(
-		[] as MapBoxListing[]
-	);
+	const [ filteredListings, setFilteredListings ] = useState<
+		MapBoxListing[] | null
+	>( null );
 	const [ loaded, setLoaded ] = useState( false );
 	const mapDefaults = getMapDefaults();
 	const mapIcons = attributes.mapboxOptions.icons;

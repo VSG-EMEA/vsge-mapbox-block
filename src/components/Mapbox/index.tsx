@@ -1,6 +1,11 @@
 import { Map } from './Map';
 import { TopBar } from '../TopBar';
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import {
+	createRef,
+	useCallback,
+	useEffect,
+	useState,
+} from '@wordpress/element';
 import { useMapboxContext } from './MapboxContext';
 import { getListing, getMarkerData } from './utils';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
@@ -69,9 +74,9 @@ export function MapBox( {
 		setLoaded,
 		mapIcons,
 	}: MountedMapsContextValue = useMapboxContext();
-	const [ lastChangedElements, setLastChangedElements ] = useState<
-		null | MapBoxListing[]
-	>( null );
+	const [ updatedPin, setUpdatedPin ] = useState< null | MapBoxListing[] >(
+		null
+	);
 
 	/**
 	 * Updates the markers on the map based on the given list of stores.
@@ -165,7 +170,7 @@ export function MapBox( {
 					newTempMarker,
 				];
 
-				setLastChangedElements( [ newTempMarker ] );
+				setUpdatedPin( [ newTempMarker ] );
 				setListings( newListings );
 				return;
 			}
@@ -215,6 +220,7 @@ export function MapBox( {
 				map.current
 			) {
 				// prints the popup that allow the user to find a location
+				const popupRef = createRef< HTMLDivElement | null >();
 				addPopup(
 					map.current,
 					markerData,
@@ -225,7 +231,8 @@ export function MapBox( {
 						setFilteredListings={ setFilteredListings }
 						mapRef={ mapRef.current }
 						map={ map.current }
-					/>
+					/>,
+					popupRef.current
 				);
 				return;
 			}
@@ -235,7 +242,8 @@ export function MapBox( {
 			 */
 			if ( markerData?.type === 'Feature' && map.current ) {
 				// popup the marker data on the currentMap
-				addPopup( map.current, markerData );
+				const popupRef = createRef< HTMLDivElement | null >();
+				addPopup( map.current, markerData, null, popupRef.current );
 			}
 		},
 		[ map, mapRef, listings, setFilteredListings ]
@@ -286,26 +294,27 @@ export function MapBox( {
 
 	useEffect( () => {
 		if ( loaded && map.current ) {
-			if ( lastChangedElements ) {
-				updateMarkers( lastChangedElements );
-				setLastChangedElements( null );
-			} else if ( filteredListings.length > 0 ) {
+			// update a single pin
+			if ( updatedPin ) {
+				updateMarkers( updatedPin );
+				setUpdatedPin( null );
+			} else if ( filteredListings && filteredListings?.length > 0 ) {
 				// removes all markers from the map if they aren't listed in the filtered list
 				listings?.forEach( ( listing ) => {
 					// check if the listing is in the filtered list otherwise remove it
 					if (
-						! filteredListings.find( ( filteredListing ) => {
-							return listing.id === filteredListing.id;
-						} )
+						! filteredListings.find( ( l ) => l.id === listing.id )
 					) {
 						removeMarkerEl(
 							listing.id,
 							mapRef?.current as HTMLDivElement
 						);
+					} else {
+						updateMarkers( [ listing ] );
 					}
 				} );
 			} else {
-				updateMarkers( getListing( listings, filteredListings ) );
+				updateMarkers( listings );
 			}
 		}
 	}, [ loaded, listings, filteredListings ] );
