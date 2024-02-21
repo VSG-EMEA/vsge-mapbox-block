@@ -10,6 +10,8 @@ import { useMapboxContext } from '../Mapbox/MapboxContext';
 import { __ } from '@wordpress/i18n';
 import { removePopups } from '../Popup/';
 import './style.scss';
+import { MapButton } from '../UIComponents/MapButton';
+import { MapSelectControl } from '../UIComponents/MapSelect';
 
 /**
  * trasform an array of strings into a select values that could be used with select control
@@ -23,7 +25,7 @@ function topbarBuildSelectFromArray(
 	selectValues: FilterCollection[]
 ): { label: string; value: string }[] {
 	return selectValues.map( ( item ) => {
-		return { label: item.value ?? '', value: item.value ?? '' };
+		return { label: item.value, value: item.value };
 	} );
 }
 
@@ -78,7 +80,13 @@ export const TopBar = ( attributes: {
 
 	useEffect( () => {
 		// if a filter is selected, filter the listings by filter
-		setFilteredListings( filterListingsBy( listings, { filter, tag } ) );
+		if ( filter === '' && tag === '' ) {
+			setFilteredListings( null );
+		} else {
+			setFilteredListings(
+				filterListingsBy( listings, { tag, filter } )
+			);
+		}
 	}, [ filter, tag ] );
 
 	// if no special stuff is required, return null
@@ -90,24 +98,22 @@ export const TopBar = ( attributes: {
 					: 'map-topbar-hidden'
 			}
 		>
-			<Button
+			<MapButton
 				icon={ resetIcon }
-				hidden={ filteredListings.length !== listings.length }
-				isSmall={ true }
+				hidden={ filteredListings?.length !== listings.length }
 				className={ 'reset-filters' }
 				onClick={ () => {
 					if ( mapRef?.current ) removePopups( mapRef.current );
-					setFilteredListings( [] );
+					setFilteredListings( null );
 					setListings( attributes.mapboxOptions.listings );
 				} }
 			>
 				{ __( 'Reset Filters', 'vsge-mapbox-block' ) }
-			</Button>
+			</MapButton>
 
 			{ fitView && map ? (
-				<Button
+				<MapButton
 					icon={ centerViewIcon }
-					isSmall={ true }
 					className={ 'fit-view' }
 					onClick={ () =>
 						mapRef?.current &&
@@ -116,11 +122,11 @@ export const TopBar = ( attributes: {
 					}
 				>
 					{ __( 'Fit View', 'vsge-mapbox-block' ) }
-				</Button>
+				</MapButton>
 			) : null }
 
 			{ filtersEnabled ? (
-				<SelectControl
+				<MapSelectControl
 					className={ 'mapbox-map-filter filter-by-partnership' }
 					value={ filter }
 					options={ [
@@ -130,13 +136,14 @@ export const TopBar = ( attributes: {
 						},
 						...topbarBuildSelectFromArray( mapboxOptions.filters ),
 					] }
-					onChange={ ( selected ) => setFilter( selected ) }
-					__nextHasNoMarginBottom
+					onChange={ ( selected ) =>
+						setFilter( selected.target.value )
+					}
 				/>
 			) : null }
 
 			{ tagsEnabled ? (
-				<SelectControl
+				<MapSelectControl
 					className={ 'mapbox-map-filter filter-by-tag' }
 					value={ tag }
 					options={ [
@@ -146,8 +153,9 @@ export const TopBar = ( attributes: {
 						},
 						...topbarBuildSelectFromArray( mapboxOptions.tags ),
 					] }
-					onChange={ ( selected ) => setTag( selected ) }
-					__nextHasNoMarginBottom
+					onChange={ ( selected ) =>
+						setFilter( selected.target.value )
+					}
 				/>
 			) : null }
 		</div>
