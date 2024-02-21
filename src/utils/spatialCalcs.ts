@@ -1,6 +1,6 @@
 import { Coord, distance, Units } from '@turf/turf';
-import { CoordinatesDef, MapBoxListing, MapItem } from '../types';
-import { LngLatBoundsLike, LngLatLike, Point } from 'mapbox-gl';
+import { MapBoxListing, MapItem } from '../types';
+import { LngLatBoundsLike } from 'mapbox-gl';
 
 /**
  * This function takes a user's location and an array of stores, calculates the distance between the
@@ -8,7 +8,7 @@ import { LngLatBoundsLike, LngLatLike, Point } from 'mapbox-gl';
  *
  * @param {Coord}     result      The result parameter is an object that represents the coordinates of a
  *                                location, typically obtained from a user's device or input.
- * @param {MapItem[]} storesArray is an array of objects representing stores, where
+ * @param {MapItem[]|null} storesArray is an array of objects representing stores, where
  *                                each object has a `geometry` property containing the coordinates of the store's location. The
  *                                function calculates the distance between the `result` coordinates and each store's location, and
  *                                adds a `distance` property to each store object with the
@@ -17,9 +17,13 @@ import { LngLatBoundsLike, LngLatLike, Point } from 'mapbox-gl';
  */
 export function locateNearestStore(
 	result: Coord,
-	storesArray: MapBoxListing[]
-) {
+	storesArray: MapBoxListing[] | null
+): MapBoxListing[] {
 	const options: { units: Units | undefined } = { units: 'kilometers' };
+
+	if ( storesArray === null ) {
+		return [];
+	}
 
 	storesArray = storesArray
 		.filter( ( store ) => store.type === 'Feature' )
@@ -60,7 +64,10 @@ export function locateNearestStore(
  * the bounding box, and the second array contains the coordinates of the upper right corner of the
  * bounding box.
  */
-export function getBbox( listing1, listing2 ): LngLatBoundsLike {
+export function getBbox(
+	listing1: { type?: string; coordinates: any },
+	listing2: { type?: string; coordinates: any }
+): LngLatBoundsLike {
 	const lats = [ listing1.coordinates[ 1 ], listing2.coordinates[ 1 ] ];
 
 	const lng = [ listing1.coordinates[ 0 ], listing2.coordinates[ 0 ] ];
@@ -92,12 +99,12 @@ export function getBbox( listing1, listing2 ): LngLatBoundsLike {
 /**
  * Removes the "distance" property from each listing in the provided array.
  *
- * @param {MapBoxListing[] | null} filteredListings - The array of listings to remove the "distance" property from.
- * @return {MapBoxListing[] | undefined} The updated array of listings without the "distance" property.
+ * @param {MapBoxListing[]} filteredListings - The array of listings to remove the "distance" property from.
+ * @return {MapBoxListing[]} The updated array of listings without the "distance" property.
  */
 export function clearListingsDistances(
-	filteredListings: MapBoxListing[] | null
-) {
+	filteredListings: MapBoxListing[]
+): MapBoxListing[] {
 	return filteredListings?.map( ( listing ) => {
 		delete listing.properties.distance;
 		return listing;
