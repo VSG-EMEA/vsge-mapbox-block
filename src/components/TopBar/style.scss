@@ -1,5 +1,4 @@
 .wp-block-vsge-mapbox .map-wrapper {
-
 	.map-topbar {
 		height: var(--mabox-topbar-height);
 		display: flex;
@@ -18,18 +17,19 @@
 		}
 
 		.components {
-
-			&-select-control select {
+			&-select-control {
 				height: var(--mabox-topbar-height);
 				font-family: var(--font__family);
 				font-weight: 500;
 				text-overflow: ellipsis;
+				margin: 0 0.25rem;
+				padding-left: 0.25rem;
+				padding-right: 0.25rem;
 			}
 
 			&-input-control__backdrop {
 				border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
 			}
-
 		}
 
 		button {
