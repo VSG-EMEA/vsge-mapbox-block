@@ -17,13 +17,13 @@ import { MapBoxListing, MarkerIcon } from '../../types';
  */
 export function mapMarker(
 	listing: MapBoxListing,
-	markersRef: HTMLDivElement[],
+	markersRef: HTMLButtonElement[],
 	icons: MarkerIcon[]
 ): void {
 	// Check if the coordinates are valid
 	if ( areValidCoordinates( listing?.geometry?.coordinates ) ) {
 		// Render a Marker Component on our new DOM node
-		markersRef[ listing.id ] = document.createElement( 'div' );
+		markersRef[ listing.id ] = document.createElement( 'button' );
 		markersRef[ listing.id ].id = 'marker-' + listing.id;
 		markersRef[ listing.id ].className = `marker-${ safeSlug(
 			listing.type

@@ -1,8 +1,7 @@
 import { getNextId } from '../../utils/dataset';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
-import type { RefObject } from 'react';
-import { MapboxBlockDefaults, MapBoxListing } from '../../types';
+import { MapboxBlockDefaults, MapBoxListing, MarkerProps } from '../../types';
 import { geoMarkerStyle } from '../Marker/defaults';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import { removePopups, showNearestStore } from '../Popup/';
@@ -15,32 +14,32 @@ import './style.scss';
 /**
  * Initializes the geocoder for the map.
  *
- * @param                                         mapboxgl
- * @param {mapboxgl.Map}                          map                 - The Mapbox map object.
- * @param                                         map.current
- * @param {RefObject<HTMLDivElement>} mapRef              - The ref object for the map container.
- * @param                                         markersRef
- * @param {RefObject<HTMLDivElement>} geocoderRef         - The ref object for the geocoder container.
- * @param {MapBoxListing[]}           listings            - The array of mapbox listings.
- * @param {MapBoxListing[]}                filteredListings    - The array of filtered mapbox listings.
- * @param {(listings: MapBoxListing[]) => void}   setFilteredListings - The function to set the filtered listings.
- * @param                                         mapDefaults
+ * @param                                       mapboxgl
+ * @param {mapboxgl.Map}                        map                 - The Mapbox map object.
+ * @param                                       map.current         - The Mapbox current instance.
+ * @param {HTMLDivElement}                      mapRef              - The ref object for the map container.
+ * @param                                       markersRef          - The ref object for the markers' container.
+ * @param {HTMLDivElement}                      geocoderRef         - The ref object for the geocoder container.
+ * @param {MapBoxListing[]}                     listings            - The array of mapbox listings.
+ * @param {MapBoxListing[]}                     filteredListings    - The array of filtered mapbox listings.
+ * @param {(listings: MapBoxListing[] | null) => void} setFilteredListings - The function to set the filtered listings.
+ * @param                                       mapDefaults
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
  */
 export function initGeoCoder(
 	mapboxgl: any,
 	map: mapboxgl.Map,
 	mapRef: HTMLDivElement,
-	markersRef: HTMLDivElement[],
+	markersRef: HTMLButtonElement[],
 	geocoderRef: HTMLDivElement,
 	listings: MapBoxListing[],
-	filteredListings: MapBoxListing[],
-	setFilteredListings: ( listings: MapBoxListing[] ) => void,
+	filteredListings: MapBoxListing[] | null,
+	setFilteredListings: ( listings: MapBoxListing[] | null ) => void,
 	mapDefaults: MapboxBlockDefaults
 ): MapboxGeocoder | undefined {
 	const geomarkerListing = initGeoMarker( getNextId( listings ), markersRef );
 
-	const marker: mapboxgl.Marker = {
+	const marker = {
 		element: geomarkerListing,
 		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
 		draggable: true,
@@ -52,7 +51,7 @@ export function initGeoCoder(
 		const geocoder = new MapboxGeocoder( {
 			accessToken: mapDefaults.accessToken,
 			mapboxgl,
-			marker,
+			marker: mapboxgl.Marker,
 			language: mapDefaults.language || 'en',
 			placeholder: __( 'Find the nearest store', 'vsge-mapbox-block' ),
 			types: DEFAULT_GEOCODER_TYPE_SEARCH,
@@ -72,9 +71,8 @@ export function initGeoCoder(
 			geocoderRef?.classList.add( 'disabled' );
 
 			// Reset the displayed listings
-			if ( filteredListings.length > 0 ) {
-				setFilteredListings( [] );
-			}
+			setFilteredListings( null );
+
 			// Remove the search result
 			searchResult = undefined;
 			// Remove the popup, if any
@@ -91,11 +89,6 @@ export function initGeoCoder(
 				'geocoder-marker',
 			] );
 			removePopups( mapRef );
-
-			// if there are no filtered listings, copy the listings to the filtered listings
-			if ( ! filteredListings?.length ) {
-				filteredListings = listings as MapBoxListing[];
-			}
 
 			// save the search results
 			searchResult = ev.result;
@@ -133,7 +126,18 @@ export function initGeoCoder(
 				} );
 
 				const newFilteredListings = showNearestStore(
-					searchResult,
+					{
+						...searchResult,
+						id: getNextId( filteredListings ),
+						properties: searchResult.properties as MarkerProps,
+						geometry: {
+							coordinates: [
+								geoMarker.getLngLat().lng,
+								geoMarker.getLngLat().lat,
+							],
+							type: 'Point',
+						},
+					},
 					sortedNearestStores,
 					mapRef,
 					map

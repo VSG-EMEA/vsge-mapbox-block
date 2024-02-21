@@ -54,4 +54,72 @@
 			background: var(--mapbox--color--gray-light);
 		}
 	}
+
+	/**
+   * Mapbox Sidebar Listing
+   */
+	.mapbox-sidebar-feature {
+		cursor: pointer;
+		position: relative;
+		border-bottom: 1px solid var(--mapbox--color--gray-200);
+		padding: 1.3rem 1rem;
+		margin: 0 4px 4px 0;
+		border-radius: 4px;
+		background: var(--mapbox--color--gray-100);
+		text-decoration: none;
+
+		&__inner {
+			display: flex;
+			gap: 0.5rem;
+		}
+
+		&:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+		}
+
+		.title {
+			display: block;
+			color: var(--mapbox--color--gray-dark);
+			font-weight: 600;
+			font-size: 1.2rem;
+			line-height: 1.2;
+			margin: 0 0 0.5rem;
+			transition: 0.3s;
+
+			small {
+				font-weight: 400;
+			}
+		}
+
+		svg {
+			align-self: flex-start;
+			min-width: 32px;
+		}
+
+		p.partnership {
+			line-height: 15px;
+			margin: 0;
+			font-size: 11px;
+			text-transform: uppercase;
+			color: var(--mapbox--color--gray-dark);
+		}
+
+		p,
+		a {
+			line-height: 18px;
+			margin: 0;
+			font-size: 0.75rem;
+			color: var(--mapbox--color--gray-dark);
+		}
+
+		&.active-store .title,
+		.title:hover {
+			color: var(--mapbox--color--primary-accent);
+		}
+
+		&.active-store {
+			background-color: var(--mapbox--color--gray-100);
+		}
+	}
 }

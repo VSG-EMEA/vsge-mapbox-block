@@ -24,9 +24,6 @@ export function recenterView( map: mapboxgl.Map, defaults: any ): any {
  *
  * @param                  map         - The mapboxgl.Map object that represents the map instance on which the flyToStore
  *                                     function will be called.
- * @param {CoordinatesDef} coordinates - The coordinates parameter is a variable that represents the
- *                                     latitude and longitude of a location on a map. It is used to set the center of the map when the
- *                                     flyToStore function is called.
  * @param                  store
  * @param {number}         [zoom=8]    - The zoom parameter is a number that determines the level of zoom for the
  *                                     map. A higher number means the map will be more zoomed in, while a lower number means the map will

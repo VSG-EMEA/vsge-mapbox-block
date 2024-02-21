@@ -137,9 +137,9 @@ export function getMarkerData(
  */
 export function getListing(
 	listings: MapBoxListing[],
-	filteredListings: MapBoxListing[]
+	filteredListings: MapBoxListing[] | null
 ): MapBoxListing[] {
-	return filteredListings.length > 0 ? filteredListings : listings;
+	return filteredListings?.length ? filteredListings : listings;
 }
 
 /**

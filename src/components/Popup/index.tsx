@@ -1,11 +1,11 @@
-import { createRef, createRoot } from '@wordpress/element';
+import { createRef, createRoot, useRef } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
-import { PopupContent, SearchPopup } from './PopupContent';
+import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
-import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { SEARCH_RESULTS_SHOWN } from '../../constants';
 import './style.scss';
+import { SearchPopup } from './SearchPopup';
 
 /**
  * This function adds a popup to a Mapbox map with custom content or default content based on a
@@ -20,23 +20,24 @@ import './style.scss';
  *                                             that can be passed as a child to the `PopupCustom` component. If provided, it will be rendered
  *                                             inside the popup. If not provided, the `PopupContent` component will be rendered with the properties
  *                                             of the `marker` object.
+ * @param popupRef
  * @return A `mapboxgl.Popup` object is being returned.
  */
 export function addPopup(
 	map: mapboxgl.Map,
-	marker: MapBoxListing | MapboxGeocoder.Result,
-	children: JSX.Element | null = null
+	marker: MapBoxListing,
+	children: JSX.Element | null = null,
+	popupRef: HTMLDivElement | null = null
 ): mapboxgl.Popup | null {
 	if ( ! marker ) {
 		/* eslint-disable no-console */
 		console.error( 'Marker not found', marker );
 		return null;
 	}
-	const popupRef = createRef< HTMLDivElement | null >();
 
 	// Create a new DOM root and save it to the React ref
-	popupRef.current = document.createElement( 'div' );
-	const root = createRoot( popupRef.current );
+	popupRef = document.createElement( 'div' );
+	const root = createRoot( popupRef );
 
 	// Render a Marker Component on our new DOM node
 	root.render(
@@ -49,7 +50,7 @@ export function addPopup(
 					( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,
 		  } )
 				.setLngLat( marker?.geometry?.coordinates as CoordinatesDef )
-				.setDOMContent( popupRef.current )
+				.setDOMContent( popupRef )
 				.addTo( map )
 		: null;
 }
@@ -73,14 +74,14 @@ export function removePopups( mapRef: HTMLDivElement ) {
 /**
  * Displays the nearest store and updates the filtered listings.
  *
- * @param {MapboxGeocoder.Result}     location            - The location object.
- * @param {MapBoxListing[]}           sortedNearestStores - The sorted list of nearest stores.
- * @param {RefObject<HTMLDivElement>} mapRef              - The reference to the map container.
- * @param                             map                 The map object.
- * @param                             map.current
+ * @param {MapboxGeocoder.Result} location            - The location object.
+ * @param {MapBoxListing[]}       sortedNearestStores - The sorted list of nearest stores.
+ * @param {HTMLDivElement}        mapRef              - The reference to the map container.
+ * @param                         map                 The map object.
+ * @param                         map.current
  */
 export function showNearestStore(
-	location: MapboxGeocoder.Result,
+	location: MapBoxListing,
 	sortedNearestStores: MapBoxListing[],
 	mapRef: HTMLDivElement,
 	map: mapboxgl.Map
@@ -92,20 +93,23 @@ export function showNearestStore(
 	removePopups( mapRef as HTMLDivElement );
 
 	/* Open a popup for the closest store. */
+	const popupStoreRef = createRef< HTMLDivElement | null >();
 	addPopup(
 		map,
 		location,
 		<SearchPopup
 			icon={ 'home' }
-			name={ location.text }
+			name={ location.properties?.name }
 			category={ location.properties?.category }
 			maki={ location.properties?.maki }
 			draggable={ true }
-		/>
+		/>,
+		popupStoreRef.current
 	);
 
 	/* Open a popup for the closest store. */
-	addPopup( map, newFilteredListings[ 0 ] );
+	const popupRef = createRef< HTMLDivElement | null >();
+	addPopup( map, newFilteredListings[ 0 ], null, popupRef.current );
 
 	/** Highlight the listing for the closest store. */
 	mapRef

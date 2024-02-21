@@ -20,7 +20,8 @@ export const EmailAddr = ( {
 	if ( ! emailAddress ) return null;
 	return (
 		<p className={ 'mbb-email-address ' + className }>
-			{ label }: <a href={ 'mailto:' + emailAddress }>{ emailAddress }</a>
+			<b>{ label }: </b>
+			<a href={ 'mailto:' + emailAddress }>{ emailAddress }</a>
 		</p>
 	);
 };

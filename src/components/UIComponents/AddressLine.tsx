@@ -14,19 +14,23 @@ export const AddressLine = ( {
 	country = '',
 	city = '',
 	countryCode = '',
+	postalCode = '',
 	className = 'address-line',
 }: {
 	address?: string;
 	country?: string;
 	city?: string;
 	countryCode?: string;
+	postalCode?: string;
 	className?: string;
 } ): JSX.Element | null => {
 	if ( ! address && ! city && ! country ) return null;
 	return (
 		<p className={ 'mbb-address ' + className }>
 			{ address ? address + <br /> : null }
-			{ city } { country } { countryCode && `(${ countryCode })` }
+			{ city }
+			{ postalCode ? ' (' + postalCode + ')' : null } { country }{ ' ' }
+			{ countryCode && `(${ countryCode })` }
 		</p>
 	);
 };
