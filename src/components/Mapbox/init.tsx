@@ -71,7 +71,7 @@ export function initMap(
 					mapboxOptions.listings as Feature< GeoJSON.Geometry >[]
 				),
 			},
-		} );
+		} as any );
 
 		// Add a layer showing the places.
 		map.addLayer( {
