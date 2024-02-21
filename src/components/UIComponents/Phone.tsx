@@ -21,7 +21,7 @@ export const Phone = ( {
 	}
 	return (
 		<p className={ 'mbb-phone ' + className }>
-			{ label }: <a href={ 'tel:' + phone }>{ phone }</a>
+			<b>{ label }: </b> <a href={ 'tel:' + phone }>{ phone }</a>
 		</p>
 	);
 };
