@@ -8,7 +8,7 @@ import { __ } from '@wordpress/i18n';
 import { flyToStore } from '../../utils/view';
 import { PopupContent } from '../Popup/PopupContent';
 import './style.scss';
-import { LinkTo } from '../UIComponents/Website';
+import { LinkTo } from '../UIComponents/LinkTo';
 import { Phone } from '../UIComponents/Phone';
 import { AddressLine } from '../UIComponents/AddressLine';
 import { EmailAddr } from '../UIComponents/EmailAddr';

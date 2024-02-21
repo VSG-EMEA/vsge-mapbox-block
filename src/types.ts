@@ -19,7 +19,7 @@ export type MapboxBlockDefaults = {
 
 export type TagArray = string[] | undefined;
 
-export type FilterCollection = { id: number; value?: string };
+export type FilterCollection = { id: number; value: string };
 export type TagCollection = { id: number; tag: string };
 
 export interface SortableProps {
@@ -68,9 +68,9 @@ export type MountedMapsContextValue = {
 	lngLat?: LngLat;
 	setLngLat: Dispatch< SetStateAction< LngLat > >;
 	listings: MapBoxListing[];
-	filteredListings: MapBoxListing[];
+	filteredListings: MapBoxListing[] | null;
 	setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
-	setFilteredListings: Dispatch< MapBoxListing[] >;
+	setFilteredListings: Dispatch< MapBoxListing[] | null >;
 	geoCoder?: MapboxGeocoder;
 	setGeoCoder?: SetStateAction< any >;
 	mapRef?: RefObject< HTMLDivElement >;
