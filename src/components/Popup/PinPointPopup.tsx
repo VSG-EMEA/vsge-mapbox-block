@@ -10,9 +10,9 @@ export function PinPointPopup( props: {
 	map: mapboxgl.Map;
 	location: CoordinatesDef;
 	mapRef: HTMLDivElement;
-	listings: MapBoxListing[];
+	listings: MapBoxListing[] | null;
 	setListings: Dispatch< MapBoxListing[] >;
-	setFilteredListings: Dispatch< MapBoxListing[] >;
+	setFilteredListings: Dispatch< MapBoxListing[] | null >;
 } ): JSX.Element | null {
 	const { location, map, mapRef, listings, setFilteredListings } = props;
 
@@ -27,7 +27,7 @@ export function PinPointPopup( props: {
 				<button
 					onClick={ () => {
 						// get the current temp pin data
-						const currentPinData = listings.find( ( listing ) => {
+						const currentPinData = listings?.find( ( listing ) => {
 							return listing.type === MARKER_TYPE_TEMP;
 						} );
 						if ( ! currentPinData ) {
@@ -69,7 +69,7 @@ export function PinPointPopup( props: {
 				<button
 					onClick={ () => {
 						removePopups( mapRef );
-						setFilteredListings( [] );
+						setFilteredListings( null );
 					} }
 				>
 					Reset

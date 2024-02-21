@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 import { Phone } from '../UIComponents/Phone';
 import { EmailAddr } from '../UIComponents/EmailAddr';
 import { DistanceLabel } from '../UIComponents/DistanceLabel';
-import { LinkTo } from '../UIComponents/Website';
+import { LinkTo } from '../UIComponents/LinkTo';
 import { AddressLine } from '../UIComponents/AddressLine';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
@@ -53,6 +53,13 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 					) : (
 						<h3 className={ 'popup-name' }>{ name }</h3>
 					) }
+
+					<LinkTo
+						websiteUri={ website }
+						text={ company }
+						className={ 'popup-website' }
+					/>
+
 					<Phone
 						phone={ phone }
 						label={ __( 'Phone', 'vsge-mapbox-block' ) }
@@ -71,12 +78,6 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 						country={ country }
 						countryCode={ countryCode }
 						postalCode={ postalCode }
-					/>
-
-					<LinkTo
-						websiteUri={ website }
-						text={ company }
-						className={ 'popup-website' }
 					/>
 
 					<EmailAddr
