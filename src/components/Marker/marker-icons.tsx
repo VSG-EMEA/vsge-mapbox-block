@@ -1,10 +1,6 @@
 import { Path, SVG } from '@wordpress/components';
 import { MarkerPropsStyle } from '../../types';
-import {
-	DEFAULT_COLOR,
-	DEFAULT_COLOR_ALT,
-	DEFAULT_SIZE,
-} from '../../constants';
+import { DEFAULT_COLOR, DEFAULT_COLOR_ALT, ICON_SIZE } from '../../constants';
 
 /**
  * Generates a custom marker style with the given children, color, and size.
@@ -30,7 +26,7 @@ with a default color of red and size of 48. The component takes in an optional `
 `color` and `size` property that can be used to customize the color and size of the marker. The SVG
 image is defined using the `Path` and `SVG` components from the `@wordpress/components` library. */
 export const DefaultMarker = ( props: MarkerPropsStyle ) => {
-	const { color = DEFAULT_COLOR, size = DEFAULT_SIZE } = props;
+	const { color = DEFAULT_COLOR, size = ICON_SIZE } = props;
 	return (
 		<SVG
 			xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +44,7 @@ export const DefaultMarker = ( props: MarkerPropsStyle ) => {
 };
 
 export const PinPoint = ( props: MarkerPropsStyle ) => {
-	const { color = DEFAULT_COLOR_ALT, size = DEFAULT_SIZE } = props;
+	const { color = DEFAULT_COLOR_ALT, size = ICON_SIZE } = props;
 	return (
 		<SVG
 			enableBackground="new 0 0 32 32"
