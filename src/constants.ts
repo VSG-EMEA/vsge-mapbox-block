@@ -14,9 +14,10 @@ export const SEARCH_RESULTS_SHOWN: number = 5;
 
 export const DEFAULT_COLOR = '#004a83';
 export const DEFAULT_COLOR_ALT = '#004a83';
-export const DEFAULT_SIZE: number = 48;
 export const ICON_SIZE: number = 36;
-export const DEFAULT_GEOCODER_TYPE_SEARCH: string = 'country,region,postcode';
+// https://docs.mapbox.com/api/search/geocoding/#data-types
+export const DEFAULT_GEOCODER_TYPE_SEARCH: string =
+	'country,region,postcode,place,locality,poi';
 
 /**
  * Markers

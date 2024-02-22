@@ -51,6 +51,8 @@ export function locateNearestStore(
 		return 0; // a must be equal to b
 	} );
 
+	console.log( storesArray );
+
 	return storesArray;
 }
 

@@ -224,6 +224,7 @@ export function MapBox( {
 				addPopup(
 					map.current,
 					markerData,
+					popupRef.current,
 					<PinPointPopup
 						location={ markerCoordinates ?? clickedPoint }
 						listings={ listings }
@@ -231,8 +232,7 @@ export function MapBox( {
 						setFilteredListings={ setFilteredListings }
 						mapRef={ mapRef.current }
 						map={ map.current }
-					/>,
-					popupRef.current
+					/>
 				);
 				return;
 			}
@@ -243,7 +243,7 @@ export function MapBox( {
 			if ( markerData?.type === 'Feature' && map.current ) {
 				// popup the marker data on the currentMap
 				const popupRef = createRef< HTMLDivElement | null >();
-				addPopup( map.current, markerData, null, popupRef.current );
+				addPopup( map.current, markerData, popupRef.current );
 			}
 		},
 		[ map, mapRef, listings, setFilteredListings ]
@@ -280,7 +280,6 @@ export function MapBox( {
 						markersRef.current,
 						geocoderRef.current,
 						listings,
-						filteredListings,
 						setFilteredListings,
 						mapDefaults
 					)

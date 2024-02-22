@@ -33,7 +33,6 @@ export function initGeoCoder(
 	markersRef: HTMLButtonElement[],
 	geocoderRef: HTMLDivElement,
 	listings: MapBoxListing[],
-	filteredListings: MapBoxListing[] | null,
 	setFilteredListings: ( listings: MapBoxListing[] | null ) => void,
 	mapDefaults: MapboxBlockDefaults
 ): MapboxGeocoder | undefined {
@@ -51,7 +50,7 @@ export function initGeoCoder(
 		const geocoder = new MapboxGeocoder( {
 			accessToken: mapDefaults.accessToken,
 			mapboxgl,
-			marker: mapboxgl.Marker,
+			marker: marker as unknown as mapboxgl.Marker,
 			language: mapDefaults.language || 'en',
 			placeholder: __( 'Find the nearest store', 'vsge-mapbox-block' ),
 			types: DEFAULT_GEOCODER_TYPE_SEARCH,
@@ -102,7 +101,7 @@ export function initGeoCoder(
 
 				const sortedNearestStores = locateNearestStore(
 					searchResult.geometry,
-					filteredListings
+					listings
 				);
 
 				// @ts-ignore
@@ -116,19 +115,20 @@ export function initGeoCoder(
 					// Remove the active class from the geocoder
 					geocoder.clear();
 				};
+
 				geoMarker.on( 'dragend', () => {
 					// Update the marker's position
 					const lngLat = geoMarker.getLngLat();
 					// Update the marker's position
 					geoMarker.setLngLat( lngLat );
-
+					// Center the map
 					flyToStore( map, geoMarker );
 				} );
 
 				const newFilteredListings = showNearestStore(
 					{
 						...searchResult,
-						id: getNextId( filteredListings ),
+						id: getNextId( listings ),
 						properties: searchResult.properties as MarkerProps,
 						geometry: {
 							coordinates: [

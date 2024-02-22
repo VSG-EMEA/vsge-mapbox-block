@@ -5,6 +5,7 @@ import { MARKER_TYPE_TEMP } from '../../constants';
 import { locateNearestStore } from '../../utils/spatialCalcs';
 import { removePopups, showNearestStore } from './index';
 import type { Dispatch } from 'react';
+import { Result } from '@mapbox/mapbox-gl-geocoder';
 
 export function PinPointPopup( props: {
 	map: mapboxgl.Map;
@@ -22,7 +23,9 @@ export function PinPointPopup( props: {
 
 	return (
 		<div className={ 'mapbox-popup-inner mapbox-popup-newpin' }>
-			<h3>{ __( 'My location', 'vsge-mapbox-block' ) }</h3>
+			<h3 className={ 'mapbox-popup-newpin-title' }>
+				{ __( 'My location', 'vsge-mapbox-block' ) }
+			</h3>
 			<div className={ 'mapbox-popup-newpin-buttons' }>
 				<button
 					onClick={ () => {
@@ -41,7 +44,7 @@ export function PinPointPopup( props: {
 							listings
 						);
 						// create a new temp pin
-						const myLocationPin: MapBoxListing = {
+						const myLocationPin = {
 							...currentPinData,
 							text: __( 'My location', 'vsge-mapbox-block' ),
 							geometry: {
@@ -55,7 +58,7 @@ export function PinPointPopup( props: {
 							},
 						};
 						const sortedListings = showNearestStore(
-							myLocationPin,
+							myLocationPin as Result & MapBoxListing,
 							sortedNearestStores,
 							mapRef,
 							map

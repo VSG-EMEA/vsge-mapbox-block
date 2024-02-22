@@ -30,9 +30,11 @@ export function SearchPopup( props: MarkerProps ): JSX.Element {
 					<Icon icon={ mapMarker } size={ ICON_SIZE } />
 				) }
 			</div>
-			<div>
-				<span title={ category }>{ category }</span>
-				<h3>{ name }</h3>
+			<div className={ 'mapbox-popup-content' }>
+				<h3 className={ 'mapbox-popup-name' }>{ name }</h3>
+				<span className={ 'mapbox-popup-category' } title={ category }>
+					{ category }
+				</span>
 			</div>
 		</div>
 	);

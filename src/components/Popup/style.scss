@@ -1,5 +1,6 @@
 /* Marker tweaks */
 .wp-block-vsge-mapbox .map-wrapper {
+
 	.map .mapboxgl-popup {
 		padding-bottom: 50px;
 
@@ -32,6 +33,10 @@
 			padding-right: 2rem;
 			width: 100%;
 
+			p {
+				padding: 0;
+			}
+
 			&.mapbox-popup-search {
 				flex-direction: column;
 				text-align: center;
@@ -46,6 +51,7 @@
 			}
 
 			&.mapbox-popup-newpin {
+
 				.mapbox-popup-newpin-buttons {
 					display: flex;
 					justify-content: space-between;
@@ -78,8 +84,10 @@
 }
 
 .wp-block-vsge-mapbox .map-wrapper {
+
 	.mapbox-sidebar-feature,
 	.mapbox-popup-wrap {
+
 		.filter-list {
 			display: flex;
 			flex-direction: column;
