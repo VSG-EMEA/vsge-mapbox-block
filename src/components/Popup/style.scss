@@ -32,6 +32,10 @@
 			padding-right: 2rem;
 			width: 100%;
 
+			p {
+				padding: 0;
+			}
+
 			&.mapbox-popup-search {
 				flex-direction: column;
 				text-align: center;
