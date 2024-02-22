@@ -22,7 +22,7 @@
 			&-select-control {
 				height: var(--mabox-topbar-height);
 				min-width: 120px;
-				font-size: var(--wp--preset--font-size--medium);
+				font-size: var(--wp--preset--font-size--normal);
 				font-family: var(--mapbox--font-family);
 				border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
 				font-weight: 500;
@@ -37,7 +37,7 @@
 		}
 
 		button {
-			font-size: var(--wp--preset--font-size--medium);
+			font-size: var(--wp--preset--font-size--normal);
 			font-family: var(--mapbox--font-family);
 			background: var(--wp--preset--color--white);
 			border: 1px solid var(--wp--preset--color--cyan-bluish-gray);
