@@ -27,9 +27,23 @@ export const AddressLine = ( {
 	if ( ! address && ! city && ! country ) return null;
 	return (
 		<p className={ 'mbb-address ' + className }>
-			{ address ? address + <br /> : null }
-			{ city }
-			{ postalCode ? ' (' + postalCode + ')' : null } { country }{ ' ' }
+			{ address && <>{ address }, </> }
+			{ city && (
+				<>
+					{ city }
+					<br />
+				</>
+			) }
+			{ postalCode && (
+				<>
+					{ postalCode } <br />
+				</>
+			) }
+			{ country && (
+				<>
+					{ country } <br />
+				</>
+			) }
 			{ countryCode && `(${ countryCode })` }
 		</p>
 	);
