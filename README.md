@@ -73,6 +73,11 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) 
 
 Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
 
+# Screenshots
+![image](https://github.com/VSG-EMEA/vsge-mapbox-block/assets/8550908/57c6dda4-5aae-498c-b0dd-79e8a272df39)
+![image](https://github.com/VSG-EMEA/vsge-mapbox-block/assets/8550908/bf279618-850e-4aa7-b4c5-846d6a0fcbd3)
+
+
 ## Support
 
 If you have any questions or need assistance, please open an issue in this repository, and we'll be happy to help.
