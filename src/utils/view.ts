@@ -11,10 +11,17 @@ import { MapBoxListing } from '../types';
  * @return The `recenterView` function is returning a call to the `flyTo` method of the `map` object
  * with an object argument containing the `center` and `zoom` properties.
  */
-export function recenterView( map: mapboxgl.Map, defaults: any ): any {
+export function recenterView(
+	map: mapboxgl.Map,
+	defaults: {
+		latitude: number;
+		longitude: number;
+		zoom?: number;
+	}
+): any {
 	return map.flyTo( {
 		center: [ defaults.latitude, defaults.longitude ],
-		zoom: defaults.zoom,
+		zoom: defaults.zoom ?? 10,
 	} );
 }
 
@@ -42,6 +49,10 @@ export function flyToStore(
 			center: store.geometry.coordinates,
 			zoom,
 		} );
+	recenterView( map, {
+		latitude: store.geometry.coordinates[ 1 ],
+		longitude: store.geometry.coordinates[ 0 ],
+	} );
 }
 
 /**
