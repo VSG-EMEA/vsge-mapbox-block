@@ -16,9 +16,9 @@ export const LinkTo = ( {
 	text?: string;
 	className?: string;
 } ): JSX.Element | null => {
-	return (
+	return text ? (
 		<b className={ 'mbb-link ' + className }>
-			{ text ? <a href={ '//' + websiteUri }> { text } </a> : text }
+			{ websiteUri ? <a href={ '//' + websiteUri }> { text } </a> : text }
 		</b>
-	);
+	) : null;
 };
