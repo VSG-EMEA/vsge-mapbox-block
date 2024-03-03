@@ -1,3 +1,5 @@
+import { __ } from '@wordpress/i18n';
+
 /**
  * Renders a phone number with label as a link for calling.
  *
@@ -21,7 +23,14 @@ export const Phone = ( {
 	}
 	return (
 		<p className={ 'mbb-phone ' + className }>
-			<b>{ label }: </b> <a href={ 'tel:' + phone }>{ phone }</a>
+			<b>{ label }: </b>{ ' ' }
+			<a
+				href={ 'tel:' + phone }
+				title={ __( 'Call ' ) + phone }
+				rel="noreferrer noopener"
+			>
+				{ phone }
+			</a>
 		</p>
 	);
 };

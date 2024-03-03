@@ -1,3 +1,5 @@
+import { __ } from '@wordpress/i18n';
+
 /**
  * Renders an email address with an optional label and CSS class.
  *
@@ -21,7 +23,14 @@ export const EmailAddr = ( {
 	return (
 		<p className={ 'mbb-email-address ' + className }>
 			<b>{ label }: </b>
-			<a href={ 'mailto:' + emailAddress }>{ emailAddress }</a>
+			<a
+				href={ 'mailto:' + emailAddress }
+				target={ '_blank' }
+				title={ __( 'Email ' ) + emailAddress }
+				rel="noreferrer noopener"
+			>
+				{ emailAddress }
+			</a>
 		</p>
 	);
 };
