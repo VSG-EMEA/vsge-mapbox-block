@@ -5,6 +5,7 @@
  * Description: VSGE - mapbox block
  * Author:            codekraft
  * Text Domain:       vsge-mapbox-block
+ * Domain Path:       /languages
  */
 define( 'VSGE_MB_PLUGIN_DIR', __DIR__ );
 define( 'VSGE_MB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

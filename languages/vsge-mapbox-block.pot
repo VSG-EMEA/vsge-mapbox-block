@@ -1,215 +1,282 @@
+# Copyright (C) 2024 vsge-mapbox-block
+# This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=utf-8\n"
-"X-Generator: babel-plugin-makepot\n"
+"Project-Id-Version: vsge-mapbox-block 0.1.0\n"
+"Report-Msgid-Bugs-To: codekraft <EMAIL>\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"POT-Creation-Date: 2024-03-17T12:11:29.340Z\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"Last-Translator: codekraft <EMAIL>\n"
+"Language-Team: codekraft <EMAIL>\n"
+"X-Generator: @wp-blocks/make-pot 1.0.2\n"
+"Language: en\n"
+"domain: X-Domain: vsge-mapbox-block\n"
 
-#: src/components/Edit/Edit.tsx:162
-msgid "Enable Sidebar"
+#: vsge-mapbox-block.php
+#. Name of the plugin
+msgid "vsge-mapbox-block"
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:177
-msgid "Enable Geocoder"
+#: vsge-mapbox-block.php
+#. Author URI of the plugin
+msgid "undefined"
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:188
-msgid "Enable Filters"
+#: vsge-mapbox-block.php
+#. Description of the plugin
+msgid "VSGE - mapbox block"
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:198
-msgid "Enable Tag"
+#: vsge-mapbox-block.php
+#. Author of the plugin
+msgid "codekraft"
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:208
-msgid "Enable fitView"
+#: block.json
+#. title
+msgid "title"
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:219
-msgid "Enable Elevation"
+#: block.json
+#. description
+msgid "description"
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:230
-msgid "Enable camera 3d rotation"
+#: block.json
+#. keywords
+msgid "keywords"
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:243
-msgid "Enable Zoom with mouse wheel"
+#: src\components\UIComponents\Phone.tsx:29
+msgid "Call "
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:257
-msgid "Camera Options"
+#: src\components\UIComponents\EmailAddr.tsx:29
+msgid "Email "
 msgstr ""
 
-#: src/components/Edit/Edit.tsx:266
-msgid "Get Current view"
-msgstr ""
-
-#: src/components/Edit/Edit.tsx:269
-msgid "Camera Fine tuning"
-msgstr ""
-
-#: src/components/Edit/Edit.tsx:271
-msgid "Latitude"
-msgstr ""
-
-#: src/components/Edit/Edit.tsx:289
-msgid "Longitude"
-msgstr ""
-
-#: src/components/Edit/Edit.tsx:381
-msgid "Map Height"
-msgstr ""
-
-#: src/components/Edit/EditPanelIcons.tsx:120
-#: src/components/Sortable/index.tsx:222
-msgid "Add new"
-msgstr ""
-
-#: src/components/Edit/EditPanelIcons.tsx:32
-msgid "Delete icon"
-msgstr ""
-
-#: src/components/Edit/EditPanelIcons.tsx:41
-msgid "Marker Name"
-msgstr ""
-
-#: src/components/Edit/EditPanelIcons.tsx:51
-msgid "svg markup"
-msgstr ""
-
-#: src/components/Edit/EditPanelIcons.tsx:89
-msgid "New Marker "
-msgstr ""
-
-#: src/components/Geocoder/init.ts:61
-msgid "Find the nearest store"
-msgstr ""
-
-#: src/components/Listing/index.tsx:162
-#: src/components/Popup/PopupContent.tsx:112
-msgid "Distance: "
-msgstr ""
-
-#: src/components/Popup/PopupContent.tsx:195
-msgid "My location"
-msgstr ""
-
-#: src/components/Popup/PopupContent.tsx:196
-msgid "Clicked Pin"
-msgstr ""
-
-#: src/components/Popup/PopupContent.tsx:219
-msgid "Find the nearest store?"
-msgstr ""
-
-#: src/components/Popup/PopupContent.tsx:65
-msgid "Phone: "
-msgstr ""
-
-#: src/components/Popup/PopupContent.tsx:72
-msgid "Mobile: "
-msgstr ""
-
-#: src/components/Sidebar/index.tsx:69
-msgid "no listings found"
-msgstr ""
-
-#: src/components/Sortable/IconPreview.tsx:26
-msgid "error 😥"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:132
-#: src/components/Sortable/index.tsx:153
-msgid "New"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:144
-msgid "type"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:163
-msgid "lat"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:182
-msgid "lang"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:216
-msgid "Add Pin"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:225
-msgid "Name"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:240
-msgid "Phone"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:254
-msgid "Mobile"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:268
-msgid "Email"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:282
-msgid "website"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:296
-msgid "City"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:310
-msgid "Country"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:324
-msgid "Postal Code"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:338
-msgid "Country Code"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:352
-msgid "Address"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:405
-msgid "Filters"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:465
-msgid "Select a Marker"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:473
-msgid "Default"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:503
-msgid "Marker"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:545
-msgid "Reset"
-msgstr ""
-
-#: src/components/Sortable/SortablePins.tsx:554
-msgid "Save"
-msgstr ""
-
-#: src/components/Sortable/index.tsx:130
-msgid "New Marker"
-msgstr ""
-
-#: src/components/TopBar/index.tsx:113
+#: src\components\TopBar\index.tsx:111
 msgid "Reset Filters"
 msgstr ""
 
-#: src/components/TopBar/index.tsx:123
+#: src\components\TopBar\index.tsx:124
 msgid "Fit View"
+msgstr ""
+
+#: src\components\TopBar\index.tsx:135
+msgid "Select a filter"
+msgstr ""
+
+#: src\components\TopBar\index.tsx:152
+msgid "Select a tag"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:134
+#: src\components\Sortable\index.tsx:156
+msgid "New"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:146
+msgid "type"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:165
+msgid "lat"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:184
+msgid "lang"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:218
+msgid "Add Pin"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:227
+msgid "Name"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:242
+msgid "Company"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:257
+#: src\components\Popup\PopupContent.tsx:65
+msgid "Phone"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:271
+#: src\components\Popup\PopupContent.tsx:70
+msgid "Mobile"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:285
+#: src\components\Sidebar\Listing.tsx:149
+#: src\components\Popup\PopupContent.tsx:85
+msgid "Email"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:299
+msgid "website"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:313
+msgid "City"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:327
+msgid "Country"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:341
+msgid "Postal Code"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:355
+msgid "Country Code"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:369
+msgid "Address"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:422
+msgid "Filters"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:482
+msgid "Select a Marker"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:490
+msgid "Default"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:520
+msgid "Marker"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:568
+msgid "Reset"
+msgstr ""
+
+#: src\components\Sortable\SortablePins.tsx:577
+msgid "Save"
+msgstr ""
+
+#: src\components\Sortable\index.tsx:131
+msgid "New Marker"
+msgstr ""
+
+#: src\components\Sortable\index.tsx:227
+#: src\components\Edit\EditPanelIcons.tsx:119
+msgid "Add new"
+msgstr ""
+
+#: src\components\Sortable\IconPreview.tsx:28
+msgid "error ??"
+msgstr ""
+
+#: src\components\Sidebar\Listing.tsx:155
+msgid "Distance: "
+msgstr ""
+
+#: src\components\Sidebar\index.tsx:34
+msgid "no listings found"
+msgstr ""
+
+#: src\components\Popup\PopupContent.tsx:95
+msgid "Distance"
+msgstr ""
+
+#: src\components\Popup\PinPointPopup.tsx:57
+msgid "My location"
+msgstr ""
+
+#: src\components\Popup\PinPointPopup.tsx:70
+msgid "Find the nearest store?"
+msgstr ""
+
+#: src\components\Mapbox\MapboxContext.tsx:96
+msgid "useMapboxContext must be used within a MapboxProvider"
+msgstr ""
+
+#: src\components\Geocoder\init.ts:55
+msgid "Find the nearest store"
+msgstr ""
+
+#: src\components\Edit\EditPanelIcons.tsx:32
+msgid "Delete icon"
+msgstr ""
+
+#: src\components\Edit\EditPanelIcons.tsx:41
+msgid "Marker Name"
+msgstr ""
+
+#: src\components\Edit\EditPanelIcons.tsx:51
+msgid "svg markup"
+msgstr ""
+
+#: src\components\Edit\EditPanelIcons.tsx:89
+msgid "New Marker "
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:162
+msgid "Enable Sidebar"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:180
+msgid "Enable Geocoder"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:194
+msgid "Enable Filters"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:207
+msgid "Enable Tag"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:217
+msgid "Enable fitView"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:231
+msgid "Enable Elevation"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:245
+msgid "Enable camera 3d rotation"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:261
+msgid "Enable Zoom with mouse wheel"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:278
+msgid "Camera Options"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:287
+msgid "Get Current view"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:291
+msgid "Camera Fine tuning"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:294
+msgid "Latitude"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:312
+msgid "Longitude"
+msgstr ""
+
+#: src\components\Edit\Edit.tsx:404
+msgid "Map Height"
 msgstr ""
