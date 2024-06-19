@@ -1,5 +1,6 @@
 {
-  "apiVersion": 2,
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
   "name": "vsge/mapbox",
   "title": "MapBox",
   "description": "A block that displays the map using mapbox",
@@ -8,17 +9,27 @@
   ],
 
   "category": "embed",
-  "editorStyle": [
-    "file:./build/vendors.css",
-    "file:./build/mapbox-block.css"
-  ],
-  "style": [
-    "file:./build/vendors.css",
-    "file:./build/mapbox-frontend.css"
-  ],
   "supports": {
+    "html": false,
     "align": true,
-    "className": true,
+    "dimensions": {
+      "minHeight": true
+    },
+    "color": {
+      "text": true,
+      "background": true,
+      "link": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontStyle": true,
+      "__experimentalFontWeight": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalTextTransform": true,
+      "__experimentalTextDecoration": true
+    },
     "spacing": {
       "margin": true,
       "padding": true,
@@ -100,12 +111,9 @@
       }
     }
   },
-  "viewScript": [
-    "vsge-mapbox-vendors",
-    "vsge-mapbox-frontend"
-  ],
-  "editorScript": [
-    "vsge-mapbox-vendors",
-    "vsge-mapbox-block"
-  ]
+  "viewScript": "file:./frontend.js",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-frontend.css",
+  "render": "file:./render.php"
 }
