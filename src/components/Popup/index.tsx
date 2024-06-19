@@ -101,7 +101,7 @@ export function showNearestStore(
 			icon={ 'home' }
 			name={ location?.place_name }
 			category={
-				location.properties?.category || location.place_type[ 0 ]
+				location.properties?.category || location?.place_type[ 0 ]
 			}
 			maki={ location.properties?.maki }
 			draggable={ true }

@@ -1,9 +1,8 @@
 import type { Feature, Geometry } from '@turf/turf';
-import mapboxgl, { LngLat, LngLatLike } from 'mapbox-gl';
+import mapboxgl, { LngLat } from 'mapbox-gl';
 import type {
-	MutableRefObject,
-	ComponentType,
 	Dispatch,
+	MutableRefObject,
 	RefObject,
 	SetStateAction,
 } from 'react';

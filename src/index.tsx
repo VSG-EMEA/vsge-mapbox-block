@@ -1,9 +1,6 @@
 import { registerBlockType } from '@wordpress/blocks';
 
 /** add styles to bundle */
-import 'mapbox-gl/dist/mapbox-gl.css';
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-
 import './style/admin.scss';
 
 /** the edit function */
@@ -13,7 +10,7 @@ import Edit from './edit';
 import Save from './save';
 
 /** Block settings */
-import blockConfig from '../block.json';
+import blockConfig from './block.json';
 
 const jsonData = blockConfig as Record< string, any >;
 
