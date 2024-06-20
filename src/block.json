@@ -7,7 +7,6 @@
   "keywords": [
     "mapbox"
   ],
-
   "category": "embed",
   "supports": {
     "html": false,
@@ -65,10 +64,6 @@
       "type": "string",
       "default": "satellite-streets-v12"
     },
-    "mapHeight": {
-      "type": "number",
-      "default": "80vh"
-    },
     "sidebarEnabled": {
       "type": "boolean",
       "default": false
@@ -113,7 +108,7 @@
   },
   "viewScript": "file:./frontend.js",
   "editorScript": "file:./index.js",
-  "editorStyle": "file:./index.css",
-  "style": "file:./style-frontend.css",
+  "editorStyle": "file:./style-index.css",
+  "viewStyle": ["file:./style-frontend.css", "file:./frontend.css"],
   "render": "file:./render.php"
 }
