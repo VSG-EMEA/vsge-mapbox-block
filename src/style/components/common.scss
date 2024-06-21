@@ -15,9 +15,13 @@
 	--mapbox--font-family: var(--typography--font--default);
 }
 
-.wp-block-vsge-mapbox .map-wrapper {
-	font-size: 13px;
-	color: var(--mapbox--color--gray-dark);
+.wp-block-vsge-mapbox {
+	display: flex;
+
+	.map-wrapper {
+		font-size: 13px;
+		color: var(--mapbox--color--gray-dark);
+	}
 
 	a {
 		text-decoration: inherit;
