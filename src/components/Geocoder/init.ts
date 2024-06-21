@@ -10,20 +10,21 @@ import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { initGeoMarker } from '../Marker/Geomarker';
 import './style.scss';
+import type mapboxgl from 'mapbox-gl';
 
 /**
  * Initializes the geocoder for the map.
  *
- * @param                                       mapboxgl
- * @param {mapboxgl.Map}                        map                 - The Mapbox map object.
- * @param                                       map.current         - The Mapbox current instance.
- * @param {HTMLDivElement}                      mapRef              - The ref object for the map container.
- * @param                                       markersRef          - The ref object for the markers' container.
- * @param {HTMLDivElement}                      geocoderRef         - The ref object for the geocoder container.
- * @param {MapBoxListing[]}                     listings            - The array of mapbox listings.
- * @param {MapBoxListing[]}                     filteredListings    - The array of filtered mapbox listings.
+ * @param                                              mapboxgl
+ * @param {mapboxgl.Map}                               map                 - The Mapbox map object.
+ * @param                                              map.current         - The Mapbox current instance.
+ * @param {HTMLDivElement}                             mapRef              - The ref object for the map container.
+ * @param                                              markersRef          - The ref object for the markers' container.
+ * @param {HTMLDivElement}                             geocoderRef         - The ref object for the geocoder container.
+ * @param {MapBoxListing[]}                            listings            - The array of mapbox listings.
+ * @param {MapBoxListing[]}                            filteredListings    - The array of filtered mapbox listings.
  * @param {(listings: MapBoxListing[] | null) => void} setFilteredListings - The function to set the filtered listings.
- * @param                                       mapDefaults
+ * @param                                              mapDefaults
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
  */
 export function initGeoCoder(

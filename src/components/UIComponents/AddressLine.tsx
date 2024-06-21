@@ -24,7 +24,9 @@ export const AddressLine = ( {
 	postalCode?: string;
 	className?: string;
 } ): JSX.Element | null => {
-	if ( ! address && ! city && ! country ) return null;
+	if ( ! address && ! city && ! country ) {
+		return null;
+	}
 	return (
 		<p className={ 'mbb-address ' + className }>
 			{ address && <>{ address }, </> }

@@ -1,10 +1,10 @@
+import './style.scss';
 import { createRef, createRoot } from '@wordpress/element';
 import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
 import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
 import { SEARCH_RESULTS_SHOWN } from '../../constants';
-import './style.scss';
 import { SearchPopup } from './SearchPopup';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
@@ -37,7 +37,7 @@ export function removePopups( mapRef: HTMLDivElement ) {
  *                                             that can be passed as a child to the `PopupCustom` component. If provided, it will be rendered
  *                                             inside the popup. If not provided, the `PopupContent` component will be rendered with the properties
  *                                             of the `marker` object.
- * @param popupRef
+ * @param                      popupRef
  * @return A `mapboxgl.Popup` object is being returned.
  */
 export function addPopup(

@@ -19,7 +19,9 @@ export const EmailAddr = ( {
 	label?: string;
 	className?: string;
 } ): JSX.Element | null => {
-	if ( ! emailAddress ) return null;
+	if ( ! emailAddress ) {
+		return null;
+	}
 	return (
 		<p className={ 'mbb-email-address ' + className }>
 			<b>{ label }: </b>
