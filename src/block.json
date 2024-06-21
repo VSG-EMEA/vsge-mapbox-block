@@ -1,6 +1,6 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 3,
+  "apiVersion": 2,
   "name": "vsge/mapbox",
   "title": "MapBox",
   "description": "A block that displays the map using mapbox",
@@ -38,11 +38,11 @@
   "attributes": {
     "longitude": {
       "type": "number",
-      "default": 15.0
+      "default": 11.3
     },
     "latitude": {
       "type": "number",
-      "default": 45.0
+      "default": 44.5
     },
     "pitch": {
       "type": "number",
@@ -104,11 +104,19 @@
         "filters": [],
         "icons": []
       }
+    },
+    "style": {
+      "type": "object",
+      "default": {
+        "dimensions": {
+          "minHeight": "80vh"
+        }
+      }
     }
   },
-  "viewScript": "file:./frontend.js",
-  "editorScript": "file:./index.js",
-  "editorStyle": "file:./style-index.css",
-  "viewStyle": ["file:./style-frontend.css", "file:./frontend.css"],
+  "viewScript": ["file:./vendors.js", "file:./frontend.js"],
+  "editorScript": ["file:./vendors.js", "file:./index.js"],
+  "editorStyle": ["file:./vendors.css","file:./index.css"],
+  "viewStyle": ["file:./vendors.css","file:./frontend.css"],
   "render": "file:./render.php"
 }

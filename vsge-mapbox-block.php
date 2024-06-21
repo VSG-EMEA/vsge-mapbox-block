@@ -7,13 +7,13 @@
  * Text Domain:       vsge-mapbox-block
  * Domain Path:       /languages
  */
-define( 'VSGE_MB_PLUGIN_DIR', __DIR__ );
-define( 'VSGE_MB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define('VSGE_MB_PLUGIN_DIR', __DIR__);
+define('VSGE_MB_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 /* Adding actions to the init hook. */
-add_action( 'init', function () {
-	register_block_type( VSGE_MB_PLUGIN_DIR . '/build' );
-	}
+add_action('init', function () {
+	register_block_type(VSGE_MB_PLUGIN_DIR . '/build');
+}
 );
 
 /**
@@ -34,7 +34,7 @@ function vsge_get_token(): string {
  * @return void
  */
 function vsge_mapbox_block_scripts(): void {
-	echo '<script id="vsge-mapbox-block-data">var mapboxBlockData = ' . json_encode( array( 'siteurl' => get_option( 'siteurl' ), 'accessToken' => vsge_get_token(), 'language' => get_locale() ) ) . ' </script>';
+	echo '<script id="vsge-mapbox-block-data">var mapboxBlockData = ' . json_encode(array('siteurl' => get_option('siteurl'), 'accessToken' => vsge_get_token(), 'language' => get_locale())) . ' </script>';
 }
-add_action( 'wp_footer', 'vsge_mapbox_block_scripts' );
-add_action( 'admin_footer', 'vsge_mapbox_block_scripts' );
+add_action('wp_footer', 'vsge_mapbox_block_scripts');
+add_action('admin_footer', 'vsge_mapbox_block_scripts');
