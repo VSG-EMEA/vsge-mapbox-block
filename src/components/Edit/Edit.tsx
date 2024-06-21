@@ -1,10 +1,8 @@
 import { useMapboxContext } from '../Mapbox/MapboxContext';
 import { useEffect } from '@wordpress/element';
 import { MapBox } from '../Mapbox';
-import mapboxgl from 'mapbox-gl';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
-	__experimentalUnitControl as UnitControl,
 	Button,
 	Panel,
 	PanelBody,
@@ -26,6 +24,7 @@ import {
 import classNames from 'classnames';
 import { getMapDefaults } from '../../utils';
 import { EditPanelIcons } from './EditPanelIcons';
+import mapboxgl from 'mapbox-gl';
 
 export function MapEdit( {
 	attributes,
@@ -44,7 +43,6 @@ export function MapEdit( {
 		mapZoom,
 		mapStyle,
 		mapProjection,
-		mapHeight,
 		sidebarEnabled,
 		geocoderEnabled,
 		filtersEnabled,
@@ -57,7 +55,6 @@ export function MapEdit( {
 	}: MapAttributes = attributes;
 
 	const { map, mapRef, loaded, setListings } = useMapboxContext();
-
 	/**
 	 * This function sets options for a Mapbox map and updates the markers accordingly.
 	 *
@@ -86,7 +83,7 @@ export function MapEdit( {
 	 *                                              undefined. It represents the current map object that is being used.
 	 */
 	function pullMapOptions( currentMap: mapboxgl.Map | undefined ) {
-		if ( currentMap )
+		if ( currentMap ) {
 			setAttributes( {
 				...attributes,
 				latitude: currentMap.getCenter().lat,
@@ -95,6 +92,7 @@ export function MapEdit( {
 				bearing: currentMap.getBearing(),
 				mapZoom: currentMap.getZoom(),
 			} );
+		}
 	}
 
 	/**
@@ -107,9 +105,15 @@ export function MapEdit( {
 		// wait 100 ms then resize the map
 		setTimeout( () => {
 			// get the mapRef element width and height
-			if ( mapRef?.current?.style ) map.current?.resize();
+			if ( mapRef?.current?.style ) {
+				map.current?.resize();
+			}
 		}, timeout );
 	}
+
+	useEffect( () => {
+		refreshMap();
+	}, [ loaded ] );
 
 	useEffect( () => {
 		if ( loaded ) {
@@ -280,8 +284,9 @@ export function MapEdit( {
 						<Button
 							variant="secondary"
 							onClick={ () => {
-								if ( map.current )
+								if ( map.current ) {
 									pullMapOptions( map.current );
+								}
 							} }
 						>
 							{ __( 'Get Current view', 'vsge-mapbox-block' ) }
@@ -301,11 +306,12 @@ export function MapEdit( {
 									...attributes,
 									latitude: newValue || 0,
 								} );
-								if ( map.current && newValue )
+								if ( map.current && newValue ) {
 									map.current.setCenter( [
 										newValue,
 										longitude,
 									] );
+								}
 							} }
 						/>
 						<RangeControl
@@ -319,11 +325,12 @@ export function MapEdit( {
 									...attributes,
 									longitude: newValue || 0,
 								} );
-								if ( newValue )
+								if ( newValue ) {
 									map.current?.setCenter( [
 										latitude,
 										newValue,
 									] );
+								}
 							} }
 						/>
 						<RangeControl
@@ -337,8 +344,9 @@ export function MapEdit( {
 									...attributes,
 									pitch: newValue || 0,
 								} );
-								if ( newValue )
+								if ( newValue ) {
 									map.current?.setPitch( newValue );
+								}
 							} }
 						/>
 						<RangeControl
@@ -352,8 +360,9 @@ export function MapEdit( {
 									...attributes,
 									bearing: newValue || 0,
 								} );
-								if ( newValue )
+								if ( newValue ) {
 									map.current?.setBearing( newValue );
+								}
 							} }
 						/>
 						<RangeControl
@@ -367,8 +376,9 @@ export function MapEdit( {
 									...attributes,
 									mapZoom: newValue || 0,
 								} );
-								if ( newValue )
+								if ( newValue ) {
 									map.current?.setZoom( newValue );
+								}
 							} }
 						/>
 						<SelectControl
@@ -380,10 +390,11 @@ export function MapEdit( {
 									...attributes,
 									mapStyle: newValue,
 								} );
-								if ( newValue )
+								if ( newValue ) {
 									map.current?.setStyle(
 										'mapbox://styles/mapbox/' + newValue
 									);
+								}
 							} }
 						/>
 						<SelectControl
@@ -395,18 +406,9 @@ export function MapEdit( {
 									...attributes,
 									mapProjection: newValue,
 								} );
-								if ( newValue )
+								if ( newValue ) {
 									map.current?.setProjection( newValue );
-							} }
-						/>
-						<UnitControl
-							value={ mapHeight }
-							label={ __( 'Map Height', 'vsge-mapbox-block' ) }
-							onChange={ ( newValue ) => {
-								setAttributes( {
-									...attributes,
-									mapHeight: newValue || '',
-								} );
+								}
 							} }
 						/>
 					</PanelBody>
@@ -415,7 +417,7 @@ export function MapEdit( {
 				{ filtersEnabled || tagsEnabled ? (
 					<Panel>
 						<PanelBody title="Filters" icon={ tag }>
-							{ tagsEnabled === true ? (
+							{ tagsEnabled ? (
 								<>
 									<h2>Tags</h2>
 									<Sortable
@@ -474,10 +476,10 @@ export function MapEdit( {
 			</InspectorControls>
 
 			<MapBox
+				mapboxgl={ mapboxgl }
 				attributes={ attributes }
 				mapDefaults={ getMapDefaults() }
 				isEditor={ true }
-				mapboxgl={ mapboxgl }
 			/>
 		</div>
 	);

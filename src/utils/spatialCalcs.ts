@@ -12,15 +12,15 @@ import { LngLatBoundsLike } from 'mapbox-gl';
  *                                each object has a `geometry` property containing the coordinates of the store's location. The
  *                                function calculates the distance between the `result` coordinates and each store's location, and
  *                                adds a `distance` property to each store object with the
+ * @param options - The options parameter is an object that contains the units of measurement for the
  * @return {MapItem[]} the sorted `storesArray` with each store's distance from the `result` location added as a
  * `distance` property to the store object.
  */
 export function locateNearestStore(
 	result: Coord,
-	storesArray: MapBoxListing[] | null
+	storesArray: MapBoxListing[] | null,
+	options: { units: Units | undefined } = { units: 'kilometers' }
 ): MapBoxListing[] {
-	const options: { units: Units | undefined } = { units: 'kilometers' };
-
 	if ( storesArray === null ) {
 		return [];
 	}

@@ -1,4 +1,4 @@
-import { Button, Icon, SelectControl } from '@wordpress/components';
+import { Icon } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import { filterListingsBy, fitInView } from '../../utils/view';
 import {
@@ -103,7 +103,9 @@ export const TopBar = ( attributes: {
 				hidden={ filteredListings?.length !== listings.length }
 				className={ 'reset-filters' }
 				onClick={ () => {
-					if ( mapRef?.current ) removePopups( mapRef.current );
+					if ( mapRef?.current ) {
+						removePopups( mapRef.current );
+					}
 					setFilteredListings( null );
 					setListings( attributes.mapboxOptions.listings );
 				} }

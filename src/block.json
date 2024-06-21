@@ -1,4 +1,5 @@
 {
+  "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 2,
   "name": "vsge/mapbox",
   "title": "MapBox",
@@ -6,19 +7,28 @@
   "keywords": [
     "mapbox"
   ],
-
   "category": "embed",
-  "editorStyle": [
-    "file:./build/vendors.css",
-    "file:./build/mapbox-block.css"
-  ],
-  "style": [
-    "file:./build/vendors.css",
-    "file:./build/mapbox-frontend.css"
-  ],
   "supports": {
+    "html": false,
     "align": true,
-    "className": true,
+    "dimensions": {
+      "minHeight": true
+    },
+    "color": {
+      "text": true,
+      "background": true,
+      "link": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontStyle": true,
+      "__experimentalFontWeight": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalTextTransform": true,
+      "__experimentalTextDecoration": true
+    },
     "spacing": {
       "margin": true,
       "padding": true,
@@ -28,11 +38,11 @@
   "attributes": {
     "longitude": {
       "type": "number",
-      "default": 15.0
+      "default": 11.3
     },
     "latitude": {
       "type": "number",
-      "default": 45.0
+      "default": 44.5
     },
     "pitch": {
       "type": "number",
@@ -53,10 +63,6 @@
     "mapStyle": {
       "type": "string",
       "default": "satellite-streets-v12"
-    },
-    "mapHeight": {
-      "type": "number",
-      "default": "80vh"
     },
     "sidebarEnabled": {
       "type": "boolean",
@@ -98,14 +104,19 @@
         "filters": [],
         "icons": []
       }
+    },
+    "style": {
+      "type": "object",
+      "default": {
+        "dimensions": {
+          "minHeight": "80vh"
+        }
+      }
     }
   },
-  "viewScript": [
-    "vsge-mapbox-vendors",
-    "vsge-mapbox-frontend"
-  ],
-  "editorScript": [
-    "vsge-mapbox-vendors",
-    "vsge-mapbox-block"
-  ]
+  "viewScript": ["file:./vendors.js", "file:./frontend.js"],
+  "editorScript": ["file:./vendors.js", "file:./index.js"],
+  "editorStyle": ["file:./vendors.css","file:./index.css"],
+  "viewStyle": ["file:./vendors.css","file:./frontend.css"],
+  "render": "file:./render.php"
 }

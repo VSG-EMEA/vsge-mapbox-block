@@ -6,7 +6,13 @@ of the `attributes` object. It also contains a `div` with class `map` and a `ref
 import { MountedMapsContextValue } from '../../types';
 import { useMapboxContext } from './MapboxContext';
 
+function randomHash() {
+	return Math.random().toString( 36 ).substring( 2, 9 );
+}
+
 export function Map(): JSX.Element {
 	const { mapRef }: MountedMapsContextValue = useMapboxContext();
-	return <div className={ 'map' } ref={ mapRef } />;
+	return (
+		<div className={ 'map' } id={ 'map-' + randomHash() } ref={ mapRef } />
+	);
 }

@@ -55,7 +55,7 @@ export function MapProvider( {
 	const mapIcons = attributes.mapboxOptions.icons;
 
 	const mapRef = useRef< HTMLDivElement >( null );
-	const geocoderRef = useRef< HTMLDivElement | null >( null );
+	const geocoderRef = useRef< HTMLDivElement >( null );
 	const markersRef = useRef< HTMLButtonElement[] >( [] );
 
 	return (

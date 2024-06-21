@@ -15,7 +15,9 @@ export const DistanceLabel = ( {
 	label?: string;
 	className?: string;
 } ): JSX.Element | null => {
-	if ( ! distance ) return null;
+	if ( ! distance ) {
+		return null;
+	}
 	return (
 		<p className={ 'mbb-distance-label ' + className }>
 			{ label + `: ${ distance.toFixed( 2 ) }Km` }

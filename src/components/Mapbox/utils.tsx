@@ -35,8 +35,9 @@ export function setMapElevation( map: mapboxgl.Map, hasElevation: boolean ) {
 			// unset terrain elevation
 			map.setTerrain();
 			// unload the DEM source
-			if ( map.getSource( 'mapbox-dem' ) )
+			if ( map.getSource( 'mapbox-dem' ) ) {
 				map.removeSource( 'mapbox-dem' );
+			}
 		}
 	}
 }
