@@ -21,20 +21,21 @@ export async function createMapRoot(
 	attributes: MapAttributes
 ) {
 	// initialize the map with React
-	await import( 'mapbox-gl' ).then( ( mapboxgl ) => {
-		const componentRoot = createRoot( el );
-		componentRoot.render(
-			<Suspense fallback={ <Loader wrapperHeight={ '50vh' } /> }>
-				<MapProvider attributes={ attributes }>
-					<MapBox
-						mapboxgl={ mapboxgl.default }
-						attributes={ attributes }
-						mapDefaults={ getMapDefaults() }
-					/>
-				</MapProvider>
-			</Suspense>
-		);
-	} );
+	const mapboxgl = await import(
+		/* webpackChunkName: "mapbox" */ 'mapbox-gl'
+	);
+	const componentRoot = createRoot( el );
+	componentRoot.render(
+		<Suspense fallback={ <Loader wrapperHeight={ '50vh' } /> }>
+			<MapProvider attributes={ attributes }>
+				<MapBox
+					mapboxgl={ mapboxgl.default }
+					attributes={ attributes }
+					mapDefaults={ getMapDefaults() }
+				/>
+			</MapProvider>
+		</Suspense>
+	);
 }
 
 /**

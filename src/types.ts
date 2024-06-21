@@ -1,12 +1,13 @@
 import type { Feature, Geometry } from '@turf/turf';
-import mapboxgl, { LngLat } from 'mapbox-gl';
+import type mapboxgl from 'mapbox-gl';
+import type { LngLat } from 'mapbox-gl';
 import type {
 	Dispatch,
 	MutableRefObject,
 	RefObject,
 	SetStateAction,
 } from 'react';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import type MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 export type CoordinatesDef = [ number, number ];
 
