@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: vsge-mapbox-block
- * Version: 1.0.0
+ * Version: 1.0.1
  * Description: VSGE - mapbox block
  * Author:            codekraft
  * Text Domain:       vsge-mapbox-block
@@ -21,7 +21,8 @@ add_action('init', function () {
  *
  * @return string
  */
-function vsge_get_token(): string {
+function vsge_get_token(): string
+{
 	if (defined('MAPBOX_TOKEN')) {
 		return apply_filters('vsge_mapbox_block_key', MAPBOX_TOKEN);
 	}
@@ -33,8 +34,10 @@ function vsge_get_token(): string {
  *
  * @return void
  */
-function vsge_mapbox_block_scripts(): void {
+function vsge_mapbox_block_scripts(): void
+{
 	echo '<script id="vsge-mapbox-block-data">var mapboxBlockData = ' . json_encode(array('siteurl' => get_option('siteurl'), 'accessToken' => vsge_get_token(), 'language' => get_locale())) . ' </script>';
 }
+
 add_action('wp_footer', 'vsge_mapbox_block_scripts');
 add_action('admin_footer', 'vsge_mapbox_block_scripts');
