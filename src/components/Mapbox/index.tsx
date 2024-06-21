@@ -4,10 +4,11 @@ import {
 	createRef,
 	useCallback,
 	useEffect,
+	useLayoutEffect,
 	useState,
 } from '@wordpress/element';
 import { useMapboxContext } from './MapboxContext';
-import { getListing, getMarkerData } from './utils';
+import { getMarkerData } from './utils';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import { GeoCoder } from '../Geocoder/Geocoder';
 import {
@@ -34,7 +35,6 @@ import { addPopup, removePopups } from '../Popup/';
 import { initMap } from './init';
 import { equalsCheck } from '../../utils';
 import { initGeoCoder } from '../Geocoder/init';
-import './style.scss';
 import { PinPointPopup } from '../Popup/PinPointPopup';
 
 /**
@@ -53,7 +53,7 @@ export function MapBox( {
 	mapDefaults,
 	isEditor,
 }: {
-	mapboxgl: any;
+	mapboxgl: mapboxgl;
 	attributes: MapAttributes;
 	mapDefaults: MapboxBlockDefaults;
 	isEditor?: boolean;
@@ -141,7 +141,9 @@ export function MapBox( {
 			// Find features intersecting the bounding box.
 			const clickedEl = event.originalEvent?.target as HTMLElement;
 
-			if ( ! mapRef?.current ) return;
+			if ( ! mapRef?.current ) {
+				return;
+			}
 
 			/**
 			 * The map was clicked
@@ -180,7 +182,9 @@ export function MapBox( {
 			) as MarkerHTMLElement | null;
 
 			// eslint-disable-next-line no-console
-			if ( ! markerEl ) return console.log( 'no marker data found' );
+			if ( ! markerEl ) {
+				return console.log( 'no marker data found' );
+			}
 
 			/**
 			 * A marker was clicked, get the marker data
@@ -249,15 +253,18 @@ export function MapBox( {
 		[ map, mapRef, listings, setFilteredListings ]
 	);
 
-	useEffect( () => {
-		// Initialize Mapbox only once
-		if ( loaded || map.current ) return;
+	useLayoutEffect( () => {
+		if ( loaded || map.current ) {
+			return;
+		}
 
 		if ( mapDefaults?.accessToken && mapRef?.current ) {
+			const mapboxEl: HTMLDivElement = mapRef.current;
+
 			// Initialize map and store the map instance
 			map.current = initMap(
 				mapboxgl,
-				mapRef.current,
+				mapboxEl,
 				attributes,
 				mapDefaults
 			);
@@ -276,7 +283,7 @@ export function MapBox( {
 					initGeoCoder(
 						mapboxgl,
 						map.current,
-						mapRef.current,
+						mapRef?.current,
 						markersRef.current,
 						geocoderRef.current,
 						listings,
@@ -287,9 +294,11 @@ export function MapBox( {
 			}
 
 			// Set the ready state of the map
-			setLoaded( true );
+			map.current.on( 'load', () => {
+				setLoaded( true );
+			} );
 		}
-	}, [] );
+	}, [ mapRef?.current ] );
 
 	useEffect( () => {
 		if ( loaded && map.current ) {
@@ -349,10 +358,7 @@ export function MapBox( {
 	 * The mapbox component
 	 */
 	return (
-		<div
-			className={ 'map-wrapper' }
-			style={ { minHeight: attributes.mapHeight } }
-		>
+		<div className={ 'map-wrapper' }>
 			{ attributes.sidebarEnabled && (
 				<div className={ 'map-sidebar' }>
 					{ attributes.geocoderEnabled && <GeoCoder /> }
