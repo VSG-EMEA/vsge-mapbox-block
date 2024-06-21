@@ -60,7 +60,7 @@ export function initMap(
 		if ( map.getLayer( 'country-label' ) ) {
 			map.setLayoutProperty( 'country-label', 'text-field', [
 				'get',
-				'name_' + defaults?.language?.substring( 0, 2 ) || 'en',
+				'name_' + defaults.language || 'en',
 			] );
 		}
 

@@ -17,9 +17,9 @@
   "scripts": {
     "packages-update": "wp-scripts packages-update",
     "build": "npm run build:scripts && npm run build:makepot",
-    "build:scripts": "wp-scripts build ./src/index ./src/frontend",
+    "build:scripts": "wp-scripts build",
     "build:makepot": "npx @wp-blocks/make-pot",
-    "start": "wp-scripts start ./src/index ./src/frontend",
+    "start": "wp-scripts start",
     "format": "wp-scripts format /src",
     "lint:css": "wp-scripts lint-style /src/style",
     "lint:js": "wp-scripts lint-js ./src",
@@ -60,20 +60,36 @@
     "babel-jest": "^29.5.0",
     "jest-puppeteer": "^8.0.6",
     "react-beautiful-dnd": "^13.1.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "classnames": "^2.5.1"
   },
   "dependencies": {
     "@mapbox/maki": "^8.0.1",
     "@mapbox/mapbox-gl-geocoder": "^5.0.2",
     "@mapbox/mapbox-gl-language": "^1.0.1",
     "@turf/turf": "^6.5.0",
-    "classnames": "^2.5.1",
     "mapbox-gl": "^3.4.0"
-  },
-  "engines": {
-    "node": ">=16.0.0"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
-  ]
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=7.0.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:@wordpress/eslint-plugin/recommended"
+    ],
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "globals": {
+      "window": true,
+      "document": true,
+      "localStorage": true
+    }
+  },
+  "prettier": "@wordpress/prettier-config"
 }

@@ -1,49 +1,23 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
+    "target": "ES2022",
+    "module": "ES2022",
     "jsx": "react-jsx",
-    "lib": [ "esnext", "dom", "dom.iterable", "es2022" ],
-    // Search under node_modules for non-relative imports.
     "moduleResolution": "node",
-    "sourceMap": true,
-
-    // Enable the strictest settings like strictNullChecks & noImplicitAny.
-    "strict": true,
-
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    // Import non-ES modules as default imports."esModuleInterop": true,
-
-    // Tells TypeScript to read JS files, as
-    // normally they are ignored as source files
+    // Search under node_modules for non-relative imports.
     "allowJs": true,
-    // Generate d.ts files
-    "declaration": true,
-    "declarationMap": true,
-    "declarationDir": "build/types",
-    "emitDeclarationOnly": true,
-    "pretty": true,
-
-    // Types should go into this directory.
-    // Removing this would place the .d.ts files
-    // next to the .js files
+    // Process & infer types from .js files.
+    "noEmit": true,
+    // Don't emit; allow Babel to transform files.
     "outDir": "build",
-    "typeRoots": [
-      "node_modules/@types",
-      "@types"
-    ],
-    "types": [
-      "mapbox-gl",
-      "mapbox__mapbox-gl-geocoder",
-      "puppeteer",
-      "jest-environment-puppeteer",
-      "expect-puppeteer"
-    ]
+    "baseUrl": "src",
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*", "block.json"],
-  "exclude": ["build","coverage"]
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "coverage",
+    "docs"
+  ]
 }

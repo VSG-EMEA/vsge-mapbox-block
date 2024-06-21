@@ -114,9 +114,9 @@
       }
     }
   },
-  "viewScript": ["file:./vendors.js", "file:./frontend.js"],
-  "editorScript": ["file:./vendors.js", "file:./index.js"],
-  "editorStyle": ["file:./vendors.css","file:./index.css"],
-  "viewStyle": ["file:./vendors.css","file:./frontend.css"],
+  "viewScript": ["file:./vendor.js", "file:./frontend.js"],
+  "editorScript": ["file:./vendor.js", "file:./editor.js"],
+  "editorStyle": ["file:./vendor.css","file:./style-frontend.css", "file:./style-editor.css", "file:./editor.css"],
+  "viewStyle": ["file:./vendor.css","file:./style-frontend.css", "file:./frontend.css"],
   "render": "file:./render.php"
 }
