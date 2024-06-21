@@ -25,15 +25,18 @@ export const Sidebar = (): JSX.Element | null => {
 	}: MountedMapsContextValue = useMapboxContext();
 
 	// return null if the map is not loaded
-	if ( ! loaded || ! map.current || ! mapRef?.current ) return <Loading />;
+	if ( ! loaded || ! map.current || ! mapRef?.current ) {
+		return <Loading />;
+	}
 
 	// return a message if there are no listings
-	if ( ! listings )
+	if ( ! listings ) {
 		return (
 			<div className={ 'result' }>
 				<p>{ __( 'no listings found', 'vsge-mapbox-block' ) }</p>
 			</div>
 		);
+	}
 
 	return (
 		<Listings

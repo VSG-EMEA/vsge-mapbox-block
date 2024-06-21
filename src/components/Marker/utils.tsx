@@ -10,7 +10,9 @@ export function createMarkerEl(
 	listing: MapBoxListing,
 	map: RefObject< mapboxgl.Map >
 ) {
-	if ( ! map.current ) return;
+	if ( ! map.current ) {
+		return;
+	}
 	// Render a Marker Component on our new DOM node
 	const markerElement = new mapboxgl.Marker( markerEl, {
 		offset: [ 0, ( listing?.properties?.iconSize || 0 ) * -0.5 ],
@@ -56,8 +58,9 @@ export function removeTempMarkers(
 			! excludedMarkers.includes( marker.dataset?.markerName )
 		) {
 			// Remove the marker from the listings array
-			if ( listings[ Number( marker.dataset.id ) ] )
+			if ( listings[ Number( marker.dataset.id ) ] ) {
 				delete listings[ Number( marker.dataset.id ) ];
+			}
 			// Remove the marker from the DOM
 			marker?.remove();
 		}
@@ -109,7 +112,9 @@ export function updateCamera(
 	map: RefObject< mapboxgl.Map | null >,
 	mapRef: RefObject< HTMLDivElement | null >
 ): void {
-	if ( ! map.current || ! mapRef.current ) return;
+	if ( ! map.current || ! mapRef.current ) {
+		return;
+	}
 
 	// if filtered listings are present
 	if ( filteredStores?.length ) {

@@ -1,7 +1,6 @@
 import { PinPoint } from './marker-icons';
 import { createRoot } from '@wordpress/element';
 import { Marker } from './';
-import type { RefObject } from 'react';
 import { geocoderMarkerDefaults, geoMarkerStyle } from './defaults';
 
 /**
