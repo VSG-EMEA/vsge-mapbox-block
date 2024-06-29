@@ -162,7 +162,7 @@ export const PinCard = ( props: {
 								} }
 							/>
 							<TextControl
-								label={ __( 'lat', 'vsge-mapbox-block' ) }
+								label={ __( 'long', 'vsge-mapbox-block' ) }
 								value={
 									itemData.geometry.coordinates[ 0 ] || 0
 								}
@@ -181,7 +181,7 @@ export const PinCard = ( props: {
 								}
 							/>
 							<TextControl
-								label={ __( 'lang', 'vsge-mapbox-block' ) }
+								label={ __( 'lat', 'vsge-mapbox-block' ) }
 								value={
 									itemData.geometry.coordinates[ 1 ] || 0
 								}
@@ -215,7 +215,10 @@ export const PinCard = ( props: {
 										},
 									} );
 								} }
-								label={ __( 'Add Pin', 'vsge-mapbox-block' ) }
+								label={ __(
+									'Get position from map',
+									'vsge-mapbox-block'
+								) }
 								showTooltip={ true }
 							/>
 						</Flex>
