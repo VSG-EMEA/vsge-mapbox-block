@@ -155,9 +155,7 @@ export const TopBar = ( attributes: {
 						},
 						...topbarBuildSelectFromArray( mapboxOptions.tags ),
 					] }
-					onChange={ ( selected ) =>
-						setFilter( selected.target.value )
-					}
+					onChange={ ( selected ) => setTag( selected.target.value ) }
 				/>
 			) : null }
 		</div>

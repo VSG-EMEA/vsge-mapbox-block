@@ -6,20 +6,25 @@ import { Button } from '@wordpress/components';
 import { useMapboxContext } from '../Mapbox/MapboxContext';
 import { plusCircle } from '@wordpress/icons';
 import { getNextId, reorder } from '../../utils/dataset';
-import { MapBoxListing, SortableProps } from '../../types';
+import { MapBoxListing, MarkerProps, SortableProps } from '../../types';
 import { LngLatLike } from 'mapbox-gl';
 import { removePopups } from '../Popup/';
 import { defaultColors, defaultMarkerSize } from '../Marker/defaults';
 
 import './style.scss';
 
-export const defaultMarkerProps = {
+export const defaultMarkerProps: MarkerProps = {
 	name: __( 'New Marker', 'vsge-mapbox-block' ),
 	description: '',
 	address: '',
-	location: '',
 	city: '',
-	cap: '',
+	phone: '',
+	mobile: '',
+	emailAddress: '',
+	country: '',
+	postalCode: '',
+	countryCode: '',
+	website: '',
 	icon: 'default',
 	iconSize: defaultMarkerSize,
 	iconColor: defaultColors[ 0 ],
