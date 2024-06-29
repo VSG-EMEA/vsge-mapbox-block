@@ -25,7 +25,7 @@ export const defaultMarkerProps: MarkerProps = {
 	postalCode: '',
 	countryCode: '',
 	website: '',
-	icon: '',
+	icon: 'default',
 	iconSize: defaultMarkerSize,
 	iconColor: defaultColors[ 0 ],
 	draggable: false,
