@@ -108,7 +108,7 @@ export function initGeoCoder(
 				const currentArea = getCurrentContext( searchResult );
 
 				const preferredStores = filterByPreferredArea(
-					currentArea.region.short_code,
+					currentArea,
 					sortedNearestStores
 				);
 

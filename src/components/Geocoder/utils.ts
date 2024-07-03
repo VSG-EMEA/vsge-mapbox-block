@@ -49,13 +49,14 @@ export function getCurrentContext(
 
 /**
  * Filters the sorted stores and returns the results that are compatible with the context
- * @param currentRegion The geocoder current region
- * @param stores        the stores collection
+ * @param currentContext        The geocoder current region
+ * @param currentContext.region The geocoder current region
+ * @param stores                the stores collection
  *
  * @return the filtered stores
  */
 export function filterByPreferredArea(
-	currentRegion: string,
+	currentContext: { region: CurrentContext[ 'region' ] },
 	stores: MapBoxListing[]
 ): MapBoxListing[] {
 	/** @member preferredStores the list of the stores that should be shown because related to the area of the search */
@@ -64,9 +65,12 @@ export function filterByPreferredArea(
 		// the reseller preferred area
 		const prefArea = currentStore.properties.preferredArea;
 		if ( prefArea && prefArea.length ) {
-			prefArea.forEach( ( contextEntry ) => {
+			prefArea.forEach( ( storeRegion ) => {
 				// check if the current position matches the reseller preferred area
-				if ( isChildOf( currentRegion, contextEntry ) ) {
+				if (
+					currentContext.region.short_code === storeRegion ||
+					isChildOf( currentContext.region.short_code, storeRegion )
+				) {
 					preferredStores.push( currentStore );
 				}
 			} );
