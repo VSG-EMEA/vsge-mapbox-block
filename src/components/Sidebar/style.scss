@@ -9,9 +9,11 @@
 		flex-direction: column;
 
 		@media (max-width: 600px) {
-      max-height: 20vh;
+      max-height: 25vh;
       width: 100%;
       max-width: inherit;
+      padding: 0 10px;
+      box-sizing: border-box;
 		}
 
 		p {
