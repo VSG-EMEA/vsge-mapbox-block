@@ -368,6 +368,30 @@ export const PinCard = ( props: {
 								} );
 							} }
 						/>
+						<TextControl
+							label={ __(
+								'Preferred area',
+								'vsge-mapbox-block'
+							) }
+							type={ 'text' }
+							value={
+								itemData.properties?.preferredArea?.join(
+									','
+								) || ''
+							}
+							onChange={ ( newValue ) => {
+								setItemData( {
+									...itemData,
+									properties: {
+										...itemData.properties,
+										preferredArea:
+											newValue
+												?.split( ',' )
+												.map( ( r ) => r.trim() ) ?? [],
+									},
+								} );
+							} }
+						/>
 						<TextareaControl
 							label={ __( 'Address', 'vsge-mapbox-block' ) }
 							value={ itemData.properties?.address || '' }
