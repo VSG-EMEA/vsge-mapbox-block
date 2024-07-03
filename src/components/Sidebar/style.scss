@@ -9,7 +9,9 @@
 		flex-direction: column;
 
 		@media (max-width: 600px) {
-			max-width: 100vw;
+      max-height: 20vh;
+      width: 100%;
+      max-width: inherit;
 		}
 
 		p {
@@ -23,7 +25,9 @@
 			@media (max-width: 600px) {
 				padding-bottom: var(--wp--preset--spacing--30);
 				display: block;
-				max-height: 80vh;
+				max-height: 100vh;
+        padding-left: var(--size__margin);
+        padding-right: var(--size__margin);
 			}
 
 			&.filtered {

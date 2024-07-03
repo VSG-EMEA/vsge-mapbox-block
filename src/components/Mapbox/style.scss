@@ -6,9 +6,8 @@
 	width: 100%;
 
 	@media (max-width: 600px) {
-		gap: 0;
-		width: 200%;
-		transform: translateX(-50%);
+		gap: var(--wp--preset--spacing--20);
+    flex-direction: column-reverse;
 	}
 
 	.map {
