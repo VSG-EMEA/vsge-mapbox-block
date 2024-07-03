@@ -1,6 +1,7 @@
-import { Coord, distance, Units } from '@turf/turf';
+import { type Coord, type Units, distance } from '@turf/turf';
 import { MapBoxListing, MapItem } from '../types';
 import { LngLatBoundsLike } from 'mapbox-gl';
+import { isChildOf } from 'iso3166-helper';
 
 /**
  * This function takes a user's location and an array of stores, calculates the distance between the
@@ -50,8 +51,6 @@ export function locateNearestStore(
 		}
 		return 0; // a must be equal to b
 	} );
-
-	console.log( storesArray );
 
 	return storesArray;
 }
