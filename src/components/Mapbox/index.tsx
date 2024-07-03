@@ -296,6 +296,8 @@ export function MapBox( {
 			// Set the ready state of the map
 			map.current.on( 'load', () => {
 				setLoaded( true );
+				// make sure the map is loaded before resizing to match the wrapper size
+				map.current.resize();
 			} );
 		}
 	}, [ mapRef?.current ] );
