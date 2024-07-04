@@ -1,17 +1,15 @@
 import { getNextId } from '../../utils/dataset';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { __ } from '@wordpress/i18n';
-import { MapboxBlockDefaults, MapBoxListing, MarkerProps } from '../../types';
-import { geoMarkerStyle } from '../Marker/defaults';
-import { locateNearestStore } from '../../utils/spatialCalcs';
-import { removePopups, showNearestStore } from '../Popup/';
+import { MapboxBlockDefaults, MapBoxListing } from '../../types';
+import { removePopups } from '../Popup/';
 import { fitInView, flyToStore } from '../../utils/view';
 import { removeTempMarkers } from '../Marker/utils';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { initGeoMarker } from '../Marker/Geomarker';
-import './style.scss';
 import type mapboxgl from 'mapbox-gl';
-import { filterByPreferredArea, getCurrentContext } from './utils';
+import { getNearestStore } from './utils';
+import './style.scss';
 
 /**
  * Initializes the geocoder for the map.
@@ -37,13 +35,7 @@ export function initGeoCoder(
 	setFilteredListings: ( listings: MapBoxListing[] | null ) => void,
 	mapDefaults: MapboxBlockDefaults
 ): MapboxGeocoder | undefined {
-	const geomarkerListing = initGeoMarker( getNextId( listings ), markersRef );
-
-	const marker = {
-		element: geomarkerListing,
-		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
-		draggable: true,
-	};
+	const marker = initGeoMarker( getNextId( listings ), markersRef );
 
 	let searchResult: MapboxGeocoder.Result | undefined;
 
@@ -61,6 +53,9 @@ export function initGeoCoder(
 			( geocoderRef as HTMLElement ).appendChild( geocoder.onAdd( map ) );
 		}
 
+		/**
+		 * Clears the geocoder input and resets the displayed listings.
+		 */
 		function onGeocoderClear() {
 			document
 				.getElementById( 'feature-listing' )
@@ -81,6 +76,12 @@ export function initGeoCoder(
 			fitInView( map, listings, mapRef );
 		}
 
+		/**
+		 * A function that handles the geocoder result.
+		 *
+		 * @param {Object} ev - An object containing the geocoder result.
+		 * @param {MapboxGeocoder.Result | undefined} ev.result - The geocoder result.
+		 */
 		function onGeocoderResult( ev: {
 			result: MapboxGeocoder.Result | undefined;
 		} ) {
@@ -100,61 +101,38 @@ export function initGeoCoder(
 				// Remove the active class from the geocoder
 				geocoderRef?.classList.remove( 'disabled' );
 
-				const sortedNearestStores = locateNearestStore(
-					searchResult.geometry,
-					listings
-				);
-
-				const currentArea = getCurrentContext( searchResult );
-
-				const preferredStores = filterByPreferredArea(
-					currentArea,
-					sortedNearestStores
-				);
-
-				// @ts-ignore
-				const geoMarker = geocoder.mapMarker;
-
-				// The map marker element
 				// const markerEl = geocoder.mapMarker.getElement() as HTMLElement;
-				geoMarker.geometry = searchResult.geometry;
-
-				geoMarker.onclick = () => {
-					// Remove the active class from the geocoder
-					geocoder.clear();
+				const geoMarker = {
+					// @ts-expect-error - mapMarker is a property on the geocoder
+					...geocoder.mapMarker,
+					...searchResult,
+					geometry: searchResult.geometry,
 				};
 
-				geoMarker.on( 'dragend', () => {
+				const filtered = getNearestStore(
+					searchResult,
+					mapRef,
+					map,
+					listings,
+					geoMarker
+				);
+
+				// Display the nearest store
+				setFilteredListings( filtered );
+
+				geoMarker.onDragEnd = () => {
 					// Update the marker's position
 					const lngLat = geoMarker.getLngLat();
 					// Update the marker's position
 					geoMarker.setLngLat( lngLat );
 					// Center the map
 					flyToStore( map, geoMarker );
-				} );
+				};
 
-				const newFilteredListings = showNearestStore(
-					{
-						...searchResult,
-						id: getNextId( listings ),
-						properties: searchResult.properties as MarkerProps,
-						geometry: {
-							coordinates: [
-								geoMarker.getLngLat().lng,
-								geoMarker.getLngLat().lat,
-							],
-							type: 'Point',
-						},
-					},
-					preferredStores.length
-						? preferredStores
-						: sortedNearestStores,
-					mapRef,
-					map
-				);
-
-				// Display the nearest store
-				setFilteredListings( [ ...newFilteredListings, geoMarker ] );
+				geoMarker.onclick = () => {
+					// Remove the active class from the geocoder
+					geocoder.clear();
+				};
 			}
 		}
 
