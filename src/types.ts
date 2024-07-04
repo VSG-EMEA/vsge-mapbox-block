@@ -150,6 +150,7 @@ export interface MarkerProps {
 	itemTags?: TagArray;
 	itemFilters?: TagArray;
 	distance?: number;
+	preferredArea?: string[];
 }
 
 export interface MarkerPropsStyle {

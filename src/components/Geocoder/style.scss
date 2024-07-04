@@ -19,7 +19,7 @@
 			padding: 6px var(--wp--preset--spacing--40) 6px 48px;
 
 			@media (max-width: 600px) {
-				font-size: 0.25rem;
+				font-size: var(--wp--preset--font-size--small);
 			}
 		}
 

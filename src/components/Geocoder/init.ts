@@ -11,6 +11,7 @@ import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { initGeoMarker } from '../Marker/Geomarker';
 import './style.scss';
 import type mapboxgl from 'mapbox-gl';
+import { filterByPreferredArea, getCurrentContext } from './utils';
 
 /**
  * Initializes the geocoder for the map.
@@ -22,7 +23,6 @@ import type mapboxgl from 'mapbox-gl';
  * @param                                              markersRef          - The ref object for the markers' container.
  * @param {HTMLDivElement}                             geocoderRef         - The ref object for the geocoder container.
  * @param {MapBoxListing[]}                            listings            - The array of mapbox listings.
- * @param {MapBoxListing[]}                            filteredListings    - The array of filtered mapbox listings.
  * @param {(listings: MapBoxListing[] | null) => void} setFilteredListings - The function to set the filtered listings.
  * @param                                              mapDefaults
  * @return {MapboxGeocoder | undefined} The initialized Mapbox geocoder.
@@ -105,6 +105,13 @@ export function initGeoCoder(
 					listings
 				);
 
+				const currentArea = getCurrentContext( searchResult );
+
+				const preferredStores = filterByPreferredArea(
+					currentArea,
+					sortedNearestStores
+				);
+
 				// @ts-ignore
 				const geoMarker = geocoder.mapMarker;
 
@@ -139,7 +146,9 @@ export function initGeoCoder(
 							type: 'Point',
 						},
 					},
-					sortedNearestStores,
+					preferredStores.length
+						? preferredStores
+						: sortedNearestStores,
 					mapRef,
 					map
 				);
