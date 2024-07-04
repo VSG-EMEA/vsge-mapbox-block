@@ -2,14 +2,13 @@
 	.map-sidebar {
 		width: var(--mabox-sidebar-width);
 		max-width: var(--mabox-sidebar-width);
-		overflow: hidden;
 		padding-right: var(--size__margin);
 
 		display: flex;
 		flex-direction: column;
 
 		@media (max-width: 600px) {
-      max-height: 25vh;
+      max-height: 46px;
       width: 100%;
       max-width: inherit;
       padding: 0 10px;
@@ -25,8 +24,8 @@
 			overflow: auto;
 
 			@media (max-width: 600px) {
+				display: none;
 				padding-bottom: var(--wp--preset--spacing--30);
-				display: block;
 				max-height: 100vh;
         padding-left: var(--size__margin);
         padding-right: var(--size__margin);
