@@ -29,7 +29,7 @@
     }
 
     .mapboxgl-popup-content {
-      max-width: 280px;
+			width: auto !important;
 
       @media (max-width: 600px) {
         width: 100%;
