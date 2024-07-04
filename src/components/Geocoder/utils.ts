@@ -1,6 +1,10 @@
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { MapBoxListing } from '../../types';
+import { CoordinatesDef, MapBoxListing } from '../../types';
 import { isChildOf } from 'iso3166-helper';
+import { locateNearestStore } from '../../utils/spatialCalcs';
+import { showNearestStore } from '../Popup';
+import { SEARCH_RESULTS_SHOWN } from '../../constants';
+
 /**
  * The geocoder entry context
  */
@@ -56,7 +60,7 @@ export function getCurrentContext(
  * @return the filtered stores
  */
 export function filterByPreferredArea(
-	currentContext: { region: CurrentContext[ 'region' ] },
+	currentContext: CurrentContext,
 	stores: MapBoxListing[]
 ): MapBoxListing[] {
 	/** @member preferredStores the list of the stores that should be shown because related to the area of the search */
@@ -77,4 +81,47 @@ export function filterByPreferredArea(
 		}
 	} );
 	return preferredStores;
+}
+
+/**
+ * Retrieves the nearest store based on the given result, map, listings, and optional myLocationPin.
+ *
+ * @param {MapboxGeocoder.Result} result - The result object from the Mapbox geocoder.
+ * @param {HTMLDivElement} mapRef - The reference to the map container.
+ * @param {mapboxgl.Map} map - The map object.
+ * @param {MapBoxListing[]} listings - The list of stores.
+ * @param {MapBoxListing} [myLocationPin] - The optional location pin.
+ *
+ * @return {MapBoxListing[]} The sorted list of nearest stores.
+ */
+export function getNearestStore(
+	result: MapboxGeocoder.Result,
+	mapRef: HTMLDivElement,
+	map: mapboxgl.Map,
+	listings: MapBoxListing[],
+	myLocationPin?: MapBoxListing
+): MapBoxListing[] {
+	const currentArea = getCurrentContext( result );
+
+	// locate the nearest store on the map
+	const sortedNearestStores = locateNearestStore(
+		result.geometry.coordinates as CoordinatesDef,
+		listings
+	)?.slice( 0, SEARCH_RESULTS_SHOWN );
+
+	// filter results by preferred area
+	const preferredStores = filterByPreferredArea(
+		currentArea,
+		sortedNearestStores
+	);
+
+	// if there are preferred stores, show them otherwise show the nearest store
+	const sortedListings = preferredStores.length
+		? preferredStores
+		: sortedNearestStores;
+
+	// then show the nearest store
+	showNearestStore( myLocationPin, sortedListings, mapRef, map );
+
+	return [ ...sortedListings ];
 }

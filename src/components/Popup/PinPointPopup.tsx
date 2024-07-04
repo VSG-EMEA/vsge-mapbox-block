@@ -1,11 +1,22 @@
 import type mapboxgl from 'mapbox-gl';
-import { CoordinatesDef, MapBoxListing } from '../../types';
+import {
+	CoordinatesDef,
+	MapboxBlockDefaults,
+	MapBoxListing,
+} from '../../types';
 import { __ } from '@wordpress/i18n';
-import { MARKER_TYPE_TEMP } from '../../constants';
-import { locateNearestStore } from '../../utils/spatialCalcs';
-import { removePopups, showNearestStore } from './index';
+import {
+	DEFAULT_GEOCODER_TYPE_SEARCH,
+	MARKER_TYPE_TEMP,
+} from '../../constants';
+import { removePopups } from './index';
 import type { Dispatch } from 'react';
-import { Result } from '@mapbox/mapbox-gl-geocoder';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { getNearestStore } from '../Geocoder/utils';
+import { getTheCurrentTempPin } from '../../utils/view';
+import { initGeoMarker } from '../Marker/Geomarker';
+import { getNextId } from '../../utils/dataset';
+import { removeTempMarkers } from '../Marker/utils';
 
 export function PinPointPopup( props: {
 	map: mapboxgl.Map;
@@ -14,8 +25,18 @@ export function PinPointPopup( props: {
 	listings: MapBoxListing[] | null;
 	setListings: Dispatch< MapBoxListing[] >;
 	setFilteredListings: Dispatch< MapBoxListing[] | null >;
+	mapDefaults: MapboxBlockDefaults;
+	markersRef: HTMLButtonElement[];
 } ): JSX.Element | null {
-	const { location, map, mapRef, listings, setFilteredListings } = props;
+	const {
+		location,
+		map,
+		mapRef,
+		listings,
+		setFilteredListings,
+		mapDefaults,
+		markersRef,
+	} = props;
 
 	if ( ! mapRef ) {
 		return null;
@@ -28,46 +49,44 @@ export function PinPointPopup( props: {
 			</h3>
 			<div className={ 'mapbox-popup-newpin-buttons' }>
 				<button
-					onClick={ () => {
-						// get the current temp pin data
-						const currentPinData = listings?.find( ( listing ) => {
-							return listing.type === MARKER_TYPE_TEMP;
-						} );
-						if ( ! currentPinData ) {
-							// eslint-disable-next-line no-console
-							console.error( 'currentPinData not found' );
-							return;
-						}
-						// sort the array and get the nearest store
-						const sortedNearestStores = locateNearestStore(
-							location,
-							listings
-						);
-						// create a new temp pin
-						const myLocationPin = {
-							...currentPinData,
-							text: __( 'My location', 'vsge-mapbox-block' ),
-							geometry: {
-								type: 'Point',
-								coordinates: location as CoordinatesDef,
-							},
-							properties: {
-								icon: 'myLocation',
-								draggable: false,
-								name: __( 'My location', 'vsge-mapbox-block' ),
-							},
-						};
-						const sortedListings = showNearestStore(
-							myLocationPin as Result & MapBoxListing,
-							sortedNearestStores,
+					onClick={ ( e ) => {
+						// remove any popup or temp marker (clicked point, another geocoder marker) from the map
+						const currentListings = removeTempMarkers(
+							listings,
 							mapRef,
-							map
+							[ 'click-marker' ]
 						);
-						const filtered = [ ...sortedListings, myLocationPin ];
-						setFilteredListings( filtered );
+
+						const geo = new MapboxGeocoder( {
+							accessToken: mapDefaults.accessToken,
+							reverseGeocode: true,
+							language: mapDefaults.language || 'en',
+							types: DEFAULT_GEOCODER_TYPE_SEARCH,
+						} );
+
+						map.addControl( geo );
+
+						geo.query( `${ location[ 1 ] },${ location[ 0 ] }` );
+
+						// Add geocoder result to container.
+						geo.on( 'result', ( e ) => {
+							const searchResult =
+								e.result as MapboxGeocoder.Result;
+
+							const filtered = getNearestStore(
+								searchResult,
+								mapRef,
+								map,
+								currentListings
+							);
+
+							map.removeControl( geo );
+
+							setFilteredListings( filtered );
+						} );
 					} }
 				>
-					{ __( 'Find the nearest store?', 'vsge-mapbox-block' ) }
+					{ __( 'Find nearest Sales Agent', 'vsge-mapbox-block' ) }
 				</button>
 				<button
 					onClick={ () => {

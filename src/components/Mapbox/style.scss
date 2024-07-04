@@ -1,14 +1,12 @@
 // the map
 .wp-block-vsge-mapbox .map-wrapper {
   display: flex;
-  overflow: hidden;
   gap: 24px;
   width: 100%;
 
   @media (max-width: 600px) {
-    gap: var(--wp--preset--spacing--20);
+    gap: var(--wp--preset--spacing--30);
     flex-direction: column-reverse;
-    min-height: 100vh;
   }
 
   .map {
@@ -29,7 +27,7 @@
     }
 
     .mapboxgl-popup-content {
-      max-width: 280px;
+			width: auto !important;
 
       @media (max-width: 600px) {
         width: 100%;

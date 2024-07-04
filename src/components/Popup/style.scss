@@ -3,9 +3,9 @@
 
 	.map .mapboxgl-popup {
 		padding-bottom: 50px;
+		max-width: inherit !important;
 
 		&-close-button {
-			// display:none;
 			margin: 0;
 			background-color: transparent;
 			color: var(--color__gray-800);
@@ -29,9 +29,12 @@
 
 		.mapbox-popup-inner {
 			gap: 1rem;
-			max-width: 280px;
-			padding-right: 2rem;
 			width: 100%;
+			min-width: 240px;
+
+			h3 {
+				max-width: 240px;
+			}
 
 			p {
 				padding: 0;
@@ -54,6 +57,7 @@
 
 				.mapbox-popup-newpin-buttons {
 					display: flex;
+					gap: 0.4rem;
 					justify-content: space-between;
 					align-items: center;
 					margin-top: 1rem;
@@ -64,6 +68,8 @@
 					color: var(--mapbox--color--primary);
 					padding: 0.8rem 0.6rem;
 					border: 1px solid var(--mapbox--color--primary);
+					white-space: nowrap;
+					cursor: pointer;
 
 					text-transform: uppercase;
 					font-size: 0.66rem;

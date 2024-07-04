@@ -102,6 +102,8 @@ export interface MapBoxListing {
 	id: number;
 	type: string;
 	text?: string;
+	place_name?: string;
+	place_type?: string[];
 	properties: MarkerProps;
 	geometry: {
 		type: string;

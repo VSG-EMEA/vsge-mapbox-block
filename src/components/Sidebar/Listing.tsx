@@ -47,19 +47,6 @@ export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
 	// 1. Fly to the point
 	flyToStore( map, marker );
 
-	const getPopupTemplate = (
-		mkr: MapBoxListing
-	): JSX.Element | undefined => {
-		if ( mkr.type === 'Feature' ) {
-			return <PopupContent { ...mkr.properties } />;
-		} else if ( mkr.properties.name === 'geocoder' ) {
-			return <SearchPopup { ...( mkr.properties as MarkerProps ) } />;
-		}
-	};
-
-	// 2. Close all other popups and display popup for clicked store
-	// addPopup( map, marker, getPopupTemplate( marker ) );
-
 	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
 	highlightListing( marker );
 }
