@@ -150,3 +150,25 @@ export function fitInView(
 
 	map.resize();
 }
+
+/**
+ * Retrieves the current temp pin data from the provided array of listings.
+ *
+ * @param {MapBoxListing[]} listings - The array of listings to search.
+ * @return {MapBoxListing | undefined} The current temp pin data, or undefined if not found.
+ */
+export function getTheCurrentTempPin(
+	listings: MapBoxListing[]
+): MapBoxListing | undefined {
+	// get the current temp pin data
+	const currentPinData = listings?.find( ( listing ) => {
+		return listing.type === MARKER_TYPE_TEMP;
+	} );
+
+	if ( ! currentPinData ) {
+		// eslint-disable-next-line no-console
+		console.error( 'currentPinData not found' );
+		return;
+	}
+	return currentPinData;
+}
