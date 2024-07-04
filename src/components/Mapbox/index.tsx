@@ -174,6 +174,23 @@ export function MapBox( {
 
 				setUpdatedPin( [ newTempMarker ] );
 				setListings( newListings );
+
+				const popupRef = createRef< HTMLDivElement | null >();
+				addPopup(
+					map.current,
+					newTempMarker,
+					popupRef.current,
+					<PinPointPopup
+						location={ clickedPoint }
+						listings={ listings }
+						setListings={ setListings }
+						setFilteredListings={ setFilteredListings }
+						mapRef={ mapRef.current }
+						map={ map.current }
+						mapDefaults={ mapDefaults }
+						markersRef={ markersRef.current }
+					/>
+				);
 				return;
 			}
 
