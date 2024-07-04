@@ -77,8 +77,7 @@ export function PinPointPopup( props: {
 								searchResult,
 								mapRef,
 								map,
-								currentListings,
-								null
+								currentListings
 							);
 
 							map.removeControl( geo );
@@ -87,10 +86,7 @@ export function PinPointPopup( props: {
 						} );
 					} }
 				>
-					{ __(
-						'Find the nearest Sales Agent',
-						'vsge-mapbox-block'
-					) }
+					{ __( 'Find nearest Sales Agent', 'vsge-mapbox-block' ) }
 				</button>
 				<button
 					onClick={ () => {

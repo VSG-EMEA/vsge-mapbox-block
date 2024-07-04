@@ -45,7 +45,10 @@ export function initGeoCoder(
 			mapboxgl,
 			marker: marker as unknown as mapboxgl.Marker,
 			language: mapDefaults.language || 'en',
-			placeholder: __( 'Find the nearest store', 'vsge-mapbox-block' ),
+			placeholder: __(
+				'Find the nearest sales agent',
+				'vsge-mapbox-block'
+			),
 			types: DEFAULT_GEOCODER_TYPE_SEARCH,
 		} );
 
@@ -113,8 +116,7 @@ export function initGeoCoder(
 					searchResult,
 					mapRef,
 					map,
-					listings,
-					geoMarker
+					listings
 				);
 
 				// Display the nearest store
