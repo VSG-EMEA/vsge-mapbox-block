@@ -2,6 +2,7 @@ import { PinPoint } from './marker-icons';
 import { createRoot } from '@wordpress/element';
 import { Marker } from './';
 import { geocoderMarkerDefaults, geoMarkerStyle } from './defaults';
+import type mapboxgl from 'mapbox-gl';
 
 /**
  * This function initializes a map marker using a React component and adds it to a Mapbox map.
@@ -13,12 +14,22 @@ import { geocoderMarkerDefaults, geoMarkerStyle } from './defaults';
 export const initGeoMarker = (
 	id: number,
 	markersRef: HTMLButtonElement[]
-): Element => {
+): mapboxgl.Marker => {
 	// Create a new DOM root and save it to the React ref
 	markersRef[ id ] = document.createElement( 'button' );
 	markersRef[ id ].className = 'marker marker-geocoder disabled';
 
-	const root = createRoot( markersRef[ id ] );
+	makeGeoMarker( markersRef[ id ], id );
+
+	return {
+		element: markersRef[ id ] as HTMLButtonElement,
+		offset: [ 0, ( geoMarkerStyle.size || 0 ) * -0.5 ],
+		draggable: true,
+	};
+};
+
+export function makeGeoMarker( markersRef, id ) {
+	const root = createRoot( markersRef );
 
 	const defaultStyle = geoMarkerStyle;
 	const markerData = geocoderMarkerDefaults( id, defaultStyle );
@@ -32,6 +43,4 @@ export const initGeoMarker = (
 			<PinPoint color={ defaultStyle.color } size={ defaultStyle.size } />
 		</Marker>
 	);
-
-	return markersRef[ id ];
-};
+}
