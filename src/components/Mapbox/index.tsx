@@ -236,6 +236,8 @@ export function MapBox( {
 						setFilteredListings={ setFilteredListings }
 						mapRef={ mapRef.current }
 						map={ map.current }
+						mapDefaults={ mapDefaults }
+						markersRef={ markersRef.current }
 					/>
 				);
 				return;
