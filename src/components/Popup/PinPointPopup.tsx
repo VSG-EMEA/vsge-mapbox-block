@@ -16,6 +16,7 @@ import { getNearestStore } from '../Geocoder/utils';
 import { getTheCurrentTempPin } from '../../utils/view';
 import { initGeoMarker } from '../Marker/Geomarker';
 import { getNextId } from '../../utils/dataset';
+import { removeTempMarkers } from '../Marker/utils';
 
 export function PinPointPopup( props: {
 	map: mapboxgl.Map;
@@ -49,7 +50,12 @@ export function PinPointPopup( props: {
 			<div className={ 'mapbox-popup-newpin-buttons' }>
 				<button
 					onClick={ ( e ) => {
-						const currentPinData = getTheCurrentTempPin( listings );
+						// remove any popup or temp marker (clicked point, another geocoder marker) from the map
+						const currentListings = removeTempMarkers(
+							listings,
+							mapRef,
+							[ 'click-marker' ]
+						);
 
 						const geo = new MapboxGeocoder( {
 							accessToken: mapDefaults.accessToken,
@@ -64,39 +70,15 @@ export function PinPointPopup( props: {
 
 						// Add geocoder result to container.
 						geo.on( 'result', ( e ) => {
-							const marker = initGeoMarker(
-								getNextId( listings ),
-								markersRef
-							);
-
 							const searchResult =
 								e.result as MapboxGeocoder.Result;
-
-							// create a new temp pin
-							const myLocationPin: MapBoxListing = {
-								id: 0,
-								type: MARKER_TYPE_TEMP,
-								text: searchResult.place_name,
-								marker: marker,
-								place_name:
-									currentPinData.place_name ??
-									__( 'My location', 'vsge-mapbox-block' ),
-								geometry: {
-									type: 'Point',
-									coordinates: searchResult.geometry
-										.coordinates as CoordinatesDef,
-								},
-								properties: {
-									...currentPinData?.properties,
-								},
-							};
 
 							const filtered = getNearestStore(
 								searchResult,
 								mapRef,
 								map,
-								listings,
-								myLocationPin
+								currentListings,
+								null
 							);
 
 							map.removeControl( geo );

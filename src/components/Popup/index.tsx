@@ -80,31 +80,33 @@ export function addPopup(
  * @param                         map.current
  */
 export function showNearestStore(
-	location: MapBoxListing,
+	location: MapBoxListing | undefined,
 	sortedNearestStores: MapBoxListing[],
 	mapRef: HTMLDivElement,
 	map: mapboxgl.Map
 ): MapBoxListing[] {
 	removePopups( mapRef as HTMLDivElement );
 
-	/* Open a popup for the closest store. */
-	const popupStoreRef = createRef< HTMLDivElement | null >();
-	addPopup(
-		map,
-		location as unknown as MapBoxListing,
-		popupStoreRef.current,
-		<SearchPopup
-			icon={ 'home' }
-			name={ location?.place_name }
-			category={
-				location.properties?.category ??
-				location?.place_type?.join( ', ' ) ??
-				''
-			}
-			maki={ location.properties?.maki }
-			draggable={ location.properties?.draggable ?? true }
-		/>
-	);
+	if ( location ) {
+		/* Open a popup for the closest store. */
+		const popupStoreRef = createRef< HTMLDivElement | null >();
+		addPopup(
+			map,
+			location as unknown as MapBoxListing,
+			popupStoreRef.current,
+			<SearchPopup
+				icon={ 'home' }
+				name={ location?.place_name }
+				category={
+					location.properties?.category ??
+					location?.place_type?.join( ', ' ) ??
+					''
+				}
+				maki={ location.properties?.maki }
+				draggable={ location.properties?.draggable ?? true }
+			/>
+		);
+	}
 
 	/* Open a popup for the closest store. */
 	const popupRef = createRef< HTMLDivElement | null >();
