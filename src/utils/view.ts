@@ -1,5 +1,6 @@
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing } from '../types';
+import { MARKER_TYPE_TEMP } from '../constants';
 
 /**
  * The function recenterView takes a map and default values and flies the map to the default center and
