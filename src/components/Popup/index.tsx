@@ -6,7 +6,7 @@ import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
 import { SEARCH_RESULTS_SHOWN } from '../../constants';
 import { SearchPopup } from './SearchPopup';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import { enableListing } from '../Sidebar/Listing';
 
 /**
  * The function removes the active popup from the DOM.
@@ -80,15 +80,11 @@ export function addPopup(
  * @param                         map.current
  */
 export function showNearestStore(
-	location: MapboxGeocoder.Result & MapBoxListing,
+	location: MapBoxListing,
 	sortedNearestStores: MapBoxListing[],
 	mapRef: HTMLDivElement,
 	map: mapboxgl.Map
 ): MapBoxListing[] {
-	const newFilteredListings: MapBoxListing[] = [
-		...sortedNearestStores.slice( 0, SEARCH_RESULTS_SHOWN ),
-	];
-
 	removePopups( mapRef as HTMLDivElement );
 
 	/* Open a popup for the closest store. */
@@ -106,18 +102,18 @@ export function showNearestStore(
 				''
 			}
 			maki={ location.properties?.maki }
-			draggable={ true }
+			draggable={ location.properties?.draggable ?? true }
 		/>
 	);
 
 	/* Open a popup for the closest store. */
 	const popupRef = createRef< HTMLDivElement | null >();
-	addPopup( map, newFilteredListings[ 0 ], popupRef.current );
+	addPopup( map, sortedNearestStores[ 0 ], popupRef.current );
 
 	/** Highlight the listing for the closest store. */
 	mapRef
 		?.querySelector( '#marker-' + sortedNearestStores[ 0 ]?.id )
 		?.classList.add( 'active' );
 
-	return newFilteredListings;
+	enableListing( map, sortedNearestStores[ 0 ] );
 }

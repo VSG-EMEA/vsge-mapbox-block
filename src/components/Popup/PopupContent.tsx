@@ -25,12 +25,8 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 		mobile = '',
 		address = '',
 		city = '',
-		postalCode = '',
-		countryCode = '',
-		country = '',
 		website = '',
 		emailAddress = '',
-		distance = null,
 	} = props;
 	return (
 		<div className={ 'mapbox-popup-wrap' }>
@@ -91,11 +87,6 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 					<TagList
 						tags={ itemTags }
 						className={ 'popup-tag-list tag-list' }
-					/>
-					<DistanceLabel
-						distance={ distance }
-						label={ __( 'Distance', 'vsge-mapbox-block' ) }
-						className={ 'popup-distance-labek' }
 					/>
 				</div>
 			</div>

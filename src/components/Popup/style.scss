@@ -30,6 +30,11 @@
 		.mapbox-popup-inner {
 			gap: 1rem;
 			width: 100%;
+			min-width: 240px;
+
+			h3 {
+				max-width: 240px;
+			}
 
 			p {
 				padding: 0;
