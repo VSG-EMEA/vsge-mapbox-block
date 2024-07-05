@@ -75,8 +75,12 @@ export function filterByPreferredArea(
 			prefArea.forEach( ( storeRegion ) => {
 				// check if the current position matches the reseller preferred area
 				if (
-					currentContext.region.short_code === storeRegion ||
-					isChildOf( currentContext.region.short_code, storeRegion )
+					currentContext.region?.short_code &&
+					( currentContext.region?.short_code === storeRegion ||
+						isChildOf(
+							currentContext?.region?.short_code,
+							storeRegion
+						) )
 				) {
 					preferredStores.push( currentStore );
 				}
