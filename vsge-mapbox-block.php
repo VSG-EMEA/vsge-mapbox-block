@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: vsge-mapbox-block
- * Version: 1.0.2
+ * Version: 1.1.3
  * Description: VSGE - mapbox block
  * Author:            codekraft
  * Text Domain:       vsge-mapbox-block
@@ -9,12 +9,6 @@
  */
 define('VSGE_MB_PLUGIN_DIR', __DIR__);
 define('VSGE_MB_PLUGIN_URL', plugin_dir_url(__FILE__));
-
-/* Adding actions to the init hook. */
-add_action('init', function () {
-	register_block_type(VSGE_MB_PLUGIN_DIR . '/build');
-}
-);
 
 /**
  * Get the MapBox token from the already defined constants and return it.
@@ -29,15 +23,61 @@ function vsge_get_token(): string
 	return 'no token provided';
 }
 
-/**
- * The mapbox block frontend scripts.
- *
- * @return void
- */
-function vsge_mapbox_block_scripts(): void
-{
-	echo '<script id="vsge-mapbox-block-data">var mapboxBlockData = ' . json_encode(array('siteurl' => get_option('siteurl'), 'accessToken' => vsge_get_token(), 'language' => get_locale())) . ' </script>';
-}
+add_action('init', function () {
+	register_block_type(VSGE_MB_PLUGIN_DIR . '/build', [
+		"script" => "vsge-mapbox-vendor",
+		"viewScript" => "vsge-mapbox-frontend",
+		"editorScript" => "vsge-mapbox-editor",
+	]);
+});
 
-add_action('wp_footer', 'vsge_mapbox_block_scripts');
-add_action('admin_footer', 'vsge_mapbox_block_scripts');
+/* Adding actions to the init hook. */
+add_action('enqueue_block_assets', function () {
+
+	$fe_assets = include VSGE_MB_PLUGIN_DIR . '/build/frontend.asset.php';
+	$editor_assets = include VSGE_MB_PLUGIN_DIR . '/build/editor.asset.php';
+	$vendor_assets = include VSGE_MB_PLUGIN_DIR . '/build/vendor.asset.php';
+
+	wp_register_script(
+		'vsge-mapbox-vendor',
+		VSGE_MB_PLUGIN_URL . 'build/vendor.js',
+		$vendor_assets['dependencies'],
+		$vendor_assets['version']
+	);
+
+	wp_localize_script('vsge-mapbox-vendor',
+		'mapboxBlockData',
+		array(
+			'siteurl' => get_option('siteurl'),
+			'accessToken' => vsge_get_token(),
+			'language' => get_locale()
+		)
+	);
+
+	wp_register_script(
+		'vsge-mapbox-frontend',
+		VSGE_MB_PLUGIN_URL . 'build/frontend.js',
+		$fe_assets['dependencies'],
+		$fe_assets['version']
+	);
+
+	wp_register_script(
+		'vsge-mapbox-editor',
+		VSGE_MB_PLUGIN_URL . 'build/editor.js',
+		$editor_assets['dependencies'],
+		$editor_assets['version']
+	);
+});
+
+
+function vsge_mapbox_block_i18n() {
+	load_plugin_textdomain( 'vsge-mapbox-block', false, VSGE_MB_PLUGIN_DIR . '/languages' );
+}
+add_action( 'init', 'vsge_mapbox_block_i18n' );
+
+
+function vsge_mapbox_block_script_translations() {
+	wp_set_script_translations( 'vsge-mapbox-frontend', 'vsge-mapbox-block', VSGE_MB_PLUGIN_DIR . '/languages' );
+	wp_set_script_translations( 'vsge-mapbox-editor', 'vsge-mapbox-block', VSGE_MB_PLUGIN_DIR . '/languages' );
+}
+add_action( 'init', 'vsge_mapbox_block_script_translations' );

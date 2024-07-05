@@ -7,6 +7,7 @@
   "keywords": [
     "mapbox"
   ],
+  "textdomain": "vsge-mapbox-block",
   "category": "embed",
   "supports": {
     "html": false,
@@ -114,8 +115,6 @@
       }
     }
   },
-  "viewScript": ["file:./vendor.js", "file:./frontend.js"],
-  "editorScript": ["file:./vendor.js", "file:./editor.js"],
   "editorStyle": ["file:./vendor.css","file:./style-frontend.css", "file:./style-editor.css", "file:./editor.css"],
   "viewStyle": ["file:./vendor.css","file:./style-frontend.css", "file:./frontend.css"],
   "render": "file:./render.php"
