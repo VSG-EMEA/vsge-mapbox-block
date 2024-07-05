@@ -27,6 +27,9 @@ export type CurrentContext = {
 export function getCurrentContext(
 	searchResult: MapboxGeocoder.Result
 ): CurrentContext {
+	if ( ! searchResult ) {
+		return {};
+	}
 	// parse the current pointer area to get the country and the region
 	const currentArea: CurrentContext = {};
 
