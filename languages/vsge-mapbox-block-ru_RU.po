@@ -1,40 +1,266 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vsge-mapbox-block\n"
+"Report-Msgid-Bugs-To: codekraft <EMAIL>\n"
+"POT-Creation-Date: 2024-07-05T16:10:19.521Z\n"
+"PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-17T19:44:17+00:00\n"
-"PO-Revision-Date: \n"
-"Language: ru\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
-#. Plugin Name of the plugin
+#. Name of the plugin
+#: vsge-mapbox-block.php
 msgid "vsge-mapbox-block"
 msgstr "vsge-mapbox-block"
 
 #. Description of the plugin
+#: vsge-mapbox-block.php
 msgid "VSGE - mapbox block"
 msgstr "VSGE - блок mapbox"
 
 #. Author of the plugin
+#: vsge-mapbox-block.php
 msgid "codekraft"
 msgstr "codekraft"
 
-#: block.json
-msgctxt "block title"
-msgid "MapBox"
-msgstr "MapBox"
+#: src/components/UIComponents/Phone.tsx:29
+msgid "Call "
+msgstr "Звонок "
 
-#: block.json
-msgctxt "block description"
-msgid "A block that displays the map using mapbox"
-msgstr "Блок, отображающий карту с помощью mapbox"
+#: src/components/UIComponents/EmailAddr.tsx:31
+msgid "Email "
+msgstr "Email "
 
-#: block.json
-msgctxt "block keyword"
-msgid "mapbox"
-msgstr "mapbox"
+#: src/components/TopBar/index.tsx:113
+msgid "Reset Filters"
+msgstr "Сбросить фильтры"
+
+#: src/components/TopBar/index.tsx:126
+msgid "Fit View"
+msgstr "Вид на фит"
+
+#: src/components/TopBar/index.tsx:137
+msgid "Select a filter"
+msgstr "Выберите фильтр"
+
+#: src/components/TopBar/index.tsx:154
+msgid "Select a tag"
+msgstr "Выберите тэг"
+
+#: src/components/Sidebar/Listing.tsx:136
+#: src/components/Sortable/SortablePins.tsx:288
+#: src/components/Popup/PopupContent.tsx:83
+msgid "Email"
+msgstr "Email"
+
+#: src/components/Sidebar/Listing.tsx:142
+msgid "Distance: "
+msgstr "Расстояние: "
+
+#: src/components/Sidebar/index.tsx:36
+msgid "no listings found"
+msgstr "объявления не найдены"
+
+#: src/components/Sortable/SortablePins.tsx:134
+#: src/components/Sortable/index.tsx:163
+msgid "New"
+msgstr "Новый"
+
+#: src/components/Sortable/SortablePins.tsx:146
+msgid "type"
+msgstr "тип"
+
+#: src/components/Sortable/SortablePins.tsx:165
+msgid "long"
+msgstr "долгое"
+
+#: src/components/Sortable/SortablePins.tsx:184
+msgid "lat"
+msgstr "лат"
+
+#: src/components/Sortable/SortablePins.tsx:218
+msgid "Get position from map"
+msgstr "Получение позиции с карты"
+
+#: src/components/Sortable/SortablePins.tsx:230
+msgid "Name"
+msgstr "Имя"
+
+#: src/components/Sortable/SortablePins.tsx:245
+msgid "Company"
+msgstr "Компания"
+
+#: src/components/Sortable/SortablePins.tsx:260
+#: src/components/Popup/PopupContent.tsx:61
+msgid "Phone"
+msgstr "Телефон"
+
+#: src/components/Sortable/SortablePins.tsx:274
+#: src/components/Popup/PopupContent.tsx:66
+msgid "Mobile"
+msgstr "Мобильный"
+
+#: src/components/Sortable/SortablePins.tsx:302
+msgid "website"
+msgstr "веб-сайт"
+
+#: src/components/Sortable/SortablePins.tsx:316
+msgid "City"
+msgstr "Город"
+
+#: src/components/Sortable/SortablePins.tsx:330
+msgid "Country"
+msgstr "Страна"
+
+#: src/components/Sortable/SortablePins.tsx:344
+msgid "Postal Code"
+msgstr "Почтовый индекс"
+
+#: src/components/Sortable/SortablePins.tsx:358
+msgid "Country Code"
+msgstr "Код страны"
+
+#: src/components/Sortable/SortablePins.tsx:372
+msgid "Preferred area"
+msgstr "Предпочтительный район"
+
+#: src/components/Sortable/SortablePins.tsx:396
+msgid "Address"
+msgstr "Адрес"
+
+#: src/components/Sortable/SortablePins.tsx:449
+msgid "Filters"
+msgstr "Фильтры"
+
+#: src/components/Sortable/SortablePins.tsx:509
+msgid "Select a Marker"
+msgstr "Выберите маркер"
+
+#: src/components/Sortable/SortablePins.tsx:517
+msgid "Default"
+msgstr "По умолчанию"
+
+#: src/components/Sortable/SortablePins.tsx:547
+msgid "Marker"
+msgstr "Маркер"
+
+#: src/components/Sortable/SortablePins.tsx:595
+msgid "Reset"
+msgstr "Сброс"
+
+#: src/components/Sortable/SortablePins.tsx:604
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/components/Sortable/index.tsx:17 src/components/Sortable/index.tsx:138
+msgid "New Marker"
+msgstr "Новая Метка"
+
+#: src/components/Sortable/index.tsx:234
+#: src/components/Edit/EditPanelIcons.tsx:119
+msgid "Add new"
+msgstr "Добавить новый"
+
+#: src/components/Sortable/IconPreview.tsx:28
+msgid "error ??"
+msgstr "ошибка ??"
+
+#: src/components/Popup/PinPointPopup.tsx:46
+msgid "My location"
+msgstr "Моё местоположение"
+
+#: src/components/Popup/PinPointPopup.tsx:91
+msgid "Find nearest Sales Agent"
+msgstr "Найти ближайшего агента по продажам"
+
+#: src/components/Mapbox/MapboxContext.tsx:96
+msgid "useMapboxContext must be used within a MapboxProvider"
+msgstr "useMapboxContext должен использоваться внутри MapboxProvider"
+
+#: src/components/Geocoder/init.ts:48
+msgid "Find the nearest sales agent"
+msgstr "Найдите ближайшего торгового агента"
+
+#: src/components/Edit/EditPanelIcons.tsx:32
+msgid "Delete icon"
+msgstr "Удалить иконку"
+
+#: src/components/Edit/EditPanelIcons.tsx:41
+msgid "Marker Name"
+msgstr "Имя Метки"
+
+#: src/components/Edit/EditPanelIcons.tsx:51
+msgid "svg markup"
+msgstr "разметка svg"
+
+#: src/components/Edit/EditPanelIcons.tsx:89
+msgid "New Marker "
+msgstr "Новый маркер "
+
+#: src/components/Edit/Edit.tsx:166
+msgid "Enable Sidebar"
+msgstr "Включить боковую панель"
+
+#: src/components/Edit/Edit.tsx:184
+msgid "Enable Geocoder"
+msgstr "Включить геокодер"
+
+#: src/components/Edit/Edit.tsx:198
+msgid "Enable Filters"
+msgstr "Включить фильтры"
+
+#: src/components/Edit/Edit.tsx:211
+msgid "Enable Tag"
+msgstr "Включить тег"
+
+#: src/components/Edit/Edit.tsx:221
+msgid "Enable fitView"
+msgstr "Включить функцию fitView"
+
+#: src/components/Edit/Edit.tsx:235
+msgid "Enable Elevation"
+msgstr "Включить подъем"
+
+#: src/components/Edit/Edit.tsx:249
+msgid "Enable camera 3d rotation"
+msgstr "Включить поворот камеры в 3d"
+
+#: src/components/Edit/Edit.tsx:265
+msgid "Enable Zoom with mouse wheel"
+msgstr "Включить масштабирование с помощью колеса мыши"
+
+#: src/components/Edit/Edit.tsx:282
+msgid "Camera Options"
+msgstr "Параметры камеры"
+
+#: src/components/Edit/Edit.tsx:292
+msgid "Get Current view"
+msgstr "Получить текущий вид"
+
+#: src/components/Edit/Edit.tsx:296
+msgid "Camera Fine tuning"
+msgstr "Тонкая настройка камеры"
+
+#: src/components/Edit/Edit.tsx:299
+msgid "Latitude"
+msgstr "Широта"
+
+#: src/components/Edit/Edit.tsx:318
+msgid "Longitude"
+msgstr "Долгота"
+
+#~ msgctxt "block title"
+#~ msgid "MapBox"
+#~ msgstr "MapBox"
+
+#~ msgctxt "block description"
+#~ msgid "A block that displays the map using mapbox"
+#~ msgstr "Блок, отображающий карту с помощью mapbox"
+
+#~ msgctxt "block keyword"
+#~ msgid "mapbox"
+#~ msgstr "mapbox"
