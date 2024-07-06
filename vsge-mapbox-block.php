@@ -31,52 +31,52 @@ function vsge_get_token(): string
 	return 'no token provided';
 }
 
-\add_action('init', function () {
-	\register_block_type(VSGE_MB_PLUGIN_DIR . '/build', [
+add_action('init', function () {
+	register_block_type(VSGE_MB_PLUGIN_DIR . '/build', [
 		"script" => "vsge-mapbox-vendor",
 		"viewScript" => "vsge-mapbox-frontend",
 		"editorScript" => "vsge-mapbox-editor",
 	]);
 });
 
-\add_action('enqueue_block_assets', function () {
+add_action('enqueue_block_assets', function () {
 
 	$fe_assets = include VSGE_MB_PLUGIN_DIR . '/build/frontend.asset.php';
 	$editor_assets = include VSGE_MB_PLUGIN_DIR . '/build/editor.asset.php';
 	$vendor_assets = include VSGE_MB_PLUGIN_DIR . '/build/vendor.asset.php';
 
-	\wp_register_script(
+	wp_register_script(
 		'vsge-mapbox-vendor',
 		VSGE_MB_PLUGIN_URL . 'build/vendor.js',
 		$vendor_assets['dependencies'],
 		$vendor_assets['version']
 	);
 
-	\wp_localize_script('vsge-mapbox-vendor',
+	wp_localize_script('vsge-mapbox-vendor',
 		'mapboxBlockData',
 		array(
-			'siteurl' => \get_option('siteurl'),
+			'siteurl' => get_option('siteurl'),
 			'accessToken' => vsge_get_token(),
-			'language' => \get_locale()
+			'language' => get_locale()
 		)
 	);
 
-	\wp_register_script(
+	wp_register_script(
 		'vsge-mapbox-frontend',
 		VSGE_MB_PLUGIN_URL . 'build/frontend.js',
 		$fe_assets['dependencies'],
 		$fe_assets['version']
 	);
 
-	\wp_set_script_translations( 'vsge-mapbox-frontend', 'vsge-mapbox-block', VSGE_MB_PLUGIN_DIR . '/languages' );
+	wp_set_script_translations( 'vsge-mapbox-frontend', 'vsge-mapbox-block', VSGE_MB_PLUGIN_DIR . '/languages' );
 
-	\wp_register_script(
+	wp_register_script(
 		'vsge-mapbox-editor',
 		VSGE_MB_PLUGIN_URL . 'build/editor.js',
 		$editor_assets['dependencies'],
 		$editor_assets['version']
 	);
 
-	\wp_set_script_translations( 'vsge-mapbox-editor', 'vsge-mapbox-block', VSGE_MB_PLUGIN_DIR . '/languages' );
+	wp_set_script_translations( 'vsge-mapbox-editor', 'vsge-mapbox-block', VSGE_MB_PLUGIN_DIR . '/languages' );
 });
 
