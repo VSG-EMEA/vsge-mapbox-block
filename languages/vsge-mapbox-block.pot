@@ -8,7 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"POT-Creation-Date: 2024-07-06T02:15:28.285Z\n"
+"POT-Creation-Date: 2024-07-06T14:31:01.278Z\n"
 "PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: codekraft <EMAIL>\n"
 "Language-Team: codekraft <EMAIL>\n"
@@ -90,18 +90,18 @@ msgid "Company"
 msgstr ""
 
 #: src/components/Sortable/SortablePins.tsx:260
-#: src/components/Popup/PopupContent.tsx:61
+#: src/components/Popup/PopupContent.tsx:60
 msgid "Phone"
 msgstr ""
 
 #: src/components/Sortable/SortablePins.tsx:274
-#: src/components/Popup/PopupContent.tsx:66
+#: src/components/Popup/PopupContent.tsx:65
 msgid "Mobile"
 msgstr ""
 
 #: src/components/Sortable/SortablePins.tsx:288
-#: src/components/Sidebar/Listing.tsx:136
-#: src/components/Popup/PopupContent.tsx:83
+#: src/components/Sidebar/Listing.tsx:135
+#: src/components/Popup/PopupContent.tsx:77
 msgid "Email"
 msgstr ""
 
@@ -171,7 +171,7 @@ msgstr ""
 msgid "error ??"
 msgstr ""
 
-#: src/components/Sidebar/Listing.tsx:142
+#: src/components/Sidebar/Listing.tsx:141
 msgid "Distance: "
 msgstr ""
 
@@ -179,11 +179,11 @@ msgstr ""
 msgid "no listings found"
 msgstr ""
 
-#: src/components/Popup/PinPointPopup.tsx:46
+#: src/components/Popup/PinPointPopup.tsx:40
 msgid "My location"
 msgstr ""
 
-#: src/components/Popup/PinPointPopup.tsx:91
+#: src/components/Popup/PinPointPopup.tsx:85
 msgid "Find nearest Sales Agent"
 msgstr ""
 

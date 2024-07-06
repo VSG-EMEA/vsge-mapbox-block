@@ -141,7 +141,6 @@ export interface MarkerProps {
 	postalCode?: string;
 	country?: string;
 	countryCode?: string;
-	state?: string;
 	emailAddress?: string;
 	website?: string;
 	icon: string;
