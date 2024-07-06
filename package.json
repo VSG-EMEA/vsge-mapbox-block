@@ -69,7 +69,7 @@
     "@mapbox/mapbox-gl-geocoder": "^5.0.2",
     "@mapbox/mapbox-gl-language": "^1.0.1",
     "@turf/turf": "^6.5.0",
-    "mapbox-gl": "^3.5.0",
+    "mapbox-gl": "^3.5.1",
     "iso3166-helper": "^1.0.2"
   },
   "browserslist": [
