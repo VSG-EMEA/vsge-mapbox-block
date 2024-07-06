@@ -28,7 +28,7 @@ export const EmailAddr = ( {
 			<a
 				href={ 'mailto:' + emailAddress }
 				target={ '_blank' }
-				title={ __( 'Email ' ) + emailAddress }
+				title={ __( 'Email ', 'vsge-mapbox-block' ) + emailAddress }
 				rel="noreferrer noopener"
 			>
 				{ emailAddress }

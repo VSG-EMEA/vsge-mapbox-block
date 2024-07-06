@@ -26,7 +26,7 @@ export const Phone = ( {
 			<b>{ label }: </b>{ ' ' }
 			<a
 				href={ 'tel:' + phone }
-				title={ __( 'Call ' ) + phone }
+				title={ __( 'Call ', 'vsge-mapbox-block' ) + phone }
 				rel="noreferrer noopener"
 			>
 				{ phone }

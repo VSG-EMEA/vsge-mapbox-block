@@ -1,5 +1,4 @@
 import type { Feature, Geometry } from '@turf/turf';
-import type mapboxgl from 'mapbox-gl';
 import type { LngLat } from 'mapbox-gl';
 import type {
 	Dispatch,
@@ -142,7 +141,6 @@ export interface MarkerProps {
 	postalCode?: string;
 	country?: string;
 	countryCode?: string;
-	state?: string;
 	emailAddress?: string;
 	website?: string;
 	icon: string;

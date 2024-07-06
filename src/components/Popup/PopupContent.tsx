@@ -5,7 +5,6 @@ import { mapMarker } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { Phone } from '../UIComponents/Phone';
 import { EmailAddr } from '../UIComponents/EmailAddr';
-import { DistanceLabel } from '../UIComponents/DistanceLabel';
 import { LinkTo } from '../UIComponents/LinkTo';
 import { AddressLine } from '../UIComponents/AddressLine';
 
@@ -71,11 +70,6 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 						className={ 'popup-address' }
 						address={ address }
 						city={ city }
-						/*
-              country={ country }
-              countryCode={ countryCode }
-              postalCode={ postalCode }
-						*/
 					/>
 
 					<EmailAddr

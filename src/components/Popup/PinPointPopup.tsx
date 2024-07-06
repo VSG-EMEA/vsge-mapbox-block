@@ -5,17 +5,11 @@ import {
 	MapBoxListing,
 } from '../../types';
 import { __ } from '@wordpress/i18n';
-import {
-	DEFAULT_GEOCODER_TYPE_SEARCH,
-	MARKER_TYPE_TEMP,
-} from '../../constants';
+import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { removePopups } from './index';
 import type { Dispatch } from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { getNearestStore } from '../Geocoder/utils';
-import { getTheCurrentTempPin } from '../../utils/view';
-import { initGeoMarker } from '../Marker/Geomarker';
-import { getNextId } from '../../utils/dataset';
 import { removeTempMarkers } from '../Marker/utils';
 
 export function PinPointPopup( props: {

@@ -119,11 +119,11 @@ export function filterByPreferredArea(
 /**
  * Retrieves the nearest store based on the given result, map, listings, and optional myLocationPin.
  *
- * @param {MapboxGeocoder.Result} result - The result object from the Mapbox geocoder.
- * @param {HTMLDivElement} mapRef - The reference to the map container.
- * @param {mapboxgl.Map} map - The map object.
- * @param {MapBoxListing[]} listings - The list of stores.
- * @param {MapBoxListing} [myLocationPin] - The optional location pin.
+ * @param {MapboxGeocoder.Result} result          - The result object from the Mapbox geocoder.
+ * @param {HTMLDivElement}        mapRef          - The reference to the map container.
+ * @param {mapboxgl.Map}          map             - The map object.
+ * @param {MapBoxListing[]}       listings        - The list of stores.
+ * @param {MapBoxListing}         [myLocationPin] - The optional location pin.
  *
  * @return {MapBoxListing[]} The sorted list of nearest stores.
  */

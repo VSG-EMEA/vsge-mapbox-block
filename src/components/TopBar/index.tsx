@@ -134,7 +134,7 @@ export const TopBar = ( attributes: {
 					options={ [
 						{
 							value: '',
-							label: __( 'Select a filter' ),
+							label: __( 'Select a filter', 'vsge-mapbox-block' ),
 						},
 						...topbarBuildSelectFromArray( mapboxOptions.filters ),
 					] }
@@ -151,7 +151,7 @@ export const TopBar = ( attributes: {
 					options={ [
 						{
 							value: '',
-							label: __( 'Select a tag' ),
+							label: __( 'Select a tag', 'vsge-mapbox-block' ),
 						},
 						...topbarBuildSelectFromArray( mapboxOptions.tags ),
 					] }

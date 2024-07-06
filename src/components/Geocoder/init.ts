@@ -45,7 +45,7 @@ export function initGeoCoder(
 			mapboxgl,
 			marker: marker as unknown as mapboxgl.Marker,
 			language: mapDefaults.language || 'en',
-			placeholder: __( 'Find nearest sales agent', 'vsge-mapbox-block' ),
+			placeholder: __( 'Find nearest Sales Agent', 'vsge-mapbox-block' ),
 			types: DEFAULT_GEOCODER_TYPE_SEARCH,
 		} );
 
@@ -79,7 +79,7 @@ export function initGeoCoder(
 		/**
 		 * A function that handles the geocoder result.
 		 *
-		 * @param {Object} ev - An object containing the geocoder result.
+		 * @param {Object}                            ev        - An object containing the geocoder result.
 		 * @param {MapboxGeocoder.Result | undefined} ev.result - The geocoder result.
 		 */
 		function onGeocoderResult( ev: {
