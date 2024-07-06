@@ -49,7 +49,8 @@ add_action('enqueue_block_assets', function () {
 		'vsge-mapbox-vendor',
 		VSGE_MB_PLUGIN_URL . 'build/vendor.js',
 		$vendor_assets['dependencies'],
-		$vendor_assets['version']
+		$vendor_assets['version'],
+		true
 	);
 
 	wp_localize_script('vsge-mapbox-vendor',
