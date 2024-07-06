@@ -79,7 +79,7 @@ export function initGeoCoder(
 		/**
 		 * A function that handles the geocoder result.
 		 *
-		 * @param {Object} ev - An object containing the geocoder result.
+		 * @param {Object}                            ev        - An object containing the geocoder result.
 		 * @param {MapboxGeocoder.Result | undefined} ev.result - The geocoder result.
 		 */
 		function onGeocoderResult( ev: {

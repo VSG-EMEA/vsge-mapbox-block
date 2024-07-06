@@ -6,9 +6,12 @@ import { MARKER_TYPE_TEMP } from '../constants';
  * The function recenterView takes a map and default values and flies the map to the default center and
  * zoom.
  *
- * @param {mapboxgl.Map} map      - The map object that we want to recenter.
- * @param {Object}       defaults - `defaults` is an object that contains default values for the center coordinates
- *                                and zoom level of a map. It has the following properties:
+ * @param {mapboxgl.Map} map                - The map object that we want to recenter.
+ * @param {Object}       defaults           - `defaults` is an object that contains default values for the center coordinates
+ *                                          and zoom level of a map. It has the following properties:
+ * @param                defaults.latitude
+ * @param                defaults.longitude
+ * @param                defaults.zoom
  * @return The `recenterView` function is returning a call to the `flyTo` method of the `map` object
  * with an object argument containing the `center` and `zoom` properties.
  */
@@ -30,12 +33,12 @@ export function recenterView(
  * The function flyToStore takes in a map, coordinates, and an optional zoom level and flies the map to
  * the specified location.
  *
- * @param                  map         - The mapboxgl.Map object that represents the map instance on which the flyToStore
- *                                     function will be called.
- * @param                  store
- * @param {number}         [zoom=8]    - The zoom parameter is a number that determines the level of zoom for the
- *                                     map. A higher number means the map will be more zoomed in, while a lower number means the map will
- *                                     be more zoomed out. The default value for zoom in this function is 8.
+ * @param          map      - The mapboxgl.Map object that represents the map instance on which the flyToStore
+ *                          function will be called.
+ * @param          store
+ * @param {number} [zoom=8] - The zoom parameter is a number that determines the level of zoom for the
+ *                          map. A higher number means the map will be more zoomed in, while a lower number means the map will
+ *                          be more zoomed out. The default value for zoom in this function is 8.
  * @return The `flyToStore` function is returning the result of calling the `flyTo` method on the
  * `map` object with the provided `coordinates` and `zoom` level. The `flyTo` method animates the map
  * to a new location and zoom level.
@@ -45,11 +48,12 @@ export function flyToStore(
 	store: MapBoxListing,
 	zoom: number = 8
 ) {
-	if ( store?.geometry?.coordinates )
+	if ( store?.geometry?.coordinates ) {
 		return map?.flyTo( {
 			center: store.geometry.coordinates,
 			zoom,
 		} );
+	}
 	recenterView( map, {
 		latitude: store.geometry.coordinates[ 1 ],
 		longitude: store.geometry.coordinates[ 0 ],
@@ -122,7 +126,9 @@ export function fitInView(
 	listings: MapBoxListing[],
 	mapRef: HTMLDivElement
 ) {
-	if ( ! map || ! mapRef ) return;
+	if ( ! map || ! mapRef ) {
+		return;
+	}
 
 	const bounds = new mapboxgl.LngLatBounds();
 	let padding = 0;

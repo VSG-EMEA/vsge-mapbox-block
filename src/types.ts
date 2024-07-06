@@ -1,5 +1,4 @@
 import type { Feature, Geometry } from '@turf/turf';
-import type mapboxgl from 'mapbox-gl';
 import type { LngLat } from 'mapbox-gl';
 import type {
 	Dispatch,
