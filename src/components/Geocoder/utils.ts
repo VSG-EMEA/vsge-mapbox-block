@@ -94,7 +94,7 @@ export function filterByPreferredArea(
 		stores?.forEach( ( currentStore: MapBoxListing ) => {
 			// Get the reseller country code
 			const storeCountry =
-				currentStore?.properties?.countryCode.toLowerCase() ?? 'none';
+				currentStore?.properties?.countryCode?.toLowerCase() ?? 'none';
 			// Using the preferred area lookup for the country code
 			const prefArea = currentStore.properties.preferredArea?.map(
 				( area ) => {
