@@ -45,10 +45,7 @@ export function initGeoCoder(
 			mapboxgl,
 			marker: marker as unknown as mapboxgl.Marker,
 			language: mapDefaults.language || 'en',
-			placeholder: __(
-				'Find the nearest sales agent',
-				'vsge-mapbox-block'
-			),
+			placeholder: __( 'Find nearest sales agent', 'vsge-mapbox-block' ),
 			types: DEFAULT_GEOCODER_TYPE_SEARCH,
 		} );
 
