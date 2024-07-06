@@ -70,11 +70,6 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 						className={ 'popup-address' }
 						address={ address }
 						city={ city }
-						/*
-              country={ country }
-              countryCode={ countryCode }
-              postalCode={ postalCode }
-						*/
 					/>
 
 					<EmailAddr
