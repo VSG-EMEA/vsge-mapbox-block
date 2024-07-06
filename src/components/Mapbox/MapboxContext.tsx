@@ -10,8 +10,7 @@ import {
 	MapBoxListing,
 	MountedMapsContextValue,
 } from '../../types';
-import type mapboxgl from 'mapbox-gl';
-import type { LngLat } from 'mapbox-gl';
+import { LngLat } from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import type { MutableRefObject } from 'react';
 import { __ } from '@wordpress/i18n';

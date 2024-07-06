@@ -4,7 +4,6 @@ import mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
 import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
-import { SEARCH_RESULTS_SHOWN } from '../../constants';
 import { SearchPopup } from './SearchPopup';
 import { enableListing } from '../Sidebar/Listing';
 

@@ -27,6 +27,9 @@ export type CurrentContext = {
 export function getCurrentContext(
 	searchResult: MapboxGeocoder.Result
 ): CurrentContext {
+	if ( ! searchResult ) {
+		return {};
+	}
 	// parse the current pointer area to get the country and the region
 	const currentArea: CurrentContext = {};
 
@@ -72,14 +75,44 @@ export function filterByPreferredArea(
 			prefArea.forEach( ( storeRegion ) => {
 				// check if the current position matches the reseller preferred area
 				if (
-					currentContext.region.short_code === storeRegion ||
-					isChildOf( currentContext.region.short_code, storeRegion )
+					currentContext.region?.short_code &&
+					( currentContext.region?.short_code === storeRegion ||
+						isChildOf(
+							currentContext?.region?.short_code,
+							storeRegion
+						) )
 				) {
 					preferredStores.push( currentStore );
 				}
 			} );
 		}
 	} );
+
+	// if no preferred stores are found, search for the resellers in the same country
+	if ( ! preferredStores.length ) {
+		// loop for each store found
+		stores?.forEach( ( currentStore: MapBoxListing ) => {
+			// Get the reseller country code
+			const storeCountry =
+				currentStore?.properties?.countryCode?.toLowerCase() ?? 'none';
+			// Using the preferred area lookup for the country code
+			const prefArea = currentStore.properties.preferredArea?.map(
+				( area ) => {
+					return area.split( '-' )[ 0 ].toLowerCase();
+				}
+			);
+
+			// check if the current position matches the reseller preferred area
+			if (
+				currentContext.country.short_code === storeCountry ||
+				( prefArea && prefArea.includes( storeCountry ) )
+			) {
+				preferredStores.push( currentStore );
+			}
+		} );
+	}
+
+	// return the collected preferred stores
 	return preferredStores;
 }
 

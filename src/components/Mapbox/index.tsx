@@ -36,6 +36,7 @@ import { initMap } from './init';
 import { equalsCheck } from '../../utils';
 import { initGeoCoder } from '../Geocoder/init';
 import { PinPointPopup } from '../Popup/PinPointPopup';
+import type mapboxgl from 'mapbox-gl';
 
 /**
  * Renders a MapBox component.
@@ -53,7 +54,7 @@ export function MapBox( {
 	mapDefaults,
 	isEditor,
 }: {
-	mapboxgl: mapboxgl;
+	mapboxgl: mapboxgl.Map;
 	attributes: MapAttributes;
 	mapDefaults: MapboxBlockDefaults;
 	isEditor?: boolean;
@@ -188,7 +189,6 @@ export function MapBox( {
 						mapRef={ mapRef.current }
 						map={ map.current }
 						mapDefaults={ mapDefaults }
-						markersRef={ markersRef.current }
 					/>
 				);
 				return;
@@ -254,7 +254,6 @@ export function MapBox( {
 						mapRef={ mapRef.current }
 						map={ map.current }
 						mapDefaults={ mapDefaults }
-						markersRef={ markersRef.current }
 					/>
 				);
 				return;

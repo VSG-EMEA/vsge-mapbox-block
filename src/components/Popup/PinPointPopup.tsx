@@ -26,7 +26,6 @@ export function PinPointPopup( props: {
 	setListings: Dispatch< MapBoxListing[] >;
 	setFilteredListings: Dispatch< MapBoxListing[] | null >;
 	mapDefaults: MapboxBlockDefaults;
-	markersRef: HTMLButtonElement[];
 } ): JSX.Element | null {
 	const {
 		location,
@@ -35,7 +34,6 @@ export function PinPointPopup( props: {
 		listings,
 		setFilteredListings,
 		mapDefaults,
-		markersRef,
 	} = props;
 
 	if ( ! mapRef ) {
@@ -49,7 +47,7 @@ export function PinPointPopup( props: {
 			</h3>
 			<div className={ 'mapbox-popup-newpin-buttons' }>
 				<button
-					onClick={ ( e ) => {
+					onClick={ () => {
 						// remove any popup or temp marker (clicked point, another geocoder marker) from the map
 						const currentListings = removeTempMarkers(
 							listings,
@@ -64,14 +62,18 @@ export function PinPointPopup( props: {
 							types: DEFAULT_GEOCODER_TYPE_SEARCH,
 						} );
 
-						map.addControl( geo );
+						const geoInputMock = document.createElement( 'div' );
+						geoInputMock.style.display = 'none';
+						mapRef.append( geoInputMock );
+
+						geo.addTo( geoInputMock );
 
 						geo.query( `${ location[ 1 ] },${ location[ 0 ] }` );
 
 						// Add geocoder result to container.
-						geo.on( 'result', ( e ) => {
+						geo.on( 'result', ( ev: any ) => {
 							const searchResult =
-								e.result as MapboxGeocoder.Result;
+								ev.result as MapboxGeocoder.Result;
 
 							const filtered = getNearestStore(
 								searchResult,
@@ -80,7 +82,7 @@ export function PinPointPopup( props: {
 								currentListings
 							);
 
-							map.removeControl( geo );
+							mapRef.removeChild( geoInputMock );
 
 							setFilteredListings( filtered );
 						} );
