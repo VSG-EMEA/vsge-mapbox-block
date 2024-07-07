@@ -55,21 +55,23 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 						className={ 'popup-website' }
 					/>
 
+					<AddressLine
+						label={ __( 'Address', 'vsge-mapbox-block' ) }
+						className={ 'popup-address' }
+						address={ address }
+						city={ city }
+					/>
+
 					<Phone
 						phone={ phone }
 						label={ __( 'Phone', 'vsge-mapbox-block' ) }
 						className={ 'popup-phone' }
 					/>
+
 					<Phone
 						phone={ mobile }
 						label={ __( 'Mobile', 'vsge-mapbox-block' ) }
 						className={ 'popup-mobile' }
-					/>
-
-					<AddressLine
-						className={ 'popup-address' }
-						address={ address }
-						city={ city }
 					/>
 
 					<EmailAddr

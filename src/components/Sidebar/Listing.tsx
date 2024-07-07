@@ -45,7 +45,7 @@ export function enableListing( map: mapboxgl.Map, marker: MapBoxListing ) {
 	// 1. Fly to the point
 	flyToStore( map, marker );
 
-	// 3. Highlight listing in sidebar (and remove highlight for all other listings)
+	// 3. Highlight listing in the sidebar (and remove highlight for all other listings)
 	highlightListing( marker );
 }
 
@@ -108,25 +108,26 @@ export const Listing = ( {
 						className={ 'listings-company-link' }
 					/>
 
-					<Phone
-						phone={ phone }
-						label="Phone"
-						className={ 'listings-phone-label' }
-					/>
-
-					<Phone
-						phone={ mobile }
-						label="Mobile"
-						className={ 'listings-mobile-label' }
-					/>
-
 					<AddressLine
+						label={ __( 'Address', 'vsge-mapbox-block' ) }
 						className={ 'listings-address-label' }
 						address={ address }
 						city={ city }
 						country={ country }
 						countryCode={ countryCode }
 						postalCode={ postalCode }
+					/>
+
+					<Phone
+						phone={ phone }
+						label={ __( 'Phone', 'vsge-mapbox-block' ) }
+						className={ 'listings-phone-label' }
+					/>
+
+					<Phone
+						phone={ mobile }
+						label={ __( 'Mobile', 'vsge-mapbox-block' ) }
+						className={ 'listings-mobile-label' }
 					/>
 
 					<EmailAddr
