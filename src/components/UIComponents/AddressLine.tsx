@@ -1,4 +1,5 @@
 import { regions } from 'iso3166-helper/lib/data/regions';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Formats the address based on the provided street, city, state, zip code, country, and country code.
@@ -46,24 +47,26 @@ function formatAddress(
 /**
  * Renders an address line with optional country code and custom class name.
  *
- * @param {object=} props             - The props object
+ * @param {object} props             - The props object
  * @return {JSX.Element | null} The rendered address line or null if no address, city, or country is provided.
  */
-export const AddressLine = ( props ): JSX.Element | null => {
+export const AddressLine = ( props: {
+	label?: string;
+	address?: string;
+	country?: string;
+	city?: string;
+	countryCode?: string;
+	postalCode?: string;
+	className?: string;
+} ): JSX.Element | null => {
 	const {
+		label = '',
 		address = '',
 		country = '',
 		city = '',
 		countryCode = '',
 		postalCode = '',
 		className = 'address-line',
-	}: {
-		address?: string;
-		country?: string;
-		city?: string;
-		countryCode?: string;
-		postalCode?: string;
-		className?: string;
 	} = props;
 
 	const formattedAddress = formatAddress(
@@ -78,5 +81,10 @@ export const AddressLine = ( props ): JSX.Element | null => {
 		return null;
 	}
 
-	return <p className={ 'mbb-address ' + className }>{ formattedAddress }</p>;
+	return (
+		<p className={ `mbb-address ${ className }` }>
+			<b>{ label } </b>
+			{ formattedAddress }
+		</p>
+	);
 };

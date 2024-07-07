@@ -140,7 +140,7 @@ export function getNearestStore(
 	const sortedNearestStores = locateNearestStore(
 		result.geometry.coordinates as CoordinatesDef,
 		listings
-	)?.slice( 0, SEARCH_RESULTS_SHOWN );
+	)?.slice( 0, SEARCH_RESULTS_SHOWN * 2 ); // we need to shrink the list to an acceptable number to be processed and avoid unneeded computations
 
 	// filter results by preferred area
 	const preferredStores = filterByPreferredArea(
@@ -154,7 +154,12 @@ export function getNearestStore(
 		: sortedNearestStores;
 
 	// then show the nearest store
-	showNearestStore( myLocationPin, sortedListings, mapRef, map );
+	showNearestStore(
+		myLocationPin,
+		sortedListings.slice( 0, SEARCH_RESULTS_SHOWN ),
+		mapRef,
+		map
+	);
 
 	return [ ...sortedListings ];
 }

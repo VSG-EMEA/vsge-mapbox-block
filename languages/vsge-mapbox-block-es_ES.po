@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: codekraft <EMAIL>\n"
-"POT-Creation-Date: 2024-07-05T23:54:32.396Z\n"
+"POT-Creation-Date: 2024-07-07T14:41:43.489Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -27,6 +27,14 @@ msgstr "VSGE - bloque mapbox"
 msgid "codekraft"
 msgstr "codekraft"
 
+#: src/components/UIComponents/Phone.tsx:29
+msgid "Call "
+msgstr "Llame a "
+
+#: src/components/UIComponents/EmailAddr.tsx:31
+msgid "Email "
+msgstr "Email "
+
 #: src/components/TopBar/index.tsx:113
 msgid "Reset Filters"
 msgstr "Reiniciar Filtros"
@@ -42,14 +50,6 @@ msgstr "Filtrar"
 #: src/components/TopBar/index.tsx:154
 msgid "Select a tag"
 msgstr "Seleccione una etiqueta"
-
-#: src/components/UIComponents/Phone.tsx:29
-msgid "Call "
-msgstr "Llame a "
-
-#: src/components/UIComponents/EmailAddr.tsx:31
-msgid "Email "
-msgstr "Email "
 
 #: src/components/Sortable/SortablePins.tsx:134
 #: src/components/Sortable/index.tsx:163
@@ -81,18 +81,20 @@ msgid "Company"
 msgstr "Empresa"
 
 #: src/components/Sortable/SortablePins.tsx:260
-#: src/components/Popup/PopupContent.tsx:61
+#: src/components/Sidebar/Listing.tsx:123
+#: src/components/Popup/PopupContent.tsx:67
 msgid "Phone"
 msgstr "Teléfono"
 
 #: src/components/Sortable/SortablePins.tsx:274
-#: src/components/Popup/PopupContent.tsx:66
+#: src/components/Sidebar/Listing.tsx:129
+#: src/components/Popup/PopupContent.tsx:72
 msgid "Mobile"
 msgstr "Móvil"
 
 #: src/components/Sortable/SortablePins.tsx:288
-#: src/components/Sidebar/Listing.tsx:136
-#: src/components/Popup/PopupContent.tsx:83
+#: src/components/Sidebar/Listing.tsx:135
+#: src/components/Popup/PopupContent.tsx:78
 msgid "Email"
 msgstr "Email"
 
@@ -121,6 +123,8 @@ msgid "Preferred area"
 msgstr "Zona preferida"
 
 #: src/components/Sortable/SortablePins.tsx:396
+#: src/components/Sidebar/Listing.tsx:112
+#: src/components/Popup/PopupContent.tsx:59
 msgid "Address"
 msgstr "Dirección"
 
@@ -161,7 +165,7 @@ msgstr "Añadir nuevo"
 msgid "error ??"
 msgstr "error ??"
 
-#: src/components/Sidebar/Listing.tsx:142
+#: src/components/Sidebar/Listing.tsx:141
 msgid "Distance: "
 msgstr "Distancia: "
 
@@ -169,17 +173,17 @@ msgstr "Distancia: "
 msgid "no listings found"
 msgstr "no se han encontrado anuncios"
 
-#: src/components/Mapbox/MapboxContext.tsx:96
-msgid "useMapboxContext must be used within a MapboxProvider"
-msgstr "useMapboxContext debe utilizarse dentro de un MapboxProvider"
-
-#: src/components/Popup/PinPointPopup.tsx:46
+#: src/components/Popup/PinPointPopup.tsx:40
 msgid "My location"
 msgstr "Mi ubicación"
 
-#: src/components/Popup/PinPointPopup.tsx:91
+#: src/components/Popup/PinPointPopup.tsx:85 src/components/Geocoder/init.ts:48
 msgid "Find nearest Sales Agent"
 msgstr "Encontrar el agente comercial más cercano"
+
+#: src/components/Mapbox/MapboxContext.tsx:96
+msgid "useMapboxContext must be used within a MapboxProvider"
+msgstr "useMapboxContext debe utilizarse dentro de un MapboxProvider"
 
 #: src/components/Edit/EditPanelIcons.tsx:32
 msgid "Delete icon"
@@ -249,9 +253,8 @@ msgstr "Latitud"
 msgid "Longitude"
 msgstr "Longitud"
 
-#: src/components/Geocoder/init.ts:48
-msgid "Find nearest sales agent"
-msgstr "Encontrar el agente comercial más cercano"
+#~ msgid "Find nearest sales agent"
+#~ msgstr "Encontrar el agente comercial más cercano"
 
 #~ msgctxt "block title"
 #~ msgid "MapBox"

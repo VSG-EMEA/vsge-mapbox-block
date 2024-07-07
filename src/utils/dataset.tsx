@@ -42,3 +42,22 @@ export const reorder = (
 
 	return result;
 };
+
+/**
+ * Takes an array and a separator and returns a new array with the separator
+ * interspersed between each element of the original array.
+ *
+ * @param {Array} elements - The array of elements to intersperse.
+ * @return {Array} - The new array with the separator interspersed.
+ */
+export function intersperse( elements: JSX.Element[] ): Array< any > {
+	return elements.reduce(
+		( result, element, index ) => {
+			if ( index === 0 ) {
+				return [ element ];
+			}
+			return [ ...result, ', ', element ];
+		},
+		[] as ( JSX.Element | string )[]
+	);
+}

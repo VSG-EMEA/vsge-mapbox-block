@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { intersperse } from '../../utils/dataset';
 
 /**
  * Renders a phone number with label as a link for calling.
@@ -21,16 +22,24 @@ export const Phone = ( {
 	if ( ! phone ) {
 		return null;
 	}
-	return (
-		<p className={ 'mbb-phone ' + className }>
-			<b>{ label }: </b>{ ' ' }
+	const phoneNumbers = phone.split( ',' ).map( ( n ) => n.trim() );
+
+	const phoneMarkup = intersperse(
+		phoneNumbers.map( ( phoneNumber ) => (
 			<a
-				href={ 'tel:' + phone }
-				title={ __( 'Call ', 'vsge-mapbox-block' ) + phone }
+				key={ 'phone-' + phoneNumber }
+				href={ 'tel:' + phoneNumber }
+				title={ __( 'Call ', 'vsge-mapbox-block' ) + phoneNumber }
 				rel="noreferrer noopener"
 			>
-				{ phone }
+				{ phoneNumber }
 			</a>
+		) )
+	);
+	return (
+		<p className={ 'mbb-phone ' + className }>
+			<b>{ label }: </b>
+			{ phoneMarkup }
 		</p>
 	);
 };
