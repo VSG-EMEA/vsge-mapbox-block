@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: vsge-mapbox-block
- * Version: 1.1.3
+ * Version: 1.1.4
  * Description: VSGE - mapbox block
  * Author: codekraft
  * Text Domain: vsge-mapbox-block
