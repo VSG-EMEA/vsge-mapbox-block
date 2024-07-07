@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: codekraft <EMAIL>\n"
-"POT-Creation-Date: 2024-07-05T16:10:19.521Z\n"
+"POT-Creation-Date: 2024-07-06T14:31:01.278Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -51,20 +51,6 @@ msgstr "Selezionare un filtro"
 msgid "Select a tag"
 msgstr "Selezionare un tag"
 
-#: src/components/Sidebar/Listing.tsx:136
-#: src/components/Sortable/SortablePins.tsx:288
-#: src/components/Popup/PopupContent.tsx:83
-msgid "Email"
-msgstr "E-mail"
-
-#: src/components/Sidebar/Listing.tsx:142
-msgid "Distance: "
-msgstr "Distanza: "
-
-#: src/components/Sidebar/index.tsx:36
-msgid "no listings found"
-msgstr "nessun annuncio trovato"
-
 #: src/components/Sortable/SortablePins.tsx:134
 #: src/components/Sortable/index.tsx:163
 msgid "New"
@@ -95,14 +81,20 @@ msgid "Company"
 msgstr "Azienda"
 
 #: src/components/Sortable/SortablePins.tsx:260
-#: src/components/Popup/PopupContent.tsx:61
+#: src/components/Popup/PopupContent.tsx:60
 msgid "Phone"
 msgstr "Telefono"
 
 #: src/components/Sortable/SortablePins.tsx:274
-#: src/components/Popup/PopupContent.tsx:66
+#: src/components/Popup/PopupContent.tsx:65
 msgid "Mobile"
 msgstr "Cellulare"
+
+#: src/components/Sortable/SortablePins.tsx:288
+#: src/components/Sidebar/Listing.tsx:135
+#: src/components/Popup/PopupContent.tsx:77
+msgid "Email"
+msgstr "E-mail"
 
 #: src/components/Sortable/SortablePins.tsx:302
 msgid "website"
@@ -169,11 +161,19 @@ msgstr "Aggiungi nuovo"
 msgid "error ??"
 msgstr "errore?"
 
-#: src/components/Popup/PinPointPopup.tsx:46
+#: src/components/Sidebar/Listing.tsx:141
+msgid "Distance: "
+msgstr "Distanza: "
+
+#: src/components/Sidebar/index.tsx:36
+msgid "no listings found"
+msgstr "nessun annuncio trovato"
+
+#: src/components/Popup/PinPointPopup.tsx:40
 msgid "My location"
 msgstr "La mia località"
 
-#: src/components/Popup/PinPointPopup.tsx:91
+#: src/components/Popup/PinPointPopup.tsx:85
 msgid "Find nearest Sales Agent"
 msgstr "Trova l'agente di vendita più vicino"
 
@@ -182,7 +182,7 @@ msgid "useMapboxContext must be used within a MapboxProvider"
 msgstr "useMapboxContext deve essere utilizzato all'interno di un MapboxProvider"
 
 #: src/components/Geocoder/init.ts:48
-msgid "Find the nearest sales agent"
+msgid "Find nearest sales agent"
 msgstr "Trova l'agente di vendita più vicino"
 
 #: src/components/Edit/EditPanelIcons.tsx:32
