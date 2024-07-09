@@ -138,7 +138,7 @@ export const Listing = ( {
 
 					<DistanceLabel
 						distance={ distance }
-						label={ __( 'Distance: ', 'vsge-mapbox-block' ) }
+						label={ __( 'Distance', 'vsge-mapbox-block' ) }
 						className={ 'store-distance' }
 					/>
 

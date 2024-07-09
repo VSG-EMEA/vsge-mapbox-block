@@ -162,8 +162,8 @@ msgid "error ??"
 msgstr "erreur ? ?"
 
 #: src/components/Sidebar/Listing.tsx:141
-msgid "Distance: "
-msgstr "Distance : "
+msgid "Distance"
+msgstr "Distance"
 
 #: src/components/Sidebar/index.tsx:36
 msgid "no listings found"

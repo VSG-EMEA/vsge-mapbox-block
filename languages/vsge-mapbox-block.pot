@@ -176,7 +176,7 @@ msgid "error ??"
 msgstr ""
 
 #: src/components/Sidebar/Listing.tsx:141
-msgid "Distance: "
+msgid "Distance"
 msgstr ""
 
 #: src/components/Sidebar/index.tsx:36

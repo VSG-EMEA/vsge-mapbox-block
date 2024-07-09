@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: codekraft <EMAIL>\n"
-"POT-Creation-Date: 2024-07-06T14:31:01.278Z\n"
+"POT-Creation-Date: 2024-07-07T14:41:43.489Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -81,18 +81,20 @@ msgid "Company"
 msgstr "Azienda"
 
 #: src/components/Sortable/SortablePins.tsx:260
-#: src/components/Popup/PopupContent.tsx:60
+#: src/components/Sidebar/Listing.tsx:123
+#: src/components/Popup/PopupContent.tsx:67
 msgid "Phone"
 msgstr "Telefono"
 
 #: src/components/Sortable/SortablePins.tsx:274
-#: src/components/Popup/PopupContent.tsx:65
+#: src/components/Sidebar/Listing.tsx:129
+#: src/components/Popup/PopupContent.tsx:72
 msgid "Mobile"
 msgstr "Cellulare"
 
 #: src/components/Sortable/SortablePins.tsx:288
 #: src/components/Sidebar/Listing.tsx:135
-#: src/components/Popup/PopupContent.tsx:77
+#: src/components/Popup/PopupContent.tsx:78
 msgid "Email"
 msgstr "E-mail"
 
@@ -121,6 +123,8 @@ msgid "Preferred area"
 msgstr "Area preferita"
 
 #: src/components/Sortable/SortablePins.tsx:396
+#: src/components/Sidebar/Listing.tsx:112
+#: src/components/Popup/PopupContent.tsx:59
 msgid "Address"
 msgstr "Indirizzo"
 
@@ -162,8 +166,8 @@ msgid "error ??"
 msgstr "errore?"
 
 #: src/components/Sidebar/Listing.tsx:141
-msgid "Distance: "
-msgstr "Distanza: "
+msgid "Distance"
+msgstr "Distanza"
 
 #: src/components/Sidebar/index.tsx:36
 msgid "no listings found"
@@ -173,17 +177,13 @@ msgstr "nessun annuncio trovato"
 msgid "My location"
 msgstr "La mia località"
 
-#: src/components/Popup/PinPointPopup.tsx:85
+#: src/components/Popup/PinPointPopup.tsx:85 src/components/Geocoder/init.ts:48
 msgid "Find nearest Sales Agent"
 msgstr "Trova l'agente di vendita più vicino"
 
 #: src/components/Mapbox/MapboxContext.tsx:96
 msgid "useMapboxContext must be used within a MapboxProvider"
 msgstr "useMapboxContext deve essere utilizzato all'interno di un MapboxProvider"
-
-#: src/components/Geocoder/init.ts:48
-msgid "Find nearest sales agent"
-msgstr "Trova l'agente di vendita più vicino"
 
 #: src/components/Edit/EditPanelIcons.tsx:32
 msgid "Delete icon"
@@ -252,39 +252,3 @@ msgstr "Latitudine"
 #: src/components/Edit/Edit.tsx:318
 msgid "Longitude"
 msgstr "Longitudine"
-
-#~ msgid "Distance"
-#~ msgstr "Distanza"
-
-#~ msgid "Find the nearest store?"
-#~ msgstr "Trovare il negozio più vicino?"
-
-#~ msgid "Phone: "
-#~ msgstr "Telefono: "
-
-#~ msgid "Mobile: "
-#~ msgstr "Mobile: "
-
-#~ msgid "Clicked Pin"
-#~ msgstr "Pin cliccato"
-
-#~ msgid "lang"
-#~ msgstr "lingua"
-
-#~ msgid "Add Pin"
-#~ msgstr "Aggiungi Pin"
-
-#~ msgid "Map Height"
-#~ msgstr "Altezza mappa"
-
-#~ msgctxt "block title"
-#~ msgid "MapBox"
-#~ msgstr "Mappa"
-
-#~ msgctxt "block description"
-#~ msgid "A block that displays the map using mapbox"
-#~ msgstr "Un blocco che visualizza la mappa utilizzando mapbox"
-
-#~ msgctxt "block keyword"
-#~ msgid "mapbox"
-#~ msgstr "mapbox"

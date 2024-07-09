@@ -20,7 +20,7 @@ export const DistanceLabel = ( {
 	}
 	return (
 		<p className={ 'mbb-distance-label ' + className }>
-			{ label + `: ${ distance.toFixed( 2 ) }Km` }
+			{ label + `: ${ distance.toFixed( 1 ) }Km` }
 		</p>
 	);
 };
