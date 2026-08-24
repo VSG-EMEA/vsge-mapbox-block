@@ -1,11 +1,26 @@
 {
 	"name": "vsge-mapbox-block",
-	"description": "a wordpress block that allow to show mapbox maps",
-	"version": "1.0.0",
+	"version": "1.1.4",
+	"description": "A WordPress block for displaying VSGE Mapbox reseller maps.",
 	"author": "codekraft",
 	"license": "GPL-2.0-or-later",
-	"main": "./build/mapbox.js",
-	"typings": "./build/main.d.ts",
+	"keywords": [
+		"wordpress",
+		"gutenberg",
+		"mapbox"
+	],
+	"homepage": "https://github.com/VSG-EMEA/vsge-mapbox-block#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/VSG-EMEA/vsge-mapbox-block.git"
+	},
+	"bugs": {
+		"url": "https://github.com/VSG-EMEA/vsge-mapbox-block/issues"
+	},
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=7.0.0"
+	},
 	"files": [
 		"build/*",
 		"languages/*",
@@ -14,85 +29,58 @@
 		"LICENSE.md",
 		"readme.txt"
 	],
-	"scripts": {
-		"packages-update": "wp-scripts packages-update",
-		"build": "npm run build:scripts && npm run build:makepot && npm run build:makeFeJson && npm run build:makeEditorJson",
-		"build:scripts": "wp-scripts build",
-		"build:makepot": "npx make-pot",
-		"build:makeFeJson": "npx makejson ./languages --scriptName=\"build/frontend.js\"",
-		"build:makeEditorJson": "npx makejson ./languages --scriptName=\"build/editor.js\"",
-		"start": "wp-scripts start",
-		"format": "wp-scripts format /src",
-		"lint:css": "wp-scripts lint-style /src/style",
-		"lint:js": "wp-scripts lint-js ./src",
-		"wp-env:start": "wp-env start",
-		"wp-env:stop": "wp-env stop",
-		"wp-env:destroy": "wp-env destroy",
-		"test": "jest --silent=false --coverage",
-		"plugin-zip": "wp-scripts plugin-zip"
+	"main": "./build/mapbox.js",
+	"typings": "./build/main.d.ts",
+	"dependencies": {
+		"@mapbox/maki": "^8.2.0",
+		"@mapbox/mapbox-gl-geocoder": "^5.1.2",
+		"@mapbox/mapbox-gl-language": "^1.0.1",
+		"@turf/distance": "^7.4.0",
+		"@turf/helpers": "^7.4.0",
+		"iso3166-helper": "^1.0.2",
+		"mapbox-gl": "^3.28.1"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.24.7",
-		"@babel/preset-typescript": "^7.24.7",
-		"@jest/globals": "^29.5.0",
-		"@types/expect-puppeteer": "^5.0.6",
-		"@types/jest": "^29.5.12",
-		"@types/jest-environment-puppeteer": "^5.0.6",
-		"@types/mapbox-gl": "^3.1.0",
+		"@jest/globals": "^30.4.1",
+		"@playwright/test": "^1.62.1",
+		"@types/jest": "^30.0.0",
 		"@types/mapbox__maki": "^7.2.2",
-		"@types/mapbox__mapbox-gl-geocoder": "^5.0.0",
-		"@types/node": "^20.14.6",
-		"@types/puppeteer": "^7.0.4",
-		"@types/react": "^18.3.3",
-		"@types/react-beautiful-dnd": "^13.1.8",
-		"@types/wordpress__block-editor": "^11.5.15",
-		"@types/wordpress__blocks": "^12.5.14",
-		"@types/wordpress__components": "^23.8.0",
-		"@types/wordpress__compose": "^6.0.1",
-		"@wordpress/block-editor": "^13.1.0",
-		"@wordpress/data": "^10.1.0",
-		"@wordpress/e2e-test-utils": "^11.1.0",
-		"@wordpress/e2e-tests": "^8.1.0",
-		"@wordpress/env": "^10.1.0",
-		"@wordpress/i18n": "^5.1.0",
-		"@wordpress/icons": "^10.1.0",
-		"@wordpress/jest-preset-default": "^12.1.0",
-		"@wordpress/scripts": "^27.9.0",
-		"@wp-blocks/make-pot": "^1.4.0",
-		"babel-jest": "^29.5.0",
+		"@types/mapbox__mapbox-gl-geocoder": "^5.1.2",
+		"@types/node": "^20.19.43",
+		"@types/react": "^18.3.31",
+		"@wordpress/block-editor": "^16.2.0",
+		"@wordpress/blocks": "^15.26.0",
+		"@wordpress/components": "^39.0.0",
+		"@wordpress/compose": "^8.6.0",
+		"@wordpress/data": "^10.53.0",
+		"@wordpress/e2e-test-utils-playwright": "^1.52.0",
+		"@wordpress/element": "^8.5.0",
+		"@wordpress/env": "^11.13.0",
+		"@wordpress/i18n": "^6.26.0",
+		"@wordpress/icons": "^15.4.0",
+		"@wordpress/jest-preset-default": "^14.0.0",
+		"@wordpress/scripts": "^34.1.0",
 		"classnames": "^2.5.1",
-		"jest-puppeteer": "^8.0.6",
-		"react-beautiful-dnd": "^13.1.1",
-		"typescript": "^5.4.5"
+		"jest-environment-jsdom": "^30.4.1",
+		"typescript": "^5.9.3"
 	},
-	"dependencies": {
-		"@mapbox/maki": "^8.0.1",
-		"@mapbox/mapbox-gl-geocoder": "^5.0.2",
-		"@mapbox/mapbox-gl-language": "^1.0.1",
-		"@turf/turf": "^6.5.0",
-		"iso3166-helper": "^1.0.2",
-		"mapbox-gl": "^3.5.1"
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format src tests",
+		"lint:css": "wp-scripts lint-style src/style",
+		"lint:js": "wp-scripts lint-js src/edit.tsx src/frontend.tsx src/types.ts src/utils/dataset.tsx src/utils/spatialCalcs.ts src/utils/svg.ts src/components/Edit src/components/Mapbox/Map.tsx src/components/Mapbox/index.tsx src/components/Mapbox/init.tsx src/components/Mapbox/utils.tsx src/components/Marker/Geomarker.tsx src/components/Marker/MapMarker.tsx src/components/Marker/utils.tsx src/components/Popup/index.tsx tests",
+		"lint:pkg": "wp-scripts lint-pkg-json",
+		"typecheck": "tsc --noEmit",
+		"test": "npm run test:unit",
+		"test:unit": "wp-scripts test-unit-js",
+		"test:e2e": "wp-scripts test-e2e",
+		"wp-env:start": "wp-env start",
+		"wp-env:stop": "wp-env stop",
+		"wp-env:destroy": "wp-env destroy"
 	},
 	"browserslist": [
 		"extends @wordpress/browserslist-config"
 	],
-	"engines": {
-		"node": ">=18.0.0",
-		"npm": ">=7.0.0"
-	},
-	"eslintConfig": {
-		"extends": [
-			"plugin:@wordpress/eslint-plugin/recommended"
-		],
-		"env": {
-			"browser": true,
-			"node": true
-		},
-		"globals": {
-			"window": true,
-			"document": true,
-			"localStorage": true
-		}
-	},
 	"prettier": "@wordpress/prettier-config"
 }
