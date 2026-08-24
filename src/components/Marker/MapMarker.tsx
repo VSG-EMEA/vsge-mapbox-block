@@ -1,4 +1,4 @@
-import { areValidCoordinates } from '../Sortable/utils';
+import { isValidCoordinates } from '../../utils/dataset';
 import { safeSlug } from '../../utils';
 import { createRoot } from '@wordpress/element';
 import { getMarkerSvg, modifySVG } from '../../utils/svg';
@@ -21,7 +21,7 @@ export function mapMarker(
 	icons: MarkerIcon[]
 ): void {
 	// Check if the coordinates are valid
-	if ( areValidCoordinates( listing?.geometry?.coordinates ) ) {
+	if ( isValidCoordinates( listing?.geometry?.coordinates ) ) {
 		// Render a Marker Component on our new DOM node
 		markersRef[ listing.id ] = document.createElement( 'button' );
 		markersRef[ listing.id ].id = 'marker-' + listing.id;

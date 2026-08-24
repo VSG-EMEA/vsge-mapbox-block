@@ -23,7 +23,7 @@ export function createMarkerEl(
 		)
 		.addTo( map.current );
 
-	markerElement.on( 'dragend', ( event ) => {
+	markerElement.on( 'dragend', () => {
 		const lngLat = markerElement.getLngLat();
 		// Update the marker's position
 		markerElement.setLngLat( lngLat );
@@ -50,23 +50,18 @@ export function removeTempMarkers(
 		'.marker-temp'
 	) as NodeListOf< HTMLElement >;
 	// Loop through the markers and remove them
+	const removableIds = new Set< number >();
 	markers.forEach( ( marker ) => {
-		// Check if the marker is excluded
-		if (
-			excludedMarkers.length === 0 &&
-			marker?.dataset?.markerName &&
-			! excludedMarkers.includes( marker.dataset?.markerName )
-		) {
-			// Remove the marker from the listings array
-			if ( listings[ Number( marker.dataset.id ) ] ) {
-				delete listings[ Number( marker.dataset.id ) ];
+		const markerName = marker.dataset?.markerName;
+		const markerId = Number( marker.dataset?.id );
+		if ( markerName && ! excludedMarkers.includes( markerName ) ) {
+			if ( Number.isFinite( markerId ) ) {
+				removableIds.add( markerId );
 			}
-			// Remove the marker from the DOM
-			marker?.remove();
+			marker.remove();
 		}
 	} );
-
-	return listings;
+	return listings.filter( ( listing ) => ! removableIds.has( listing.id ) );
 }
 
 /**
