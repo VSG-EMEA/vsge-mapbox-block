@@ -2,3 +2,48 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
 @import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 @import "components/common";
+
+.vsge-mapbox-editor-map {
+	height: 360px;
+	margin-bottom: 16px;
+}
+
+.vsge-mapbox-dealer-manager {
+	background: #fff;
+	border: 1px solid #ddd;
+	padding: 16px;
+
+	&__heading,
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	&__list {
+		display: grid;
+		gap: 4px;
+		max-height: 500px;
+		overflow: auto;
+		margin: 12px 0;
+	}
+
+	&__row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		text-align: left;
+		width: 100%;
+
+		span {
+			color: inherit;
+			opacity: 0.8;
+		}
+	}
+}
+
+.vsge-mapbox-dealer-editor {
+	border-top: 1px solid #ddd;
+	margin-top: 16px;
+	padding-top: 16px;
+}
