@@ -1,4 +1,4 @@
-import type { Feature, Geometry } from '@turf/turf';
+import type { Feature, Geometry } from 'geojson';
 import type { LngLat } from 'mapbox-gl';
 import type {
 	Dispatch,
@@ -20,13 +20,6 @@ export type TagArray = string[] | undefined;
 
 export type FilterCollection = { id: number; value: string };
 export type TagCollection = { id: number; tag: string };
-
-export interface SortableProps {
-	items: MapBoxListing[] | FilterCollection[];
-	tax: string;
-	setOptions: Function;
-	mapboxOptions?: MapboxOptions;
-}
 
 export interface MarkerIcon {
 	id: number;
