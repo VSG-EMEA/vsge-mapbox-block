@@ -1,5 +1,4 @@
-import type { BlockAttributes, BlockEditProps } from '@wordpress/blocks';
-import { MapProvider } from './components/Mapbox/MapboxContext';
+import type { BlockEditProps } from '@wordpress/blocks';
 import { MapEdit } from './components/Edit/Edit';
 import { MapAttributes } from './types';
 
@@ -16,14 +15,14 @@ export default function Edit( {
 	attributes,
 	setAttributes,
 	isSelected,
-}: BlockEditProps< BlockAttributes > ): JSX.Element {
+}: BlockEditProps ): JSX.Element {
 	return (
-		<MapProvider attributes={ attributes as MapAttributes }>
-			<MapEdit
-				attributes={ attributes as MapAttributes }
-				setAttributes={ setAttributes }
-				isSelected={ isSelected }
-			/>
-		</MapProvider>
+		<MapEdit
+			attributes={ attributes as MapAttributes }
+			setAttributes={
+				setAttributes as ( updates: Partial< MapAttributes > ) => void
+			}
+			isSelected={ isSelected }
+		/>
 	);
 }

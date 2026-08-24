@@ -1,11 +1,17 @@
 import './style/frontend.scss';
 
-import { createRoot, Suspense } from '@wordpress/element';
-import { MapBox } from './components/Mapbox/';
+import { createRoot, lazy, Suspense } from '@wordpress/element';
 import { MapProvider } from './components/Mapbox/MapboxContext';
 import { MapAttributes } from './types';
 import Loader from './components/Loader';
 import { getMapDefaults } from './utils';
+
+const MapBox = lazy( async () => ( {
+	default: ( await import( './components/Mapbox/index' ) ).MapBox,
+} ) );
+
+const isEnabled = ( value: unknown ): boolean =>
+	value === true || value === 'true';
 
 /**
  * This function creates a React component that renders a MapBox map with given attributes and default
@@ -57,32 +63,55 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	// Then create a Mapbox map React element for each element with the class "wp-block-vsge-mapbox"
 	if ( mapboxWrapper.length > 0 ) {
 		mapboxWrapper.forEach( ( mapElement ) => {
-			const rawAttributes = { ...mapElement.dataset };
+			const payload = mapElement.querySelector(
+				':scope > script.vsge-mapbox-data'
+			)?.textContent;
+			let rawAttributes: Record< string, unknown > = {
+				...mapElement.dataset,
+			};
+			if ( payload ) {
+				try {
+					rawAttributes = JSON.parse( payload ) as Record<
+						string,
+						unknown
+					>;
+				} catch ( error ) {
+					// Keep rendering legacy data attributes if a malformed payload is encountered.
+					// eslint-disable-next-line no-console
+					console.error( 'Unable to read Mapbox block data.', error );
+				}
+			}
 			const attributes: MapAttributes = {
 				...rawAttributes,
-				mapboxOptions: JSON.parse(
-					rawAttributes.mapboxOptions ||
-						'{ "listings": [], "tags": [], "filters": [] }'
+				mapboxOptions: ( typeof rawAttributes.mapboxOptions === 'string'
+					? JSON.parse( rawAttributes.mapboxOptions )
+					: rawAttributes.mapboxOptions || {
+							listings: [],
+							tags: [],
+							filters: [],
+							icons: [],
+					  } ) as MapAttributes[ 'mapboxOptions' ],
+				align: String( rawAttributes.align || 'center' ),
+				bearing: Number( rawAttributes.bearing || 0 ),
+				elevation: isEnabled( rawAttributes.elevation ),
+				freeViewCamera: isEnabled( rawAttributes.freeViewCamera ),
+				mapProjection: String(
+					rawAttributes.mapProjection || 'mercator'
 				),
-				align: rawAttributes.align || 'center',
-				bearing: Number( rawAttributes.bearing ),
-				elevation: rawAttributes.elevation === 'true',
-				freeViewCamera: rawAttributes.freeViewCamera === 'true',
-				mapProjection: rawAttributes.mapProjection || 'mercator',
-				latitude: Number( rawAttributes.latitude ),
-				longitude: Number( rawAttributes.longitude ),
-				pitch: Number( rawAttributes.pitch ),
-				sidebarEnabled: rawAttributes.sidebarEnabled === 'true',
-				fitView: rawAttributes.fitView === 'true',
-				geocoderEnabled: rawAttributes.geocoderEnabled === 'true',
-				tagsEnabled: rawAttributes.tagsEnabled === 'true',
-				filtersEnabled: rawAttributes.filtersEnabled === 'true',
-				mapHeight: rawAttributes.mapHeight || '100vh',
+				latitude: Number( rawAttributes.latitude || 0 ),
+				longitude: Number( rawAttributes.longitude || 0 ),
+				pitch: Number( rawAttributes.pitch || 0 ),
+				sidebarEnabled: isEnabled( rawAttributes.sidebarEnabled ),
+				fitView: isEnabled( rawAttributes.fitView ),
+				geocoderEnabled: isEnabled( rawAttributes.geocoderEnabled ),
+				tagsEnabled: isEnabled( rawAttributes.tagsEnabled ),
+				filtersEnabled: isEnabled( rawAttributes.filtersEnabled ),
+				mapHeight: String( rawAttributes.mapHeight || '100vh' ),
 				mapStyle:
-					rawAttributes.mapStyle ||
+					String( rawAttributes.mapStyle || '' ) ||
 					'mapbox://styles/mapbox/streets-v11',
-				mapZoom: Number( rawAttributes.mapZoom ),
-				mouseWheelZoom: rawAttributes.mouseWheelZoom === 'true',
+				mapZoom: Number( rawAttributes.mapZoom || 0 ),
+				mouseWheelZoom: isEnabled( rawAttributes.mouseWheelZoom ),
 			};
 			createMapRoot( mapElement, attributes );
 		} );
