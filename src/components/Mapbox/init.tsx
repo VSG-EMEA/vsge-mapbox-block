@@ -1,9 +1,10 @@
 import type { MapAttributes, MapboxBlockDefaults } from '../../types';
-import { prepareStores } from '../../utils/dataset';
+import { getMapStyleUrl, toFeatureCollection } from '../../utils/dataset';
 import { setMapElevation, setMapThreeDimensionality } from './utils';
-import type { Feature } from '@turf/turf';
 import type mapboxgl from 'mapbox-gl';
 import './style.scss';
+
+type MapboxGL = typeof mapboxgl;
 
 /**
  * The function initializes a Mapbox map with specified attributes and adds a terrain layer if
@@ -17,7 +18,7 @@ import './style.scss';
  * @return {mapboxgl.Map} a mapboxgl.Map object.
  */
 export function initMap(
-	mapboxgl: any,
+	mapbox: MapboxGL,
 	mapHtmlElement: HTMLDivElement,
 	attributes: MapAttributes,
 	defaults: MapboxBlockDefaults
@@ -34,9 +35,9 @@ export function initMap(
 		mapboxOptions,
 	} = attributes;
 
-	const map = new mapboxgl.Map( {
+	const map = new mapbox.Map( {
 		container: mapHtmlElement,
-		style: 'mapbox://styles/mapbox/' + mapStyle,
+		style: getMapStyleUrl( mapStyle ),
 		antialias: true,
 		center: [ longitude, latitude ],
 		zoom: mapZoom,
@@ -52,28 +53,15 @@ export function initMap(
 		setMapElevation( map, attributes.elevation );
 
 		// Add navigation control (the +/- zoom buttons)
-		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );
+		map.addControl( new mapbox.NavigationControl(), 'top-right' );
 
 		setMapThreeDimensionality( map, attributes.freeViewCamera );
-
-		// Set up the language.
-		if ( map.getLayer( 'country-label' ) ) {
-			map.setLayoutProperty( 'country-label', 'text-field', [
-				'get',
-				'name_' + defaults.language || 'en',
-			] );
-		}
 
 		// Add a GeoJSON source for the stores
 		map.addSource( 'geojson-stores', {
 			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: prepareStores(
-					mapboxOptions.listings as Feature< GeoJSON.Geometry >[]
-				),
-			},
-		} as any );
+			data: toFeatureCollection( mapboxOptions.listings ),
+		} );
 
 		// Add a layer showing the places.
 		map.addLayer( {

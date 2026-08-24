@@ -134,13 +134,13 @@ export function getMarkerData(
  *
  * @param {MapBoxListing[]} listings         - An array of MapBoxListing objects representing all the listings.
  * @param {MapBoxListing[]} filteredListings - An array of MapBoxListing objects representing the filtered listings.
- * @return {MapBoxListing[]} - An array of MapBoxListing objects. If filteredListings is not empty, it returns the filteredListings; otherwise, it returns the listings.
+ * @return {MapBoxListing[]} - A filtered list (including an intentionally empty one), or all listings when no filter is active.
  */
 export function getListing(
 	listings: MapBoxListing[],
 	filteredListings: MapBoxListing[] | null
 ): MapBoxListing[] {
-	return filteredListings?.length ? filteredListings : listings;
+	return filteredListings === null ? listings : filteredListings;
 }
 
 /**

@@ -26,7 +26,7 @@ import {
 	removeTempListings,
 	removeTempMarkers,
 } from '../Marker/utils';
-import { getNextId } from '../../utils/dataset';
+import { getNextId, normalizeMapboxLanguage } from '../../utils/dataset';
 import { generateTempMarkerData } from '../Marker/defaults';
 import { clearListingsDistances } from '../../utils/spatialCalcs';
 import { mapMarker } from '../Marker/MapMarker';
@@ -37,6 +37,8 @@ import { equalsCheck } from '../../utils';
 import { initGeoCoder } from '../Geocoder/init';
 import { PinPointPopup } from '../Popup/PinPointPopup';
 import type mapboxgl from 'mapbox-gl';
+
+type MapboxGL = typeof mapboxgl;
 
 /**
  * Renders a MapBox component.
@@ -49,12 +51,12 @@ import type mapboxgl from 'mapbox-gl';
  * @return {JSX.Element} The rendered MapBox component.
  */
 export function MapBox( {
-	mapboxgl,
+	mapboxgl: mapbox,
 	attributes,
 	mapDefaults,
 	isEditor,
 }: {
-	mapboxgl: mapboxgl.Map;
+	mapboxgl: MapboxGL;
 	attributes: MapAttributes;
 	mapDefaults: MapboxBlockDefaults;
 	isEditor?: boolean;
@@ -129,7 +131,7 @@ export function MapBox( {
 
 	const listenMapClick = useCallback(
 		// useCallback ensures the functions stays identical
-		( event: mapboxgl.MapMouseEvent & mapboxgl.EventData ) => {
+		( event: mapboxgl.MapMouseEvent ) => {
 			// store the last clicked position in oder to add the event listener again
 			setLngLat( event.lngLat );
 			const clickedPoint = [
@@ -198,9 +200,8 @@ export function MapBox( {
 				'.mapboxgl-marker'
 			) as MarkerHTMLElement | null;
 
-			// eslint-disable-next-line no-console
 			if ( ! markerEl ) {
-				return console.log( 'no marker data found' );
+				return;
 			}
 
 			/**
@@ -280,15 +281,14 @@ export function MapBox( {
 			const mapboxEl: HTMLDivElement = mapRef.current;
 
 			// Initialize map and store the map instance
-			map.current = initMap(
-				mapboxgl,
-				mapboxEl,
-				attributes,
-				mapDefaults
-			);
+			map.current = initMap( mapbox, mapboxEl, attributes, mapDefaults );
 
 			// Add the language control to the map
-			const language = new MapboxLanguage();
+			const language = new MapboxLanguage( {
+				defaultLanguage: normalizeMapboxLanguage(
+					mapDefaults.language
+				),
+			} );
 			map.current.addControl( language );
 
 			// Add the geocoder to the map
@@ -299,7 +299,7 @@ export function MapBox( {
 			) {
 				setGeoCoder(
 					initGeoCoder(
-						mapboxgl,
+						mapbox,
 						map.current,
 						mapRef?.current,
 						markersRef.current,
@@ -318,6 +318,14 @@ export function MapBox( {
 				map.current.resize();
 			} );
 		}
+
+		return () => {
+			if ( map.current ) {
+				map.current.remove();
+				map.current = null;
+			}
+			setLoaded( false );
+		};
 	}, [ mapRef?.current ] );
 
 	useEffect( () => {
@@ -356,7 +364,7 @@ export function MapBox( {
 	/**
 	 * if the access key isn't provided
 	 */
-	if ( typeof mapDefaults?.accessToken !== 'string' ) {
+	if ( ! mapDefaults?.accessToken ) {
 		return (
 			<div>
 				<p>
