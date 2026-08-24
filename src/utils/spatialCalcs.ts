@@ -1,5 +1,6 @@
-import { type Coord, distance, type Units } from '@turf/turf';
-import { MapBoxListing, MapItem } from '../types';
+import distance from '@turf/distance';
+import type { Coord, Units } from '@turf/helpers';
+import { MapBoxListing } from '../types';
 import { LngLatBoundsLike } from 'mapbox-gl';
 
 /**
@@ -26,33 +27,27 @@ export function locateNearestStore(
 		return [];
 	}
 
-	storesArray = storesArray
+	return storesArray
 		.filter( ( store ) => store.type === 'Feature' )
-		.map( ( store ) => {
-			delete store.properties.distance;
-			Object.defineProperty( store.properties, 'distance', {
-				value: distance( result, store.geometry as Coord, options ),
-				writable: true,
-				enumerable: true,
-				configurable: true,
-			} );
-			return store;
+		.map( ( store ) => ( {
+			...store,
+			properties: {
+				...store.properties,
+				distance: distance( result, store.geometry as Coord, options ),
+			},
+		} ) )
+		.sort( ( a, b ) => {
+			if ( ! a.properties.distance || ! b.properties.distance ) {
+				return -1;
+			}
+			if ( a.properties.distance > b.properties.distance ) {
+				return 1;
+			}
+			if ( a.properties.distance < b.properties.distance ) {
+				return -1;
+			}
+			return 0; // a must be equal to b
 		} );
-
-	storesArray.sort( ( a, b ) => {
-		if ( ! a.properties.distance || ! b.properties.distance ) {
-			return -1;
-		}
-		if ( a.properties.distance > b.properties.distance ) {
-			return 1;
-		}
-		if ( a.properties.distance < b.properties.distance ) {
-			return -1;
-		}
-		return 0; // a must be equal to b
-	} );
-
-	return storesArray;
 }
 
 /**
@@ -111,7 +106,7 @@ export function clearListingsDistances(
 	filteredListings: MapBoxListing[]
 ): MapBoxListing[] {
 	return filteredListings?.map( ( listing ) => {
-		delete listing.properties.distance;
-		return listing;
+		const { distance: _distance, ...properties } = listing.properties;
+		return { ...listing, properties };
 	} );
 }
