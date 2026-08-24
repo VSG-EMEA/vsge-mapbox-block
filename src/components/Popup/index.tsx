@@ -117,4 +117,5 @@ export function showNearestStore(
 		?.classList.add( 'active' );
 
 	enableListing( map, sortedNearestStores[ 0 ] );
+	return sortedNearestStores;
 }
