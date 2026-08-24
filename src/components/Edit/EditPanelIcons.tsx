@@ -10,6 +10,7 @@ import { cancelCircleFilled, mapMarker, plusCircle } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { getNextId } from '../../utils/dataset';
 import { MarkerIcon } from '../../types';
+import { sanitizeMarkerSvg } from '../../utils/svg';
 
 export const IconItem = ( props: {
 	id: number;
@@ -25,7 +26,9 @@ export const IconItem = ( props: {
 			<div className={ 'marker-icon-item__preview' }>
 				<div
 					className={ 'svg-wrapper' }
-					dangerouslySetInnerHTML={ { __html: content } }
+					dangerouslySetInnerHTML={ {
+						__html: sanitizeMarkerSvg( content ) || '',
+					} }
 				></div>
 				<Button
 					icon={ cancelCircleFilled }
@@ -70,11 +73,13 @@ export const EditPanelIcons = ( {
 	setOptions: Function;
 } ) => {
 	function setIcon( newIcon: MarkerIcon ) {
+		const content = sanitizeMarkerSvg( newIcon.content ) || '';
 		const newIcons = icons.map( ( icon ) =>
 			icon.id === newIcon.id
 				? {
 						...icon,
 						...newIcon,
+						content,
 				  }
 				: icon
 		);
@@ -86,10 +91,10 @@ export const EditPanelIcons = ( {
 			...icons,
 			{
 				id: nextId,
-				name: [ __( 'New Marker ', 'vsge-mapbox-block' ), nextId ].join(
+				name: [ __( 'New Marker', 'vsge-mapbox-block' ), nextId ].join(
 					' '
 				),
-				content: undefined,
+				content: '',
 			},
 		] );
 	}
