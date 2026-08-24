@@ -20,10 +20,20 @@ module.exports = {
 			...defaultConfig.optimization.splitChunks,
 			cacheGroups: {
 				...defaultConfig.optimization.splitChunks.cacheGroups,
-				vendor: {
-					test: /[\\/]node_modules[\\/](mapbox-gl|@mapbox|@turf)[\\/]/,
-					name: 'vendor',
-					chunks: 'all',
+				style: {
+					...defaultConfig.optimization.splitChunks.cacheGroups.style,
+					name( _, chunks, cacheGroupKey ) {
+						const namedChunk = chunks.find(
+							( chunk ) => chunk.name
+						);
+						return namedChunk
+							? `${ path.dirname(
+									namedChunk.name
+							  ) }/${ cacheGroupKey }-${ path.basename(
+									namedChunk.name
+							  ) }`
+							: cacheGroupKey;
+					},
 				},
 			},
 		},

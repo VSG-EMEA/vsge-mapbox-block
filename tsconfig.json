@@ -3,7 +3,8 @@
     "target": "ES2022",
     "module": "ES2022",
     "jsx": "react-jsx",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     // Search under node_modules for non-relative imports.
     "allowJs": true,
     // Process & infer types from .js files.
@@ -11,7 +12,8 @@
     // Don't emit; allow Babel to transform files.
     "outDir": "build",
     "baseUrl": "src",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
   },
   "include": [
     "./src/**/*"
