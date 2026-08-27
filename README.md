@@ -23,7 +23,7 @@ The Mapbox Gutenberg Block is a powerful WordPress block that allows you to easi
 
 1. Clone or download this repository.
 2. Upload the plugin folder to the `wp-content/plugins/` directory of your WordPress site.
-3. `npm install` and `npm build` the plugin
+3. Run `npm ci` and `npm run build` from the plugin directory when building source assets.
 4. Activate the plugin from the WordPress admin panel.
 
 ## Usage
@@ -45,7 +45,15 @@ Here's how to get your Mapbox Token:
 
 ## Configuration
 
-You can configure the Mapbox Gutenberg Block via the block settings panel in the WordPress block editor. Customize the map's appearance, add markers, set camera settings, and manage filters from within the block.
+Configure the public browser token in **Settings → VSGE Mapbox**, or keep the
+existing `MAPBOX_TOKEN` constant in `wp-config.php`. The constant takes
+precedence over the admin setting.
+
+The block keeps its established `mapboxOptions` listing, tag, filter, and icon
+data contract. Existing blocks require no migration. For large datasets, the
+editor uses a searchable, country-filtered dealer list with 25-item pages and
+opens one selected dealer editor at a time; the frontend behavior remains
+separate.
 
 ## Dev (wp-env)
 
@@ -62,7 +70,9 @@ You can use wp-env to develop with mapbox-block, all you have to do is create a 
 
 ## License
 
-This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
+LICENSE DECISION REQUIRED: `LICENSE.md` is GPL-3.0 while the plugin header and
+package metadata declare GPL-2.0-or-later. This modernization does not relicense
+the plugin; Erik must choose the canonical license before release.
 
 ## Acknowledgments
 
