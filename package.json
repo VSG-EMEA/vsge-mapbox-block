@@ -1,9 +1,9 @@
 {
 	"name": "vsge-mapbox-block",
-	"version": "1.1.4",
+	"version": "1.1.5",
 	"description": "A WordPress block for displaying VSGE Mapbox reseller maps.",
 	"author": "codekraft",
-	"license": "GPL-2.0-or-later",
+	"license": "GPL-3.0-only",
 	"keywords": [
 		"wordpress",
 		"gutenberg",
@@ -22,15 +22,13 @@
 		"npm": ">=7.0.0"
 	},
 	"files": [
-		"build/*",
-		"languages/*",
-		"block.json",
+		"build",
+		"languages",
 		"vsge-mapbox-block.php",
 		"LICENSE.md",
-		"readme.txt"
+		"README.md",
+		"THIRD-PARTY-NOTICES.md"
 	],
-	"main": "./build/mapbox.js",
-	"typings": "./build/main.d.ts",
 	"dependencies": {
 		"@mapbox/maki": "^8.2.0",
 		"@mapbox/mapbox-gl-geocoder": "^5.1.2",
@@ -69,12 +67,14 @@
 		"start": "wp-scripts start",
 		"format": "wp-scripts format src tests",
 		"lint:css": "wp-scripts lint-style src/style",
-		"lint:js": "wp-scripts lint-js src/edit.tsx src/frontend.tsx src/types.ts src/utils/dataset.tsx src/utils/spatialCalcs.ts src/utils/svg.ts src/components/Edit src/components/Mapbox/Map.tsx src/components/Mapbox/index.tsx src/components/Mapbox/init.tsx src/components/Mapbox/utils.tsx src/components/Marker/Geomarker.tsx src/components/Marker/MapMarker.tsx src/components/Marker/utils.tsx src/components/Popup/index.tsx tests",
+		"lint:js": "wp-scripts lint-js src/edit.tsx src/frontend.tsx src/types.ts src/utils/dataset.tsx src/utils/spatialCalcs.ts src/utils/svg.ts src/components/Edit src/components/Mapbox/Map.tsx src/components/Mapbox/index.tsx src/components/Mapbox/init.tsx src/components/Mapbox/utils.tsx src/components/Marker/Geomarker.tsx src/components/Marker/utils.tsx src/components/Popup/index.tsx tests",
 		"lint:pkg": "wp-scripts lint-pkg-json",
 		"typecheck": "tsc --noEmit",
 		"test": "npm run test:unit",
 		"test:unit": "wp-scripts test-unit-js",
 		"test:e2e": "wp-scripts test-e2e",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"build:zip": "wp-scripts plugin-zip",
 		"wp-env:start": "wp-env start",
 		"wp-env:stop": "wp-env stop",
 		"wp-env:destroy": "wp-env destroy"
