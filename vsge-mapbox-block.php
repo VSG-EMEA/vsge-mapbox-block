@@ -1,11 +1,15 @@
 <?php
 /**
  * Plugin Name: vsge-mapbox-block
- * Version: 1.1.4
+ * Version: 1.1.5
  * Description: VSGE - mapbox block
  * Author: codekraft
  * Text Domain: vsge-mapbox-block
  * Domain Path: /languages
+ * Requires at least: 6.3
+ * Requires PHP: 7.4
+ * License: GPL v3
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  */
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +21,11 @@ const VSGE_MB_TOKEN_OPTION = 'vsge_mapbox_access_token';
  * Loads the text domain for the vsge-mapbox-block plugin.
  */
 function vsge_mapbox_block_i18n() {
-	\load_plugin_textdomain( 'vsge-mapbox-block', false, VSGE_MB_PLUGIN_DIR . '/languages' );
+	\load_plugin_textdomain(
+		'vsge-mapbox-block',
+		false,
+		dirname( \plugin_basename( __FILE__ ) ) . '/languages'
+	);
 }
 \add_action( 'init', 'vsge_mapbox_block_i18n' );
 
@@ -82,7 +90,7 @@ function vsge_mapbox_render_settings_page(): void {
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'VSGE Mapbox', 'vsge-mapbox-block' ); ?></h1>
-		<p><?php echo esc_html( sprintf( __( 'Effective source: %s', 'vsge-mapbox-block' ), $source ) ); ?></p>
+		<p><?php echo esc_html( sprintf( /* translators: %s: source configuration type */ __( 'Effective source: %s', 'vsge-mapbox-block' ), $source ) ); ?></p>
 		<p><?php echo esc_html( $has_constant || $has_option ? __( 'Configuration status: configured', 'vsge-mapbox-block' ) : __( 'Configuration status: not configured', 'vsge-mapbox-block' ) ); ?></p>
 		<form action="options.php" method="post">
 			<?php \settings_fields( 'vsge_mapbox_settings' ); \do_settings_sections( 'vsge-mapbox' ); \submit_button(); ?>
@@ -99,6 +107,17 @@ function vsge_mapbox_register_block_assets(): void {
 		'accessToken' => vsge_get_token(),
 		'language'    => \get_locale(),
 	);
+
+	if ( file_exists( VSGE_MB_PLUGIN_DIR . '/build/mapbox-runtime.asset.php' ) ) {
+		$runtime_assets = include VSGE_MB_PLUGIN_DIR . '/build/mapbox-runtime.asset.php';
+		\wp_register_script(
+			'vsge-mapbox-runtime',
+			VSGE_MB_PLUGIN_URL . 'build/mapbox-runtime.js',
+			$runtime_assets['dependencies'],
+			$runtime_assets['version'],
+			true
+		);
+	}
 
 	\wp_register_script(
 		'vsge-mapbox-frontend',
@@ -123,4 +142,15 @@ function vsge_mapbox_register_block_assets(): void {
 	\register_block_type( VSGE_MB_PLUGIN_DIR . '/build' );
 }
 \add_action( 'init', 'vsge_mapbox_register_block_assets', 20 );
+
+/**
+ * Enqueue the Mapbox runtime inside the editor canvas iframe realm.
+ */
+function vsge_mapbox_enqueue_editor_canvas_assets(): void {
+	if ( \is_admin() && \wp_script_is( 'vsge-mapbox-runtime', 'registered' ) ) {
+		\wp_enqueue_script( 'vsge-mapbox-runtime' );
+	}
+}
+\add_action( 'enqueue_block_assets', 'vsge_mapbox_enqueue_editor_canvas_assets' );
+
 
