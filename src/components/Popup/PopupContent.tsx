@@ -7,6 +7,7 @@ import { Phone } from '../UIComponents/Phone';
 import { EmailAddr } from '../UIComponents/EmailAddr';
 import { LinkTo } from '../UIComponents/LinkTo';
 import { AddressLine } from '../UIComponents/AddressLine';
+import { normalizeExternalUrl } from '../../utils/url';
 
 /* This code exports a React functional component called `PopupContent` that takes in a `props` object.
 The component destructures the `props` object to extract the properties `itemTags`, `itemFilters`,
@@ -27,6 +28,7 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 		website = '',
 		emailAddress = '',
 	} = props;
+	const safeWebsite = normalizeExternalUrl( website );
 	return (
 		<div className={ 'mapbox-popup-wrap' }>
 			<TagList
@@ -37,12 +39,17 @@ export function PopupContent( props: MarkerProps ): JSX.Element {
 				className={ 'mapbox-popup-inner' }
 				style={ { display: 'flex' } }
 			>
-				<div>
+				<div aria-hidden="true">
 					<Icon icon={ mapMarker } size={ 36 } />
 				</div>
 				<div>
-					{ website ? (
-						<a href={ website } className={ 'popup-website' }>
+					{ safeWebsite ? (
+						<a
+							href={ safeWebsite }
+							className={ 'popup-website' }
+							target="_blank"
+							rel="noreferrer noopener"
+						>
 							<h3 className={ 'popup-name' }>{ name }</h3>
 						</a>
 					) : (

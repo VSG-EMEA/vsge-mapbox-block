@@ -5,12 +5,18 @@ import {
 	MapBoxListing,
 } from '../../types';
 import { __ } from '@wordpress/i18n';
+import { normalizeMapboxLanguage } from '../../utils/dataset';
 import { DEFAULT_GEOCODER_TYPE_SEARCH } from '../../constants';
 import { removePopups } from './index';
+import { useCallback, useEffect, useRef } from '@wordpress/element';
 import type { Dispatch } from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { getNearestStore } from '../Geocoder/utils';
+import { useContext } from '@wordpress/element';
 import { removeTempMarkers } from '../Marker/utils';
+import type { PopupManager } from './popupManager';
+import type { DealerMarkerRegistry } from '../Marker/registry';
+import { MapboxContext } from '../Mapbox/MapboxContext';
 
 export function PinPointPopup( props: {
 	map: mapboxgl.Map;
@@ -20,6 +26,11 @@ export function PinPointPopup( props: {
 	setListings: Dispatch< MapBoxListing[] >;
 	setFilteredListings: Dispatch< MapBoxListing[] | null >;
 	mapDefaults: MapboxBlockDefaults;
+	clearPopups?: () => void;
+	popupManager?: PopupManager | null;
+	markerRegistry?: DealerMarkerRegistry | null;
+	mapbox?: any;
+	setDistanceReference?: ( coords: CoordinatesDef | null ) => void;
 } ): JSX.Element | null {
 	const {
 		location,
@@ -28,7 +39,49 @@ export function PinPointPopup( props: {
 		listings,
 		setFilteredListings,
 		mapDefaults,
+		clearPopups,
+		popupManager,
+		markerRegistry,
+		mapbox,
 	} = props;
+
+	const context = useContext( MapboxContext );
+	const setDistanceReference =
+		props.setDistanceReference || context?.setDistanceReference;
+
+	const isDisposedRef = useRef( false );
+	const activeGeocoderRef = useRef< {
+		geo: MapboxGeocoder;
+		container: HTMLElement;
+		onResult: ( ev: any ) => void;
+		onError: ( ev: any ) => void;
+	} | null >( null );
+
+	const cleanupActiveGeocoder = useCallback( () => {
+		if ( activeGeocoderRef.current ) {
+			const { geo, container, onResult, onError } =
+				activeGeocoderRef.current;
+			geo.off( 'result', onResult );
+			geo.off( 'error', onError );
+			try {
+				geo.onRemove();
+			} catch {
+				// Ignore if already removed
+			}
+			if ( container.parentNode ) {
+				container.parentNode.removeChild( container );
+			}
+			activeGeocoderRef.current = null;
+		}
+	}, [] );
+
+	useEffect( () => {
+		isDisposedRef.current = false;
+		return () => {
+			isDisposedRef.current = true;
+			cleanupActiveGeocoder();
+		};
+	}, [ cleanupActiveGeocoder ] );
 
 	if ( ! mapRef ) {
 		return null;
@@ -42,30 +95,37 @@ export function PinPointPopup( props: {
 			<div className={ 'mapbox-popup-newpin-buttons' }>
 				<button
 					onClick={ () => {
-						// remove any popup or temp marker (clicked point, another geocoder marker) from the map
+						cleanupActiveGeocoder();
+
+						// remove any popup or temp marker from the registry / listings
 						const currentListings = removeTempMarkers(
-							listings,
-							mapRef,
+							listings || [],
+							markerRegistry || mapRef,
 							[ 'click-marker' ]
 						);
 
 						const geo = new MapboxGeocoder( {
 							accessToken: mapDefaults.accessToken,
 							reverseGeocode: true,
-							language: mapDefaults.language || 'en',
+							language:
+								normalizeMapboxLanguage(
+									mapDefaults.language
+								) || 'en',
 							types: DEFAULT_GEOCODER_TYPE_SEARCH,
 						} );
 
 						const geoInputMock = document.createElement( 'div' );
 						geoInputMock.style.display = 'none';
-						mapRef.append( geoInputMock );
+						mapRef.appendChild( geoInputMock );
 
 						geo.addTo( geoInputMock );
 
-						geo.query( `${ location[ 1 ] },${ location[ 0 ] }` );
+						const onResult = ( ev: any ) => {
+							if ( isDisposedRef.current ) {
+								cleanupActiveGeocoder();
+								return;
+							}
 
-						// Add geocoder result to container.
-						geo.on( 'result', ( ev: any ) => {
 							const searchResult =
 								ev.result as MapboxGeocoder.Result;
 
@@ -73,24 +133,53 @@ export function PinPointPopup( props: {
 								searchResult,
 								mapRef,
 								map,
-								currentListings
+								currentListings,
+								undefined,
+								popupManager,
+								mapbox
 							);
 
-							mapRef.removeChild( geoInputMock );
-
+							cleanupActiveGeocoder();
 							setFilteredListings( filtered );
-						} );
+							setDistanceReference?.( location );
+						};
+
+						const onError = () => {
+							if ( isDisposedRef.current ) {
+								cleanupActiveGeocoder();
+								return;
+							}
+							cleanupActiveGeocoder();
+						};
+
+						geo.on( 'result', onResult );
+						geo.on( 'error', onError );
+
+						activeGeocoderRef.current = {
+							geo,
+							container: geoInputMock,
+							onResult,
+							onError,
+						};
+
+						geo.query( `${ location[ 1 ] },${ location[ 0 ] }` );
 					} }
 				>
 					{ __( 'Find nearest Sales Agent', 'vsge-mapbox-block' ) }
 				</button>
 				<button
 					onClick={ () => {
-						removePopups( mapRef );
+						cleanupActiveGeocoder();
+						if ( clearPopups ) {
+							clearPopups();
+						} else {
+							removePopups( mapRef );
+						}
 						setFilteredListings( null );
+						setDistanceReference?.( null );
 					} }
 				>
-					Reset
+					{ __( 'Reset', 'vsge-mapbox-block' ) }
 				</button>
 			</div>
 		</div>

@@ -1,11 +1,22 @@
 import './style.scss';
 import { createRef, createRoot } from '@wordpress/element';
-import mapboxgl from 'mapbox-gl';
+import type mapboxgl from 'mapbox-gl';
 import { CoordinatesDef, MapBoxListing, MarkerProps } from '../../types';
 import { PopupContent } from './PopupContent';
 import { defaultMarkerSize } from '../Marker/defaults';
 import { SearchPopup } from './SearchPopup';
 import { enableListing } from '../Sidebar/Listing';
+import {
+	createManagedPopup,
+	createPopupManager,
+	type PopupManager,
+	type PopupResource,
+	type PopupOptions,
+	type PopupOrigin,
+} from './popupManager';
+
+export type { PopupManager, PopupResource, PopupOptions, PopupOrigin };
+export { createPopupManager, createManagedPopup };
 
 /**
  * The function removes the active popup from the DOM.
@@ -58,15 +69,21 @@ export function addPopup(
 		children ?? <PopupContent { ...( marker.properties as MarkerProps ) } />
 	);
 
-	return map !== null
-		? new mapboxgl.Popup( {
-				offset:
-					( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,
-		  } )
-				.setLngLat( marker?.geometry?.coordinates as CoordinatesDef )
-				.setDOMContent( popupRef )
-				.addTo( map )
-		: null;
+	const mb =
+		( window as any ).vsgeMapboxGL ||
+		( window as any ).mapboxgl ||
+		( map as any )?._mapboxgl;
+
+	if ( ! map || ! mb?.Popup ) {
+		return null;
+	}
+
+	return new mb.Popup( {
+		offset: ( marker?.properties?.iconSize || defaultMarkerSize ) * 0.5,
+	} )
+		.setLngLat( marker?.geometry?.coordinates as CoordinatesDef )
+		.setDOMContent( popupRef )
+		.addTo( map );
 }
 
 /**
@@ -77,45 +94,82 @@ export function addPopup(
  * @param {HTMLDivElement}        mapRef              - The reference to the map container.
  * @param                         map                 The map object.
  * @param                         map.current
+ * @param                         popupManager        Optional PopupManager instance.
+ * @param                         mapbox              Optional Mapbox GL runtime constructor.
  */
 export function showNearestStore(
 	location: MapBoxListing | undefined,
 	sortedNearestStores: MapBoxListing[],
 	mapRef: HTMLDivElement,
-	map: mapboxgl.Map
+	map: mapboxgl.Map,
+	popupManager?: PopupManager | null,
+	mapbox?: typeof mapboxgl
 ): MapBoxListing[] {
-	removePopups( mapRef as HTMLDivElement );
+	if ( popupManager && mapbox ) {
+		popupManager.clear();
 
-	if ( location ) {
-		/* Open a popup for the closest store. */
-		const popupStoreRef = createRef< HTMLDivElement | null >();
-		addPopup(
-			map,
-			location as unknown as MapBoxListing,
-			popupStoreRef.current,
-			<SearchPopup
-				icon={ 'home' }
-				name={ location?.place_name }
-				category={
-					location.properties?.category ??
-					location?.place_type?.join( ', ' ) ??
-					''
-				}
-				maki={ location.properties?.maki }
-				draggable={ location.properties?.draggable ?? true }
-			/>
-		);
+		if ( location ) {
+			createManagedPopup(
+				mapbox,
+				map,
+				popupManager,
+				location as unknown as MapBoxListing,
+				<SearchPopup
+					icon={ 'home' }
+					name={ location?.place_name }
+					category={
+						location.properties?.category ??
+						location?.place_type?.join( ', ' ) ??
+						''
+					}
+					maki={ location.properties?.maki }
+					draggable={ location.properties?.draggable ?? true }
+				/>
+			);
+		}
+
+		if ( sortedNearestStores[ 0 ] ) {
+			createManagedPopup(
+				mapbox,
+				map,
+				popupManager,
+				sortedNearestStores[ 0 ]
+			);
+		}
+	} else {
+		removePopups( mapRef as HTMLDivElement );
+
+		if ( location ) {
+			/* Open a popup for the closest store. */
+			const popupStoreRef = createRef< HTMLDivElement | null >();
+			addPopup(
+				map,
+				location as unknown as MapBoxListing,
+				popupStoreRef.current,
+				<SearchPopup
+					icon={ 'home' }
+					name={ location?.place_name }
+					category={
+						location.properties?.category ??
+						location?.place_type?.join( ', ' ) ??
+						''
+					}
+					maki={ location.properties?.maki }
+					draggable={ location.properties?.draggable ?? true }
+				/>
+			);
+		}
+
+		if ( sortedNearestStores[ 0 ] ) {
+			/* Open a popup for the closest store. */
+			const popupRef = createRef< HTMLDivElement | null >();
+			addPopup( map, sortedNearestStores[ 0 ], popupRef.current );
+		}
 	}
 
-	/* Open a popup for the closest store. */
-	const popupRef = createRef< HTMLDivElement | null >();
-	addPopup( map, sortedNearestStores[ 0 ], popupRef.current );
+	if ( sortedNearestStores[ 0 ] ) {
+		enableListing( map, sortedNearestStores[ 0 ], mapRef );
+	}
 
-	/** Highlight the listing for the closest store. */
-	mapRef
-		?.querySelector( '#marker-' + sortedNearestStores[ 0 ]?.id )
-		?.classList.add( 'active' );
-
-	enableListing( map, sortedNearestStores[ 0 ] );
 	return sortedNearestStores;
 }

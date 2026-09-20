@@ -1,13 +1,27 @@
+import { useEffect, useState } from '@wordpress/element';
 import { MarkerProps } from '../../types';
 import { ICON_SIZE } from '../../constants';
 import { Icon } from '@wordpress/components';
 import { mapMarker } from '@wordpress/icons';
-import { getIcon } from './utils';
+import { getMakiSvg } from '../../utils/maki';
 
 export function SearchPopup( props: MarkerProps ): JSX.Element {
 	const { name = '', category = '', maki = '', distance = 0 } = props;
+	const [ iconSvg, setIconSvg ] = useState< string | null >( null );
 
-	const icon = getIcon( maki );
+	useEffect( () => {
+		let cancelled = false;
+		if ( maki ) {
+			getMakiSvg( maki ).then( ( svg ) => {
+				if ( ! cancelled && svg ) {
+					setIconSvg( svg );
+				}
+			} );
+		}
+		return () => {
+			cancelled = true;
+		};
+	}, [ maki ] );
 
 	return (
 		<div
@@ -20,10 +34,10 @@ export function SearchPopup( props: MarkerProps ): JSX.Element {
 					height: ICON_SIZE + 'px',
 				} }
 			>
-				{ icon ? (
+				{ iconSvg ? (
 					<span
 						dangerouslySetInnerHTML={ {
-							__html: icon,
+							__html: iconSvg,
 						} }
 					/>
 				) : (
