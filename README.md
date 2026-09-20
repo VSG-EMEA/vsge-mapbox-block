@@ -1,95 +1,74 @@
 # Mapbox Gutenberg Block for WordPress
 
-The Mapbox Gutenberg Block is a powerful WordPress block that allows you to easily integrate Mapbox maps into your content with extensive customization options. You can create interactive maps with features like custom markers, popups, filters, and more.
-
-![image](https://github.com/VSG-EMEA/vsge-mapbox-block/assets/8550908/c315dbf8-81cf-4c48-98de-898bde9ee6ca)
+A high-performance WordPress block for displaying interactive Mapbox maps and dealer locators in the block editor and frontend.
 
 ## Features
 
-- **Interactive Maps**: Display beautiful Mapbox maps on your WordPress site.
-- **Custom Markers**: Add custom markers with icons and colors of your choice.
-- **Popup Listings**: Clicking on a marker shows a popup with listing data.
-- **Filtering**: Add custom tags and terms to each marker listing and filter the map items by those tags or terms.
-- **Geocoder**: Easily locate places using the geocoding feature.
-- **Camera Control**: Fine-tune camera settings, including Latitude, Longitude, Pitch, Bearing, Zoom, and more.
-- **3D Rotation**: Rotate the map for a 3D perspective.
-- **Zoom Control**: Zoom in and out with the mouse wheel.
-- **Map Styles**: Choose from various map styles.
-- **Map Projection**: Select the projection type.
-- **Map Height**: Customize the height of the map.
-- **Non blocking plugin load**: This block takes advantage of webpack's dynamic loading to minimise the impact of mapbox plugin loading times on the pages of your site
+- **Interactive Maps**: Display high-performance Mapbox GL maps with customizable styles, projections, pitch, bearing, and zoom.
+- **GPU-Accelerated Markers**: Dealers render via a single GeoJSON source and WebGL symbol layers with SDF icons, eliminating HTML DOM marker overhead.
+- **Keyboard-Accessible Sidebar**: Dealer selection via native button controls, semantic `aria-current` state, non-color visual indicators, and symmetrical popup focus restoration.
+- **Safe Link Normalization**: Dealer websites are safely validated and normalized to HTTPS/HTTP; malicious schemes (such as `javascript:`) are rejected.
+- **Viewport-Aware Lazy Loading**: Below-the-fold maps defer heavy Mapbox runtime assets until approaching the viewport, preserving pre-hydration layout space.
+- **Multi-Map Isolation**: Multiple map blocks on the same page operate with isolated state and lifecycle management.
+- **Comprehensive Internationalization**: Standard WordPress gettext localization across PHP and JavaScript, with canonical ISO 639-1 locale normalization for Mapbox and Geocoder services.
+- **Editor Canvas Realm Safety**: Mapbox runs in the Gutenberg editor canvas iframe realm without cross-realm DOM initialization errors.
+
+## Requirements
+
+- **WordPress**: 6.3 or higher (Block API v3 / iframe editor realm)
+- **PHP**: 7.4 or higher (supported runtime minimum)
 
 ## Installation
 
-1. Clone or download this repository.
-2. Upload the plugin folder to the `wp-content/plugins/` directory of your WordPress site.
-3. Run `npm ci` and `npm run build` from the plugin directory when building source assets.
-4. Activate the plugin from the WordPress admin panel.
+1. Upload the plugin folder to the `wp-content/plugins/` directory of your WordPress site.
+2. Activate the plugin from the WordPress **Plugins** admin screen.
+3. Configure your Mapbox Access Token.
 
-## Usage
+## Obtaining a Mapbox Access Token
 
-1. Create or edit a post or page in the WordPress block editor.
-2. Add a new block and search for "Mapbox Map" or similar.
-3. Configure the map settings, including markers, filters, camera settings, and more.
-4. Publish or update your post/page to display the interactive map.
-
-## Obtaining a Mapbox Token
-
-To use Mapbox GL in your project, you'll need a Mapbox Token. Mapbox offers a pay-as-you-go plan that allows you to use Mapbox for free up to a certain limit (please refer to the price page of mapbox).
-
-Here's how to get your Mapbox Token:
-
-1. Create a Mapbox Account: If you don't already have one, you can create a free Mapbox account by visiting Mapbox Account Creation Page. Sign up and log in [here](https://account.mapbox.com/auth/signup/).
-2. Access Token Management: After logging in, you'll be directed to your Mapbox Account Landing Page. Here, you'll find options for managing your Mapbox tokens.
-3. Create a New Token or Use Default Public Token: You can either create a new token by following the on-screen instructions or use your Default Public Token. Remember to keep your token safe and confidential.
+To use Mapbox GL, you need a Mapbox Access Token:
+1. Create a Mapbox account at [account.mapbox.com](https://account.mapbox.com/auth/signup/).
+2. Obtain your default public access token or generate a scoped token.
 
 ## Configuration
 
-Configure the public browser token in **Settings → VSGE Mapbox**, or keep the
-existing `MAPBOX_TOKEN` constant in `wp-config.php`. The constant takes
-precedence over the admin setting.
+Configure the public access token in **Settings → VSGE Mapbox**, or define the `MAPBOX_TOKEN` constant in `wp-config.php`:
 
-The block keeps its established `mapboxOptions` listing, tag, filter, and icon
-data contract. Existing blocks require no migration. For large datasets, the
-editor uses a searchable, country-filtered dealer list with 25-item pages and
-opens one selected dealer editor at a time; the frontend behavior remains
-separate.
-
-## Dev (wp-env)
-
-You can use wp-env to develop with mapbox-block, all you have to do is create a .wp-env file and add this (remember to add your key)
+```php
+define( 'MAPBOX_TOKEN', 'pk.eyJ1Ijo...' );
 ```
-{
-  "plugins": ["."],
-  "core": null,
-  "config": {
-    "MAPBOX_TOKEN": "MYKEY-MYKEY1MYKEY2MYKEY3MYKEY4MYKEY5MYKEY6"
-  }
-}
+
+The constant takes precedence over the database option.
+
+## Development and Testing
+
+```bash
+# Build production runtime assets
+npm run build
+
+# Start development watcher
+npm start
+
+# Run unit tests
+npm test
+
+# Run end-to-end browser tests (Playwright)
+npm run test:e2e
+
+# Run linters and typechecks
+npm run typecheck
+npm run lint:js
+npm run lint:css
+npm run lint:pkg
 ```
 
 ## License
 
-LICENSE DECISION REQUIRED: `LICENSE.md` is GPL-3.0 while the plugin header and
-package metadata declare GPL-2.0-or-later. This modernization does not relicense
-the plugin; Erik must choose the canonical license before release.
+This plugin is licensed under the GNU General Public License v3.0 only (`GPL-3.0-only`).
+See [LICENSE.md](LICENSE.md) for the full license text.
 
-## Acknowledgments
+## Third-Party Software Notices
 
-- This Gutenberg block is powered by Mapbox, an amazing mapping platform.
-- Special thanks to the WordPress community for their support and contributions.
+This plugin includes third-party software components subject to separate license terms. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for complete details.
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
-
-# Screenshots
-![image](https://github.com/VSG-EMEA/vsge-mapbox-block/assets/8550908/57c6dda4-5aae-498c-b0dd-79e8a272df39)
-![image](https://github.com/VSG-EMEA/vsge-mapbox-block/assets/8550908/bf279618-850e-4aa7-b4c5-846d6a0fcbd3)
-
-
-## Support
-
-If you have any questions or need assistance, please open an issue in this repository, and we'll be happy to help.
-
-
+> **Mapbox Terms Notice**: Mapbox GL JS 3.x is licensed under the Mapbox Web SDK terms and requires an active Mapbox account in accordance with Mapbox Terms of Service (https://www.mapbox.com/legal/tos/).
