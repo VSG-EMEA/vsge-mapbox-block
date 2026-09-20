@@ -1,5 +1,5 @@
 // Default marker style
-import { CoordinatesDef, MapBoxListing, MarkerPropsStyle } from '../../types';
+import { CoordinatesDef, MapBoxListing } from '../../types';
 import {
 	DEFAULT_COLOR,
 	DEFAULT_COLOR_ALT,
@@ -14,11 +14,6 @@ interface MarkerBasicStyle {
 	color: string;
 	size: number;
 }
-
-export const defaultMarkerStyle: MarkerBasicStyle = {
-	color: defaultColors[ 0 ],
-	size: defaultMarkerSize,
-};
 
 export const tempMarkerStyle: MarkerBasicStyle = {
 	color: defaultColors[ 1 ],
@@ -62,48 +57,6 @@ export function generateTempMarkerData(
 		geometry: {
 			type: 'Point',
 			coordinates,
-		},
-	};
-}
-
-export function generateGeocoderMarkerData(
-	id: number,
-	coordinates: CoordinatesDef | [ number, number ]
-): MapBoxListing {
-	return {
-		id,
-		type: MARKER_TYPE_TEMP,
-		properties: {
-			name: 'geocoder-marker',
-			icon: 'geocoder',
-			iconSize: defaultMarkerSize,
-			iconColor: defaultColors[ 2 ],
-			draggable: true,
-		},
-		geometry: {
-			type: 'Point',
-			coordinates,
-		},
-	};
-}
-
-export function geocoderMarkerDefaults(
-	id: number,
-	defaultStyle: MarkerPropsStyle
-): MapBoxListing {
-	return {
-		id,
-		type: MARKER_TYPE_TEMP,
-		properties: {
-			name: 'geocoder-marker',
-			icon: 'geocoder',
-			iconSize: defaultStyle.size,
-			iconColor: defaultStyle.color,
-			draggable: true,
-		},
-		geometry: {
-			type: 'Point',
-			coordinates: [ 0, 0 ] as CoordinatesDef,
 		},
 	};
 }

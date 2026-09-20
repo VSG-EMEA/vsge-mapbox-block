@@ -1,4 +1,5 @@
 .wp-block-vsge-mapbox .map-wrapper {
+
 	.mapboxgl-marker {
 		appearance: none;
 		background-color: transparent;
@@ -11,10 +12,12 @@
 		padding: 0;
 		transition: inherit;
 
-		&.active {
-			transition: 125ms;
-			transform: scale(1.2);
-			transform-origin: bottom center;
-		}
+	}
+
+	.marker-temp {
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		background: transparent;
 	}
 }
