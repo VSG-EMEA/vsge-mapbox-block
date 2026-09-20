@@ -21,6 +21,7 @@ export const MapButton = ( props: {
 
 	return (
 		<button
+			type="button"
 			onClick={ onClick }
 			className={ 'map-button ' + className }
 			hidden={ hidden }

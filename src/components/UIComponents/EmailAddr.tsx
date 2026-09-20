@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Renders an email address with an optional label and CSS class.
@@ -27,8 +27,11 @@ export const EmailAddr = ( {
 			<b>{ label }: </b>
 			<a
 				href={ 'mailto:' + emailAddress }
-				target={ '_blank' }
-				title={ __( 'Email ', 'vsge-mapbox-block' ) + emailAddress }
+				title={ sprintf(
+					/* translators: %s: email address */
+					__( 'Email %s', 'vsge-mapbox-block' ),
+					emailAddress
+				) }
 				rel="noreferrer noopener"
 			>
 				{ emailAddress }

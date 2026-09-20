@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { intersperse } from '../../utils/dataset';
 
 /**
@@ -29,7 +29,11 @@ export const Phone = ( {
 			<a
 				key={ 'phone-' + phoneNumber }
 				href={ 'tel:' + phoneNumber }
-				title={ __( 'Call ', 'vsge-mapbox-block' ) + phoneNumber }
+				title={ sprintf(
+					/* translators: %s: phone number */
+					__( 'Call %s', 'vsge-mapbox-block' ),
+					phoneNumber
+				) }
 				rel="noreferrer noopener"
 			>
 				{ phoneNumber }

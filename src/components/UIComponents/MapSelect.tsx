@@ -11,26 +11,51 @@ import { ChangeEvent } from 'react';
  * @return {JSX.Element} the select control with options
  */
 export const MapSelectControl = ( props: {
+	id?: string;
+	label?: string;
+	hideLabelFromVision?: boolean;
 	className: string;
 	value: string;
 	options: { label: string; value: string }[];
 	onChange( event: ChangeEvent< HTMLSelectElement > ): void;
 } ): JSX.Element => {
-	const { className, value, options, onChange } = props;
+	const {
+		id,
+		label,
+		hideLabelFromVision = true,
+		className,
+		value,
+		options,
+		onChange,
+	} = props;
 
 	return (
-		<select
-			onChange={ onChange }
-			value={ value }
-			className={ 'components-select-control ' + className }
-		>
-			{ options.map( ( option ) => {
-				return (
-					<option key={ option.value } value={ option.value }>
-						{ option.label }
-					</option>
-				);
-			} ) }
-		</select>
+		<>
+			{ label && id && (
+				<label
+					htmlFor={ id }
+					className={
+						hideLabelFromVision ? 'screen-reader-text' : undefined
+					}
+				>
+					{ label }
+				</label>
+			) }
+			<select
+				id={ id }
+				aria-label={ ! id || ! label ? label : undefined }
+				onChange={ onChange }
+				value={ value }
+				className={ 'components-select-control ' + className }
+			>
+				{ options.map( ( option ) => {
+					return (
+						<option key={ option.value } value={ option.value }>
+							{ option.label }
+						</option>
+					);
+				} ) }
+			</select>
+		</>
 	);
 };

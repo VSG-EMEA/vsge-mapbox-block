@@ -1,6 +1,3 @@
-import { regions } from 'iso3166-helper/lib/data/regions';
-import { __ } from '@wordpress/i18n';
-
 /**
  * Formats the address based on the provided street, city, state, zip code, country, and country code.
  *
