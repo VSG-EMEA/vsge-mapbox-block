@@ -6,6 +6,7 @@ module.exports = {
 	entry: {
 		frontend: './src/frontend.tsx',
 		editor: './src/index.tsx',
+		'mapbox-runtime': './src/mapbox-runtime.ts',
 	},
 	module: {
 		...defaultConfig.module,
