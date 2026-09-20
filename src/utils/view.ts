@@ -1,6 +1,6 @@
 import mapboxgl from 'mapbox-gl';
 import { MapBoxListing } from '../types';
-import { MARKER_TYPE_TEMP } from '../constants';
+import { isValidCoordinates } from './dataset';
 
 /**
  * The function recenterView takes a map and default values and flies the map to the default center and
@@ -61,25 +61,6 @@ export function flyToStore(
 }
 
 /**
- * Filter the listings based on the provided filteredIds.
- *
- * @param {MapBoxListing[]} listings    - The array of listings to filter.
- * @param {number[] | null} filteredIds - The array of filtered ids or null.
- * @return {MapBoxListing[]} - The filtered array of listings.
- */
-export function filterListings(
-	listings: MapBoxListing[],
-	filteredIds: number[] | null
-): MapBoxListing[] {
-	// Filter the listings based on the provided filteredIds
-	return filteredIds
-		? listings.filter( ( listing ) => {
-				return ( filteredIds as number[] )?.includes( listing.id );
-		  } )
-		: listings;
-}
-
-/**
  * Filters the given list of MapBox listings based on a specified criteria.
  *
  * @param {MapBoxListing[]}             listings     - The list of MapBox listings to filter.
@@ -112,70 +93,81 @@ export function filterListingsBy(
 }
 
 /**
- * The function fits the map view to the bounds of filtered stores with a padding of 10% of the map
- * container's width.
+ * Fits the map view to the bounds of the provided listings with padding relative
+ * to the actual Mapbox canvas/container.
  *
- * @param {mapboxgl.Map}    map      The map object is an instance of the Mapbox GL JS map that is being used to display the
- *                                   map.
- * @param {MapBoxListing[]} listings filteredStores is an array of features representing the stores that need to
- *                                   be displayed on the map.
- * @param                   mapRef   The map reference is an instance of the Mapbox GL JS map that is being used to display the map.
+ * @param {mapboxgl.Map}        map      - The Mapbox GL JS map instance.
+ * @param {MapBoxListing[]}     listings - Array of listings to fit.
+ * @param {HTMLElement | null} [mapRef]  - Optional map container fallback.
  */
 export function fitInView(
 	map: mapboxgl.Map,
 	listings: MapBoxListing[],
-	mapRef: HTMLDivElement
+	mapRef?: HTMLElement | null
 ) {
-	if ( ! map || ! mapRef ) {
+	if ( ! map || ! Array.isArray( listings ) ) {
 		return;
 	}
 
-	const bounds = new mapboxgl.LngLatBounds();
-	let padding = 0;
+	const validListings = listings.filter( ( listing ) =>
+		isValidCoordinates( listing?.geometry?.coordinates )
+	);
 
-	padding = mapRef.offsetWidth * 0.1;
-
-	if ( listings.length !== 0 ) {
-		listings.forEach( ( point ) => {
-			bounds.extend( point.geometry.coordinates );
-		} );
-
-		if (
-			bounds._sw.lat === bounds._ne.lat &&
-			bounds._sw.lng === bounds._ne.lng
-		) {
-			const lat = bounds._sw.lat;
-			const lng = bounds._sw.lng;
-			bounds._sw.lat = lat + 0.5;
-			bounds._ne.lat = lat - 0.5;
-			bounds._sw.lng = lng + 0.5;
-			bounds._ne.lng = lng - 0.5;
-		}
-
-		map.fitBounds( bounds, { padding } );
+	// Zero results: safe no-op
+	if ( validListings.length === 0 ) {
+		return;
 	}
 
-	map.resize();
-}
+	// Calculate padding relative to the actual Mapbox canvas/container
+	const mapContainer = map.getContainer ? map.getContainer() : mapRef;
+	const canvas = map.getCanvas ? map.getCanvas() : null;
+	const width = canvas?.clientWidth || mapContainer?.clientWidth || 400;
+	const height = canvas?.clientHeight || mapContainer?.clientHeight || 400;
+	const padding = Math.max(
+		20,
+		Math.min( Math.floor( Math.min( width, height ) * 0.1 ), 50 )
+	);
 
-/**
- * Retrieves the current temp pin data from the provided array of listings.
- *
- * @param {MapBoxListing[]} listings - The array of listings to search.
- * @return {MapBoxListing | undefined} The current temp pin data, or undefined if not found.
- */
-export function getTheCurrentTempPin(
-	listings: MapBoxListing[]
-): MapBoxListing | undefined {
-	// get the current temp pin data
-	const currentPinData = listings?.find( ( listing ) => {
-		return listing.type === MARKER_TYPE_TEMP;
+	// One result: center dealer with sensible conservative zoom
+	if ( validListings.length === 1 ) {
+		const coords = validListings[ 0 ].geometry.coordinates as [
+			number,
+			number,
+		];
+		const currentZoom = map.getZoom ? map.getZoom() : 8;
+		const targetZoom = Math.min( Math.max( currentZoom, 8 ), 10 );
+		map.flyTo( {
+			center: coords,
+			zoom: targetZoom,
+			padding: {
+				top: padding,
+				bottom: padding,
+				left: padding,
+				right: padding,
+			},
+		} );
+		return;
+	}
+
+	// Multiple results: use public LngLatBounds APIs (no private _sw/_ne)
+	const bounds = new mapboxgl.LngLatBounds();
+	validListings.forEach( ( item ) => {
+		bounds.extend( item.geometry.coordinates as [ number, number ] );
 	} );
 
-	if ( ! currentPinData ) {
-		// eslint-disable-next-line no-console
-		console.error( 'currentPinData not found' );
-		return;
+	if ( ! bounds.isEmpty() ) {
+		map.fitBounds( bounds, {
+			padding: {
+				top: padding,
+				bottom: padding,
+				left: padding,
+				right: padding,
+			},
+			maxZoom: 14,
+		} );
 	}
-	return currentPinData;
+
+	if ( typeof map.resize === 'function' ) {
+		map.resize();
+	}
 }

@@ -1,5 +1,6 @@
 import type { FeatureCollection, Point } from 'geojson';
 import type { CoordinatesDef, MapBoxListing } from '../types';
+import { MARKER_TYPE_TEMP } from '../constants';
 
 /** A single, typed boundary between persisted listing data and Mapbox GeoJSON. */
 export function toFeatureCollection(
@@ -21,6 +22,46 @@ export function toFeatureCollection(
 				properties: listing.properties,
 			} ) ),
 	};
+}
+
+/**
+ * Filters listings to only canonical dealers, excluding temporary markers.
+ *
+ * @param listings The listings array to filter.
+ * @return Canonical dealer listings.
+ */
+export function getCanonicalDealerListings(
+	listings: MapBoxListing[] | null | undefined
+): MapBoxListing[] {
+	if ( ! listings || ! Array.isArray( listings ) ) {
+		return [];
+	}
+	return listings.filter( ( listing ) => {
+		if ( ! listing ) {
+			return false;
+		}
+		if (
+			listing.type === MARKER_TYPE_TEMP ||
+			listing.type === 'temporary' ||
+			listing.properties?.name === 'click-marker' ||
+			listing.properties?.name === 'geocoder-marker'
+		) {
+			return false;
+		}
+		return true;
+	} );
+}
+
+/**
+ * Dedicated boundary converting canonical dealer listings to a GeoJSON FeatureCollection.
+ *
+ * @param listings The listings array.
+ * @return FeatureCollection containing only canonical dealer features.
+ */
+export function toDealerFeatureCollection(
+	listings: MapBoxListing[] | null | undefined
+): FeatureCollection< Point, MapBoxListing[ 'properties' ] > {
+	return toFeatureCollection( getCanonicalDealerListings( listings ) );
 }
 
 export function isValidCoordinates(
@@ -49,6 +90,61 @@ export function getNextId( listings: Array< { id: number } > ): number {
 			0
 		) + 1
 	);
+}
+
+/**
+ * Reorder an array by moving an item from startIndex to endIndex.
+ *
+ * @param list       The list of items to reorder.
+ * @param startIndex The index of the item to move.
+ * @param endIndex   The destination index.
+ * @return New array with the item moved to the destination index.
+ */
+export function reorder< T >(
+	list: T[],
+	startIndex: number,
+	endIndex: number
+): T[] {
+	if (
+		startIndex < 0 ||
+		startIndex >= list.length ||
+		endIndex < 0 ||
+		endIndex >= list.length ||
+		startIndex === endIndex
+	) {
+		return list;
+	}
+	const result = Array.from( list );
+	const [ removed ] = result.splice( startIndex, 1 );
+	result.splice( endIndex, 0, removed );
+	return result;
+}
+
+/**
+ * Reorders listings by finding the source and target items by their unique IDs,
+ * moving the source listing to the target listing's position in canonical listings
+ * while preserving all other listings in their relative positions.
+ *
+ * @param listings Canonical array of listings.
+ * @param sourceId The ID of the listing being moved.
+ * @param targetId The ID of the target listing where the source should be placed.
+ * @return New array of listings with the source listing moved.
+ */
+export function reorderListingsById(
+	listings: MapBoxListing[],
+	sourceId: number,
+	targetId: number
+): MapBoxListing[] {
+	const sourceIndex = listings.findIndex( ( item ) => item.id === sourceId );
+	const targetIndex = listings.findIndex( ( item ) => item.id === targetId );
+	if (
+		sourceIndex === -1 ||
+		targetIndex === -1 ||
+		sourceIndex === targetIndex
+	) {
+		return listings;
+	}
+	return reorder( listings, sourceIndex, targetIndex );
 }
 
 export function updateListingById(
@@ -90,17 +186,9 @@ export function searchListings(
 	} );
 }
 
-export function paginateListings< T >(
-	items: T[],
-	page: number,
-	pageSize: number
-): T[] {
-	return items.slice( Math.max( 0, page - 1 ) * pageSize, page * pageSize );
-}
-
 export function normalizeMapboxLanguage( locale?: string ): string {
 	const language = ( locale || 'en' ).replace( '_', '-' ).split( '-' )[ 0 ];
-	return /^[a-z]{2,3}$/i.test( language ) ? language.toLowerCase() : 'en';
+	return /^[a-z]{2}$/i.test( language ) ? language.toLowerCase() : 'en';
 }
 
 export function getMapStyleUrl( mapStyle: string ): string {

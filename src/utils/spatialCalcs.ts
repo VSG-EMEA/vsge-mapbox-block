@@ -1,7 +1,6 @@
 import distance from '@turf/distance';
 import type { Coord, Units } from '@turf/helpers';
 import { MapBoxListing } from '../types';
-import { LngLatBoundsLike } from 'mapbox-gl';
 
 /**
  * This function takes a user's location and an array of stores, calculates the distance between the
@@ -48,52 +47,6 @@ export function locateNearestStore(
 			}
 			return 0; // a must be equal to b
 		} );
-}
-
-/**
- * The function calculates the bounding box of a store and a given location.
- *
- * @param {Coord} listing1             - The first listing
- * @param {Coord} listing2             - The second listing
- * @param         listing1.type
- * @param         listing1.coordinates
- * @param         listing2.type
- * @param         listing2.coordinates
- * @return an array of two arrays, each containing two numbers representing the longitude and latitude
- * coordinates of a bounding box. The first array contains the coordinates of the lower left corner of
- * the bounding box, and the second array contains the coordinates of the upper right corner of the
- * bounding box.
- */
-export function getBbox(
-	listing1: { type?: string; coordinates: any },
-	listing2: { type?: string; coordinates: any }
-): LngLatBoundsLike {
-	const lats = [ listing1.coordinates[ 1 ], listing2.coordinates[ 1 ] ];
-
-	const lng = [ listing1.coordinates[ 0 ], listing2.coordinates[ 0 ] ];
-
-	const sortedLong = lng.sort( function ( a, b ) {
-		if ( a > b ) {
-			return 1;
-		}
-		if ( a.distance < b.distance ) {
-			return -1;
-		}
-		return 0;
-	} );
-	const sortedLats = lats.sort( function ( a, b ) {
-		if ( a > b ) {
-			return 1;
-		}
-		if ( a.distance < b.distance ) {
-			return -1;
-		}
-		return 0;
-	} );
-	return [
-		[ sortedLong[ 0 ], sortedLats[ 0 ] ],
-		[ sortedLong[ 1 ], sortedLats[ 1 ] ],
-	];
 }
 
 /**
