@@ -1,67 +1,79 @@
-import {
-	Button,
-	Flex,
-	FlexItem,
-	Panel,
-	PanelBody,
-	TextControl,
-} from '@wordpress/components';
-import { cancelCircleFilled, mapMarker, plusCircle } from '@wordpress/icons';
-import { __ } from '@wordpress/i18n';
+import { Button, Panel, PanelBody, TextControl } from '@wordpress/components';
+import { mapMarker, plusCircle, trash } from '@wordpress/icons';
+import { __, sprintf } from '@wordpress/i18n';
 import { getNextId } from '../../utils/dataset';
-import { MarkerIcon } from '../../types';
+import type { MarkerIcon } from '../../types';
 import { sanitizeMarkerSvg } from '../../utils/svg';
 
 export const IconItem = ( props: {
 	id: number;
 	name: string;
 	content: string;
-	setIcon: ( props: any ) => void;
+	setIcon: ( props: MarkerIcon ) => void;
 	removeIcon: ( id: number ) => void;
 } ) => {
 	const { id, name, content, setIcon, removeIcon } = props;
 
-	return (
-		<FlexItem className={ 'marker-icon-item icon-item-' + id }>
-			<div className={ 'marker-icon-item__preview' }>
-				<div
-					className={ 'svg-wrapper' }
-					dangerouslySetInnerHTML={ {
-						__html: sanitizeMarkerSvg( content ) || '',
-					} }
-				></div>
-				<Button
-					icon={ cancelCircleFilled }
-					title={ __( 'Delete icon', 'vsge-mapbox-block' ) }
-					className={ 'remove-sortable-item' }
-					style={ { width: '50%' } }
-					onClick={ () => removeIcon( id ) }
-				/>
-			</div>
+	const confirmMessage = sprintf(
+		/* translators: %s: pointer name */
+		__( 'Remove pointer "%s"?', 'vsge-mapbox-block' ),
+		name || ''
+	);
 
-			<div>
-				<TextControl
-					placeholder={ __( 'Marker Name', 'vsge-mapbox-block' ) }
-					value={ name || 'mapMarker' }
-					onChange={ ( newValue ) =>
-						setIcon( {
-							...props,
-							name: newValue,
-						} )
+	const deleteLabel = sprintf(
+		/* translators: %s: pointer name */
+		__( 'Remove pointer "%s"', 'vsge-mapbox-block' ),
+		name || ''
+	);
+
+	return (
+		<div className={ 'vsge-mapbox-pointer-row pointer-item-' + id }>
+			<div
+				className="vsge-mapbox-pointer-preview"
+				dangerouslySetInnerHTML={ {
+					__html: sanitizeMarkerSvg( content ) || '',
+				} }
+			/>
+			<TextControl
+				placeholder={ __( 'Name', 'vsge-mapbox-block' ) }
+				aria-label={ __( 'Pointer name', 'vsge-mapbox-block' ) }
+				value={ name }
+				className="vsge-mapbox-pointer-name"
+				__nextHasNoMarginBottom
+				onChange={ ( newValue ) =>
+					setIcon( {
+						id,
+						content,
+						name: newValue,
+					} )
+				}
+			/>
+			<TextControl
+				placeholder={ __( 'SVG markup', 'vsge-mapbox-block' ) }
+				aria-label={ __( 'SVG markup', 'vsge-mapbox-block' ) }
+				value={ content }
+				className="vsge-mapbox-pointer-svg"
+				__nextHasNoMarginBottom
+				onChange={ ( newValue ) =>
+					setIcon( {
+						id,
+						name,
+						content: newValue,
+					} )
+				}
+			/>
+			<Button
+				icon={ trash }
+				label={ deleteLabel }
+				isDestructive
+				className="vsge-mapbox-pointer-delete"
+				onClick={ () => {
+					if ( window.confirm( confirmMessage ) ) {
+						removeIcon( id );
 					}
-				/>
-				<TextControl
-					placeholder={ __( 'svg markup', 'vsge-mapbox-block' ) }
-					value={ content || '<svg></svg>' }
-					onChange={ ( newValue ) =>
-						setIcon( {
-							...props,
-							content: newValue,
-						} )
-					}
-				/>
-			</div>
-		</FlexItem>
+				} }
+			/>
+		</div>
 	);
 };
 
@@ -91,8 +103,10 @@ export const EditPanelIcons = ( {
 			...icons,
 			{
 				id: nextId,
-				name: [ __( 'New Marker', 'vsge-mapbox-block' ), nextId ].join(
-					' '
+				name: sprintf(
+					/* translators: %s: marker icon ID */
+					__( 'Pointer %s', 'vsge-mapbox-block' ),
+					String( nextId )
 				),
 				content: '',
 			},
@@ -108,24 +122,36 @@ export const EditPanelIcons = ( {
 
 	return (
 		<Panel>
-			<PanelBody title="Pointer" icon={ mapMarker } initialOpen={ false }>
-				<Flex direction={ 'column' }>
-					{ icons?.map( ( icon, index ) => (
+			<PanelBody
+				title={ __( 'Pointer', 'vsge-mapbox-block' ) }
+				icon={ mapMarker }
+				initialOpen={ false }
+				className="vsge-mapbox-pointer-section"
+			>
+				<p className="vsge-mapbox-pointer-helper">
+					{ __(
+						'Custom reusable marker icons.',
+						'vsge-mapbox-block'
+					) }
+				</p>
+				<div className="vsge-mapbox-pointer-list">
+					{ icons?.map( ( icon ) => (
 						<IconItem
-							key={ index }
+							key={ icon.id }
 							{ ...icon }
 							setIcon={ setIcon }
 							removeIcon={ removeIcon }
 						/>
 					) ) }
-				</Flex>
+				</div>
 				<Button
 					icon={ plusCircle }
-					text={ __( 'Add new', 'vsge-mapbox-block' ) }
-					className={ 'add-new-sortable-item' }
-					style={ { width: '50%' } }
+					variant="secondary"
+					className="vsge-mapbox-pointer-add"
 					onClick={ () => addNewIcon( getNextId( icons ) ) }
-				/>
+				>
+					{ __( 'Add new', 'vsge-mapbox-block' ) }
+				</Button>
 			</PanelBody>
 		</Panel>
 	);
