@@ -6,14 +6,13 @@ import {
 } from '@wordpress/element';
 import { getMapDefaults } from '../../utils';
 import {
+	CoordinatesDef,
 	MapAttributes,
 	MapBoxListing,
 	MountedMapsContextValue,
 } from '../../types';
-import { LngLat } from 'mapbox-gl';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import type { LngLat } from 'mapbox-gl';
 import type { MutableRefObject } from 'react';
-import { __ } from '@wordpress/i18n';
 
 export const MapboxContext = createContext< null | MountedMapsContextValue >(
 	null
@@ -40,9 +39,6 @@ export function MapProvider( {
 	children: JSX.Element;
 } ) {
 	const map: MutableRefObject< mapboxgl.Map | null > = useRef( null );
-	const [ geoCoder, setGeoCoder ] = useState< MapboxGeocoder | undefined >(
-		undefined
-	);
 	const [ lngLat, setLngLat ] = useState( { lng: 0, lat: 0 } as LngLat );
 	const [ listings, setListings ] = useState(
 		attributes.mapboxOptions.listings as MapBoxListing[]
@@ -50,6 +46,11 @@ export function MapProvider( {
 	const [ filteredListings, setFilteredListings ] = useState<
 		MapBoxListing[] | null
 	>( null );
+	const [ selectedDealerId, setSelectedDealerId ] = useState< number | null >(
+		null
+	);
+	const [ distanceReference, setDistanceReference ] =
+		useState< CoordinatesDef | null >( null );
 	const [ loaded, setLoaded ] = useState( false );
 	const mapDefaults = getMapDefaults();
 	const mapIcons = attributes.mapboxOptions.icons;
@@ -68,12 +69,14 @@ export function MapProvider( {
 				setListings,
 				filteredListings,
 				setFilteredListings,
+				selectedDealerId,
+				setSelectedDealerId,
+				distanceReference,
+				setDistanceReference,
 				loaded,
 				setLoaded,
 				mapDefaults,
 				mapRef,
-				geoCoder,
-				setGeoCoder,
 				geocoderRef,
 				markersRef,
 				mapIcons,
@@ -93,7 +96,7 @@ export function useMapboxContext() {
 	const context = useContext( MapboxContext );
 	if ( context === null ) {
 		throw new Error(
-			__( 'useMapboxContext must be used within a MapboxProvider' )
+			'useMapboxContext must be used within a MapboxProvider'
 		);
 	}
 	return context;

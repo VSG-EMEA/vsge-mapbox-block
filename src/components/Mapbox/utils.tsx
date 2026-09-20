@@ -1,21 +1,23 @@
-import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl';
+import type mapboxgl from 'mapbox-gl';
 import type { MapBoxListing } from '../../types';
-import { removeMarkerEl } from '../Marker/utils';
+import { getEffectiveProjection } from '../../utils/projection';
 
 /**
- * The function sets the elevation of a Mapbox map to either a globe or a mercator projection and adds
+ * The function sets the elevation of a Mapbox map to either a globe or configured projection and adds
  * or removes a terrain layer with exaggerated height based on a boolean input.
  *
- * @param           map          - A variable of type `mapboxgl.Map` representing the map object on which the elevation
- *                               will be set.
- * @param {boolean} hasElevation - A boolean value indicating whether or not to enable elevation on the
- *                               map. If true, the map will be displayed with a 3D terrain effect. If false, the map will be
- *                               displayed in 2D.
+ * @param map           - A variable of type `mapboxgl.Map` representing the map object on which the elevation will be set.
+ * @param hasElevation  - A boolean value indicating whether or not to enable elevation on the map.
+ * @param mapProjection - The configured map projection.
  */
-export function setMapElevation( map: mapboxgl.Map, hasElevation: boolean ) {
+export function setMapElevation(
+	map: mapboxgl.Map,
+	hasElevation: boolean,
+	mapProjection?: string
+) {
 	if ( map ) {
 		if ( hasElevation ) {
-			map.setProjection( 'globe' );
+			map.setProjection( getEffectiveProjection( mapProjection, true ) );
 			if ( ! map.getSource( 'mapbox-dem' ) ) {
 				map.addSource( 'mapbox-dem', {
 					type: 'raster-dem',
@@ -31,7 +33,7 @@ export function setMapElevation( map: mapboxgl.Map, hasElevation: boolean ) {
 				exaggeration: 1.5,
 			} );
 		} else {
-			map.setProjection( 'mercator' );
+			map.setProjection( getEffectiveProjection( mapProjection, false ) );
 			// unset terrain elevation
 			map.setTerrain();
 			// unload the DEM source
@@ -93,43 +95,6 @@ export function setMapWheelZoom( map: mapboxgl.Map, mouseWheelZoom: boolean ) {
 }
 
 /**
- * The function removes a marker from a list of markers based on its ID.
- *
- * @param {number}                 id          - a number representing the ID of the marker to be removed.
- * @param {MapboxGeoJSONFeature[]} markersList - markersList is an array of MapboxGeoJSONFeature
- *                                             objects. These objects represent markers on a map and contain information such as the marker's
- *                                             location, properties, and ID. The function takes this array as an input parameter and returns a new
- *                                             array with the marker that matches the given ID removed.
- * @return a new array of MapboxGeoJSONFeature objects that do not have the specified id.
- */
-export function removeMarkerById(
-	id: number,
-	markersList: MapboxGeoJSONFeature[]
-): MapboxGeoJSONFeature[] {
-	return markersList.filter( ( marker ) => marker.id !== id );
-}
-
-/**
- * This TypeScript function searches for a specific marker in a list of MapBox listings based on its ID
- * and returns the matching listing.
- *
- * @param {number}          id          - The id parameter is a number that represents the unique identifier of a
- *                                      MapBoxListing object.
- * @param {MapBoxListing[]} markersList - markersList is an array of objects of type MapBoxListing. It
- *                                      contains a list of markers that are displayed on a MapBox map. Each marker object has properties
- *                                      such as id, latitude, longitude, and title. The function takes this array as input and searches for
- *                                      a marker object with a specific
- * @return a `MapBoxListing` object that matches the given `id` parameter from the `markersList`
- * array. If no matching object is found, it will return `undefined`.
- */
-export function getMarkerData(
-	id: number,
-	markersList: MapBoxListing[]
-): MapBoxListing | undefined {
-	return markersList.find( ( marker ) => marker.id === id );
-}
-
-/**
  * Returns a list of MapBoxListing objects based on the given listings and filteredListings.
  *
  * @param {MapBoxListing[]} listings         - An array of MapBoxListing objects representing all the listings.
@@ -141,18 +106,4 @@ export function getListing(
 	filteredListings: MapBoxListing[] | null
 ): MapBoxListing[] {
 	return filteredListings === null ? listings : filteredListings;
-}
-
-/**
- * Updates the listing on the map.
- *
- * @param {MapBoxListing} mapListing - The map listing to be updated.
- * @param                 currentMap
- */
-export function updateListing(
-	mapListing: MapBoxListing,
-	currentMap: HTMLDivElement
-) {
-	// remove previous marker and popup
-	removeMarkerEl( mapListing.id, currentMap );
 }

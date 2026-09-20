@@ -1,5 +1,6 @@
 import type { MapAttributes, MapboxBlockDefaults } from '../../types';
 import { getMapStyleUrl, toFeatureCollection } from '../../utils/dataset';
+import { getEffectiveProjection } from '../../utils/projection';
 import { setMapElevation, setMapThreeDimensionality } from './utils';
 import type mapboxgl from 'mapbox-gl';
 import './style.scss';
@@ -46,11 +47,15 @@ export function initMap(
 		pitch,
 		scrollZoom: mouseWheelZoom,
 		dragRotate: freeViewCamera,
+		projection: getEffectiveProjection(
+			attributes.mapProjection,
+			attributes.elevation
+		),
 	} );
 
 	map.on( 'load', function () {
 		// Set the map's terrain layer.
-		setMapElevation( map, attributes.elevation );
+		setMapElevation( map, attributes.elevation, attributes.mapProjection );
 
 		// Add navigation control (the +/- zoom buttons)
 		map.addControl( new mapbox.NavigationControl(), 'top-right' );
