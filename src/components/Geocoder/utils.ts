@@ -104,7 +104,7 @@ export function filterByPreferredArea(
 
 			// check if the current position matches the reseller preferred area
 			if (
-				currentContext.country.short_code === storeCountry ||
+				currentContext.country?.short_code === storeCountry ||
 				( prefArea && prefArea.includes( storeCountry ) )
 			) {
 				preferredStores.push( currentStore );
@@ -124,6 +124,8 @@ export function filterByPreferredArea(
  * @param {mapboxgl.Map}          map             - The map object.
  * @param {MapBoxListing[]}       listings        - The list of stores.
  * @param {MapBoxListing}         [myLocationPin] - The optional location pin.
+ * @param                         popupManager    - Optional PopupManager instance.
+ * @param                         mapbox          - Optional Mapbox GL runtime constructor.
  *
  * @return {MapBoxListing[]} The sorted list of nearest stores.
  */
@@ -132,7 +134,9 @@ export function getNearestStore(
 	mapRef: HTMLDivElement,
 	map: mapboxgl.Map,
 	listings: MapBoxListing[],
-	myLocationPin?: MapBoxListing
+	myLocationPin?: MapBoxListing,
+	popupManager?: import('../Popup').PopupManager | null,
+	mapbox?: any
 ): MapBoxListing[] {
 	const currentArea = getCurrentContext( result );
 
@@ -158,7 +162,9 @@ export function getNearestStore(
 		myLocationPin,
 		sortedListings.slice( 0, SEARCH_RESULTS_SHOWN ),
 		mapRef,
-		map
+		map,
+		popupManager,
+		mapbox
 	);
 
 	return [ ...sortedListings ];
