@@ -1,4 +1,4 @@
-import type { Feature, Geometry } from 'geojson';
+import type mapboxgl from 'mapbox-gl';
 import type { LngLat } from 'mapbox-gl';
 import type {
 	Dispatch,
@@ -6,7 +6,12 @@ import type {
 	RefObject,
 	SetStateAction,
 } from 'react';
-import type MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+
+declare global {
+	interface Window {
+		vsgeMapboxGL?: typeof mapboxgl;
+	}
+}
 
 export type CoordinatesDef = [ number, number ];
 
@@ -19,7 +24,6 @@ export type MapboxBlockDefaults = {
 export type TagArray = string[] | undefined;
 
 export type FilterCollection = { id: number; value: string };
-export type TagCollection = { id: number; tag: string };
 
 export interface MarkerIcon {
 	id: number;
@@ -63,8 +67,8 @@ export type MountedMapsContextValue = {
 	filteredListings: MapBoxListing[] | null;
 	setListings: Dispatch< SetStateAction< MapBoxListing[] > >;
 	setFilteredListings: Dispatch< MapBoxListing[] | null >;
-	geoCoder?: MapboxGeocoder;
-	setGeoCoder?: SetStateAction< any >;
+	selectedDealerId: number | null;
+	setSelectedDealerId: Dispatch< SetStateAction< number | null > >;
 	mapRef?: RefObject< HTMLDivElement >;
 	markersRef: MutableRefObject< HTMLButtonElement[] >;
 	geocoderRef?: RefObject< HTMLDivElement >;
@@ -72,23 +76,14 @@ export type MountedMapsContextValue = {
 	setLoaded: Dispatch< SetStateAction< boolean > >;
 	mapDefaults?: MapboxBlockDefaults;
 	mapIcons?: MarkerIcon[];
+	distanceReference: CoordinatesDef | null;
+	setDistanceReference: Dispatch< SetStateAction< CoordinatesDef | null > >;
 };
 
 export type selectOptions = {
 	label: string;
 	value: string;
 };
-
-export interface MapItem extends Feature {
-	geometry: Geometry;
-	properties: MarkerProps;
-	distance?: {
-		value: number;
-		writable: boolean;
-		enumerable: boolean;
-		configurable: boolean;
-	} | null;
-}
 
 export interface MapBoxListing {
 	id: number;

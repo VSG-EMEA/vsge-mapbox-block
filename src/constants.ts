@@ -1,14 +1,8 @@
-import { MapboxOptions } from 'mapbox-gl';
 import { MapboxBlockDefaults, selectOptions } from './types';
 
 declare global {
 	let mapboxBlockData: MapboxBlockDefaults;
 }
-
-export const mapboxDefaults: MapboxOptions = {
-	container: '',
-	scrollZoom: true,
-};
 
 export const SEARCH_RESULTS_SHOWN: number = 5;
 
@@ -65,5 +59,3 @@ export const mapProjections: selectOptions[] = [
 	{ label: 'Winkel Tripel', value: 'winkelTripel' },
 	{ label: 'Globe', value: 'globe' },
 ];
-
-export const pointerOffset = { offset: [ 0, -23 ] };
