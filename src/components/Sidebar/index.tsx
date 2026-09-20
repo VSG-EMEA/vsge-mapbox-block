@@ -15,7 +15,20 @@ import { Listings } from './Listings';
  * GeoCoder component is conditionally rendered based on the value of the "geocoderEnabled" property in
  * the "mapboxOptions" object. The "feature-listing" div contains a map
  */
-export const Sidebar = (): JSX.Element | null => {
+import type { MapBoxListing } from '../../types';
+import type { PopupOptions, PopupResource } from '../Popup';
+
+export const Sidebar = ( {
+	clearPopups,
+	openPopup,
+}: {
+	clearPopups?: () => void;
+	openPopup?: (
+		marker: MapBoxListing,
+		children?: JSX.Element,
+		options?: PopupOptions
+	) => PopupResource | null;
+} = {} ): JSX.Element | null => {
 	const {
 		map,
 		mapRef,
@@ -43,6 +56,8 @@ export const Sidebar = (): JSX.Element | null => {
 			listings={ getListing( listings, filteredListings ) }
 			map={ map.current }
 			mapRef={ mapRef.current }
+			clearPopups={ clearPopups }
+			openPopup={ openPopup }
 		/>
 	);
 };
