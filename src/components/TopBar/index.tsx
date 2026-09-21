@@ -37,6 +37,8 @@ const centerViewIcon = () => (
 				height={ 20 }
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 48 48"
+				aria-hidden="true"
+				focusable="false"
 			>
 				<path d="M0 0h48v48H0z" fill="none" />
 				<path d="M10 30H6v8a4 4 0 0 0 4 4h8v-4h-8v-8zm0-20h8V6h-8a4 4 0 0 0-4 4v8h4v-8zm28-4h-8v4h8v8h4v-8a4 4 0 0 0-4-4zm0 32h-8v4h8a4 4 0 0 0 4-4v-8h-4v8zM24 16a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm0 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
@@ -53,6 +55,8 @@ const resetIcon = () => (
 				height="24"
 				viewBox="0 -960 960 960"
 				width={ '24' }
+				aria-hidden="true"
+				focusable="false"
 			>
 				<path d="M440-122q-121-15-200.5-105.5T160-440q0-66 26-126.5T260-672l57 57q-38 34-57.5 79T240-440q0 88 56 155.5T440-202v80Zm80 0v-80q87-16 143.5-83T720-440q0-100-70-170t-170-70h-3l44 44-56 56-140-140 140-140 56 56-44 44h3q134 0 227 93t93 227q0 121-79.5 211.5T520-122Z" />
 			</svg>
@@ -60,21 +64,35 @@ const resetIcon = () => (
 	/>
 );
 
-export const TopBar = ( attributes: {
+type TopBarProps = {
 	fitView: boolean;
 	tagsEnabled: boolean;
 	filtersEnabled: boolean;
 	mapboxOptions: MapboxOptions;
-} ) => {
+	onClearGeocoder?: () => void;
+	onClearPopups?: () => void;
+};
+
+import { isFilterActive } from './utils';
+
+export { isFilterActive };
+
+export const TopBar = ( {
+	fitView,
+	tagsEnabled,
+	filtersEnabled,
+	mapboxOptions,
+	onClearGeocoder,
+	onClearPopups,
+}: TopBarProps ) => {
 	const {
 		map,
 		mapRef,
 		listings,
 		filteredListings,
-		setListings,
 		setFilteredListings,
+		setDistanceReference,
 	}: MountedMapsContextValue = useMapboxContext();
-	const { fitView, tagsEnabled, filtersEnabled, mapboxOptions } = attributes;
 	const [ filter, setFilter ] = useState( '' );
 	const [ tag, setTag ] = useState( '' );
 
@@ -87,7 +105,13 @@ export const TopBar = ( attributes: {
 				filterListingsBy( listings, { tag, filter } )
 			);
 		}
+		setDistanceReference( null );
 	}, [ filter, tag ] );
+
+	const filterActive = isFilterActive( filter, tag, filteredListings );
+
+	const visibleListings =
+		filteredListings !== null ? filteredListings : listings;
 
 	// if no special stuff is required, return null
 	return mapRef?.current && map?.current ? (
@@ -100,14 +124,19 @@ export const TopBar = ( attributes: {
 		>
 			<MapButton
 				icon={ resetIcon }
-				hidden={ filteredListings?.length !== listings.length }
+				hidden={ ! filterActive }
 				className={ 'reset-filters' }
 				onClick={ () => {
-					if ( mapRef?.current ) {
+					if ( onClearPopups ) {
+						onClearPopups();
+					} else if ( mapRef?.current ) {
 						removePopups( mapRef.current );
 					}
+					setFilter( '' );
+					setTag( '' );
+					onClearGeocoder?.();
 					setFilteredListings( null );
-					setListings( attributes.mapboxOptions.listings );
+					setDistanceReference( null );
 				} }
 			>
 				{ __( 'Reset Filters', 'vsge-mapbox-block' ) }
@@ -120,7 +149,11 @@ export const TopBar = ( attributes: {
 					onClick={ () =>
 						mapRef?.current &&
 						map?.current &&
-						fitInView( map.current, listings, mapRef.current )
+						fitInView(
+							map.current,
+							visibleListings,
+							mapRef.current
+						)
 					}
 				>
 					{ __( 'Fit View', 'vsge-mapbox-block' ) }
@@ -129,6 +162,8 @@ export const TopBar = ( attributes: {
 
 			{ filtersEnabled ? (
 				<MapSelectControl
+					id="vsge-mapbox-filter-select"
+					label={ __( 'Filter by category', 'vsge-mapbox-block' ) }
 					className={ 'mapbox-map-filter filter-by-partnership' }
 					value={ filter }
 					options={ [
@@ -146,6 +181,8 @@ export const TopBar = ( attributes: {
 
 			{ tagsEnabled ? (
 				<MapSelectControl
+					id="vsge-mapbox-tag-select"
+					label={ __( 'Filter by tag', 'vsge-mapbox-block' ) }
 					className={ 'mapbox-map-filter filter-by-tag' }
 					value={ tag }
 					options={ [
