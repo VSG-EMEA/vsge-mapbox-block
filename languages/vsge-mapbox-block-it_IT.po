@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: codekraft <EMAIL>\n"
-"POT-Creation-Date: 2024-07-07T14:41:43.489Z\n"
-"PO-Revision-Date: \n"
+"POT-Creation-Date: 2026-09-18T07:13:45+00:00
+"PO-Revision-Date: 2026-09-18 09:20:00+0200
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -12,243 +12,408 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.4\n"
 
-#. Name of the plugin
-#: vsge-mapbox-block.php
+#. Plugin Name of the plugin
+#: build/editor.js:1
 msgid "vsge-mapbox-block"
 msgstr "vsge-mapbox-block"
 
 #. Description of the plugin
-#: vsge-mapbox-block.php
+#: build/editor.js:1
 msgid "VSGE - mapbox block"
 msgstr "VSGE - blocco mapbox"
 
 #. Author of the plugin
-#: vsge-mapbox-block.php
+#: build/editor.js:1
 msgid "codekraft"
 msgstr "codekraft"
 
-#: src/components/UIComponents/Phone.tsx:29
-msgid "Call "
-msgstr "Chiamata "
+#: vsge-mapbox-block.php:64
+msgid "Mapbox configuration"
+msgstr ""
 
-#: src/components/UIComponents/EmailAddr.tsx:31
-msgid "Email "
-msgstr "E-Mail "
+#: vsge-mapbox-block.php:65
+msgid "Mapbox public access token"
+msgstr ""
 
-#: src/components/TopBar/index.tsx:113
-msgid "Reset Filters"
-msgstr "Reimposta Filtri"
+#: vsge-mapbox-block.php:71
+msgid "Configured by wp-config.php. The saved option is not used while this constant is defined."
+msgstr ""
 
-#: src/components/TopBar/index.tsx:126
-msgid "Fit View"
-msgstr "Centra nella vista"
+#: vsge-mapbox-block.php:74
+msgid "Saved token is hidden"
+msgstr ""
 
-#: src/components/TopBar/index.tsx:137
-msgid "Select a filter"
-msgstr "Selezionare un filtro"
+#: vsge-mapbox-block.php:75
+msgid "Leave blank to retain the saved token."
+msgstr ""
 
-#: src/components/TopBar/index.tsx:154
-msgid "Select a tag"
-msgstr "Selezionare un tag"
+#: vsge-mapbox-block.php:79
+#: vsge-mapbox-block.php:92
+msgid "VSGE Mapbox"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:134
-#: src/components/Sortable/index.tsx:163
-msgid "New"
-msgstr "Nuovo"
+#: vsge-mapbox-block.php:89
+msgid "wp-config.php constant"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:146
-msgid "type"
-msgstr "tipo"
+#: vsge-mapbox-block.php:89
+msgid "WordPress option"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:165
-msgid "long"
-msgstr "long"
+#: vsge-mapbox-block.php:89
+msgid "Not configured"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:184
-msgid "lat"
-msgstr "lat"
+#. translators: %s: source configuration type
+#: vsge-mapbox-block.php:93
+msgid "Effective source: %s"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:218
-msgid "Get position from map"
-msgstr "Ottenere la posizione dalla mappa"
+#. translators: %s: source configuration type
+#: vsge-mapbox-block.php:94
+msgid "Configuration status: configured"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:230
-msgid "Name"
-msgstr "Nome"
+#. translators: %s: source configuration type
+#: vsge-mapbox-block.php:94
+msgid "Configuration status: not configured"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:245
-msgid "Company"
-msgstr "Azienda"
+#: build/frontend.js:1
+msgid "Mapbox is not configured."
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:260
-#: src/components/Sidebar/Listing.tsx:123
-#: src/components/Popup/PopupContent.tsx:67
-msgid "Phone"
-msgstr "Telefono"
+#. translators: %s: phone number
+#: build/frontend.js:1
+msgid "Call %s"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:274
-#: src/components/Sidebar/Listing.tsx:129
-#: src/components/Popup/PopupContent.tsx:72
-msgid "Mobile"
-msgstr "Cellulare"
+#. translators: %s: email address
+#: build/frontend.js:1
+msgid "Email %s"
+msgstr ""
 
-#: src/components/Sortable/SortablePins.tsx:288
-#: src/components/Sidebar/Listing.tsx:135
-#: src/components/Popup/PopupContent.tsx:78
-msgid "Email"
-msgstr "E-mail"
-
-#: src/components/Sortable/SortablePins.tsx:302
-msgid "website"
-msgstr "website"
-
-#: src/components/Sortable/SortablePins.tsx:316
-msgid "City"
-msgstr "Città"
-
-#: src/components/Sortable/SortablePins.tsx:330
-msgid "Country"
-msgstr "Paese"
-
-#: src/components/Sortable/SortablePins.tsx:344
-msgid "Postal Code"
-msgstr "Codice postale"
-
-#: src/components/Sortable/SortablePins.tsx:358
-msgid "Country Code"
-msgstr "Codice Paese"
-
-#: src/components/Sortable/SortablePins.tsx:372
-msgid "Preferred area"
-msgstr "Area preferita"
-
-#: src/components/Sortable/SortablePins.tsx:396
-#: src/components/Sidebar/Listing.tsx:112
-#: src/components/Popup/PopupContent.tsx:59
+#. translators: %s: email address
+#: build/frontend.js:1
+#: build/editor.js:1
 msgid "Address"
 msgstr "Indirizzo"
 
-#: src/components/Sortable/SortablePins.tsx:449
-msgid "Filters"
-msgstr "Filtri"
+#: build/frontend.js:1
+#: build/editor.js:1
+msgid "Phone"
+msgstr "Telefono"
 
-#: src/components/Sortable/SortablePins.tsx:509
-msgid "Select a Marker"
-msgstr "Selezionare un marcatore"
+#: build/frontend.js:1
+#: build/editor.js:1
+msgid "Mobile"
+msgstr "Cellulare"
 
-#: src/components/Sortable/SortablePins.tsx:517
-msgid "Default"
-msgstr "Predefinito"
+#: build/frontend.js:1
+#: build/editor.js:1
+msgid "Email"
+msgstr "E-mail"
 
-#: src/components/Sortable/SortablePins.tsx:547
-msgid "Marker"
-msgstr "Segnaposto"
-
-#: src/components/Sortable/SortablePins.tsx:595
-msgid "Reset"
-msgstr "Reset"
-
-#: src/components/Sortable/SortablePins.tsx:604
-msgid "Save"
-msgstr "Salva"
-
-#: src/components/Sortable/index.tsx:17 src/components/Sortable/index.tsx:138
-msgid "New Marker"
-msgstr "Nuovo Segnaposto"
-
-#: src/components/Sortable/index.tsx:234
-#: src/components/Edit/EditPanelIcons.tsx:119
-msgid "Add new"
-msgstr "Aggiungi nuovo"
-
-#: src/components/Sortable/IconPreview.tsx:28
-msgid "error ??"
-msgstr "errore?"
-
-#: src/components/Sidebar/Listing.tsx:141
+#: build/frontend.js:1
 msgid "Distance"
 msgstr "Distanza"
 
-#: src/components/Sidebar/index.tsx:36
+#: build/frontend.js:1
+msgid "Reset Filters"
+msgstr "Reimposta Filtri"
+
+#: build/frontend.js:1
+msgid "Fit View"
+msgstr "Centra nella vista"
+
+#: build/frontend.js:1
+msgid "Filter by category"
+msgstr ""
+
+#: build/frontend.js:1
+msgid "Select a filter"
+msgstr "Selezionare un filtro"
+
+#: build/frontend.js:1
+msgid "Filter by tag"
+msgstr ""
+
+#: build/frontend.js:1
+msgid "Select a tag"
+msgstr "Selezionare un tag"
+
+#: build/frontend.js:1
 msgid "no listings found"
 msgstr "nessun annuncio trovato"
 
-#: src/components/Popup/PinPointPopup.tsx:40
+#: build/frontend.js:1
 msgid "My location"
 msgstr "La mia località"
 
-#: src/components/Popup/PinPointPopup.tsx:85 src/components/Geocoder/init.ts:48
+#: build/frontend.js:1
 msgid "Find nearest Sales Agent"
 msgstr "Trova l'agente di vendita più vicino"
 
-#: src/components/Mapbox/MapboxContext.tsx:96
-msgid "useMapboxContext must be used within a MapboxProvider"
-msgstr "useMapboxContext deve essere utilizzato all'interno di un MapboxProvider"
+#: build/frontend.js:1
+#: build/editor.js:1
+msgid "Reset"
+msgstr "Reset"
 
-#: src/components/Edit/EditPanelIcons.tsx:32
-msgid "Delete icon"
-msgstr "Elimina Icona"
+#: build/frontend.js:1
+msgid "Get a <a>Mapbox Access Token</a>, then add the token to your config.php file as a constant <code>MAPBOX_TOKEN</code>"
+msgstr ""
 
-#: src/components/Edit/EditPanelIcons.tsx:41
-msgid "Marker Name"
-msgstr "Nome Segnaposto"
+#: build/editor.js:1
+msgid "New dealer"
+msgstr ""
 
-#: src/components/Edit/EditPanelIcons.tsx:51
-msgid "svg markup"
-msgstr "markup svg"
+#: build/editor.js:1
+msgid "Longitude"
+msgstr "Longitudine"
 
-#: src/components/Edit/EditPanelIcons.tsx:89
-msgid "New Marker "
-msgstr "Nuovo Marker "
-
-#: src/components/Edit/Edit.tsx:166
-msgid "Enable Sidebar"
-msgstr "Abilita la barra laterale"
-
-#: src/components/Edit/Edit.tsx:184
-msgid "Enable Geocoder"
-msgstr "Abilita il geocoder"
-
-#: src/components/Edit/Edit.tsx:198
-msgid "Enable Filters"
-msgstr "Abilita Filtri"
-
-#: src/components/Edit/Edit.tsx:211
-msgid "Enable Tag"
-msgstr "Abilitazione del tag"
-
-#: src/components/Edit/Edit.tsx:221
-msgid "Enable fitView"
-msgstr "Abilita fitView"
-
-#: src/components/Edit/Edit.tsx:235
-msgid "Enable Elevation"
-msgstr "Abilitazione dell'elevazione"
-
-#: src/components/Edit/Edit.tsx:249
-msgid "Enable camera 3d rotation"
-msgstr "Abilita la rotazione 3D della telecamera"
-
-#: src/components/Edit/Edit.tsx:265
-msgid "Enable Zoom with mouse wheel"
-msgstr "Abilita lo zoom con la rotella del mouse"
-
-#: src/components/Edit/Edit.tsx:282
-msgid "Camera Options"
-msgstr "Opzioni della telecamera"
-
-#: src/components/Edit/Edit.tsx:292
-msgid "Get Current view"
-msgstr "Ottenere la vista corrente"
-
-#: src/components/Edit/Edit.tsx:296
-msgid "Camera Fine tuning"
-msgstr "Regolazione fine della telecamera"
-
-#: src/components/Edit/Edit.tsx:299
+#: build/editor.js:1
 msgid "Latitude"
 msgstr "Latitudine"
 
-#: src/components/Edit/Edit.tsx:318
-msgid "Longitude"
-msgstr "Longitudine"
+#: build/editor.js:1
+msgid "Use last map click"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Name"
+msgstr "Nome"
+
+#: build/editor.js:1
+msgid "Description"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Company"
+msgstr "Azienda"
+
+#: build/editor.js:1
+msgid "Website"
+msgstr ""
+
+#: build/editor.js:1
+msgid "City"
+msgstr "Città"
+
+#: build/editor.js:1
+msgid "Postal code"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Country"
+msgstr "Paese"
+
+#: build/editor.js:1
+msgid "Country code"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Preferred area"
+msgstr "Area preferita"
+
+#: build/editor.js:1
+msgid "Tags"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Filters"
+msgstr "Filtri"
+
+#: build/editor.js:1
+msgid "Marker"
+msgstr "Segnaposto"
+
+#: build/editor.js:1
+msgid "Icon size"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Icon colour"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Marker icon"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Default"
+msgstr "Predefinito"
+
+#: build/editor.js:1
+msgid "Draggable"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Delete this dealer?"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Delete dealer"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Save dealer"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Dealers"
+msgstr ""
+
+#. translators: %s: dealer ID
+#: build/editor.js:1
+msgid "New dealer %s"
+msgstr ""
+
+#. translators: %s: dealer ID
+#: build/editor.js:1
+msgid "Add dealer"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Search dealers"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Searches name, company, city, country, country code, and postal code."
+msgstr ""
+
+#: build/editor.js:1
+msgid "All countries"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Unnamed dealer"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Previous"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Next"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Delete icon"
+msgstr "Elimina Icona"
+
+#: build/editor.js:1
+msgid "Marker Name"
+msgstr "Nome Segnaposto"
+
+#: build/editor.js:1
+msgid "svg markup"
+msgstr "markup svg"
+
+#: build/editor.js:1
+msgid "Pointer"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Add new"
+msgstr "Aggiungi nuovo"
+
+#. translators: %s: marker icon ID
+#: build/editor.js:1
+msgid "New Marker %s"
+msgstr ""
+
+#. translators: %s: marker icon ID
+#: build/editor.js:1
+msgid "Remove"
+msgstr ""
+
+#: build/editor.js:1
+msgid "New"
+msgstr "Nuovo"
+
+#: build/editor.js:1
+msgid "Add"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Options"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Enable sidebar"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Enable geocoder"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Enable filters"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Enable tags"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Enable fit view"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Enable elevation"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Enable 3D camera rotation"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Enable mouse wheel zoom"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Camera"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Pitch"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Bearing"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Zoom"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Style"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Projection"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Filters and tags"
+msgstr ""
+
+#: build/editor.js:1
+msgid "Loading map editor…"
+msgstr ""
+
+#: src/block.json
+msgctxt "block title"
+msgid "MapBox"
+msgstr ""
+
+#: src/block.json
+msgctxt "block description"
+msgid "A block that displays the map using mapbox"
+msgstr ""
+
+#: src/block.json
+msgctxt "block keyword"
+msgid "mapbox"
+msgstr ""
